@@ -83,9 +83,16 @@ export function subscribeToMessages(
     collection(db, "conversations", conversationId, "messages"),
     orderBy("createdAt", "asc")
   );
-  return onSnapshot(q, (snap) => {
-    callback(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<ChatMessage, "id">) })));
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      callback(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<ChatMessage, "id">) })));
+    },
+    () => {
+      // Lecture refusée (conversation pas encore accessible) : pas de crash, liste vide.
+      callback([]);
+    }
+  );
 }
 
 export function subscribeToConversationsForCoach(
@@ -93,11 +100,17 @@ export function subscribeToConversationsForCoach(
   callback: (conversations: Conversation[]) => void
 ): () => void {
   const q = query(collection(db, "conversations"), where("coachId", "==", coachId));
-  return onSnapshot(q, (snap) => {
-    const list = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Conversation, "id">) }));
-    list.sort((a, b) => toMillis(b.lastMessageAt) - toMillis(a.lastMessageAt));
-    callback(list);
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      const list = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Conversation, "id">) }));
+      list.sort((a, b) => toMillis(b.lastMessageAt) - toMillis(a.lastMessageAt));
+      callback(list);
+    },
+    () => {
+      callback([]);
+    }
+  );
 }
 
 export async function sendMessage(

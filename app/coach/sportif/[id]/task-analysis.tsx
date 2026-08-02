@@ -69,6 +69,10 @@ export default function TaskAnalysisScreen() {
           setAthleteRadar(data.athleteRadar ?? emptyRadar());
         }
       })
+      .catch(() => {
+        // Pas principal de ce sportif : le guard usePrincipalAccess ci-dessous
+        // affichera "Accès non autorisé", pas la peine de remonter l'erreur.
+      })
       .finally(() => setLoading(false));
 
     const coachUid = auth.currentUser?.uid;

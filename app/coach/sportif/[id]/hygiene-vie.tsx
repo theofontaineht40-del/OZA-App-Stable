@@ -45,6 +45,9 @@ export default function HygieneVieScreen() {
       try {
         const data = await getLifestyleEntries(id);
         setEntries(data);
+      } catch {
+        // Pas principal de ce sportif : le guard usePrincipalAccess ci-dessous
+        // affichera "Accès non autorisé", pas la peine de remonter l'erreur.
       } finally {
         setLoading(false);
       }

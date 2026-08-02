@@ -17,8 +17,13 @@ export function usePrincipalAccess(sportifId: string | undefined): boolean | nul
         setIsPrincipal(false);
         return;
       }
-      const relation = await getRelation(sportifId, user.uid);
-      setIsPrincipal(relation?.type === "principal");
+      try {
+        const relation = await getRelation(sportifId, user.uid);
+        setIsPrincipal(relation?.type === "principal");
+      } catch {
+        // Lecture refusée (règles Firestore) : traiter comme non-principal.
+        setIsPrincipal(false);
+      }
     });
 
     return unsubscribe;

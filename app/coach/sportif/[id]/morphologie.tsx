@@ -52,6 +52,9 @@ export default function MorphologieScreen() {
         const data = await getMorphologyEntries(id);
         setEntries(data);
         if (data[0]?.taille) setTaille(String(data[0].taille));
+      } catch {
+        // Pas principal de ce sportif : le guard usePrincipalAccess ci-dessous
+        // affichera "Accès non autorisé", pas la peine de remonter l'erreur.
       } finally {
         setLoading(false);
       }

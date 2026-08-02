@@ -46,7 +46,10 @@ export default function PostureScreen() {
 
   useEffect(() => {
     if (!id) return;
-    getPosturalAssessment(id).then(setAssessment);
+    const empty = { photoUrl: null, anomalies: [] };
+    getPosturalAssessment(id)
+      .then(setAssessment)
+      .catch(() => setAssessment({ face: empty, profil: empty, dos: empty }));
   }, [id]);
 
   const isPrincipal = usePrincipalAccess(id);

@@ -48,10 +48,13 @@ export default function MorphologieScreen() {
     if (!id) return;
 
     async function load() {
-      const data = await getMorphologyEntries(id);
-      setEntries(data);
-      if (data[0]?.taille) setTaille(String(data[0].taille));
-      setLoading(false);
+      try {
+        const data = await getMorphologyEntries(id);
+        setEntries(data);
+        if (data[0]?.taille) setTaille(String(data[0].taille));
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();

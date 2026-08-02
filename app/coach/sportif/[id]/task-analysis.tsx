@@ -61,14 +61,15 @@ export default function TaskAnalysisScreen() {
 
   useEffect(() => {
     if (!id) return;
-    getTaskAnalysis(id).then((data) => {
-      if (data.sportKey) {
-        setSportKey(data.sportKey);
-        setSportRadar(data.sportRadar ?? getSport(data.sportKey)?.radar ?? emptyRadar());
-        setAthleteRadar(data.athleteRadar ?? emptyRadar());
-      }
-      setLoading(false);
-    });
+    getTaskAnalysis(id)
+      .then((data) => {
+        if (data.sportKey) {
+          setSportKey(data.sportKey);
+          setSportRadar(data.sportRadar ?? getSport(data.sportKey)?.radar ?? emptyRadar());
+          setAthleteRadar(data.athleteRadar ?? emptyRadar());
+        }
+      })
+      .finally(() => setLoading(false));
 
     const coachUid = auth.currentUser?.uid;
     if (!coachUid) return;
@@ -85,7 +86,7 @@ export default function TaskAnalysisScreen() {
         getTestResults(id, "physical"),
       ]);
       computeSuggestions(thresholds, mobilityResults, physicalResults);
-    });
+    }).catch(() => {});
   }, [id]);
 
   function computeSuggestions(

@@ -42,9 +42,12 @@ export default function HygieneVieScreen() {
     if (!id) return;
 
     async function load() {
-      const data = await getLifestyleEntries(id);
-      setEntries(data);
-      setLoading(false);
+      try {
+        const data = await getLifestyleEntries(id);
+        setEntries(data);
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();

@@ -156,18 +156,29 @@ service cloud.firestore {
     }
 
     // ── Séances réalisées (journal du sportif) ──
+    // Créée soit par le sportif lui-même (auto-déclaration après séance),
+    // soit par son coach principal (séance encadrée en direct).
     match /sessions/{sessionId} {
       allow read: if isSignedIn() && (
         resource.data.sportifId == request.auth.uid ||
         resource.data.coachId == request.auth.uid
       );
-      allow create: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      allow create: if isSignedIn() && (
+        request.resource.data.sportifId == request.auth.uid ||
+        (request.resource.data.coachId == request.auth.uid &&
+          isPrincipalOf(request.resource.data.sportifId))
+      );
       allow update, delete: if false;
     }
 
-    // ── Bien-être quotidien (privé au sportif) ──
+    // ── Bien-être quotidien ──
+    // Lisible par le sportif lui-même et par le coach qui suivait la séance
+    // au moment de la saisie (voir services/tracking.ts::addWellnessEntry).
     match /wellness/{wellnessId} {
-      allow read: if isSignedIn() && resource.data.sportifId == request.auth.uid;
+      allow read: if isSignedIn() && (
+        resource.data.sportifId == request.auth.uid ||
+        resource.data.coachId == request.auth.uid
+      );
       allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
       allow delete: if false;
     }

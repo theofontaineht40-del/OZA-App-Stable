@@ -11,8 +11,8 @@ import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
 import { getRelation, Relation } from "../../../../services/relations";
 import {
-  getSessionsForSportif,
-  getWellnessForSportif,
+  getSessionsForCoach,
+  getWellnessForCoach,
   SessionRecord,
 } from "../../../../services/tracking";
 
@@ -39,20 +39,41 @@ export default function SportifDetailScreen() {
           const data = userSnap.data();
           setName(`${data.firstName} ${data.lastName}`);
         }
-
-        const rel = await getRelation(id, coachId);
-        setRelation(rel);
-
-        if (rel?.type === "principal") {
-          const sessionData = await getSessionsForSportif(id);
-          setSessions(sessionData);
-
-          const wellnessData = await getWellnessForSportif(id);
-          setWellness(wellnessData[0] ?? null);
-        }
       } catch {
-        // Lecture refusée : traiter comme "aucun lien" plutôt que de planter.
-        setRelation(null);
+        // Ignoré : le nom n'est pas bloquant pour la suite.
+      }
+
+      let rel: Relation | null = null;
+      try {
+        rel = await getRelation(id, coachId);
+      } catch {
+        rel = null;
+      }
+      setRelation(rel);
+
+      if (rel?.type === "principal") {
+        try {
+          // Règles Firestore : seul un filtre par coachId est autorisable
+          // pour une liste, on récupère donc tout son périmètre puis on
+          // filtre côté client sur ce sportif précis.
+          const sessionData = (await getSessionsForCoach(coachId)).filter(
+            (s) => s.sportifId === id
+          );
+          setSessions(sessionData);
+        } catch {
+          setSessions([]);
+        }
+
+        try {
+          const wellnessData = (await getWellnessForCoach(coachId)).filter(
+            (w) => w.sportifId === id
+          );
+          setWellness(wellnessData[0] ?? null);
+        } catch {
+          setWellness(null);
+        }
+      } else {
+        setSessions([]);
       }
     });
 
@@ -225,17 +246,35 @@ export default function SportifDetailScreen() {
 
       <LoadSummary dailyLoads28={dailyLoads28} />
 
-      <Text style={styles.sectionTitle}>Historique des séances</Text>
+      <View style={styles.sessionsHeaderRow}>
+        <Text style={styles.sectionTitle}>Historique des séances</Text>
+        <TouchableOpacity
+          style={styles.addSessionButton}
+          onPress={() => router.push(`/coach/sportif/${id}/nouvelle-seance`)}
+        >
+          <Ionicons name="add" size={18} color={Colors.white} />
+        </TouchableOpacity>
+      </View>
       {sessions.length === 0 ? (
         <Text style={styles.emptyText}>Aucune séance enregistrée pour le moment.</Text>
       ) : (
         sessions.map((session) => (
           <View key={session.id} style={styles.sessionRow}>
-            <View>
-              <Text style={styles.sessionDate}>{session.date}</Text>
+            <View style={{ flex: 1 }}>
+              <View style={styles.sessionHeaderRow}>
+                <Text style={styles.sessionDate}>{session.date}</Text>
+                {session.loggedBy === "coach" ? (
+                  <View style={styles.coachBadge}>
+                    <Text style={styles.coachBadgeText}>Ajoutée par vous</Text>
+                  </View>
+                ) : null}
+              </View>
               <Text style={styles.sessionDetail}>
                 RPE {session.rpe} · {session.duration} min
               </Text>
+              {session.commentaire ? (
+                <Text style={styles.sessionComment}>{session.commentaire}</Text>
+              ) : null}
             </View>
             <Text style={styles.sessionLoad}>{session.load} UA</Text>
           </View>
@@ -366,11 +405,26 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
+  sessionsHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
     color: Colors.text,
-    marginBottom: 14,
+  },
+
+  addSessionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   emptyText: {
@@ -394,16 +448,42 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
 
+  sessionHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
   sessionDate: {
     fontSize: 14,
     fontWeight: "600",
     color: Colors.text,
   },
 
+  coachBadge: {
+    backgroundColor: "#FFF1F7",
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+
+  coachBadgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: Colors.primary,
+  },
+
   sessionDetail: {
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+
+  sessionComment: {
+    fontSize: 12,
+    color: Colors.text,
+    marginTop: 6,
+    fontStyle: "italic",
   },
 
   sessionLoad: {

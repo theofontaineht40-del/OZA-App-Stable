@@ -44,6 +44,7 @@ export default function NouvelleSeanceScreen() {
   });
   const [rpe, setRpe] = useState<number | null>(null);
   const [duration, setDuration] = useState("");
+  const [commentaire, setCommentaire] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -79,8 +80,14 @@ export default function NouvelleSeanceScreen() {
 
     setSubmitting(true);
     try {
-      await addWellnessEntry(uid, wellness);
-      await addSession(uid, coachId, rpe, durationNumber);
+      await addWellnessEntry(uid, wellness, coachId);
+      await addSession({
+        sportifUid: uid,
+        coachId,
+        rpe,
+        duration: durationNumber,
+        commentaire,
+      });
       Alert.alert("Séance enregistrée", "Votre charge d'entraînement a été calculée.");
       router.back();
     } finally {
@@ -182,6 +189,16 @@ export default function NouvelleSeanceScreen() {
               </Text>
             </View>
           ) : null}
+
+          <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Ressenti, points à retenir..."
+            multiline
+            numberOfLines={3}
+            value={commentaire}
+            onChangeText={setCommentaire}
+          />
 
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.secondaryButton} onPress={() => setStep(1)}>
@@ -336,6 +353,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     marginBottom: 16,
+  },
+
+  commentInput: {
+    minHeight: 90,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    marginBottom: 24,
+    textAlignVertical: "top",
   },
 
   loadPreview: {

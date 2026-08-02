@@ -58,6 +58,7 @@ export default function SeanceExecutionScreen() {
   });
   const [rpe, setRpe] = useState<number | null>(null);
   const [duration, setDuration] = useState("");
+  const [commentaire, setCommentaire] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -138,12 +139,19 @@ export default function SeanceExecutionScreen() {
 
     setSubmitting(true);
     try {
-      await addWellnessEntry(uid, wellness);
-      await addSession(uid, coachId, rpe, durationNumber, {
-        programmeId: programme.id,
-        programmeNom: programme.nom,
-        seanceNom: seance.nom,
-        exerciseLogs,
+      await addWellnessEntry(uid, wellness, coachId);
+      await addSession({
+        sportifUid: uid,
+        coachId,
+        rpe,
+        duration: durationNumber,
+        commentaire,
+        programmeInfo: {
+          programmeId: programme.id,
+          programmeNom: programme.nom,
+          seanceNom: seance.nom,
+          exerciseLogs,
+        },
       });
       Alert.alert("Séance enregistrée", "Votre charge d'entraînement a été calculée.");
       router.push("/sportif");
@@ -301,6 +309,16 @@ export default function SeanceExecutionScreen() {
           </Text>
         </View>
       ) : null}
+
+      <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
+      <TextInput
+        style={styles.commentInput}
+        placeholder="Ressenti, points à retenir..."
+        multiline
+        numberOfLines={3}
+        value={commentaire}
+        onChangeText={setCommentaire}
+      />
 
       <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit} disabled={submitting}>
         {submitting ? (
@@ -520,6 +538,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     marginBottom: 16,
+  },
+
+  commentInput: {
+    minHeight: 90,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    marginBottom: 24,
+    textAlignVertical: "top",
   },
 
   loadPreview: {

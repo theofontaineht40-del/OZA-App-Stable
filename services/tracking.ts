@@ -102,6 +102,8 @@ export type SessionRecord = {
   rpe: number;
   duration: number;
   load: number;
+  commentaire: string | null;
+  loggedBy: "sportif" | "coach";
   programmeId: string | null;
   programmeNom: string | null;
   seanceNom: string | null;
@@ -117,6 +119,8 @@ function toSessionRecord(id: string, data: any): SessionRecord {
     rpe: data.rpe,
     duration: data.duration,
     load: data.load,
+    commentaire: data.commentaire ?? null,
+    loggedBy: data.loggedBy ?? "sportif",
     programmeId: data.programmeId ?? null,
     programmeNom: data.programmeNom ?? null,
     seanceNom: data.seanceNom ?? null,
@@ -124,13 +128,18 @@ function toSessionRecord(id: string, data: any): SessionRecord {
   };
 }
 
-export async function addSession(
-  sportifUid: string,
-  coachId: string | null,
-  rpe: number,
-  duration: number,
-  programmeInfo?: ProgrammeInfo
-): Promise<SessionRecord> {
+export async function addSession(params: {
+  sportifUid: string;
+  coachId: string | null;
+  rpe: number;
+  duration: number;
+  commentaire?: string;
+  loggedBy?: "sportif" | "coach";
+  programmeInfo?: ProgrammeInfo;
+}): Promise<SessionRecord> {
+  const { sportifUid, coachId, rpe, duration, programmeInfo } = params;
+  const commentaire = params.commentaire?.trim() || null;
+  const loggedBy = params.loggedBy ?? "sportif";
   const load = computeSessionLoad(rpe, duration);
   const date = todayKey();
 
@@ -141,6 +150,8 @@ export async function addSession(
     rpe,
     duration,
     load,
+    commentaire,
+    loggedBy,
     programmeId: programmeInfo?.programmeId ?? null,
     programmeNom: programmeInfo?.programmeNom ?? null,
     seanceNom: programmeInfo?.seanceNom ?? null,
@@ -156,6 +167,8 @@ export async function addSession(
     rpe,
     duration,
     load,
+    commentaire,
+    loggedBy,
     programmeId: programmeInfo?.programmeId ?? null,
     programmeNom: programmeInfo?.programmeNom ?? null,
     seanceNom: programmeInfo?.seanceNom ?? null,
@@ -179,7 +192,8 @@ export async function getSessionsForSportif(sportifUid: string): Promise<Session
 
 export async function addWellnessEntry(
   sportifUid: string,
-  input: WellnessInput
+  input: WellnessInput,
+  coachId: string | null = null
 ): Promise<number> {
   const score = computeWellnessScore(input);
   const date = todayKey();
@@ -187,6 +201,7 @@ export async function addWellnessEntry(
   // Un seul enregistrement de bien-être par jour et par sportif (upsert).
   await setDoc(doc(db, "wellness", `${sportifUid}_${date}`), {
     sportifId: sportifUid,
+    coachId,
     date,
     ...input,
     score,
@@ -210,5 +225,19 @@ export async function getWellnessForSportif(
 
   return snap.docs
     .map((d) => ({ date: d.data().date, score: d.data().score }))
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+// Le coach ne peut pas interroger `wellness` filtré par sportifId (règles
+// Firestore : seul un filtre sur coachId est prouvable pour une liste). On
+// récupère donc tout son propre périmètre puis on filtre côté client.
+export async function getWellnessForCoach(
+  coachUid: string
+): Promise<{ sportifId: string; date: string; score: number }[]> {
+  const q = query(collection(db, "wellness"), where("coachId", "==", coachUid));
+  const snap = await getDocs(q);
+
+  return snap.docs
+    .map((d) => ({ sportifId: d.data().sportifId, date: d.data().date, score: d.data().score }))
     .sort((a, b) => b.date.localeCompare(a.date));
 }

@@ -46,7 +46,14 @@ export default function HistoriqueScreen() {
         sessions.map((session) => (
           <View key={session.id} style={styles.sessionRow}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.sessionDate}>{session.date}</Text>
+              <View style={styles.sessionHeaderRow}>
+                <Text style={styles.sessionDate}>{session.date}</Text>
+                {session.loggedBy === "coach" ? (
+                  <View style={styles.coachBadge}>
+                    <Text style={styles.coachBadgeText}>Ajoutée par le coach</Text>
+                  </View>
+                ) : null}
+              </View>
               {session.programmeNom ? (
                 <Text style={styles.sessionProgramme} numberOfLines={1}>
                   {session.programmeNom} · {session.seanceNom}
@@ -55,6 +62,9 @@ export default function HistoriqueScreen() {
               <Text style={styles.sessionDetail}>
                 RPE {session.rpe} · {session.duration} min
               </Text>
+              {session.commentaire ? (
+                <Text style={styles.sessionComment}>{session.commentaire}</Text>
+              ) : null}
             </View>
             <Text style={styles.sessionLoad}>{session.load} UA</Text>
           </View>
@@ -110,10 +120,29 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
 
+  sessionHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
   sessionDate: {
     fontSize: 14,
     fontWeight: "600",
     color: Colors.text,
+  },
+
+  coachBadge: {
+    backgroundColor: "#FFF1F7",
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+
+  coachBadgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: Colors.primary,
   },
 
   sessionProgramme: {
@@ -127,6 +156,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+
+  sessionComment: {
+    fontSize: 12,
+    color: Colors.text,
+    marginTop: 6,
+    fontStyle: "italic",
   },
 
   sessionLoad: {

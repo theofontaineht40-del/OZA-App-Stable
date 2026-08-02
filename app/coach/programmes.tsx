@@ -51,19 +51,21 @@ export default function ProgrammesScreen() {
         return;
       }
       setUid(user.uid);
-      const [data, sportifData] = await Promise.all([
-        getProgrammesForCoach(user.uid),
-        getMySportifs(user.uid),
-      ]);
-      setProgrammes(data);
-      setSportifs(sportifData);
+      try {
+        const [data, sportifData] = await Promise.all([
+          getProgrammesForCoach(user.uid),
+          getMySportifs(user.uid),
+        ]);
+        setProgrammes(data);
+        setSportifs(sportifData);
 
-      const planifEntries = await Promise.all(
-        sportifData.map(async (s) => [s.uid, await getPlanification(s.uid)] as const)
-      );
-      setPlanifications(Object.fromEntries(planifEntries));
-
-      setLoading(false);
+        const planifEntries = await Promise.all(
+          sportifData.map(async (s) => [s.uid, await getPlanification(s.uid)] as const)
+        );
+        setPlanifications(Object.fromEntries(planifEntries));
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

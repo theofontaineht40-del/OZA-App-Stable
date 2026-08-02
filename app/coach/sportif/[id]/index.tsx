@@ -33,21 +33,26 @@ export default function SportifDetailScreen() {
       }
       const coachId = user.uid;
 
-      const userSnap = await getDoc(doc(db, "users", id));
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        setName(`${data.firstName} ${data.lastName}`);
-      }
+      try {
+        const userSnap = await getDoc(doc(db, "users", id));
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          setName(`${data.firstName} ${data.lastName}`);
+        }
 
-      const rel = await getRelation(id, coachId);
-      setRelation(rel);
+        const rel = await getRelation(id, coachId);
+        setRelation(rel);
 
-      if (rel?.type === "principal") {
-        const sessionData = await getSessionsForSportif(id);
-        setSessions(sessionData);
+        if (rel?.type === "principal") {
+          const sessionData = await getSessionsForSportif(id);
+          setSessions(sessionData);
 
-        const wellnessData = await getWellnessForSportif(id);
-        setWellness(wellnessData[0] ?? null);
+          const wellnessData = await getWellnessForSportif(id);
+          setWellness(wellnessData[0] ?? null);
+        }
+      } catch {
+        // Lecture refusée : traiter comme "aucun lien" plutôt que de planter.
+        setRelation(null);
       }
     });
 

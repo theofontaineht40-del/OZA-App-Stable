@@ -50,21 +50,23 @@ export default function CoachHome() {
         return;
       }
 
-      const userSnap = await getDoc(doc(db, "users", user.uid));
-      setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
+      try {
+        const userSnap = await getDoc(doc(db, "users", user.uid));
+        setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-      const [sportifData, sessionData, slotData, relationData] = await Promise.all([
-        getMySportifs(user.uid),
-        getSessionsForCoach(user.uid),
-        getSlotsForCoach(user.uid),
-        getRelationsForCoach(user.uid),
-      ]);
-      setSportifs(sportifData);
-      setSessions(sessionData);
-      setSlots(slotData);
-      setSpecialisteRelations(relationData.filter((r) => r.type === "specialiste"));
-
-      setLoading(false);
+        const [sportifData, sessionData, slotData, relationData] = await Promise.all([
+          getMySportifs(user.uid),
+          getSessionsForCoach(user.uid),
+          getSlotsForCoach(user.uid),
+          getRelationsForCoach(user.uid),
+        ]);
+        setSportifs(sportifData);
+        setSessions(sessionData);
+        setSlots(slotData);
+        setSpecialisteRelations(relationData.filter((r) => r.type === "specialiste"));
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

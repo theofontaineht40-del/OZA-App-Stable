@@ -37,21 +37,23 @@ export default function ReservationsScreen() {
       }
       setUid(user.uid);
 
-      const userSnap = await getDoc(doc(db, "users", user.uid));
-      const data = userSnap.data();
-      setName(`${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim());
+      try {
+        const userSnap = await getDoc(doc(db, "users", user.uid));
+        const data = userSnap.data();
+        setName(`${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim());
 
-      const [bookings, relationData] = await Promise.all([
-        getSlotsForSportif(user.uid),
-        getRelationsForSportif(user.uid),
-      ]);
-      setMyBookings(bookings);
-      setRelations(relationData);
+        const [bookings, relationData] = await Promise.all([
+          getSlotsForSportif(user.uid),
+          getRelationsForSportif(user.uid),
+        ]);
+        setMyBookings(bookings);
+        setRelations(relationData);
 
-      const slots = await fetchAvailable(relationData);
-      setAvailable(slots);
-
-      setLoading(false);
+        const slots = await fetchAvailable(relationData);
+        setAvailable(slots);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

@@ -53,19 +53,20 @@ export default function ReferentielsScreen() {
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
-    getThresholds(uid, sexe, ageBracket).then((data) => {
-      setThresholds(data);
-      const initialDrafts: Record<string, { low0: string; high10: string }> = {};
-      ALL_TESTS.forEach((t) => {
-        const existing = data[t.key];
-        initialDrafts[t.key] = {
-          low0: existing ? String(existing.low0) : "",
-          high10: existing ? String(existing.high10) : "",
-        };
-      });
-      setDrafts(initialDrafts);
-      setLoading(false);
-    });
+    getThresholds(uid, sexe, ageBracket)
+      .then((data) => {
+        setThresholds(data);
+        const initialDrafts: Record<string, { low0: string; high10: string }> = {};
+        ALL_TESTS.forEach((t) => {
+          const existing = data[t.key];
+          initialDrafts[t.key] = {
+            low0: existing ? String(existing.low0) : "",
+            high10: existing ? String(existing.high10) : "",
+          };
+        });
+        setDrafts(initialDrafts);
+      })
+      .finally(() => setLoading(false));
   }, [uid, sexe, ageBracket]);
 
   async function handleSave(testKey: string) {

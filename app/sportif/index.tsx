@@ -36,19 +36,21 @@ export default function SportifHome() {
         return;
       }
 
-      const userSnap = await getDoc(doc(db, "users", user.uid));
-      setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
+      try {
+        const userSnap = await getDoc(doc(db, "users", user.uid));
+        setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-      const [sessionData, slotData, programmeData] = await Promise.all([
-        getSessionsForSportif(user.uid),
-        getSlotsForSportif(user.uid),
-        getProgrammesForSportif(user.uid),
-      ]);
-      setSessions(sessionData);
-      setUpcomingSlots(slotData);
-      setProgrammes(programmeData);
-
-      setLoading(false);
+        const [sessionData, slotData, programmeData] = await Promise.all([
+          getSessionsForSportif(user.uid),
+          getSlotsForSportif(user.uid),
+          getProgrammesForSportif(user.uid),
+        ]);
+        setSessions(sessionData);
+        setUpcomingSlots(slotData);
+        setProgrammes(programmeData);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

@@ -16,8 +16,12 @@ export default function HistoriqueScreen() {
         router.replace("/login");
         return;
       }
-      const data = await getSessionsForSportif(user.uid);
-      setSessions(data);
+      try {
+        const data = await getSessionsForSportif(user.uid);
+        setSessions(data);
+      } catch {
+        setSessions([]);
+      }
     });
 
     return unsubscribe;

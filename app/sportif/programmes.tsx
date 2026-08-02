@@ -20,9 +20,12 @@ export default function SportifProgrammesScreen() {
         router.replace("/login");
         return;
       }
-      const data = await getProgrammesForSportif(user.uid);
-      setProgrammes(data);
-      setLoading(false);
+      try {
+        const data = await getProgrammesForSportif(user.uid);
+        setProgrammes(data);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

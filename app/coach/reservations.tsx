@@ -49,9 +49,12 @@ export default function ReservationsScreen() {
         return;
       }
       setUid(user.uid);
-      const data = await getSlotsForCoach(user.uid);
-      setSlots(data);
-      setLoading(false);
+      try {
+        const data = await getSlotsForCoach(user.uid);
+        setSlots(data);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

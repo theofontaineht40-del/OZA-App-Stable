@@ -49,16 +49,19 @@ export default function ProfilProScreen() {
         return;
       }
       setUid(user.uid);
-      const profile = await getCoachProfile(user.uid);
-      if (profile) {
-        setPhotoUrl(profile.photoUrl);
-        setBio(profile.bio);
-        setSpecialites(profile.specialites);
-        setTarifHoraire(profile.tarifHoraire ? String(profile.tarifHoraire) : "");
-        setVille(profile.ville);
-        setDiscoverable(profile.discoverable);
+      try {
+        const profile = await getCoachProfile(user.uid);
+        if (profile) {
+          setPhotoUrl(profile.photoUrl);
+          setBio(profile.bio);
+          setSpecialites(profile.specialites);
+          setTarifHoraire(profile.tarifHoraire ? String(profile.tarifHoraire) : "");
+          setVille(profile.ville);
+          setDiscoverable(profile.discoverable);
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return unsubscribe;

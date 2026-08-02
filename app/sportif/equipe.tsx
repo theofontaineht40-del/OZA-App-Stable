@@ -51,15 +51,20 @@ export default function EquipeScreen() {
         return;
       }
       setUid(user.uid);
-      const [userSnap, relationData] = await Promise.all([
-        getDoc(doc(db, "users", user.uid)),
-        getRelationsForSportif(user.uid),
-      ]);
-      if (userSnap.exists()) {
-        setOwnName({ firstName: userSnap.data().firstName, lastName: userSnap.data().lastName });
+      try {
+        const [userSnap, relationData] = await Promise.all([
+          getDoc(doc(db, "users", user.uid)),
+          getRelationsForSportif(user.uid),
+        ]);
+        if (userSnap.exists()) {
+          setOwnName({ firstName: userSnap.data().firstName, lastName: userSnap.data().lastName });
+        }
+        setRelations(relationData);
+      } catch {
+        // Lecture refusée : on garde une liste vide plutôt que de planter.
+      } finally {
+        setLoading(false);
       }
-      setRelations(relationData);
-      setLoading(false);
     });
 
     return unsubscribe;

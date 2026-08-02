@@ -18,18 +18,22 @@ export default function CoachThreadScreen() {
     if (!coachId || !sportifId) return;
 
     (async () => {
-      const [coachSnap, sportifSnap] = await Promise.all([
-        getDoc(doc(db, "users", coachId)),
-        getDoc(doc(db, "users", sportifId)),
-      ]);
-      const coachData = coachSnap.data();
-      const sportifData = sportifSnap.data();
-      const coachName = `${coachData?.firstName ?? ""} ${coachData?.lastName ?? ""}`.trim();
-      const sName = `${sportifData?.firstName ?? ""} ${sportifData?.lastName ?? ""}`.trim();
-      setSportifName(sName);
+      try {
+        const [coachSnap, sportifSnap] = await Promise.all([
+          getDoc(doc(db, "users", coachId)),
+          getDoc(doc(db, "users", sportifId)),
+        ]);
+        const coachData = coachSnap.data();
+        const sportifData = sportifSnap.data();
+        const coachName = `${coachData?.firstName ?? ""} ${coachData?.lastName ?? ""}`.trim();
+        const sName = `${sportifData?.firstName ?? ""} ${sportifData?.lastName ?? ""}`.trim();
+        setSportifName(sName);
 
-      const id = await ensureConversation(coachId, sportifId, coachName, sName);
-      setConversationId(id);
+        const id = await ensureConversation(coachId, sportifId, coachName, sName);
+        setConversationId(id);
+      } catch {
+        // Lecture refusée : rien à afficher, l'écran reste vide plutôt que de planter.
+      }
     })();
   }, [sportifId]);
 

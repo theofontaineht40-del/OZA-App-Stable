@@ -57,32 +57,37 @@ export default function DecouvrirScreen() {
       }
       setUid(user.uid);
 
-      const [userSnap, coachData, relations] = await Promise.all([
-        getDoc(doc(db, "users", user.uid)),
-        getDiscoverableCoaches(),
-        getRelationsForSportif(user.uid),
-      ]);
-      if (userSnap.exists()) {
-        setOwnFirstName(userSnap.data().firstName ?? "");
-        setOwnLastName(userSnap.data().lastName ?? "");
-      }
-      setLinkedCoachIds(relations.map((r) => r.coachId));
+      try {
+        const [userSnap, coachData, relations] = await Promise.all([
+          getDoc(doc(db, "users", user.uid)),
+          getDiscoverableCoaches(),
+          getRelationsForSportif(user.uid),
+        ]);
+        if (userSnap.exists()) {
+          setOwnFirstName(userSnap.data().firstName ?? "");
+          setOwnLastName(userSnap.data().lastName ?? "");
+        }
+        setLinkedCoachIds(relations.map((r) => r.coachId));
 
-      const withRatings = await Promise.all(
-        coachData.map(async (c) => {
-          const reviews = await getReviewsForCoach(c.uid);
-          const pos = pseudoPosition(c.uid);
-          return {
-            ...c,
-            rating: averageRating(reviews),
-            reviewCount: reviews.length,
-            pinX: pos.x,
-            pinY: pos.y,
-          };
-        })
-      );
-      setCoaches(withRatings);
-      setLoading(false);
+        const withRatings = await Promise.all(
+          coachData.map(async (c) => {
+            const reviews = await getReviewsForCoach(c.uid);
+            const pos = pseudoPosition(c.uid);
+            return {
+              ...c,
+              rating: averageRating(reviews),
+              reviewCount: reviews.length,
+              pinX: pos.x,
+              pinY: pos.y,
+            };
+          })
+        );
+        setCoaches(withRatings);
+      } catch {
+        // Lecture refusée : liste vide plutôt qu'un plantage.
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;

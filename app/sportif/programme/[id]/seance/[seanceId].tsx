@@ -77,7 +77,7 @@ export default function SeanceExecutionScreen() {
   useEffect(() => {
     if (!id) return;
     getProgramme(id).then((p) => {
-      setProgramme(p);
+      setProgramme(p ?? null);
       const seance = p?.seances.find((s) => s.id === seanceId);
       if (!seance) return;
       const states: Record<string, ExerciseState> = {};
@@ -96,7 +96,7 @@ export default function SeanceExecutionScreen() {
         }
       }
       setExerciseStates(states);
-    });
+    }).catch(() => setProgramme(null));
   }, [id, seanceId]);
 
   function setWellnessValue(key: WellnessKey, value: number) {

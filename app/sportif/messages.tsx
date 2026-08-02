@@ -25,25 +25,29 @@ export default function SportifMessagesScreen() {
       }
       setUid(user.uid);
 
-      const [userSnap] = await Promise.all([getDoc(doc(db, "users", user.uid))]);
-      const data = userSnap.data();
-      const coachId = data?.coachId ?? null;
+      try {
+        const [userSnap] = await Promise.all([getDoc(doc(db, "users", user.uid))]);
+        const data = userSnap.data();
+        const coachId = data?.coachId ?? null;
 
-      if (!coachId) {
+        if (!coachId) {
+          setHasCoach(false);
+          return;
+        }
+
+        const coachSnap = await getDoc(doc(db, "users", coachId));
+        const coachData = coachSnap.data();
+        const cName = `${coachData?.firstName ?? ""} ${coachData?.lastName ?? ""}`.trim();
+        const sName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
+        setCoachName(cName);
+
+        const id = await ensureConversation(coachId, user.uid, cName, sName);
+        setConversationId(id);
+      } catch {
         setHasCoach(false);
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const coachSnap = await getDoc(doc(db, "users", coachId));
-      const coachData = coachSnap.data();
-      const cName = `${coachData?.firstName ?? ""} ${coachData?.lastName ?? ""}`.trim();
-      const sName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
-      setCoachName(cName);
-
-      const id = await ensureConversation(coachId, user.uid, cName, sName);
-      setConversationId(id);
-      setLoading(false);
     });
 
     return unsubscribe;

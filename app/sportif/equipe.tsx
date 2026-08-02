@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 
+import ConfirmModal from "../../components/confirm-modal";
 import ReviewModal from "../../components/review-modal";
 import { Colors } from "../../constants/colors";
 import { Specialite, SPECIALITES } from "../../constants/specialites";
@@ -41,6 +42,12 @@ export default function EquipeScreen() {
   const [pickingSpecialite, setPickingSpecialite] = useState(false);
   const [assigning, setAssigning] = useState(false);
   const [reviewTarget, setReviewTarget] = useState<Relation | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    title: string;
+    message: string;
+    destructive?: boolean;
+    onConfirm: () => void | Promise<void>;
+  } | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -95,7 +102,13 @@ export default function EquipeScreen() {
     if (!code.trim() || !uid) return;
     setSearching(true);
     try {
-      const coach = await findCoachByCode(code);
+      let coach;
+      try {
+        coach = await findCoachByCode(code);
+      } catch (error: any) {
+        Alert.alert("Erreur", error?.message ?? "Recherche impossible pour le moment.");
+        return;
+      }
       if (!coach) {
         Alert.alert("Code invalide", "Aucun coach ne correspond à ce code.");
         return;
@@ -119,6 +132,8 @@ export default function EquipeScreen() {
           );
           resetForm();
           await refresh();
+        } catch (error: any) {
+          Alert.alert("Erreur", error?.message ?? "Impossible d'ajouter ce coach.");
         } finally {
           setAssigning(false);
         }
@@ -131,35 +146,31 @@ export default function EquipeScreen() {
     }
   }
 
-  async function handleChoosePrincipal() {
+  function handleChoosePrincipal() {
     if (!uid || !foundCoach || !ownName) return;
-    Alert.alert(
-      "Changer de coach principal",
-      "Votre nouveau coach principal deviendra responsable de votre suivi. Tout votre historique sera conservé.",
-      [
-        { text: "Annuler", style: "cancel" },
-        {
-          text: "Confirmer",
-          onPress: async () => {
-            setAssigning(true);
-            try {
-              await setPrincipalCoach(
-                uid,
-                ownName.firstName,
-                ownName.lastName,
-                foundCoach.uid,
-                foundCoach.firstName,
-                foundCoach.lastName
-              );
-              resetForm();
-              await refresh();
-            } finally {
-              setAssigning(false);
-            }
-          },
-        },
-      ]
-    );
+    setConfirmDialog({
+      title: "Changer de coach principal",
+      message:
+        "Votre nouveau coach principal deviendra responsable de votre suivi. Tout votre historique sera conservé.",
+      onConfirm: async () => {
+        try {
+          await setPrincipalCoach(
+            uid,
+            ownName.firstName,
+            ownName.lastName,
+            foundCoach.uid,
+            foundCoach.firstName,
+            foundCoach.lastName
+          );
+          resetForm();
+          await refresh();
+        } catch (error: any) {
+          Alert.alert("Erreur", error?.message ?? "Impossible de changer de coach.");
+        } finally {
+          setConfirmDialog(null);
+        }
+      },
+    });
   }
 
   async function handleChooseSpecialite(specialite: Specialite) {
@@ -177,6 +188,8 @@ export default function EquipeScreen() {
       );
       resetForm();
       await refresh();
+    } catch (error: any) {
+      Alert.alert("Erreur", error?.message ?? "Impossible d'ajouter cet intervenant.");
     } finally {
       setAssigning(false);
     }
@@ -184,21 +197,21 @@ export default function EquipeScreen() {
 
   function handleRemoveSpecialiste(relation: Relation) {
     if (!uid) return;
-    Alert.alert(
-      "Retirer cet intervenant",
-      `${relation.coachFirstName} ${relation.coachLastName} n'aura plus accès à votre suivi.`,
-      [
-        { text: "Annuler", style: "cancel" },
-        {
-          text: "Retirer",
-          style: "destructive",
-          onPress: async () => {
-            await removeRelation(uid, relation.coachId);
-            await refresh();
-          },
-        },
-      ]
-    );
+    setConfirmDialog({
+      title: "Retirer cet intervenant",
+      message: `${relation.coachFirstName} ${relation.coachLastName} n'aura plus accès à votre suivi.`,
+      destructive: true,
+      onConfirm: async () => {
+        try {
+          await removeRelation(uid, relation.coachId);
+          await refresh();
+        } catch (error: any) {
+          Alert.alert("Erreur", error?.message ?? "Impossible de retirer cet intervenant.");
+        } finally {
+          setConfirmDialog(null);
+        }
+      },
+    });
   }
 
   if (loading) {
@@ -372,6 +385,17 @@ export default function EquipeScreen() {
           sportifId={uid ?? ""}
           sportifName={`${ownName.firstName} ${ownName.lastName}`}
           onClose={() => setReviewTarget(null)}
+        />
+      )}
+
+      {confirmDialog && (
+        <ConfirmModal
+          visible={!!confirmDialog}
+          title={confirmDialog.title}
+          message={confirmDialog.message}
+          destructive={confirmDialog.destructive}
+          onConfirm={confirmDialog.onConfirm}
+          onCancel={() => setConfirmDialog(null)}
         />
       )}
     </ScrollView>

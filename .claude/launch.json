@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oza-web-visual",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["expo", "start", "--web", "-c", "--port", "8102"],
+      "port": 8102
+    }
+  ]
+}

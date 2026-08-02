@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import { AccessDenied } from "../../../../components/access-denied";
 import { RadarChart } from "../../../../components/radar-chart";
 import { Colors } from "../../../../constants/colors";
 import { MOBILITY_TESTS } from "../../../../constants/mobility-tests";
@@ -25,6 +26,7 @@ import {
 } from "../../../../constants/sports-radar";
 import { TEST_QUALITY_MAP } from "../../../../constants/test-quality-mapping";
 import { auth } from "../../../../firebase";
+import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import { getMedicalProfile } from "../../../../services/medical";
 import { getThresholds, scoreFromValue } from "../../../../services/referentials";
 import {
@@ -150,8 +152,14 @@ export default function TaskAnalysisScreen() {
     }
   }
 
-  if (loading) {
+  const isPrincipal = usePrincipalAccess(id);
+
+  if (loading || isPrincipal === null) {
     return <View style={styles.container} />;
+  }
+
+  if (!isPrincipal) {
+    return <AccessDenied message="Le Task Analysis n'est visible que par le coach principal." />;
   }
 
   const seriesA = QUALITES.map((q) => sportRadar[q.key] ?? 0);

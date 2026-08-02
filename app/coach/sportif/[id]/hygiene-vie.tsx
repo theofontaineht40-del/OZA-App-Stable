@@ -11,7 +11,9 @@ import {
   View,
 } from "react-native";
 
+import { AccessDenied } from "../../../../components/access-denied";
 import { Colors } from "../../../../constants/colors";
+import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import {
   addLifestyleEntry,
   getLifestyleEntries,
@@ -81,8 +83,14 @@ export default function HygieneVieScreen() {
     }
   }
 
-  if (loading) {
+  const isPrincipal = usePrincipalAccess(id);
+
+  if (loading || isPrincipal === null) {
     return <View style={styles.container} />;
+  }
+
+  if (!isPrincipal) {
+    return <AccessDenied message="L'hygiène de vie n'est visible que par le coach principal." />;
   }
 
   return (

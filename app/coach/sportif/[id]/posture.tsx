@@ -12,12 +12,14 @@ import {
   View,
 } from "react-native";
 
+import { AccessDenied } from "../../../../components/access-denied";
 import { Colors } from "../../../../constants/colors";
 import {
   anomaliesForView,
   getAnomaly,
   PosturalView,
 } from "../../../../constants/postural-anomalies";
+import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import {
   addAnomalyPoint,
   AnomalyPoint,
@@ -47,8 +49,14 @@ export default function PostureScreen() {
     getPosturalAssessment(id).then(setAssessment);
   }, [id]);
 
-  if (!assessment) {
+  const isPrincipal = usePrincipalAccess(id);
+
+  if (!assessment || isPrincipal === null) {
     return <View style={styles.container} />;
+  }
+
+  if (!isPrincipal) {
+    return <AccessDenied message="La posture n'est visible que par le coach principal." />;
   }
 
   const currentView = assessment[view];

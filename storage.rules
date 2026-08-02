@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Règles Firebase Storage pour OZA (photos : profils coach, exercices,
+// posture, messagerie). Exige au minimum un compte connecté ; empêche tout
+// accès public/anonyme. Granularité plus fine possible plus tard si besoin.
+//
+// À coller dans Firebase Console > Storage > Règles, puis "Publier".
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

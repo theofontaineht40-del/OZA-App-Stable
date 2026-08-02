@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,7 +12,6 @@ import {
   View,
 } from "react-native";
 
-import { OzaLogo } from "../components/oza-logo";
 import { registerUser } from "../services/auth";
 
 const PINK = "#FF2D7A";
@@ -76,7 +76,7 @@ export default function RegisterScreen() {
     >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
-          <OzaLogo size={32} />
+          <Image source={require("../assets/images/logo.png")} style={styles.logo} resizeMode="contain" />
         </View>
 
         <Text style={styles.title}>Créer un compte</Text>
@@ -203,6 +203,13 @@ const styles = StyleSheet.create({
 
   logoRow: {
     marginBottom: 20,
+    alignItems: "center",
+  },
+
+  logo: {
+    height: 200,
+    width: 184,
+    
   },
 
   title: {

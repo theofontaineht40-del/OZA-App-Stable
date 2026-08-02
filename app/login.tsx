@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Alert,
     Animated,
+    Image,
     StyleSheet,
     Text,
     TextInput,
@@ -11,7 +12,6 @@ import {
 } from "react-native";
 
 import { doc, getDoc } from "firebase/firestore";
-import { OzaLogo } from "../components/oza-logo";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
 
@@ -64,7 +64,7 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
-          <OzaLogo size={32} />
+          <Image source={require("../assets/images/logo.png")} style={styles.logo} resizeMode="contain" />
         </View>
 
         <Text style={styles.title}>Connexion</Text>
@@ -120,6 +120,12 @@ const styles = StyleSheet.create({
 
   logoRow: {
     marginBottom: 28,
+    alignItems: "center",
+  },
+
+  logo: {
+    height: 220,
+    width: 184,
   },
 
   title: {

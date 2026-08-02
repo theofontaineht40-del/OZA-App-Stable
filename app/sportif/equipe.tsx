@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 
+import ReviewModal from "../../components/review-modal";
 import { Colors } from "../../constants/colors";
 import { Specialite, SPECIALITES } from "../../constants/specialites";
 import { auth, db } from "../../firebase";
@@ -39,6 +40,7 @@ export default function EquipeScreen() {
   const [foundCoach, setFoundCoach] = useState<CoachInfo | null>(null);
   const [pickingSpecialite, setPickingSpecialite] = useState(false);
   const [assigning, setAssigning] = useState(false);
+  const [reviewTarget, setReviewTarget] = useState<Relation | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -233,6 +235,9 @@ export default function EquipeScreen() {
             </Text>
             <Text style={styles.personRole}>Coach principal</Text>
           </View>
+          <TouchableOpacity onPress={() => setReviewTarget(principal)} hitSlop={10}>
+            <Ionicons name="star-outline" size={20} color={Colors.riskMedium} />
+          </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.emptyCard}>
@@ -343,6 +348,9 @@ export default function EquipeScreen() {
               </Text>
               <Text style={styles.personRole}>{r.specialite}</Text>
             </View>
+            <TouchableOpacity onPress={() => setReviewTarget(r)} hitSlop={10} style={{ marginRight: 14 }}>
+              <Ionicons name="star-outline" size={20} color={Colors.riskMedium} />
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => handleRemoveSpecialiste(r)} hitSlop={10}>
               <Ionicons name="close-circle-outline" size={20} color={Colors.textSecondary} />
             </TouchableOpacity>
@@ -350,6 +358,17 @@ export default function EquipeScreen() {
         ))
       )}
       </Animated.View>
+
+      {reviewTarget && ownName && (
+        <ReviewModal
+          visible={!!reviewTarget}
+          coachId={reviewTarget.coachId}
+          coachName={`${reviewTarget.coachFirstName} ${reviewTarget.coachLastName}`}
+          sportifId={uid ?? ""}
+          sportifName={`${ownName.firstName} ${ownName.lastName}`}
+          onClose={() => setReviewTarget(null)}
+        />
+      )}
     </ScrollView>
   );
 }

@@ -11,7 +11,9 @@ import {
   View,
 } from "react-native";
 
+import { AccessDenied } from "../../../../components/access-denied";
 import { Colors } from "../../../../constants/colors";
+import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import {
   addMorphologyEntry,
   computeImc,
@@ -101,8 +103,14 @@ export default function MorphologieScreen() {
     }
   }
 
-  if (loading) {
+  const isPrincipal = usePrincipalAccess(id);
+
+  if (loading || isPrincipal === null) {
     return <View style={styles.container} />;
+  }
+
+  if (!isPrincipal) {
+    return <AccessDenied message="La morphologie n'est visible que par le coach principal." />;
   }
 
   const previewImc = computeImc(parseFloat(poids) || 0, parseFloat(taille) || 0);

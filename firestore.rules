@@ -1,0 +1,215 @@
+rules_version = '2';
+
+// Règles Firestore pour OZA.
+// Reflète le modèle de permissions de l'app : un sportif a un coach
+// "principal" (tous les droits) et des "intervenants spécialistes"
+// (droits restreints à leur domaine). Voir services/relations.ts.
+//
+// À coller dans Firebase Console > Firestore Database > Règles, puis
+// cliquer sur "Publier". Ce fichier n'est pas déployé automatiquement.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function relationId(sportifId, coachId) {
+      return sportifId + "_" + coachId;
+    }
+
+    function hasRelation(sportifId, coachId) {
+      return exists(/databases/$(database)/documents/relations/$(relationId(sportifId, coachId)));
+    }
+
+    function relationType(sportifId, coachId) {
+      return get(/databases/$(database)/documents/relations/$(relationId(sportifId, coachId))).data.type;
+    }
+
+    // Le coach connecté est-il le coach PRINCIPAL de ce sportif ?
+    function isPrincipalOf(sportifId) {
+      return isSignedIn() &&
+        hasRelation(sportifId, request.auth.uid) &&
+        relationType(sportifId, request.auth.uid) == "principal";
+    }
+
+    // Le sportif connecté a-t-il un lien (principal ou spécialiste) avec ce coach ?
+    function isLinkedToCoach(coachId) {
+      return isSignedIn() && hasRelation(request.auth.uid, coachId);
+    }
+
+    // Données appartenant à un sportif : lui-même, ou son coach principal.
+    function canAccessSportifData(sportifId) {
+      return isSignedIn() && (sportifId == request.auth.uid || isPrincipalOf(sportifId));
+    }
+
+    // ── Comptes utilisateurs (coach ou sportif) ──
+    // Contient aussi des infos publiques de profil coach (bio, tarif...)
+    // consultées par n'importe quel sportif connecté dans Découvrir, et le
+    // code coach recherché avant tout lien. Lecture ouverte aux comptes
+    // connectés ; seul le propriétaire peut modifier sa propre fiche.
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // ── Relations coach ↔ sportif ──
+    // Seul le sportif décide de qui est son coach principal / intervenant.
+    // L'ID (sportifId_coachId) sert directement à autoriser, pour que la
+    // lecture fonctionne même quand la relation n'existe pas encore
+    // (getRelation() sonde ce cas normalement, avant tout lien créé).
+    match /relations/{relId} {
+      allow read: if isSignedIn() && (
+        relId.split("_")[0] == request.auth.uid ||
+        relId.split("_")[1] == request.auth.uid
+      );
+      allow create: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      allow update, delete: if isSignedIn() && relId.split("_")[0] == request.auth.uid;
+    }
+
+    // ── Programmes d'entraînement ──
+    match /programmes/{programmeId} {
+      allow read: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid
+      );
+      allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid && (
+        request.resource.data.sportifId == null || isPrincipalOf(request.resource.data.sportifId)
+      );
+      allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid && (
+        resource.data.sportifId == null || isPrincipalOf(resource.data.sportifId)
+      );
+    }
+
+    // ── Créneaux de réservation ──
+    match /slots/{slotId} {
+      allow read: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid ||
+        isLinkedToCoach(resource.data.coachId)
+      );
+      allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid ||
+        isLinkedToCoach(resource.data.coachId)
+      );
+      allow delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+    }
+
+    // ── Dossier médical (coach principal uniquement) ──
+    match /medicalProfiles/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+
+      match /injuries/{injuryId} {
+        allow read: if canAccessSportifData(sportifId);
+        allow write: if isPrincipalOf(sportifId);
+      }
+      match /painPoints/{pointId} {
+        allow read: if canAccessSportifData(sportifId);
+        allow write: if isPrincipalOf(sportifId);
+      }
+    }
+
+    // ── Morphologie, hygiène de vie, posture, planification, task analysis ──
+    // Toutes réservées au coach principal (voir hooks/use-principal-access.ts).
+    match /morphology/{sportifId}/entries/{entryId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    match /lifestyleAssessments/{sportifId}/entries/{entryId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    match /posturalAssessments/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    match /planifications/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    match /taskAnalysis/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    match /testResults/{sportifId}/entries/{entryId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
+    // ── Référentiels de notation (privés au coach) ──
+    match /referentials/{coachId}/thresholds/{thresholdId} {
+      allow read, write: if isSignedIn() && coachId == request.auth.uid;
+    }
+
+    // ── Bibliothèque d'exercices personnalisés (privée au coach) ──
+    match /exercises/{exerciseId} {
+      allow read: if isSignedIn() && resource.data.coachId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+    }
+
+    // ── Séances réalisées (journal du sportif) ──
+    match /sessions/{sessionId} {
+      allow read: if isSignedIn() && (
+        resource.data.sportifId == request.auth.uid ||
+        resource.data.coachId == request.auth.uid
+      );
+      allow create: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ── Bien-être quotidien (privé au sportif) ──
+    // ID = sportifId_date : on autorise via l'ID pour couvrir le cas où
+    // l'entrée du jour n'existe pas encore (getLatestWellnessScore sonde ça
+    // normalement chaque jour).
+    match /wellness/{wellnessId} {
+      allow read: if isSignedIn() && wellnessId.split("_")[0] == request.auth.uid;
+      allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // ── Messagerie ──
+    // ID = coachId_sportifId : autorisé via l'ID pour couvrir la première
+    // ouverture d'une conversation, avant même sa création (ensureConversation).
+    match /conversations/{conversationId} {
+      allow read, update: if isSignedIn() && (
+        conversationId.split("_")[0] == request.auth.uid ||
+        conversationId.split("_")[1] == request.auth.uid
+      );
+      allow create: if isSignedIn() && (
+        request.resource.data.coachId == request.auth.uid ||
+        request.resource.data.sportifId == request.auth.uid
+      );
+
+      match /messages/{messageId} {
+        allow read: if isSignedIn() && (
+          get(/databases/$(database)/documents/conversations/$(conversationId)).data.coachId == request.auth.uid ||
+          get(/databases/$(database)/documents/conversations/$(conversationId)).data.sportifId == request.auth.uid
+        );
+        allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid;
+      }
+    }
+
+    // ── Avis sportif → coach ──
+    match /reviews/{reviewId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // Tout le reste : refusé par défaut.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

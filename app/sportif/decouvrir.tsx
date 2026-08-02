@@ -17,7 +17,7 @@ import {
 } from "react-native";
 
 import { Colors } from "../../constants/colors";
-import { Specialite, SPECIALITES } from "../../constants/specialites";
+import { DECOUVRIR_SPECIALITES, Specialite } from "../../constants/specialites";
 import { auth, db } from "../../firebase";
 import { CoachProfile, getDiscoverableCoaches } from "../../services/discovery";
 import { addSpecialiste, getRelationsForSportif } from "../../services/relations";
@@ -69,8 +69,14 @@ export default function DecouvrirScreen() {
         }
         setLinkedCoachIds(relations.map((r) => r.coachId));
 
+        // Découvrir ne met en avant que les coachs sportifs (kiné, ostéo,
+        // médecin du sport... restent accessibles via "Mon équipe" par code).
+        const eligibleCoaches = coachData.filter((c) =>
+          c.specialites.some((s) => DECOUVRIR_SPECIALITES.includes(s))
+        );
+
         const withRatings = await Promise.all(
-          coachData.map(async (c) => {
+          eligibleCoaches.map(async (c) => {
             const reviews = await getReviewsForCoach(c.uid);
             const pos = pseudoPosition(c.uid);
             return {
@@ -121,7 +127,10 @@ export default function DecouvrirScreen() {
       return;
     }
 
-    const specialite = coach.specialites[0] ?? null;
+    const specialite =
+      coach.specialites.find((s) => DECOUVRIR_SPECIALITES.includes(s)) ??
+      coach.specialites[0] ??
+      null;
     if (!specialite) {
       Alert.alert("Indisponible", "Ce professionnel n'a pas encore renseigné de spécialité.");
       return;
@@ -185,7 +194,7 @@ export default function DecouvrirScreen() {
             Tout
           </Text>
         </TouchableOpacity>
-        {SPECIALITES.map((s) => (
+        {DECOUVRIR_SPECIALITES.map((s) => (
           <TouchableOpacity
             key={s}
             style={[styles.filterChip, filter === s && styles.filterChipActive]}

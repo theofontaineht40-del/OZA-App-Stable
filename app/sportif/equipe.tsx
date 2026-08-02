@@ -58,20 +58,27 @@ export default function EquipeScreen() {
         return;
       }
       setUid(user.uid);
+
+      // Deux lectures indépendantes : si l'une échoue, elle ne doit pas
+      // empêcher l'autre de renseigner son état (ownName est indispensable
+      // pour "Ajouter mon coach", même si les relations ne chargent pas).
       try {
-        const [userSnap, relationData] = await Promise.all([
-          getDoc(doc(db, "users", user.uid)),
-          getRelationsForSportif(user.uid),
-        ]);
+        const userSnap = await getDoc(doc(db, "users", user.uid));
         if (userSnap.exists()) {
           setOwnName({ firstName: userSnap.data().firstName, lastName: userSnap.data().lastName });
         }
+      } catch {
+        // Ignoré : le formulaire d'ajout signalera l'erreur s'il en a besoin.
+      }
+
+      try {
+        const relationData = await getRelationsForSportif(user.uid);
         setRelations(relationData);
       } catch {
         // Lecture refusée : on garde une liste vide plutôt que de planter.
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     });
 
     return unsubscribe;
@@ -147,7 +154,14 @@ export default function EquipeScreen() {
   }
 
   function handleChoosePrincipal() {
-    if (!uid || !foundCoach || !ownName) return;
+    if (!uid || !foundCoach) return;
+    if (!ownName) {
+      Alert.alert(
+        "Erreur",
+        "Impossible de récupérer votre profil pour le moment. Réessayez dans un instant."
+      );
+      return;
+    }
     setConfirmDialog({
       title: "Changer de coach principal",
       message:
@@ -174,7 +188,14 @@ export default function EquipeScreen() {
   }
 
   async function handleChooseSpecialite(specialite: Specialite) {
-    if (!uid || !foundCoach || !ownName) return;
+    if (!uid || !foundCoach) return;
+    if (!ownName) {
+      Alert.alert(
+        "Erreur",
+        "Impossible de récupérer votre profil pour le moment. Réessayez dans un instant."
+      );
+      return;
+    }
     setAssigning(true);
     try {
       await addSpecialiste(

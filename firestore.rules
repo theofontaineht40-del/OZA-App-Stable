@@ -57,16 +57,13 @@ service cloud.firestore {
 
     // ── Relations coach ↔ sportif ──
     // Seul le sportif décide de qui est son coach principal / intervenant.
-    // L'ID (sportifId_coachId) sert directement à autoriser, pour que la
-    // lecture fonctionne même quand la relation n'existe pas encore
-    // (getRelation() sonde ce cas normalement, avant tout lien créé).
     match /relations/{relId} {
       allow read: if isSignedIn() && (
-        relId.split("_")[0] == request.auth.uid ||
-        relId.split("_")[1] == request.auth.uid
+        resource.data.sportifId == request.auth.uid ||
+        resource.data.coachId == request.auth.uid
       );
       allow create: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
-      allow update, delete: if isSignedIn() && relId.split("_")[0] == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.sportifId == request.auth.uid;
     }
 
     // ── Programmes d'entraînement ──
@@ -169,22 +166,17 @@ service cloud.firestore {
     }
 
     // ── Bien-être quotidien (privé au sportif) ──
-    // ID = sportifId_date : on autorise via l'ID pour couvrir le cas où
-    // l'entrée du jour n'existe pas encore (getLatestWellnessScore sonde ça
-    // normalement chaque jour).
     match /wellness/{wellnessId} {
-      allow read: if isSignedIn() && wellnessId.split("_")[0] == request.auth.uid;
+      allow read: if isSignedIn() && resource.data.sportifId == request.auth.uid;
       allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
       allow delete: if false;
     }
 
     // ── Messagerie ──
-    // ID = coachId_sportifId : autorisé via l'ID pour couvrir la première
-    // ouverture d'une conversation, avant même sa création (ensureConversation).
     match /conversations/{conversationId} {
       allow read, update: if isSignedIn() && (
-        conversationId.split("_")[0] == request.auth.uid ||
-        conversationId.split("_")[1] == request.auth.uid
+        resource.data.coachId == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid
       );
       allow create: if isSignedIn() && (
         request.resource.data.coachId == request.auth.uid ||

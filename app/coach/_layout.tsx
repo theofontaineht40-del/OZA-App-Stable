@@ -69,17 +69,8 @@ export default function CoachTabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="sportif/[id]/index" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/profil-medical" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/hygiene-vie" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/morphologie" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/posture" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/mobilite" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/tests-physiques" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/task-analysis" options={{ href: null }} />
+      <Tabs.Screen name="sportif/[id]" options={{ href: null }} />
       <Tabs.Screen name="referentiels" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/planification" options={{ href: null }} />
-      <Tabs.Screen name="sportif/[id]/nouvelle-seance" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]" options={{ href: null }} />
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />
       <Tabs.Screen name="profil-pro" options={{ href: null }} />

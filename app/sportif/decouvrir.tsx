@@ -287,7 +287,7 @@ export default function DecouvrirScreen() {
           <View style={styles.previewActions}>
             <TouchableOpacity
               style={styles.previewMessageButton}
-              onPress={() => router.push(`/sportif/messages`)}
+              onPress={() => router.push(`/sportif/messages/${selectedCoach.uid}`)}
             >
               <Ionicons name="chatbubble-outline" size={18} color={Colors.text} />
             </TouchableOpacity>

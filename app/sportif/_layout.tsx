@@ -61,7 +61,7 @@ export default function SportifTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="messages/index"
         options={{
           title: "Messages",
           tabBarIcon: ({ color, size }) => (
@@ -83,6 +83,7 @@ export default function SportifTabsLayout() {
       <Tabs.Screen name="programme/[id]/index" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]/seance/[seanceId]" options={{ href: null }} />
       <Tabs.Screen name="equipe" options={{ href: null }} />
+      <Tabs.Screen name="messages/[coachId]" options={{ href: null }} />
     </Tabs>
   );
 }

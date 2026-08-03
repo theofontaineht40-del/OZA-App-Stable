@@ -113,6 +113,24 @@ export function subscribeToConversationsForCoach(
   );
 }
 
+export function subscribeToConversationsForSportif(
+  sportifId: string,
+  callback: (conversations: Conversation[]) => void
+): () => void {
+  const q = query(collection(db, "conversations"), where("sportifId", "==", sportifId));
+  return onSnapshot(
+    q,
+    (snap) => {
+      const list = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Conversation, "id">) }));
+      list.sort((a, b) => toMillis(b.lastMessageAt) - toMillis(a.lastMessageAt));
+      callback(list);
+    },
+    () => {
+      callback([]);
+    }
+  );
+}
+
 export async function sendMessage(
   conversationId: string,
   senderId: string,

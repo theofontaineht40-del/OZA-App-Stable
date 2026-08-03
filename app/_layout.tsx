@@ -1,6 +1,33 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 
+SplashScreen.preventAutoHideAsync();
+
+// @expo/vector-icons charge sa police via un effet interne à chaque icône,
+// qui ne s'exécute jamais pendant le pré-rendu statique d'Expo Router
+// (web.output "static") : le HTML exporté ne contient donc aucune règle
+// @font-face, et les icônes s'affichent avec la police de repli (carrés)
+// tant que le fallback interne n'a pas fini son délai. On précharge la
+// police explicitement ici et on bloque le premier rendu jusqu'à ce
+// qu'elle soit réellement chargée, sur toutes les plateformes.
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    ...Ionicons.font,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />

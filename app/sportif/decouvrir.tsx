@@ -16,24 +16,21 @@ import {
   View,
 } from "react-native";
 
+import DiscoverMap from "../../components/discover-map";
 import { Colors } from "../../constants/colors";
 import { DECOUVRIR_SPECIALITES, Specialite } from "../../constants/specialites";
 import { auth, db } from "../../firebase";
 import { CoachProfile, getDiscoverableCoaches } from "../../services/discovery";
+import { geocodeVille } from "../../services/geocoding";
 import { addSpecialiste, getRelationsForSportif } from "../../services/relations";
 import { averageRating, getReviewsForCoach } from "../../services/reviews";
 
-type CoachCard = CoachProfile & { rating: number; reviewCount: number; pinX: number; pinY: number };
-
-function pseudoPosition(uid: string): { x: number; y: number } {
-  let hash = 0;
-  for (let i = 0; i < uid.length; i++) {
-    hash = (hash * 31 + uid.charCodeAt(i)) & 0xffffffff;
-  }
-  const x = 12 + (Math.abs(hash) % 76);
-  const y = 12 + (Math.abs(hash >> 8) % 70);
-  return { x, y };
-}
+type CoachCard = CoachProfile & {
+  rating: number;
+  reviewCount: number;
+  lat: number | null;
+  lng: number | null;
+};
 
 export default function DecouvrirScreen() {
   const [uid, setUid] = useState<string | null>(null);
@@ -77,14 +74,16 @@ export default function DecouvrirScreen() {
 
         const withRatings = await Promise.all(
           eligibleCoaches.map(async (c) => {
-            const reviews = await getReviewsForCoach(c.uid);
-            const pos = pseudoPosition(c.uid);
+            const [reviews, coords] = await Promise.all([
+              getReviewsForCoach(c.uid),
+              geocodeVille(c.ville),
+            ]);
             return {
               ...c,
               rating: averageRating(reviews),
               reviewCount: reviews.length,
-              pinX: pos.x,
-              pinY: pos.y,
+              lat: coords?.lat ?? null,
+              lng: coords?.lng ?? null,
             };
           })
         );
@@ -118,6 +117,13 @@ export default function DecouvrirScreen() {
       return true;
     });
   }, [coaches, filter, search]);
+
+  // Seuls les coachs dont la ville a pu être géolocalisée ont un point sur
+  // la carte ; les autres restent trouvables via la recherche/le compteur.
+  const mappable = useMemo(
+    () => filtered.filter((c) => c.lat !== null && c.lng !== null),
+    [filtered]
+  );
 
   async function handleReserve(coach: CoachCard) {
     if (!uid) return;
@@ -214,17 +220,16 @@ export default function DecouvrirScreen() {
             <Text style={styles.mapEmptyText}>Aucun coach ne correspond à ces filtres.</Text>
           </View>
         ) : (
-          filtered.map((coach) => (
-            <TouchableOpacity
-              key={coach.uid}
-              style={[styles.pin, { left: `${coach.pinX}%`, top: `${coach.pinY}%` }]}
-              onPress={() => setSelectedCoach(coach)}
-            >
-              <Text style={styles.pinText}>
-                {coach.tarifHoraire ? `${coach.tarifHoraire} €/h` : coach.firstName}
-              </Text>
-            </TouchableOpacity>
-          ))
+          <DiscoverMap
+            coaches={mappable.map((coach) => ({
+              uid: coach.uid,
+              lat: coach.lat as number,
+              lng: coach.lng as number,
+              label: coach.tarifHoraire ? `${coach.tarifHoraire} €/h` : coach.firstName,
+            }))}
+            selectedUid={selectedCoach?.uid ?? null}
+            onSelect={(uid) => setSelectedCoach(filtered.find((c) => c.uid === uid) ?? null)}
+          />
         )}
       </View>
 
@@ -412,20 +417,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.textSecondary,
     textAlign: "center",
-  },
-
-  pin: {
-    position: "absolute",
-    backgroundColor: Colors.text,
-    borderRadius: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-
-  pinText: {
-    color: Colors.white,
-    fontSize: 12,
-    fontWeight: "700",
   },
 
   previewCard: {

@@ -4,7 +4,6 @@ import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   ScrollView,
   StyleSheet,
@@ -14,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import ConfirmModal from "../../components/confirm-modal";
 import PlanificationTimeline from "../../components/planification-timeline";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
@@ -41,6 +41,7 @@ export default function ProgrammesScreen() {
   const [nom, setNom] = useState("");
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -103,17 +104,14 @@ export default function ProgrammesScreen() {
   }
 
   function handleDelete(id: string) {
-    Alert.alert("Supprimer ce programme", "Cette action est définitive.", [
-      { text: "Annuler", style: "cancel" },
-      {
-        text: "Supprimer",
-        style: "destructive",
-        onPress: async () => {
-          await deleteProgramme(id);
-          await refresh();
-        },
-      },
-    ]);
+    setDeleteTargetId(id);
+  }
+
+  async function confirmDelete() {
+    if (!deleteTargetId) return;
+    await deleteProgramme(deleteTargetId);
+    setDeleteTargetId(null);
+    await refresh();
   }
 
   function handlePressBlock(sportifId: string, block: PlanBlock) {
@@ -313,6 +311,16 @@ export default function ProgrammesScreen() {
         </>
       )}
       </Animated.View>
+
+      <ConfirmModal
+        visible={deleteTargetId !== null}
+        title="Supprimer ce programme"
+        message="Cette action est définitive."
+        confirmLabel="Supprimer"
+        destructive
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
     </ScrollView>
   );
 }

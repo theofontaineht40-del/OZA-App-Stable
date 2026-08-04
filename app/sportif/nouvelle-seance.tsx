@@ -5,7 +5,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,6 +16,7 @@ import {
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { addSession, addWellnessEntry } from "../../services/tracking";
+import { showAlert } from "../../utils/alert";
 
 const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
   { key: "sommeil", label: "Qualité du sommeil" },
@@ -70,11 +70,11 @@ export default function NouvelleSeanceScreen() {
 
     const durationNumber = parseInt(duration, 10);
     if (rpe === null) {
-      Alert.alert("RPE manquant", "Sélectionnez votre ressenti d'effort (0 à 10).");
+      showAlert("RPE manquant", "Sélectionnez votre ressenti d'effort (0 à 10).");
       return;
     }
     if (!durationNumber || durationNumber <= 0) {
-      Alert.alert("Durée invalide", "Renseignez la durée réelle de la séance.");
+      showAlert("Durée invalide", "Renseignez la durée réelle de la séance.");
       return;
     }
 
@@ -88,7 +88,7 @@ export default function NouvelleSeanceScreen() {
         duration: durationNumber,
         commentaire,
       });
-      Alert.alert("Séance enregistrée", "Votre charge d'entraînement a été calculée.");
+      showAlert("Séance enregistrée", "Votre charge d'entraînement a été calculée.");
       router.back();
     } finally {
       setSubmitting(false);

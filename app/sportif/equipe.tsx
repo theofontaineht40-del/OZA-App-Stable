@@ -5,7 +5,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   ScrollView,
   StyleSheet,
@@ -28,6 +27,7 @@ import {
   setPrincipalCoach,
 } from "../../services/relations";
 import { CoachInfo, findCoachByCode } from "../../services/tracking";
+import { showAlert } from "../../utils/alert";
 
 export default function EquipeScreen() {
   const [uid, setUid] = useState<string | null>(null);
@@ -113,15 +113,15 @@ export default function EquipeScreen() {
       try {
         coach = await findCoachByCode(code);
       } catch (error: any) {
-        Alert.alert("Erreur", error?.message ?? "Recherche impossible pour le moment.");
+        showAlert("Erreur", error?.message ?? "Recherche impossible pour le moment.");
         return;
       }
       if (!coach) {
-        Alert.alert("Code invalide", "Aucun coach ne correspond à ce code.");
+        showAlert("Code invalide", "Aucun coach ne correspond à ce code.");
         return;
       }
       if (relations.some((r) => r.coachId === coach.uid)) {
-        Alert.alert("Déjà associé", "Ce professionnel fait déjà partie de votre équipe.");
+        showAlert("Déjà associé", "Ce professionnel fait déjà partie de votre équipe.");
         return;
       }
 
@@ -140,7 +140,7 @@ export default function EquipeScreen() {
           resetForm();
           await refresh();
         } catch (error: any) {
-          Alert.alert("Erreur", error?.message ?? "Impossible d'ajouter ce coach.");
+          showAlert("Erreur", error?.message ?? "Impossible d'ajouter ce coach.");
         } finally {
           setAssigning(false);
         }
@@ -156,7 +156,7 @@ export default function EquipeScreen() {
   function handleChoosePrincipal() {
     if (!uid || !foundCoach) return;
     if (!ownName) {
-      Alert.alert(
+      showAlert(
         "Erreur",
         "Impossible de récupérer votre profil pour le moment. Réessayez dans un instant."
       );
@@ -179,7 +179,7 @@ export default function EquipeScreen() {
           resetForm();
           await refresh();
         } catch (error: any) {
-          Alert.alert("Erreur", error?.message ?? "Impossible de changer de coach.");
+          showAlert("Erreur", error?.message ?? "Impossible de changer de coach.");
         } finally {
           setConfirmDialog(null);
         }
@@ -190,7 +190,7 @@ export default function EquipeScreen() {
   async function handleChooseSpecialite(specialite: Specialite) {
     if (!uid || !foundCoach) return;
     if (!ownName) {
-      Alert.alert(
+      showAlert(
         "Erreur",
         "Impossible de récupérer votre profil pour le moment. Réessayez dans un instant."
       );
@@ -210,7 +210,7 @@ export default function EquipeScreen() {
       resetForm();
       await refresh();
     } catch (error: any) {
-      Alert.alert("Erreur", error?.message ?? "Impossible d'ajouter cet intervenant.");
+      showAlert("Erreur", error?.message ?? "Impossible d'ajouter cet intervenant.");
     } finally {
       setAssigning(false);
     }
@@ -227,7 +227,7 @@ export default function EquipeScreen() {
           await removeRelation(uid, relation.coachId);
           await refresh();
         } catch (error: any) {
-          Alert.alert("Erreur", error?.message ?? "Impossible de retirer cet intervenant.");
+          showAlert("Erreur", error?.message ?? "Impossible de retirer cet intervenant.");
         } finally {
           setConfirmDialog(null);
         }

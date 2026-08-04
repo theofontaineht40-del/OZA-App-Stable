@@ -23,6 +23,8 @@ export type ChatMessage = {
   senderRole: SenderRole;
   text: string;
   photoUrl: string | null;
+  programmeId: string | null;
+  programmeNom: string | null;
   createdAt: unknown;
 };
 
@@ -86,7 +88,21 @@ export function subscribeToMessages(
   return onSnapshot(
     q,
     (snap) => {
-      callback(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<ChatMessage, "id">) })));
+      callback(
+        snap.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            senderId: data.senderId,
+            senderRole: data.senderRole,
+            text: data.text,
+            photoUrl: data.photoUrl ?? null,
+            programmeId: data.programmeId ?? null,
+            programmeNom: data.programmeNom ?? null,
+            createdAt: data.createdAt,
+          };
+        })
+      );
     },
     () => {
       // Lecture refusée (conversation pas encore accessible) : pas de crash, liste vide.
@@ -136,18 +152,21 @@ export async function sendMessage(
   senderId: string,
   senderRole: SenderRole,
   text: string,
-  photoUrl: string | null
+  photoUrl: string | null,
+  programme: { id: string; nom: string } | null = null
 ): Promise<void> {
   await addDoc(collection(db, "conversations", conversationId, "messages"), {
     senderId,
     senderRole,
     text,
     photoUrl,
+    programmeId: programme?.id ?? null,
+    programmeNom: programme?.nom ?? null,
     createdAt: serverTimestamp(),
   });
 
   await updateDoc(doc(db, "conversations", conversationId), {
-    lastMessageText: text || (photoUrl ? "📷 Photo" : ""),
+    lastMessageText: text || (photoUrl ? "📷 Photo" : programme ? `📋 ${programme.nom}` : ""),
     lastMessageAt: serverTimestamp(),
     lastMessageSenderId: senderId,
     unreadByCoach: senderRole === "sportif",

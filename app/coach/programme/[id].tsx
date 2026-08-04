@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,6 +12,7 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../components/access-denied";
+import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { Colors } from "../../../constants/colors";
 import { BLOC_COLORS, ExerciseTemplate } from "../../../constants/exercise-library";
@@ -30,6 +30,7 @@ import {
   saveProgramme,
   Seance,
 } from "../../../services/programmes";
+import { showAlert } from "../../../utils/alert";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
   "1rm": "% 1RM",
@@ -38,7 +39,7 @@ const CHARGE_LABELS: Record<ChargeType, string> = {
 };
 
 function showInfo(title: string, message: string) {
-  Alert.alert(title, message);
+  showAlert(title, message);
 }
 
 export default function ProgrammeEditorScreen() {
@@ -48,6 +49,8 @@ export default function ProgrammeEditorScreen() {
   const [pickerBlocId, setPickerBlocId] = useState<string | null>(null);
   const [replaceExerciceId, setReplaceExerciceId] = useState<string | null>(null);
   const [colorPickerBlocId, setColorPickerBlocId] = useState<string | null>(null);
+  const [deleteSeanceConfirm, setDeleteSeanceConfirm] = useState(false);
+  const [deleteBlocId, setDeleteBlocId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -104,18 +107,14 @@ export default function ProgrammeEditorScreen() {
 
   function handleDeleteSeance() {
     if (programme!.seances.length <= 1) return;
-    Alert.alert("Supprimer la séance", "Cette action est définitive.", [
-      { text: "Annuler", style: "cancel" },
-      {
-        text: "Supprimer",
-        style: "destructive",
-        onPress: () => {
-          const remaining = programme!.seances.filter((s) => s.id !== activeSeance.id);
-          updateSeances(() => remaining);
-          setActiveSeanceId(remaining[0]?.id ?? null);
-        },
-      },
-    ]);
+    setDeleteSeanceConfirm(true);
+  }
+
+  function confirmDeleteSeance() {
+    const remaining = programme!.seances.filter((s) => s.id !== activeSeance.id);
+    updateSeances(() => remaining);
+    setActiveSeanceId(remaining[0]?.id ?? null);
+    setDeleteSeanceConfirm(false);
   }
 
   function updateBlocs(updater: (blocs: Bloc[]) => Bloc[]) {
@@ -136,10 +135,13 @@ export default function ProgrammeEditorScreen() {
   }
 
   function handleDeleteBloc(blocId: string) {
-    Alert.alert("Supprimer ce bloc", "Cette action est définitive.", [
-      { text: "Annuler", style: "cancel" },
-      { text: "Supprimer", style: "destructive", onPress: () => updateBlocs((blocs) => blocs.filter((b) => b.id !== blocId)) },
-    ]);
+    setDeleteBlocId(blocId);
+  }
+
+  function confirmDeleteBloc() {
+    if (!deleteBlocId) return;
+    updateBlocs((blocs) => blocs.filter((b) => b.id !== deleteBlocId));
+    setDeleteBlocId(null);
   }
 
   function handleMoveBloc(blocId: string, direction: -1 | 1) {
@@ -283,6 +285,26 @@ export default function ProgrammeEditorScreen() {
           setReplaceExerciceId(null);
         }}
         onSelect={handleAddExerciceToBloc}
+      />
+
+      <ConfirmModal
+        visible={deleteSeanceConfirm}
+        title="Supprimer la séance"
+        message="Cette action est définitive."
+        confirmLabel="Supprimer"
+        destructive
+        onConfirm={confirmDeleteSeance}
+        onCancel={() => setDeleteSeanceConfirm(false)}
+      />
+
+      <ConfirmModal
+        visible={deleteBlocId !== null}
+        title="Supprimer ce bloc"
+        message="Cette action est définitive."
+        confirmLabel="Supprimer"
+        destructive
+        onConfirm={confirmDeleteBloc}
+        onCancel={() => setDeleteBlocId(null)}
       />
     </View>
   );

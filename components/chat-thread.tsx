@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Image,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -24,6 +25,7 @@ import {
   subscribeToMessages,
   uploadChatPhoto,
 } from "../services/messages";
+import { getProgrammesForCoach, Programme } from "../services/programmes";
 
 type Props = {
   conversationId: string;
@@ -44,6 +46,8 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [programmePickerVisible, setProgrammePickerVisible] = useState(false);
+  const [programmes, setProgrammes] = useState<Programme[] | null>(null);
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -80,6 +84,35 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
     }
   }
 
+  async function handleOpenProgrammePicker() {
+    setProgrammePickerVisible(true);
+    if (programmes === null) {
+      const data = await getProgrammesForCoach(currentUserId);
+      setProgrammes(data);
+    }
+  }
+
+  async function handleSendProgramme(programme: Programme) {
+    setProgrammePickerVisible(false);
+    setSending(true);
+    try {
+      await sendMessage(conversationId, currentUserId, currentUserRole, "", null, {
+        id: programme.id,
+        nom: programme.nom,
+      });
+    } finally {
+      setSending(false);
+    }
+  }
+
+  function openProgramme(programmeId: string) {
+    router.push(
+      currentUserRole === "coach"
+        ? `/coach/programme/${programmeId}`
+        : `/sportif/programme/${programmeId}`
+    );
+  }
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -114,6 +147,23 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
               >
                 <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleOther]}>
                   {m.photoUrl && <Image source={{ uri: m.photoUrl }} style={styles.bubblePhoto} />}
+                  {m.programmeId && (
+                    <TouchableOpacity
+                      style={styles.programmeCard}
+                      onPress={() => openProgramme(m.programmeId as string)}
+                    >
+                      <View style={styles.programmeIcon}>
+                        <Ionicons name="barbell" size={18} color={Colors.primary} />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.programmeLabel}>Programme</Text>
+                        <Text style={styles.programmeName} numberOfLines={1}>
+                          {m.programmeNom}
+                        </Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+                    </TouchableOpacity>
+                  )}
                   {!!m.text && (
                     <Text style={[styles.bubbleText, isMine && styles.bubbleTextMine]}>{m.text}</Text>
                   )}
@@ -131,6 +181,15 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
         <TouchableOpacity onPress={handleSendPhoto} disabled={sending} style={styles.attachButton}>
           <Ionicons name="camera-outline" size={22} color={Colors.textSecondary} />
         </TouchableOpacity>
+        {currentUserRole === "coach" && (
+          <TouchableOpacity
+            onPress={handleOpenProgrammePicker}
+            disabled={sending}
+            style={styles.attachButton}
+          >
+            <Ionicons name="barbell-outline" size={22} color={Colors.textSecondary} />
+          </TouchableOpacity>
+        )}
         <TextInput
           style={styles.textInput}
           placeholder="Message..."
@@ -150,6 +209,51 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
           )}
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={programmePickerVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setProgrammePickerVisible(false)}
+      >
+        <View style={styles.pickerBackdrop}>
+          <View style={styles.pickerCard}>
+            <View style={styles.pickerHeader}>
+              <Text style={styles.pickerTitle}>Envoyer un programme</Text>
+              <TouchableOpacity onPress={() => setProgrammePickerVisible(false)}>
+                <Ionicons name="close" size={22} color={Colors.text} />
+              </TouchableOpacity>
+            </View>
+            {programmes === null ? (
+              <ActivityIndicator color={Colors.primary} style={{ marginVertical: 24 }} />
+            ) : programmes.length === 0 ? (
+              <Text style={styles.pickerEmpty}>Aucun programme créé pour l'instant.</Text>
+            ) : (
+              <ScrollView style={styles.pickerList}>
+                {programmes.map((p) => (
+                  <TouchableOpacity
+                    key={p.id}
+                    style={styles.pickerRow}
+                    onPress={() => handleSendProgramme(p)}
+                  >
+                    <View style={styles.programmeIcon}>
+                      <Ionicons name="barbell" size={18} color={Colors.primary} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.pickerRowName} numberOfLines={1}>
+                        {p.nom}
+                      </Text>
+                      {!!p.sportifName && (
+                        <Text style={styles.pickerRowSub}>Assigné à {p.sportifName}</Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -302,5 +406,99 @@ const styles = StyleSheet.create({
 
   sendButtonDisabled: {
     backgroundColor: Colors.grayMedium,
+  },
+
+  programmeCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 6,
+    minWidth: 200,
+  },
+
+  programmeIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: "#FFF1F7",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  programmeLabel: {
+    fontSize: 10,
+    color: Colors.textSecondary,
+    fontWeight: "600",
+    textTransform: "uppercase",
+  },
+
+  programmeName: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  pickerBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
+  },
+
+  pickerCard: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 32,
+    maxHeight: "70%",
+  },
+
+  pickerHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+
+  pickerTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  pickerEmpty: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    textAlign: "center",
+    marginVertical: 24,
+  },
+
+  pickerList: {
+    maxHeight: 360,
+  },
+
+  pickerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.grayLight,
+  },
+
+  pickerRowName: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  pickerRowSub: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
   },
 });

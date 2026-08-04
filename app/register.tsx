@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Alert,
   Animated,
   Image,
   ScrollView,
@@ -13,6 +12,7 @@ import {
 } from "react-native";
 
 import { registerUser } from "../services/auth";
+import { showAlert } from "../utils/alert";
 
 const PINK = "#FF2D7A";
 
@@ -42,12 +42,12 @@ export default function RegisterScreen() {
       !password ||
       !confirmPassword
     ) {
-      Alert.alert("Erreur", "Merci de remplir tous les champs.");
+      showAlert("Erreur", "Merci de remplir tous les champs.");
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Erreur", "Les mots de passe ne correspondent pas.");
+      showAlert("Erreur", "Les mots de passe ne correspondent pas.");
       return;
     }
 
@@ -60,11 +60,11 @@ export default function RegisterScreen() {
         role
       );
 
-      Alert.alert("Succès", "Compte créé avec succès.");
+      showAlert("Succès", "Compte créé avec succès.");
 
       router.replace("/login");
     } catch (error: any) {
-      Alert.alert("Erreur", error.message);
+      showAlert("Erreur", error.message);
     }
   }
 

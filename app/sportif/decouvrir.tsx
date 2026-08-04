@@ -5,7 +5,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   Image,
   ScrollView,
@@ -16,6 +15,7 @@ import {
   View,
 } from "react-native";
 
+import ConfirmModal from "../../components/confirm-modal";
 import DiscoverMap from "../../components/discover-map";
 import { Colors } from "../../constants/colors";
 import { DECOUVRIR_SPECIALITES, Specialite } from "../../constants/specialites";
@@ -24,6 +24,7 @@ import { CoachProfile, getDiscoverableCoaches } from "../../services/discovery";
 import { geocodeVille } from "../../services/geocoding";
 import { addSpecialiste, getRelationsForSportif } from "../../services/relations";
 import { averageRating, getReviewsForCoach } from "../../services/reviews";
+import { showAlert } from "../../utils/alert";
 
 type CoachCard = CoachProfile & {
   rating: number;
@@ -43,6 +44,7 @@ export default function DecouvrirScreen() {
   const [selectedCoach, setSelectedCoach] = useState<CoachCard | null>(null);
   const [linkedCoachIds, setLinkedCoachIds] = useState<string[]>([]);
   const [booking, setBooking] = useState(false);
+  const [bookedCoachName, setBookedCoachName] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -138,7 +140,7 @@ export default function DecouvrirScreen() {
       coach.specialites[0] ??
       null;
     if (!specialite) {
-      Alert.alert("Indisponible", "Ce professionnel n'a pas encore renseigné de spécialité.");
+      showAlert("Indisponible", "Ce professionnel n'a pas encore renseigné de spécialité.");
       return;
     }
 
@@ -154,11 +156,7 @@ export default function DecouvrirScreen() {
         specialite
       );
       setLinkedCoachIds((prev) => [...prev, coach.uid]);
-      Alert.alert(
-        `${coach.firstName} ajouté(e) à votre équipe`,
-        "Vous pouvez maintenant consulter ses disponibilités depuis Réservations.",
-        [{ text: "Voir les disponibilités", onPress: () => router.push("/sportif/reservations") }]
-      );
+      setBookedCoachName(coach.firstName);
     } finally {
       setBooking(false);
     }
@@ -310,6 +308,19 @@ export default function DecouvrirScreen() {
         </View>
       )}
       </Animated.View>
+
+      <ConfirmModal
+        visible={bookedCoachName !== null}
+        title={`${bookedCoachName ?? ""} ajouté(e) à votre équipe`}
+        message="Vous pouvez maintenant consulter ses disponibilités depuis Réservations."
+        confirmLabel="Voir les disponibilités"
+        cancelLabel="Plus tard"
+        onConfirm={() => {
+          setBookedCoachName(null);
+          router.push("/sportif/reservations");
+        }}
+        onCancel={() => setBookedCoachName(null)}
+      />
     </View>
   );
 }

@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Alert,
     Animated,
     Image,
     StyleSheet,
@@ -14,6 +13,7 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
+import { showAlert } from "../utils/alert";
 
 const PINK = "#FF2D7A";
 
@@ -33,7 +33,7 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     if (!email || !password) {
-      Alert.alert("Erreur", "Merci de remplir tous les champs.");
+      showAlert("Erreur", "Merci de remplir tous les champs.");
       return;
     }
 
@@ -44,7 +44,7 @@ export default function LoginScreen() {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        Alert.alert("Erreur", "Utilisateur introuvable.");
+        showAlert("Erreur", "Utilisateur introuvable.");
         return;
       }
 
@@ -56,7 +56,7 @@ export default function LoginScreen() {
         router.push("/sportif");
       }
     } catch (error: any) {
-      Alert.alert("Erreur", error.message);
+      showAlert("Erreur", error.message);
     }
   }
 

@@ -5,7 +5,6 @@ import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import {
-  Alert,
   Animated,
   ScrollView,
   StyleSheet,
@@ -32,6 +31,7 @@ import {
   SessionRecord,
   SportifSummary,
 } from "../../services/tracking";
+import { showAlert } from "../../utils/alert";
 
 export default function CoachHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
@@ -89,7 +89,7 @@ export default function CoachHome() {
   }, [loading]);
 
   function comingSoon() {
-    Alert.alert("Bientôt disponible", "Cette fonctionnalité arrive prochainement.");
+    showAlert("Bientôt disponible", "Cette fonctionnalité arrive prochainement.");
   }
 
   if (loading) {

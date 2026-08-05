@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { TeamIllustration } from "../../components/empty-illustrations";
 import { riskColor } from "../../components/load-summary";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
@@ -154,7 +155,7 @@ export default function CoachHome() {
         <Text style={styles.sectionTitle}>Mes sportifs</Text>
         {sportifs.length === 0 ? (
           <View style={styles.emptyCard}>
-            <Ionicons name="people-outline" size={28} color={Colors.primary} />
+            <TeamIllustration size={72} />
             <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
             <Text style={styles.emptyText}>
               Partagez votre code coach depuis votre profil pour associer vos

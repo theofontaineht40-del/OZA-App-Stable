@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { CalendarIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
 import {
@@ -200,7 +201,7 @@ export default function ReservationsScreen() {
 
       {Object.keys(grouped).length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="calendar-outline" size={32} color={Colors.grayMedium} />
+          <CalendarIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucun créneau à venir</Text>
           <Text style={styles.emptyText}>
             Ajoutez des créneaux pour que vos sportifs puissent en faire la demande.

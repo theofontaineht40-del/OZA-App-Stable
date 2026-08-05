@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
@@ -6,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import { CalendarIllustration, CoachIllustration } from "../../components/empty-illustrations";
 import { auth, db } from "../../firebase";
 import {
   getAvailableSlotsForCoach,
@@ -117,7 +117,7 @@ export default function ReservationsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.centeredEmpty}>
-          <Ionicons name="person-add-outline" size={40} color={Colors.grayMedium} />
+          <CoachIllustration size={88} />
           <Text style={styles.emptyTitle}>Aucun coach associé</Text>
           <Text style={styles.emptyText}>
             Renseignez le code de votre coach depuis "Mon équipe" pour réserver des séances.
@@ -170,7 +170,7 @@ export default function ReservationsScreen() {
       <Text style={styles.sectionTitle}>Créneaux disponibles</Text>
       {available.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="calendar-outline" size={32} color={Colors.grayMedium} />
+          <CalendarIllustration size={72} />
           <Text style={styles.emptyTitle}>Aucun créneau disponible</Text>
           <Text style={styles.emptyText}>
             Vos coachs n'ont pas encore ouvert de créneaux.

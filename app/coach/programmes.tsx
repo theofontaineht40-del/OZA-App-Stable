@@ -14,6 +14,7 @@ import {
 } from "react-native";
 
 import ConfirmModal from "../../components/confirm-modal";
+import { TeamIllustration } from "../../components/empty-illustrations";
 import PlanificationTimeline from "../../components/planification-timeline";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
@@ -215,7 +216,7 @@ export default function ProgrammesScreen() {
 
       {sportifs.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="barbell-outline" size={32} color={Colors.grayMedium} />
+          <TeamIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
           <Text style={styles.emptyText}>
             Partagez votre code coach pour associer des sportifs et leur créer des programmes.

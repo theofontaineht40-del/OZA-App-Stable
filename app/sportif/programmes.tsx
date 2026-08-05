@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
@@ -54,7 +55,7 @@ export default function SportifProgrammesScreen() {
 
       {programmes.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="barbell-outline" size={32} color={Colors.grayMedium} />
+          <ProgrammeIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucun programme assigné</Text>
           <Text style={styles.emptyText}>
             Votre coach ne vous a pas encore assigné de programme d'entraînement.

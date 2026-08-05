@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { ChatIllustration } from "../../../components/empty-illustrations";
 import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForSportif } from "../../../services/messages";
@@ -84,7 +84,7 @@ export default function SportifMessagesListScreen() {
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="chatbubble-outline" size={32} color={Colors.grayMedium} />
+          <ChatIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucune conversation</Text>
           <Text style={styles.emptyText}>
             Trouvez un coach dans Découvrir pour lui écrire, même sans l'avoir encore ajouté.

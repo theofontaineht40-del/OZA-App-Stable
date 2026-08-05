@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { TeamIllustration } from "../../../components/empty-illustrations";
 import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForCoach } from "../../../services/messages";
@@ -61,7 +61,7 @@ export default function MessagesListScreen() {
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="chatbubble-outline" size={32} color={Colors.grayMedium} />
+          <TeamIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
           <Text style={styles.emptyText}>
             Partagez votre code coach pour associer des sportifs et pouvoir leur écrire.

@@ -8,18 +8,19 @@ export type Threshold = {
   high10: number; // valeur correspondant à un score de 10/10
 };
 
-function docId(testKey: string, sexe: string, ageBracket: string): string {
-  return `${testKey}__${segmentKey(sexe, ageBracket)}`;
+function docId(testKey: string, sexe: string, ageBracket: string, sport: string): string {
+  return `${testKey}__${segmentKey(sexe, ageBracket, sport)}`;
 }
 
-// Charge tous les seuils d'un segment (sexe + tranche d'âge) donné.
+// Charge tous les seuils d'un segment (sexe + tranche d'âge + sport) donné.
 export async function getThresholds(
   coachId: string,
   sexe: string,
-  ageBracket: string
+  ageBracket: string,
+  sport: string
 ): Promise<Record<string, Threshold>> {
   const snap = await getDocs(collection(db, "referentials", coachId, "thresholds"));
-  const suffix = `__${segmentKey(sexe, ageBracket)}`;
+  const suffix = `__${segmentKey(sexe, ageBracket, sport)}`;
   const result: Record<string, Threshold> = {};
 
   snap.docs.forEach((d) => {
@@ -37,10 +38,11 @@ export async function setThreshold(
   testKey: string,
   sexe: string,
   ageBracket: string,
+  sport: string,
   threshold: Threshold
 ): Promise<void> {
   await setDoc(
-    doc(db, "referentials", coachId, "thresholds", docId(testKey, sexe, ageBracket)),
+    doc(db, "referentials", coachId, "thresholds", docId(testKey, sexe, ageBracket, sport)),
     threshold
   );
 }

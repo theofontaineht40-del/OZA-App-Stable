@@ -16,7 +16,7 @@ import { AGE_BRACKETS, AgeBracket, SEXES, Sexe } from "../../constants/athlete-s
 import { Colors } from "../../constants/colors";
 import { MOBILITY_TESTS } from "../../constants/mobility-tests";
 import { PHYSICAL_TESTS } from "../../constants/physical-tests";
-import { QUALITES } from "../../constants/sports-radar";
+import { QUALITES, SPORTS } from "../../constants/sports-radar";
 import { TEST_QUALITY_MAP } from "../../constants/test-quality-mapping";
 import { auth } from "../../firebase";
 import { getThresholds, setThreshold, Threshold } from "../../services/referentials";
@@ -33,6 +33,7 @@ export default function ReferentielsScreen() {
   const [uid, setUid] = useState<string | null>(null);
   const [sexe, setSexe] = useState<Sexe>("H");
   const [ageBracket, setAgeBracket] = useState<AgeBracket>("18_35");
+  const [sportKey, setSportKey] = useState<string>(SPORTS[0].key);
   const [thresholds, setThresholds] = useState<Record<string, Threshold>>({});
   const [loading, setLoading] = useState(true);
   const [savingKey, setSavingKey] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export default function ReferentielsScreen() {
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
-    getThresholds(uid, sexe, ageBracket)
+    getThresholds(uid, sexe, ageBracket, sportKey)
       .then((data) => {
         setThresholds(data);
         const initialDrafts: Record<string, { low0: string; high10: string }> = {};
@@ -67,7 +68,7 @@ export default function ReferentielsScreen() {
         setDrafts(initialDrafts);
       })
       .finally(() => setLoading(false));
-  }, [uid, sexe, ageBracket]);
+  }, [uid, sexe, ageBracket, sportKey]);
 
   async function handleSave(testKey: string) {
     if (!uid) return;
@@ -78,7 +79,7 @@ export default function ReferentielsScreen() {
 
     setSavingKey(testKey);
     try {
-      await setThreshold(uid, testKey, sexe, ageBracket, { low0, high10 });
+      await setThreshold(uid, testKey, sexe, ageBracket, sportKey, { low0, high10 });
       setThresholds((prev) => ({ ...prev, [testKey]: { low0, high10 } }));
     } finally {
       setSavingKey(null);
@@ -98,7 +99,7 @@ export default function ReferentielsScreen() {
 
       <Text style={styles.title}>Mes référentiels</Text>
       <Text style={styles.subtitle}>
-        Définissez vos propres seuils, par sexe et tranche d'âge, pour
+        Définissez vos propres seuils, par sexe, tranche d'âge et sport, pour
         convertir automatiquement les résultats de tests en note /10 dans le
         Task Analysis.
       </Text>
@@ -121,7 +122,7 @@ export default function ReferentielsScreen() {
       </View>
 
       <Text style={styles.segmentLabel}>Tranche d'âge</Text>
-      <View style={[styles.segmentRow, { marginBottom: 24 }]}>
+      <View style={styles.segmentRow}>
         {AGE_BRACKETS.map((a) => (
           <TouchableOpacity
             key={a.key}
@@ -132,6 +133,23 @@ export default function ReferentielsScreen() {
               style={[styles.segmentText, ageBracket === a.key && styles.segmentTextActive]}
             >
               {a.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={styles.segmentLabel}>Sport</Text>
+      <View style={[styles.segmentRow, { marginBottom: 24 }]}>
+        {SPORTS.map((s) => (
+          <TouchableOpacity
+            key={s.key}
+            style={[styles.segmentChip, sportKey === s.key && styles.segmentChipActive]}
+            onPress={() => setSportKey(s.key)}
+          >
+            <Text
+              style={[styles.segmentText, sportKey === s.key && styles.segmentTextActive]}
+            >
+              {s.label}
             </Text>
           </TouchableOpacity>
         ))}

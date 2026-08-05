@@ -13,6 +13,6 @@ export const AGE_BRACKETS: { key: AgeBracket; label: string }[] = [
   { key: "35_plus", label: "35 ans et +" },
 ];
 
-export function segmentKey(sexe: string, ageBracket: string): string {
-  return `${sexe}__${ageBracket}`;
+export function segmentKey(sexe: string, ageBracket: string, sport: string): string {
+  return `${sexe}__${ageBracket}__${sport}`;
 }

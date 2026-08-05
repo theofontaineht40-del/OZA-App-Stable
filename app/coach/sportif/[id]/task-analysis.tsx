@@ -58,6 +58,9 @@ export default function TaskAnalysisScreen() {
   const [editingSportRadar, setEditingSportRadar] = useState(false);
   const [suggestions, setSuggestions] = useState<Partial<Record<QualiteKey, Suggestion>>>({});
   const [missingSegment, setMissingSegment] = useState(false);
+  const [profileSegment, setProfileSegment] = useState<{ sexe: string; ageBracket: string } | null>(
+    null
+  );
 
   useEffect(() => {
     if (!id) return;
@@ -75,23 +78,31 @@ export default function TaskAnalysisScreen() {
       })
       .finally(() => setLoading(false));
 
-    const coachUid = auth.currentUser?.uid;
-    if (!coachUid) return;
-
-    getMedicalProfile(id).then(async (profile) => {
+    getMedicalProfile(id).then((profile) => {
       if (!profile.sexe || !profile.ageBracket) {
         setMissingSegment(true);
         return;
       }
-
-      const [thresholds, mobilityResults, physicalResults] = await Promise.all([
-        getThresholds(coachUid, profile.sexe, profile.ageBracket),
-        getTestResults(id, "mobility"),
-        getTestResults(id, "physical"),
-      ]);
-      computeSuggestions(thresholds, mobilityResults, physicalResults);
+      setProfileSegment({ sexe: profile.sexe, ageBracket: profile.ageBracket });
     }).catch(() => {});
   }, [id]);
+
+  // Les seuils sont désormais spécifiques au sport sélectionné : on les
+  // recharge et on recalcule les suggestions à chaque changement de sport.
+  useEffect(() => {
+    const coachUid = auth.currentUser?.uid;
+    if (!coachUid || !id || !sportKey || !profileSegment) return;
+
+    Promise.all([
+      getThresholds(coachUid, profileSegment.sexe, profileSegment.ageBracket, sportKey),
+      getTestResults(id, "mobility"),
+      getTestResults(id, "physical"),
+    ])
+      .then(([thresholds, mobilityResults, physicalResults]) => {
+        computeSuggestions(thresholds, mobilityResults, physicalResults);
+      })
+      .catch(() => {});
+  }, [id, sportKey, profileSegment]);
 
   function computeSuggestions(
     thresholds: Record<string, { low0: number; high10: number }>,

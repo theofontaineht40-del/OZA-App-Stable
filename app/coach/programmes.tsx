@@ -220,6 +220,9 @@ export default function ProgrammesScreen() {
           <Text style={styles.emptyText}>
             Partagez votre code coach pour associer des sportifs et leur créer des programmes.
           </Text>
+          <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
+            <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         sportifs.map((s) => {
@@ -433,6 +436,20 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     alignItems: "center",
     gap: 6,
+  },
+
+  emptyButton: {
+    marginTop: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  emptyButtonText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   emptyTitle: {

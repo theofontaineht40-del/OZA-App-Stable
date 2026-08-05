@@ -160,6 +160,9 @@ export default function CoachHome() {
               Partagez votre code coach depuis votre profil pour associer vos
               sportifs.
             </Text>
+            <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
+              <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           sportifs.map((sportif) => {
@@ -529,6 +532,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 28,
     gap: 6,
+  },
+
+  emptyButton: {
+    marginTop: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  emptyButtonText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   emptyTitle: {

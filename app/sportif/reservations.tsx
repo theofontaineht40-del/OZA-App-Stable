@@ -122,6 +122,9 @@ export default function ReservationsScreen() {
           <Text style={styles.emptyText}>
             Renseignez le code de votre coach depuis "Mon équipe" pour réserver des séances.
           </Text>
+          <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/sportif/equipe")}>
+            <Text style={styles.emptyButtonText}>Ajouter mon coach</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -218,6 +221,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 40,
     gap: 8,
+  },
+
+  emptyButton: {
+    marginTop: 12,
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  emptyButtonText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   title: {

@@ -89,6 +89,9 @@ export default function SportifMessagesListScreen() {
           <Text style={styles.emptyText}>
             Trouvez un coach dans Découvrir pour lui écrire, même sans l'avoir encore ajouté.
           </Text>
+          <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/sportif/decouvrir")}>
+            <Text style={styles.emptyButtonText}>Découvrir des coachs</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         rows.map((row) => (
@@ -160,6 +163,20 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     textAlign: "center",
     paddingHorizontal: 20,
+  },
+
+  emptyButton: {
+    marginTop: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  emptyButtonText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   row: {

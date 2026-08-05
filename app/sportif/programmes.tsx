@@ -59,6 +59,9 @@ export default function SportifProgrammesScreen() {
           <Text style={styles.emptyText}>
             Votre coach ne vous a pas encore assigné de programme d'entraînement.
           </Text>
+          <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/sportif/messages")}>
+            <Text style={styles.emptyButtonText}>Écrire à mon coach</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         programmes.map((p) => (
@@ -110,6 +113,20 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     alignItems: "center",
     gap: 6,
+  },
+
+  emptyButton: {
+    marginTop: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+
+  emptyButtonText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   emptyTitle: {

@@ -14,8 +14,9 @@ import {
 import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
+import { MovementIllustration } from "../../../components/exercise-illustrations";
 import { Colors } from "../../../constants/colors";
-import { BLOC_COLORS, ExerciseTemplate } from "../../../constants/exercise-library";
+import { BLOC_COLORS, EXERCISE_LIBRARY, ExerciseTemplate } from "../../../constants/exercise-library";
 import { auth } from "../../../firebase";
 import { usePrincipalAccess } from "../../../hooks/use-principal-access";
 import {
@@ -422,9 +423,16 @@ function ExerciceCard({
   const [reposRepetitions, setReposRepetitions] = useState(exercice.reposRepetitions);
   const [commentaires, setCommentaires] = useState(exercice.commentaires);
 
+  const libraryExercise = EXERCISE_LIBRARY.find((e) => e.id === exercice.exerciceId);
+
   return (
     <View style={styles.exerciceCard}>
       <View style={styles.exerciceHeaderRow}>
+        {libraryExercise?.photoUrl ? (
+          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exercicePhoto} />
+        ) : (
+          <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={40} />
+        )}
         <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
           <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
@@ -714,15 +722,22 @@ const styles = StyleSheet.create({
 
   exerciceHeaderRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    gap: 10,
     marginBottom: 10,
   },
 
   exerciceNameButton: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+  },
+
+  exercicePhoto: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
   },
 
   exerciceName: {

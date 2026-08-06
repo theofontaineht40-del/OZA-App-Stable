@@ -16,7 +16,6 @@ import {
 import { Colors } from "../constants/colors";
 import {
   ExerciseTemplate,
-  getExerciseColor,
   GROUPES_MUSCULAIRES,
   GroupeMusculaire,
   MATERIELS,
@@ -26,6 +25,7 @@ import {
   SPORTS,
   Sport,
 } from "../constants/exercise-library";
+import { MovementIllustration } from "./exercise-illustrations";
 import { addCustomExercise, getExerciseLibrary, uploadExercisePhoto } from "../services/exercises";
 
 type Props = {
@@ -243,14 +243,7 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
                     {ex.photoUrl ? (
                       <Image source={{ uri: ex.photoUrl }} style={styles.exerciseThumb} />
                     ) : (
-                      <View
-                        style={[
-                          styles.exerciseIconWrap,
-                          { backgroundColor: `${getExerciseColor(ex)}1A` },
-                        ]}
-                      >
-                        <Ionicons name={ex.icon} size={20} color={getExerciseColor(ex)} />
-                      </View>
+                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={44} />
                     )}
                     <View style={{ flex: 1 }}>
                       <Text style={styles.exerciseName}>{ex.nom}</Text>
@@ -444,14 +437,6 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 1,
-  },
-
-  exerciseIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   exerciseThumb: {

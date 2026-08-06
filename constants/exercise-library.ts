@@ -100,6 +100,7 @@ export type ExerciseTemplate = {
   icon: keyof typeof Ionicons.glyphMap;
   pattern?: MovementPattern;
   photoUrl?: string | null;
+  videoUrl?: string | null;
   custom?: boolean;
 };
 

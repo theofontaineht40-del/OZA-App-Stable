@@ -15,12 +15,18 @@ import {
 
 import { Colors } from "../../../../../constants/colors";
 import { auth, db } from "../../../../../firebase";
-import { getProgramme, Programme } from "../../../../../services/programmes";
+import { ChargeType, getProgramme, Programme } from "../../../../../services/programmes";
 import { addSession, addWellnessEntry, ExerciseLog } from "../../../../../services/tracking";
 import { showAlert } from "../../../../../utils/alert";
 
 type WellnessKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
 type WellnessState = Record<WellnessKey, number>;
+
+const CHARGE_LABELS: Record<ChargeType, string> = {
+  "1rm": "% 1RM",
+  rpe: "RPE",
+  libre: "kg",
+};
 
 const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
   { key: "sommeil", label: "Sommeil" },
@@ -91,7 +97,7 @@ export default function SeanceExecutionScreen() {
             repetitionsPrescrites: ex.repetitions,
             seriesReelles: ex.series,
             repetitionsReelles: ex.repetitions,
-            chargeReelle: ex.chargeValeur,
+            chargeReelle: ex.poidsIndicatif ?? "",
             complete: false,
           };
         }
@@ -238,7 +244,8 @@ export default function SeanceExecutionScreen() {
                 </TouchableOpacity>
                 <Text style={styles.prescrit}>
                   Prescrit : {ex.series} × {ex.repetitions}
-                  {ex.chargeValeur ? ` · ${ex.chargeValeur}` : ""}
+                  {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
+                  {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif}kg` : ""}
                 </Text>
 
                 <View style={styles.actualRow}>
@@ -260,9 +267,10 @@ export default function SeanceExecutionScreen() {
                     />
                   </View>
                   <View style={styles.actualField}>
-                    <Text style={styles.actualLabel}>Charge</Text>
+                    <Text style={styles.actualLabel}>Poids (kg)</Text>
                     <TextInput
                       style={styles.actualInput}
+                      keyboardType="numeric"
                       value={state.chargeReelle}
                       onChangeText={(t) => updateExercise(ex.id, { chargeReelle: t })}
                     />

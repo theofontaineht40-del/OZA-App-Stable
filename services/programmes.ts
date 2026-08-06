@@ -23,6 +23,7 @@ export type BlocExercice = {
   tempo: string;
   chargeType: ChargeType;
   chargeValeur: string;
+  poidsIndicatif: string;
   reposSeries: string;
   reposRepetitions: string;
   commentaires: string;
@@ -79,6 +80,7 @@ export function newBlocExercice(exercice: {
     tempo: "2/0/1/2",
     chargeType: "rpe",
     chargeValeur: "7",
+    poidsIndicatif: "",
     reposSeries: "2'",
     reposRepetitions: "0\"",
     commentaires: "",

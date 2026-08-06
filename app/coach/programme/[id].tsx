@@ -15,6 +15,7 @@ import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { MovementIllustration } from "../../../components/exercise-illustrations";
+import VideoPreviewModal from "../../../components/video-preview-modal";
 import { Colors } from "../../../constants/colors";
 import { BLOC_COLORS, EXERCISE_LIBRARY, ExerciseTemplate } from "../../../constants/exercise-library";
 import { auth } from "../../../firebase";
@@ -31,6 +32,7 @@ import {
   saveProgramme,
   Seance,
 } from "../../../services/programmes";
+import { getExerciseLibrary } from "../../../services/exercises";
 import { showAlert } from "../../../utils/alert";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -52,6 +54,7 @@ export default function ProgrammeEditorScreen() {
   const [colorPickerBlocId, setColorPickerBlocId] = useState<string | null>(null);
   const [deleteSeanceConfirm, setDeleteSeanceConfirm] = useState(false);
   const [deleteBlocId, setDeleteBlocId] = useState<string | null>(null);
+  const [library, setLibrary] = useState<ExerciseTemplate[]>(EXERCISE_LIBRARY);
 
   useEffect(() => {
     if (!id) return;
@@ -60,6 +63,12 @@ export default function ProgrammeEditorScreen() {
       if (p) setActiveSeanceId(p.seances[0]?.id ?? null);
     });
   }, [id]);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+    getExerciseLibrary(uid).then(setLibrary);
+  }, []);
 
   const isPrincipal = usePrincipalAccess(programme?.sportifId ?? undefined);
 
@@ -247,6 +256,7 @@ export default function ProgrammeEditorScreen() {
           <BlocCard
             key={bloc.id}
             bloc={bloc}
+            library={library}
             isFirst={index === 0}
             isLast={index === activeSeance.blocs.length - 1}
             colorPickerOpen={colorPickerBlocId === bloc.id}
@@ -313,6 +323,7 @@ export default function ProgrammeEditorScreen() {
 
 function BlocCard({
   bloc,
+  library,
   isFirst,
   isLast,
   colorPickerOpen,
@@ -328,6 +339,7 @@ function BlocCard({
   onDeleteExercice,
 }: {
   bloc: Bloc;
+  library: ExerciseTemplate[];
   isFirst: boolean;
   isLast: boolean;
   colorPickerOpen: boolean;
@@ -390,6 +402,7 @@ function BlocCard({
         <ExerciceCard
           key={ex.id}
           exercice={ex}
+          library={library}
           onChangeExercise={() => onReplaceExercice(ex.id)}
           onUpdate={(patch) => onUpdateExercice(ex.id, patch)}
           onDelete={() => onDeleteExercice(ex.id)}
@@ -406,11 +419,13 @@ function BlocCard({
 
 function ExerciceCard({
   exercice,
+  library,
   onChangeExercise,
   onUpdate,
   onDelete,
 }: {
   exercice: BlocExercice;
+  library: ExerciseTemplate[];
   onChangeExercise: () => void;
   onUpdate: (patch: Partial<BlocExercice>) => void;
   onDelete: () => void;
@@ -419,20 +434,29 @@ function ExerciceCard({
   const [repetitions, setRepetitions] = useState(exercice.repetitions);
   const [tempo, setTempo] = useState(exercice.tempo);
   const [chargeValeur, setChargeValeur] = useState(exercice.chargeValeur);
+  const [poidsIndicatif, setPoidsIndicatif] = useState(exercice.poidsIndicatif ?? "");
   const [reposSeries, setReposSeries] = useState(exercice.reposSeries);
   const [reposRepetitions, setReposRepetitions] = useState(exercice.reposRepetitions);
   const [commentaires, setCommentaires] = useState(exercice.commentaires);
+  const [showVideo, setShowVideo] = useState(false);
 
-  const libraryExercise = EXERCISE_LIBRARY.find((e) => e.id === exercice.exerciceId);
+  const libraryExercise = library.find((e) => e.id === exercice.exerciceId);
 
   return (
     <View style={styles.exerciceCard}>
       <View style={styles.exerciceHeaderRow}>
-        {libraryExercise?.photoUrl ? (
-          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exercicePhoto} />
-        ) : (
-          <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={40} />
-        )}
+        <View>
+          {libraryExercise?.photoUrl ? (
+            <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exercicePhoto} />
+          ) : (
+            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={40} />
+          )}
+          {libraryExercise?.videoUrl && (
+            <TouchableOpacity style={styles.playBadge} onPress={() => setShowVideo(true)}>
+              <Ionicons name="play" size={11} color={Colors.white} />
+            </TouchableOpacity>
+          )}
+        </View>
         <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
           <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
@@ -496,7 +520,7 @@ function ExerciceCard({
         </TouchableOpacity>
       </View>
       <View style={styles.chargeTypeRow}>
-        {(["1rm", "rpe", "libre"] as ChargeType[]).map((type) => (
+        {(["1rm", "rpe"] as ChargeType[]).map((type) => (
           <TouchableOpacity
             key={type}
             style={[styles.chargeTypeChip, exercice.chargeType === type && styles.chargeTypeChipActive]}
@@ -520,6 +544,16 @@ function ExerciceCard({
           keyboardType="numeric"
         />
       </View>
+
+      <Text style={styles.fieldLabel}>Poids indicatif (kg)</Text>
+      <TextInput
+        style={styles.input}
+        value={poidsIndicatif}
+        onChangeText={setPoidsIndicatif}
+        onBlur={() => onUpdate({ poidsIndicatif })}
+        keyboardType="numeric"
+        placeholder="Ex: 60"
+      />
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
@@ -564,6 +598,12 @@ function ExerciceCard({
         onBlur={() => onUpdate({ commentaires })}
         placeholder="Notes pour le sportif..."
         multiline
+      />
+
+      <VideoPreviewModal
+        visible={showVideo}
+        videoUrl={libraryExercise?.videoUrl ?? null}
+        onClose={() => setShowVideo(false)}
       />
     </View>
   );
@@ -738,6 +778,20 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
+  },
+
+  playBadge: {
+    position: "absolute",
+    bottom: -2,
+    right: -2,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   exerciceName: {

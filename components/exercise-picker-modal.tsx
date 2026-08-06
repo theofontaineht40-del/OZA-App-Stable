@@ -26,7 +26,13 @@ import {
   Sport,
 } from "../constants/exercise-library";
 import { MovementIllustration } from "./exercise-illustrations";
-import { addCustomExercise, getExerciseLibrary, uploadExercisePhoto } from "../services/exercises";
+import VideoPreviewModal from "./video-preview-modal";
+import {
+  addCustomExercise,
+  getExerciseLibrary,
+  uploadExercisePhoto,
+  uploadExerciseVideo,
+} from "../services/exercises";
 
 type Props = {
   visible: boolean;
@@ -55,7 +61,9 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
   const [sports, setSports] = useState<Sport[]>([]);
   const [qualitesPhysiques, setQualitesPhysiques] = useState<QualitePhysique[]>([]);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [videoUri, setVideoUri] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!visible) return;
@@ -74,6 +82,7 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
     setSports([]);
     setQualitesPhysiques([]);
     setPhotoUri(null);
+    setVideoUri(null);
     setSearch("");
     setFilterGroupe(null);
     setFilterMateriel(null);
@@ -97,14 +106,24 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
     setPhotoUri(result.assets[0].uri);
   }
 
+  async function handlePickVideo() {
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["videos"], quality: 0.7 });
+    if (result.canceled) return;
+    setVideoUri(result.assets[0].uri);
+  }
+
   async function handleCreateExercise() {
     if (!nom.trim()) return;
     setSaving(true);
     try {
       let photoUrl: string | null = null;
+      let videoUrl: string | null = null;
       const tempId = `custom_${Date.now()}`;
       if (photoUri) {
         photoUrl = await uploadExercisePhoto(coachId, tempId, photoUri);
+      }
+      if (videoUri) {
+        videoUrl = await uploadExerciseVideo(coachId, tempId, videoUri);
       }
       const id = await addCustomExercise(coachId, {
         nom: nom.trim(),
@@ -113,6 +132,7 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
         sports,
         qualitesPhysiques,
         photoUrl,
+        videoUrl,
       });
       handleSelect({
         id,
@@ -123,6 +143,7 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
         qualitesPhysiques,
         icon: "barbell-outline",
         photoUrl,
+        videoUrl,
         custom: true,
       });
     } finally {
@@ -163,6 +184,20 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
                 <>
                   <Ionicons name="camera-outline" size={24} color={Colors.textSecondary} />
                   <Text style={styles.photoPickerText}>Ajouter une photo (optionnel)</Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.photoPicker} onPress={handlePickVideo}>
+              {videoUri ? (
+                <View style={styles.videoPickedRow}>
+                  <Ionicons name="videocam" size={22} color={Colors.primary} />
+                  <Text style={styles.videoPickedText}>Vidéo sélectionnée</Text>
+                </View>
+              ) : (
+                <>
+                  <Ionicons name="videocam-outline" size={24} color={Colors.textSecondary} />
+                  <Text style={styles.photoPickerText}>Ajouter une vidéo (optionnel)</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -240,11 +275,24 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
               <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
                 {filtered.map((ex) => (
                   <TouchableOpacity key={ex.id} style={styles.exerciseRow} onPress={() => handleSelect(ex)}>
-                    {ex.photoUrl ? (
-                      <Image source={{ uri: ex.photoUrl }} style={styles.exerciseThumb} />
-                    ) : (
-                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={44} />
-                    )}
+                    <View>
+                      {ex.photoUrl ? (
+                        <Image source={{ uri: ex.photoUrl }} style={styles.exerciseThumb} />
+                      ) : (
+                        <MovementIllustration pattern={ex.pattern ?? "isolation"} size={44} />
+                      )}
+                      {ex.videoUrl && (
+                        <TouchableOpacity
+                          style={styles.playBadge}
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            setPreviewVideoUrl(ex.videoUrl!);
+                          }}
+                        >
+                          <Ionicons name="play" size={12} color={Colors.white} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.exerciseName}>{ex.nom}</Text>
                       <Text style={styles.exerciseTags} numberOfLines={1}>
@@ -262,6 +310,12 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
           </>
         )}
       </View>
+
+      <VideoPreviewModal
+        visible={previewVideoUrl !== null}
+        videoUrl={previewVideoUrl}
+        onClose={() => setPreviewVideoUrl(null)}
+      />
     </Modal>
   );
 }
@@ -502,6 +556,32 @@ const styles = StyleSheet.create({
   photoPreview: {
     width: "100%",
     height: "100%",
+  },
+
+  videoPickedRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  videoPickedText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.primary,
+  },
+
+  playBadge: {
+    position: "absolute",
+    bottom: -2,
+    right: -2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   primaryButton: {

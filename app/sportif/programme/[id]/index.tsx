@@ -97,6 +97,12 @@ export default function SportifProgrammeViewScreen() {
                           </Text>
                         </View>
                         <View style={styles.detailItem}>
+                          <Text style={styles.detailLabel}>Poids indicatif</Text>
+                          <Text style={styles.detailValue}>
+                            {ex.poidsIndicatif ? `${ex.poidsIndicatif} kg` : "—"}
+                          </Text>
+                        </View>
+                        <View style={styles.detailItem}>
                           <Text style={styles.detailLabel}>Repos séries</Text>
                           <Text style={styles.detailValue}>{ex.reposSeries || "—"}</Text>
                         </View>

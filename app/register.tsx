@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import AnimatedPressable from "../components/animated-pressable";
 import { registerUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
 
@@ -167,12 +168,12 @@ export default function RegisterScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
+      <AnimatedPressable
         style={styles.button}
         onPress={handleRegister}
       >
         <Text style={styles.buttonText}>Créer mon compte</Text>
-      </TouchableOpacity>
+      </AnimatedPressable>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>

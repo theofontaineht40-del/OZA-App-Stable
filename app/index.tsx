@@ -7,10 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
+import AnimatedPressable from "../components/animated-pressable";
 import { Colors } from "../constants/colors";
 
 const VALUE_PROPS: {
@@ -38,13 +38,23 @@ const VALUE_PROPS: {
 export default function WelcomeScreen() {
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(20)).current;
+  const float = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fade, { toValue: 1, duration: 500, useNativeDriver: true }),
       Animated.spring(slide, { toValue: 0, useNativeDriver: true, friction: 8 }),
     ]).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(float, { toValue: 1, duration: 2200, useNativeDriver: true }),
+        Animated.timing(float, { toValue: 0, duration: 2200, useNativeDriver: true }),
+      ])
+    ).start();
   }, []);
+
+  const floatY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] });
 
   return (
     <ScrollView
@@ -53,9 +63,9 @@ export default function WelcomeScreen() {
       showsVerticalScrollIndicator={false}
     >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
-        <Image
+        <Animated.Image
           source={require("../assets/images/logo.png")}
-          style={styles.logo}
+          style={[styles.logo, { transform: [{ translateY: floatY }] }]}
           resizeMode="contain"
         />
 
@@ -79,19 +89,19 @@ export default function WelcomeScreen() {
           ))}
         </View>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={styles.primaryButton}
           onPress={() => router.push("/login")}
         >
           <Text style={styles.primaryText}>Se connecter</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={styles.secondaryButton}
           onPress={() => router.push("/register")}
         >
           <Text style={styles.secondaryText}>Créer un compte</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </Animated.View>
     </ScrollView>
   );

@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import AnimatedPressable from "../../components/animated-pressable";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { buildDailyLoadSeries } from "../../services/load";
@@ -123,13 +124,13 @@ export default function SportifHome() {
           </View>
         </LinearGradient>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={styles.ctaButton}
           onPress={() => router.push("/sportif/nouvelle-seance")}
         >
           <Ionicons name="add-circle" size={20} color={Colors.white} />
           <Text style={styles.ctaButtonText}>Enregistrer une séance</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <View style={styles.statsRow}>
           <StatCard icon="trophy-outline" label="Séances totales" value={String(sessions.length)} />

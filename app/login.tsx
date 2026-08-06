@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { doc, getDoc } from "firebase/firestore";
+import AnimatedPressable from "../components/animated-pressable";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
@@ -92,9 +93,9 @@ export default function LoginScreen() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <AnimatedPressable style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Se connecter</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>

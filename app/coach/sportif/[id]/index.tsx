@@ -2,10 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { LoadSummary } from "../../../../components/load-summary";
+import ProgressionChart, { ProgressionPoint } from "../../../../components/progression-chart";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
@@ -79,6 +80,24 @@ export default function SportifDetailScreen() {
 
     return unsubscribe;
   }, [id]);
+
+  const [selectedExercice, setSelectedExercice] = useState<string | null>(null);
+
+  const progressionByExercice = useMemo(() => {
+    const map: Record<string, ProgressionPoint[]> = {};
+    (sessions ?? []).forEach((session) => {
+      session.exerciseLogs?.forEach((log) => {
+        const value = parseFloat(log.chargeReelle);
+        if (isNaN(value)) return;
+        if (!map[log.exerciceNom]) map[log.exerciceNom] = [];
+        map[log.exerciceNom].push({ date: session.date, value });
+      });
+    });
+    Object.values(map).forEach((points) => points.sort((a, b) => a.date.localeCompare(b.date)));
+    return map;
+  }, [sessions]);
+
+  const exerciceNames = Object.keys(progressionByExercice).sort();
 
   if (relation === undefined || !name) {
     return <View style={styles.container} />;
@@ -245,6 +264,33 @@ export default function SportifDetailScreen() {
       )}
 
       <LoadSummary dailyLoads28={dailyLoads28} />
+
+      {exerciceNames.length > 0 && (
+        <View style={styles.progressionSection}>
+          <Text style={styles.sectionTitle}>Progression par exercice</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.exerciceChipRow}>
+            {exerciceNames.map((nom) => (
+              <TouchableOpacity
+                key={nom}
+                style={[styles.exerciceChip, selectedExercice === nom && styles.exerciceChipActive]}
+                onPress={() => setSelectedExercice(selectedExercice === nom ? null : nom)}
+              >
+                <Text
+                  style={[
+                    styles.exerciceChipText,
+                    selectedExercice === nom && styles.exerciceChipTextActive,
+                  ]}
+                >
+                  {nom}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          {selectedExercice && (
+            <ProgressionChart points={progressionByExercice[selectedExercice]} />
+          )}
+        </View>
+      )}
 
       <View style={styles.sessionsHeaderRow}>
         <Text style={styles.sectionTitle}>Historique des séances</Text>
@@ -416,6 +462,48 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: Colors.text,
+  },
+
+  progressionSection: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+  },
+
+  exerciceChipRow: {
+    marginTop: 10,
+    marginBottom: 4,
+  },
+
+  exerciceChip: {
+    paddingHorizontal: 14,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    justifyContent: "center",
+    marginRight: 8,
+  },
+
+  exerciceChipActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+
+  exerciceChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  exerciceChipTextActive: {
+    color: Colors.white,
   },
 
   addSessionButton: {

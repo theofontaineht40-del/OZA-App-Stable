@@ -637,6 +637,7 @@ const styles = StyleSheet.create({
   },
 
   seanceTabs: {
+    height: 44,
     paddingHorizontal: 20,
     marginBottom: 8,
     flexGrow: 0,

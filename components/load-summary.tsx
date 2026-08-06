@@ -63,27 +63,43 @@ export function LoadSummary({
 
   const maxLoad = Math.max(...last7.map((d) => d.load), 1);
 
+  // L'ACWR/monotony ne sont fiables qu'avec un historique de charge continu :
+  // avec très peu de séances, la moyenne "chronique" (28j) est diluée par des
+  // jours à zéro et fait exploser le ratio sans traduire un vrai surmenage.
+  const firstActiveIndex = dailyLoads28.findIndex((d) => d.load > 0);
+  const daysOfHistory = firstActiveIndex === -1 ? 0 : dailyLoads28.length - firstActiveIndex;
+  const hasEnoughHistory = daysOfHistory >= 14;
+
   return (
     <View>
       {showRiskIndicators && (
-        <View style={styles.indicatorsRow}>
-          <IndicatorCard
-            label="ACWR"
-            value={acwr.toFixed(2)}
-            level={acwrLevel}
-          />
-          <IndicatorCard
-            label="Monotony"
-            value={monotony.toFixed(2)}
-            level={monotonyLevel}
-          />
-          <IndicatorCard
-            label="Strain"
-            value={Math.round(strain).toString()}
-            level="low"
-            hideRisk
-          />
-        </View>
+        hasEnoughHistory ? (
+          <View style={styles.indicatorsRow}>
+            <IndicatorCard
+              label="ACWR"
+              value={acwr.toFixed(2)}
+              level={acwrLevel}
+            />
+            <IndicatorCard
+              label="Monotony"
+              value={monotony.toFixed(2)}
+              level={monotonyLevel}
+            />
+            <IndicatorCard
+              label="Strain"
+              value={Math.round(strain).toString()}
+              level="low"
+              hideRisk
+            />
+          </View>
+        ) : (
+          <View style={styles.notEnoughHistory}>
+            <Text style={styles.notEnoughHistoryText}>
+              Pas encore assez d'historique pour un ACWR fiable ({daysOfHistory} jour
+              {daysOfHistory > 1 ? "s" : ""} de suivi, 14 minimum).
+            </Text>
+          </View>
+        )
       )}
 
       <View style={styles.totalsRow}>
@@ -148,6 +164,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
     marginBottom: 20,
+  },
+
+  notEnoughHistory: {
+    backgroundColor: Colors.grayLight,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 20,
+  },
+
+  notEnoughHistoryText: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    textAlign: "center",
   },
 
   indicatorCard: {

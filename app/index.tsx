@@ -26,7 +26,7 @@ const VALUE_PROPS: {
   {
     icon: "trending-up-outline",
     title: "Charge et progression suivies",
-    text: "Poids soulevé, ressenti d'effort, risque de surcharge (ACWR) : tout est suivi pour progresser sans se blesser.",
+    text: "Poids soulevé, ressenti d'effort, risque de surcharge : tout est suivi pour progresser sans se blesser.",
   },
   {
     icon: "chatbubbles-outline",

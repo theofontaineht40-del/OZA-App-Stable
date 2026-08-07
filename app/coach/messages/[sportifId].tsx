@@ -25,24 +25,38 @@ export default function CoachThreadScreen() {
   useEffect(() => {
     if (!coachId || !sportifId) return;
 
+    // Repart de zéro à chaque changement de sportif : sans ça, le nom dans
+    // l'en-tête pouvait déjà pointer vers la nouvelle personne pendant que
+    // les messages affichés étaient encore ceux de l'ancienne conversation.
+    setConversationId(null);
+    setSportifName("");
+
+    let cancelled = false;
+
     (async () => {
       try {
         const [coachSnap, sportifSnap] = await Promise.all([
           getDoc(doc(db, "users", coachId)),
           getDoc(doc(db, "users", sportifId)),
         ]);
+        if (cancelled) return;
         const coachData = coachSnap.data();
         const sportifData = sportifSnap.data();
         const coachName = `${coachData?.firstName ?? ""} ${coachData?.lastName ?? ""}`.trim();
         const sName = `${sportifData?.firstName ?? ""} ${sportifData?.lastName ?? ""}`.trim();
-        setSportifName(sName);
 
         const id = await ensureConversation(coachId, sportifId, coachName, sName);
+        if (cancelled) return;
+        setSportifName(sName);
         setConversationId(id);
       } catch {
         // Lecture refusée : rien à afficher, l'écran reste vide plutôt que de planter.
       }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [sportifId, coachId]);
 
   if (!conversationId || !coachId) {
@@ -51,6 +65,7 @@ export default function CoachThreadScreen() {
 
   return (
     <ChatThread
+      key={conversationId}
       conversationId={conversationId}
       currentUserId={coachId}
       currentUserRole="coach"

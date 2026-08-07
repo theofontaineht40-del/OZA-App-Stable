@@ -15,6 +15,7 @@ import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { MovementIllustration } from "../../../components/exercise-illustrations";
+import InlineLoopingVideo from "../../../components/inline-looping-video";
 import VideoPreviewModal from "../../../components/video-preview-modal";
 import { Colors } from "../../../constants/colors";
 import { BLOC_COLORS, EXERCISE_LIBRARY, ExerciseTemplate } from "../../../constants/exercise-library";
@@ -445,18 +446,15 @@ function ExerciceCard({
   return (
     <View style={styles.exerciceCard}>
       <View style={styles.exerciceHeaderRow}>
-        <View>
-          {libraryExercise?.photoUrl ? (
+        <TouchableOpacity onPress={() => libraryExercise?.videoUrl && setShowVideo(true)} activeOpacity={libraryExercise?.videoUrl ? 0.7 : 1}>
+          {libraryExercise?.videoUrl ? (
+            <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} size={40} />
+          ) : libraryExercise?.photoUrl ? (
             <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exercicePhoto} />
           ) : (
             <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={40} />
           )}
-          {libraryExercise?.videoUrl && (
-            <TouchableOpacity style={styles.playBadge} onPress={() => setShowVideo(true)}>
-              <Ionicons name="play" size={11} color={Colors.white} />
-            </TouchableOpacity>
-          )}
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
           <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
@@ -779,20 +777,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-  },
-
-  playBadge: {
-    position: "absolute",
-    bottom: -2,
-    right: -2,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: Colors.primary,
-    borderWidth: 2,
-    borderColor: Colors.white,
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   exerciceName: {

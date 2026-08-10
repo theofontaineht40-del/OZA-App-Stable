@@ -777,7 +777,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     marginBottom: 10,
-    backgroundColor: "#FFE3EE",
+    backgroundColor: Colors.white,
   },
 
   exerciceBannerMedia: {

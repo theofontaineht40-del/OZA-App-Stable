@@ -445,16 +445,28 @@ function ExerciceCard({
 
   return (
     <View style={styles.exerciceCard}>
+      <TouchableOpacity
+        style={styles.exerciceBanner}
+        onPress={() => libraryExercise?.videoUrl && setShowVideo(true)}
+        activeOpacity={libraryExercise?.videoUrl ? 0.85 : 1}
+      >
+        {libraryExercise?.videoUrl ? (
+          <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={180} borderRadius={16} />
+        ) : libraryExercise?.photoUrl ? (
+          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="cover" />
+        ) : (
+          <View style={styles.exerciceBannerIllustration}>
+            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={100} />
+          </View>
+        )}
+        {libraryExercise?.videoUrl && (
+          <View style={styles.exerciceBannerPlay}>
+            <Ionicons name="play" size={20} color={Colors.white} />
+          </View>
+        )}
+      </TouchableOpacity>
+
       <View style={styles.exerciceHeaderRow}>
-        <TouchableOpacity onPress={() => libraryExercise?.videoUrl && setShowVideo(true)} activeOpacity={libraryExercise?.videoUrl ? 0.7 : 1}>
-          {libraryExercise?.videoUrl ? (
-            <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} size={40} />
-          ) : libraryExercise?.photoUrl ? (
-            <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exercicePhoto} />
-          ) : (
-            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={40} />
-          )}
-        </TouchableOpacity>
         <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
           <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
@@ -759,6 +771,39 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  exerciceBanner: {
+    width: "100%",
+    height: 180,
+    borderRadius: 16,
+    overflow: "hidden",
+    marginBottom: 10,
+    backgroundColor: "#FFE3EE",
+  },
+
+  exerciceBannerMedia: {
+    width: "100%",
+    height: "100%",
+  },
+
+  exerciceBannerIllustration: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  exerciceBannerPlay: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(17,17,17,0.55)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   exerciceHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -771,12 +816,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-  },
-
-  exercicePhoto: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
   },
 
   exerciceName: {

@@ -275,11 +275,11 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
                 {filtered.map((ex) => (
                   <TouchableOpacity key={ex.id} style={styles.exerciseRow} onPress={() => handleSelect(ex)}>
                     {ex.videoUrl ? (
-                      <InlineLoopingVideo videoUrl={ex.videoUrl} size={44} />
+                      <InlineLoopingVideo videoUrl={ex.videoUrl} size={64} borderRadius={14} />
                     ) : ex.photoUrl ? (
                       <Image source={{ uri: ex.photoUrl }} style={styles.exerciseThumb} />
                     ) : (
-                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={44} />
+                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={64} />
                     )}
                     <View style={{ flex: 1 }}>
                       <Text style={styles.exerciseName}>{ex.nom}</Text>
@@ -476,9 +476,9 @@ const styles = StyleSheet.create({
   },
 
   exerciseThumb: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 64,
+    height: 64,
+    borderRadius: 14,
   },
 
   exerciseName: {

@@ -453,7 +453,7 @@ function ExerciceCard({
         {libraryExercise?.videoUrl ? (
           <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={180} borderRadius={16} />
         ) : libraryExercise?.photoUrl ? (
-          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="cover" />
+          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="contain" />
         ) : (
           <View style={styles.exerciceBannerIllustration}>
             <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={100} />

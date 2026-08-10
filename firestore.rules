@@ -185,7 +185,16 @@ service cloud.firestore {
 
     // ── Messagerie ──
     match /conversations/{conversationId} {
-      allow read, update: if isSignedIn() && (
+      // La lecture se base sur l'ID (coachId_sportifId) plutôt que sur resource.data :
+      // avant le tout premier message, le document n'existe pas encore, et une règle
+      // qui référence resource.data sur un doc inexistant échoue en "permission-denied"
+      // au lieu de "introuvable" — ça bloquait ensureConversation() dès qu'un des deux
+      // participants ouvrait le fil en premier.
+      allow read: if isSignedIn() && (
+        conversationId.split("_")[0] == request.auth.uid ||
+        conversationId.split("_")[1] == request.auth.uid
+      );
+      allow update: if isSignedIn() && (
         resource.data.coachId == request.auth.uid ||
         resource.data.sportifId == request.auth.uid
       );

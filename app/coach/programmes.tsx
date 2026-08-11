@@ -283,7 +283,9 @@ export default function ProgrammesScreen() {
                 </Text>
                 <Text style={styles.programmeMeta}>{programmeDateLabel(p)}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+              <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
+                <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
+              </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </>

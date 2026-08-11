@@ -29,7 +29,7 @@ import {
 } from "../../../../services/planification";
 import {
   createProgramme,
-  getProgrammesForSportif,
+  getProgrammesForCoachAndSportif,
   Programme,
 } from "../../../../services/programmes";
 
@@ -57,26 +57,32 @@ export default function PlanificationScreen() {
     if (!id) return;
 
     async function load() {
-      const [planification, injuries, sportifSnap, programmes] = await Promise.all([
-        getPlanification(id),
-        getInjuries(id),
-        getDoc(doc(db, "users", id)),
-        getProgrammesForSportif(id),
-      ]);
+      const coachId = auth.currentUser?.uid;
+      try {
+        const [planification, injuries, sportifSnap, programmes] = await Promise.all([
+          getPlanification(id),
+          getInjuries(id),
+          getDoc(doc(db, "users", id)),
+          coachId ? getProgrammesForCoachAndSportif(coachId, id) : Promise.resolve([]),
+        ]);
 
-      setObjectif(planification.objectif);
-      setNiveau((planification.niveau as Niveau) || "");
-      setStartDate(planification.startDate ?? "");
-      setCompetitionDate(planification.competitionDate ?? "");
-      setWeeksTotal(String(planification.weeksTotal));
-      setSeancesParSemaine(String(planification.seancesParSemaine));
-      setBlocks(planification.blocks);
-      setActiveInjuries(injuries.filter((i) => i.statut === "active"));
-      const sportifData = sportifSnap.data();
-      setSportifName(`${sportifData?.firstName ?? ""} ${sportifData?.lastName ?? ""}`.trim());
-      setSportifProgrammes(programmes);
-
-      setLoading(false);
+        setObjectif(planification.objectif);
+        setNiveau((planification.niveau as Niveau) || "");
+        setStartDate(planification.startDate ?? "");
+        setCompetitionDate(planification.competitionDate ?? "");
+        setWeeksTotal(String(planification.weeksTotal));
+        setSeancesParSemaine(String(planification.seancesParSemaine));
+        setBlocks(planification.blocks);
+        setActiveInjuries(injuries.filter((i) => i.statut === "active"));
+        const sportifData = sportifSnap.data();
+        setSportifName(`${sportifData?.firstName ?? ""} ${sportifData?.lastName ?? ""}`.trim());
+        setSportifProgrammes(programmes);
+      } catch {
+        // Lecture refusée ou en échec : l'écran affiche le contrôle d'accès
+        // ci-dessous (isPrincipal) plutôt que de rester bloqué en chargement.
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();

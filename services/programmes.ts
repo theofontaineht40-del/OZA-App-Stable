@@ -120,6 +120,26 @@ export async function getProgrammesForSportif(sportifId: string): Promise<Progra
   return programmes.sort((a, b) => toMillis(b.updatedAt) - toMillis(a.updatedAt));
 }
 
+// Variante utilisée côté coach (ex: écran de planification) : filtrer aussi sur
+// coachId. Sans ça, la requête ne matche que sur sportifId, et si ce sportif a ne
+// serait-ce qu'un seul programme créé par un AUTRE coach, les règles Firestore
+// refusent la requête entière (elles exigent que resource.data.coachId corresponde
+// pour CHAQUE document potentiellement renvoyé) — l'écran restait bloqué en
+// chargement infini.
+export async function getProgrammesForCoachAndSportif(
+  coachId: string,
+  sportifId: string
+): Promise<Programme[]> {
+  const q = query(
+    collection(db, "programmes"),
+    where("coachId", "==", coachId),
+    where("sportifId", "==", sportifId)
+  );
+  const snap = await getDocs(q);
+  const programmes = snap.docs.map((d) => normalize(d.id, d.data() as Omit<Programme, "id">));
+  return programmes.sort((a, b) => toMillis(b.updatedAt) - toMillis(a.updatedAt));
+}
+
 export async function getProgramme(id: string): Promise<Programme | null> {
   const snap = await getDoc(doc(db, "programmes", id));
   if (!snap.exists()) return null;

@@ -790,11 +790,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 10,
     backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 10,
   },
 
+  // Les photos générées ont un fond blanc figé dans l'image — en plein cadre
+  // sur une carte sombre, ça tranchait trop fort. Un léger cadre + coins
+  // arrondis sur la photo elle-même la fait lire comme une carte posée sur
+  // le fond anthracite plutôt qu'un bloc blanc qui casse le thème.
   exerciceBannerMedia: {
     width: "100%",
     height: "100%",
+    borderRadius: 10,
   },
 
   exerciceBannerIllustration: {

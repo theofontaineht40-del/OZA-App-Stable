@@ -1,0 +1,12 @@
+{
+  "name": "OZA",
+  "short_name": "OZA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    { "src": "/apple-touch-icon.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "1254x1254", "type": "image/png", "purpose": "maskable" }
+  ]
+}

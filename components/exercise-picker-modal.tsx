@@ -174,7 +174,8 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
         {showCreateForm ? (
           <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
             <Text style={styles.fieldLabel}>Nom de l'exercice</Text>
-            <TextInput style={styles.input} placeholder="Ex: Squat bulgare" value={nom} onChangeText={setNom} />
+            <TextInput
+  placeholderTextColor={Colors.textSecondary} style={styles.input} placeholder="Ex: Squat bulgare" value={nom} onChangeText={setNom} />
 
             <TouchableOpacity style={styles.photoPicker} onPress={handlePickPhoto}>
               {photoUri ? (
@@ -243,6 +244,7 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
             <View style={styles.searchRow}>
               <Ionicons name="search-outline" size={18} color={Colors.textSecondary} />
               <TextInput
+  placeholderTextColor={Colors.textSecondary}
                 style={styles.searchInput}
                 placeholder="Rechercher un exercice"
                 value={search}
@@ -399,6 +401,7 @@ const styles = StyleSheet.create({
   },
 
   searchInput: {
+    color: Colors.text,
     flex: 1,
     fontSize: 14,
   },
@@ -463,7 +466,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 14,
@@ -508,6 +511,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 46,
     borderWidth: 1,
     borderColor: Colors.grayMedium,

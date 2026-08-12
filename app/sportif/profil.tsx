@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 24,
     paddingVertical: 32,
     alignItems: "center",
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
 
   badge: {
     marginTop: 14,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 18,
     marginBottom: 24,

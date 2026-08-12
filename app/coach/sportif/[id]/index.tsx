@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
 
   roleBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   },
 
   progressionSection: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
   },
 
   coachBadge: {
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 3,

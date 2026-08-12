@@ -272,6 +272,7 @@ export default function TaskAnalysisScreen() {
                     <View style={styles.qualityInputs}>
                       {editingSportRadar && (
                         <TextInput
+  placeholderTextColor={Colors.textSecondary}
                           style={[styles.smallInput, styles.sportInput]}
                           keyboardType="numeric"
                           value={String(sportRadar[q.key] ?? 0)}
@@ -279,6 +280,7 @@ export default function TaskAnalysisScreen() {
                         />
                       )}
                       <TextInput
+  placeholderTextColor={Colors.textSecondary}
                         style={styles.smallInput}
                         keyboardType="numeric"
                         value={String(athleteRadar[q.key] ?? 0)}
@@ -409,7 +411,7 @@ const styles = StyleSheet.create({
   },
 
   chartCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -454,7 +456,7 @@ const styles = StyleSheet.create({
   hintCard: {
     flexDirection: "row",
     gap: 10,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 14,
     padding: 14,
     marginBottom: 16,
@@ -474,7 +476,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -503,7 +505,7 @@ const styles = StyleSheet.create({
     gap: 6,
     marginTop: 6,
     alignSelf: "flex-start",
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -528,6 +530,7 @@ const styles = StyleSheet.create({
   },
 
   smallInput: {
+    color: Colors.text,
     width: 50,
     height: 38,
     borderWidth: 1,
@@ -565,7 +568,7 @@ const styles = StyleSheet.create({
   },
 
   gapCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 16,

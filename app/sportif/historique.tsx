@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
 
   progressionSection: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
 
   coachBadge: {
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 3,

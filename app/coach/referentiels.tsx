@@ -179,6 +179,7 @@ export default function ReferentielsScreen() {
                     Valeur basse ({test.unite}) = 0/10
                   </Text>
                   <TextInput
+  placeholderTextColor={Colors.textSecondary}
                     style={styles.input}
                     keyboardType="numeric"
                     value={draft.low0}
@@ -195,6 +196,7 @@ export default function ReferentielsScreen() {
                     Valeur haute ({test.unite}) = 10/10
                   </Text>
                   <TextInput
+  placeholderTextColor={Colors.textSecondary}
                     style={styles.input}
                     keyboardType="numeric"
                     value={draft.high10}
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 16,
     marginBottom: 12,
@@ -344,6 +346,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 42,
     borderWidth: 1,
     borderColor: Colors.grayMedium,

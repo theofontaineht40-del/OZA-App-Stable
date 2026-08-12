@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   seanceTabActive: {
-    backgroundColor: Colors.text,
+    backgroundColor: Colors.surfaceAlt,
     borderColor: Colors.text,
   },
 
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
 
   blocCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     borderLeftWidth: 4,
     padding: 16,

@@ -20,7 +20,7 @@ export default function CoachTabsLayout() {
           paddingBottom: 24,
           borderTopWidth: 1,
           borderTopColor: Colors.grayMedium,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.surface,
         },
       }}
     >

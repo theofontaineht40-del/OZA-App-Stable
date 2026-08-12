@@ -12,11 +12,12 @@ import {
 
 import { doc, getDoc } from "firebase/firestore";
 import AnimatedPressable from "../components/animated-pressable";
+import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
 
-const PINK = "#FF2D7A";
+const PINK = Colors.primary;
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -77,7 +78,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Adresse e-mail"
-          placeholderTextColor="#888"
+          placeholderTextColor={Colors.textSecondary}
           keyboardType="email-address"
           autoCapitalize="none"
           value={email}
@@ -87,7 +88,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Mot de passe"
-          placeholderTextColor="#888"
+          placeholderTextColor={Colors.textSecondary}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.background,
     paddingHorizontal: 30,
   },
 
@@ -132,24 +133,26 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "700",
-    color: "#111",
+    color: Colors.text,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: "#777",
+    color: Colors.textSecondary,
     marginBottom: 35,
   },
 
   input: {
     height: 56,
     borderWidth: 1,
-    borderColor: "#E5E5E5",
+    borderColor: Colors.border,
     borderRadius: 14,
     paddingHorizontal: 16,
     fontSize: 16,
     marginBottom: 18,
+    color: Colors.text,
+    backgroundColor: Colors.surface,
   },
 
   button: {
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#FFF",
+    color: Colors.white,
     fontWeight: "700",
     fontSize: 18,
   },
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: "#666",
+    color: Colors.textSecondary,
   },
 
   registerText: {

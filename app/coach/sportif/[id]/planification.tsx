@@ -13,6 +13,7 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../../components/access-denied";
+import DateField from "../../../../components/date-field";
 import ProgrammeLinkModal from "../../../../components/programme-link-modal";
 import { Colors } from "../../../../constants/colors";
 import { Niveau, NIVEAUX } from "../../../../constants/periodization";
@@ -265,24 +266,15 @@ export default function PlanificationScreen() {
           ))}
         </View>
 
-        <Text style={styles.fieldLabel}>Date de début du cycle (AAAA-MM-JJ)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="2026-08-04"
-          value={startDate}
-          onChangeText={setStartDate}
-        />
+        <Text style={styles.fieldLabel}>Date de début du cycle</Text>
+        <DateField value={startDate} onChange={setStartDate} placeholder="Choisir une date" />
 
-        <Text style={styles.fieldLabel}>Date de compétition (optionnel, AAAA-MM-JJ)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="2026-10-15"
-          value={competitionDate}
-          onChangeText={setCompetitionDate}
-        />
+        <Text style={styles.fieldLabel}>Date de compétition (optionnel)</Text>
+        <DateField value={competitionDate} onChange={setCompetitionDate} placeholder="Aucune" />
 
         <Text style={styles.fieldLabel}>Durée du cycle (semaines)</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.input}
           keyboardType="numeric"
           value={weeksTotal}
@@ -291,6 +283,7 @@ export default function PlanificationScreen() {
 
         <Text style={styles.fieldLabel}>Séances par semaine</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.input}
           keyboardType="numeric"
           value={seancesParSemaine}
@@ -329,6 +322,7 @@ export default function PlanificationScreen() {
       <Text style={styles.sectionTitle}>Ajouter un bloc personnalisé</Text>
       <View style={styles.customRow}>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={[styles.input, { flex: 1, marginBottom: 0 }]}
           placeholder="Ex : Technique de course"
           value={customLabel}
@@ -376,6 +370,7 @@ export default function PlanificationScreen() {
             <View style={styles.weekRow}>
               <Text style={styles.weekLabel}>Semaine</Text>
               <TextInput
+  placeholderTextColor={Colors.textSecondary}
                 style={styles.weekInput}
                 keyboardType="numeric"
                 value={String(block.startWeek)}
@@ -383,6 +378,7 @@ export default function PlanificationScreen() {
               />
               <Text style={styles.weekLabel}>à</Text>
               <TextInput
+  placeholderTextColor={Colors.textSecondary}
                 style={styles.weekInput}
                 keyboardType="numeric"
                 value={String(block.endWeek)}
@@ -489,7 +485,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 20,
@@ -538,6 +534,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 46,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -550,7 +547,7 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: "row",
     gap: 8,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 12,
     padding: 12,
     marginBottom: 20,
@@ -609,7 +606,7 @@ const styles = StyleSheet.create({
   },
 
   blockCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 10,
@@ -657,6 +654,7 @@ const styles = StyleSheet.create({
   },
 
   weekInput: {
+    color: Colors.text,
     width: 50,
     height: 38,
     borderWidth: 1,
@@ -691,7 +689,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,

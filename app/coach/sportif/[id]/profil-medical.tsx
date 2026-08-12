@@ -179,6 +179,7 @@ export default function ProfilMedicalScreen() {
 
         <Text style={styles.fieldLabel}>Antécédents sportifs</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : entorse cheville droite 2023, tendinite rotulienne..."
@@ -188,6 +189,7 @@ export default function ProfilMedicalScreen() {
 
         <Text style={styles.fieldLabel}>Pathologies</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : asthme d'effort, aucune..."
@@ -259,6 +261,7 @@ export default function ProfilMedicalScreen() {
               ))}
             </View>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               placeholder="Notes (optionnel)"
               value={painNotes}
@@ -285,12 +288,14 @@ export default function ProfilMedicalScreen() {
       {showInjuryForm && (
         <View style={styles.card}>
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             placeholder="Zone (ex : genou droit)"
             value={injuryZone}
             onChangeText={setInjuryZone}
           />
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             placeholder="Type de blessure (ex : entorse, tendinite)"
             value={injuryType}
@@ -353,6 +358,7 @@ export default function ProfilMedicalScreen() {
           </View>
 
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             placeholder="Notes (optionnel)"
             value={injuryNotes}
@@ -441,7 +447,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -460,6 +466,7 @@ const styles = StyleSheet.create({
   },
 
   textArea: {
+    color: Colors.text,
     minHeight: 70,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -472,6 +479,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 48,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -589,7 +597,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

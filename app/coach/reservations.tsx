@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import DateField from "../../components/date-field";
 import { CalendarIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
@@ -134,17 +135,13 @@ export default function ReservationsScreen() {
 
       {showForm && (
         <View style={styles.card}>
-          <Text style={styles.fieldLabel}>Date (AAAA-MM-JJ)</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="2026-08-10"
-            value={date}
-            onChangeText={setDate}
-          />
+          <Text style={styles.fieldLabel}>Date</Text>
+          <DateField value={date} onChange={setDate} placeholder="Choisir une date" />
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <Text style={styles.fieldLabel}>Heure début</Text>
               <TextInput
+  placeholderTextColor={Colors.textSecondary}
                 style={styles.input}
                 placeholder="09:00"
                 value={heureDebut}
@@ -154,6 +151,7 @@ export default function ReservationsScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.fieldLabel}>Heure fin</Text>
               <TextInput
+  placeholderTextColor={Colors.textSecondary}
                 style={styles.input}
                 placeholder="12:00"
                 value={heureFin}
@@ -289,7 +287,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -313,6 +311,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 46,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -407,7 +406,7 @@ const styles = StyleSheet.create({
   },
 
   slotCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

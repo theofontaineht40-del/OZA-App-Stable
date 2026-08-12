@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   sheet: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
   },
 
   textarea: {
+    color: Colors.text,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
     borderRadius: 14,

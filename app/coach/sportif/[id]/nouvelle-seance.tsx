@@ -141,6 +141,7 @@ export default function CoachNouvelleSeanceScreen() {
 
       <Text style={styles.fieldLabel}>Durée réelle de la séance (minutes)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         placeholder="60"
         keyboardType="number-pad"
@@ -159,6 +160,7 @@ export default function CoachNouvelleSeanceScreen() {
 
       <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.commentInput}
         placeholder="Ressenti, points à retenir..."
         multiline
@@ -276,6 +278,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 52,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -286,6 +289,7 @@ const styles = StyleSheet.create({
   },
 
   commentInput: {
+    color: Colors.text,
     minHeight: 90,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

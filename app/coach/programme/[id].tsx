@@ -212,6 +212,7 @@ export default function ProgrammeEditorScreen() {
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.programmeNomInput}
             value={programme.nom}
             onChangeText={(text) => setProgramme((prev) => (prev ? { ...prev, nom: text } : prev))}
@@ -242,6 +243,7 @@ export default function ProgrammeEditorScreen() {
 
       <View style={styles.seanceHeaderRow}>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.seanceNomInput}
           value={activeSeance.nom}
           onChangeText={handleRenameSeance}
@@ -363,6 +365,7 @@ function BlocCard({
       <View style={styles.blocHeaderRow}>
         <TouchableOpacity style={[styles.colorDot, { backgroundColor: bloc.couleur }]} onPress={onToggleColorPicker} />
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.blocNomInput}
           value={nomDraft}
           onChangeText={setNomDraft}
@@ -392,6 +395,7 @@ function BlocCard({
       )}
 
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.objectifInput}
         placeholder="Objectif du bloc (ex: Force maximale)"
         value={objectifDraft}
@@ -486,6 +490,7 @@ function ExerciceCard({
       </View>
       <View style={styles.setsRepsRow}>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.setsRepsInput}
           value={series}
           onChangeText={setSeries}
@@ -494,6 +499,7 @@ function ExerciceCard({
         />
         <Text style={styles.setsRepsX}>×</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.setsRepsInput}
           value={repetitions}
           onChangeText={setRepetitions}
@@ -514,7 +520,8 @@ function ExerciceCard({
           <Ionicons name="information-circle-outline" size={15} color={Colors.textSecondary} />
         </TouchableOpacity>
       </View>
-      <TextInput style={styles.input} value={tempo} onChangeText={setTempo} onBlur={() => onUpdate({ tempo })} placeholder="2/0/1/2" />
+      <TextInput
+  placeholderTextColor={Colors.textSecondary} style={styles.input} value={tempo} onChangeText={setTempo} onBlur={() => onUpdate({ tempo })} placeholder="2/0/1/2" />
 
       <View style={styles.labelRow}>
         <Text style={styles.fieldLabel}>Charge</Text>
@@ -547,6 +554,7 @@ function ExerciceCard({
           </TouchableOpacity>
         ))}
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.chargeValeurInput}
           value={chargeValeur}
           onChangeText={setChargeValeur}
@@ -557,6 +565,7 @@ function ExerciceCard({
 
       <Text style={styles.fieldLabel}>Poids indicatif (kg)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         value={poidsIndicatif}
         onChangeText={setPoidsIndicatif}
@@ -569,6 +578,7 @@ function ExerciceCard({
         <View style={{ flex: 1 }}>
           <Text style={styles.fieldLabel}>Repos séries</Text>
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             value={reposSeries}
             onChangeText={setReposSeries}
@@ -591,6 +601,7 @@ function ExerciceCard({
             </TouchableOpacity>
           </View>
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             value={reposRepetitions}
             onChangeText={setReposRepetitions}
@@ -602,6 +613,7 @@ function ExerciceCard({
 
       <Text style={styles.fieldLabel}>Commentaires</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={[styles.input, styles.commentInput]}
         value={commentaires}
         onChangeText={setCommentaires}
@@ -664,7 +676,7 @@ const styles = StyleSheet.create({
   },
 
   seanceTabActive: {
-    backgroundColor: Colors.text,
+    backgroundColor: Colors.surfaceAlt,
     borderColor: Colors.text,
   },
 
@@ -709,7 +721,7 @@ const styles = StyleSheet.create({
   },
 
   blocCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     borderLeftWidth: 4,
     padding: 16,
@@ -777,7 +789,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     marginBottom: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
   },
 
   exerciceBannerMedia: {
@@ -848,7 +860,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 44,
     borderRadius: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     textAlign: "center",
     fontSize: 18,
     fontWeight: "700",
@@ -862,15 +874,17 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 42,
     borderRadius: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     paddingHorizontal: 12,
     fontSize: 13,
     marginBottom: 14,
   },
 
   commentInput: {
+    color: Colors.text,
     height: 60,
     textAlignVertical: "top",
     paddingTop: 10,
@@ -887,7 +901,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     justifyContent: "center",
   },
 
@@ -909,7 +923,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     textAlign: "center",
     fontSize: 13,
     fontWeight: "700",

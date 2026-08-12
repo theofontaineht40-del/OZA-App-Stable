@@ -182,6 +182,7 @@ export default function DecouvrirScreen() {
       <View style={styles.searchRow}>
         <Ionicons name="search-outline" size={18} color={Colors.textSecondary} />
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.searchInput}
           placeholder="Nom, ville, spécialité..."
           value={search}
@@ -367,10 +368,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.grayMedium,
     borderRadius: 12,
     paddingHorizontal: 14,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
   },
 
   searchInput: {
+    color: Colors.text,
     flex: 1,
     fontSize: 14,
   },
@@ -435,7 +437,7 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     bottom: 100,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     shadowColor: "#000",

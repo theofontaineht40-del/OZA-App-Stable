@@ -161,6 +161,7 @@ export default function ProgrammesScreen() {
         <View style={styles.card}>
           <Text style={styles.fieldLabel}>Nom du programme</Text>
           <TextInput
+  placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             placeholder="Ex: Prise de masse débutant"
             value={nom}
@@ -357,7 +358,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -376,6 +377,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 46,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -470,7 +472,7 @@ const styles = StyleSheet.create({
   },
 
   sportifCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 16,
@@ -527,7 +529,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -543,7 +545,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     justifyContent: "center",
     alignItems: "center",
   },

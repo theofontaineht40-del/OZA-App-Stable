@@ -141,6 +141,7 @@ export function TestLibraryScreen({
                               Gauche ({test.unite})
                             </Text>
                             <TextInput
+  placeholderTextColor={Colors.textSecondary}
                               style={styles.input}
                               keyboardType="numeric"
                               value={valueLeft}
@@ -152,6 +153,7 @@ export function TestLibraryScreen({
                               Droite ({test.unite})
                             </Text>
                             <TextInput
+  placeholderTextColor={Colors.textSecondary}
                               style={styles.input}
                               keyboardType="numeric"
                               value={valueRight}
@@ -163,6 +165,7 @@ export function TestLibraryScreen({
                         <View>
                           <Text style={styles.fieldLabel}>Valeur ({test.unite})</Text>
                           <TextInput
+  placeholderTextColor={Colors.textSecondary}
                             style={styles.input}
                             keyboardType="numeric"
                             value={value}
@@ -172,6 +175,7 @@ export function TestLibraryScreen({
                       )}
 
                       <TextInput
+  placeholderTextColor={Colors.textSecondary}
                         style={styles.input}
                         placeholder="Notes (optionnel)"
                         value={notes}
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
   },
 
   testCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     marginBottom: 10,
     shadowColor: "#000",
@@ -307,6 +311,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 44,
     borderWidth: 1,
     borderColor: Colors.grayMedium,

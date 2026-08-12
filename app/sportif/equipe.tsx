@@ -305,6 +305,7 @@ export default function EquipeScreen() {
               <Text style={styles.fieldLabel}>Code fourni par le professionnel</Text>
               <View style={styles.codeRow}>
                 <TextInput
+  placeholderTextColor={Colors.textSecondary}
                   style={styles.codeInput}
                   placeholder="Code"
                   autoCapitalize="characters"
@@ -473,7 +474,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 16,
     marginBottom: 16,
@@ -503,7 +504,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.text,
+    backgroundColor: Colors.surfaceAlt,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -560,7 +561,7 @@ const styles = StyleSheet.create({
   },
 
   formCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     padding: 18,
     marginBottom: 24,
@@ -584,6 +585,7 @@ const styles = StyleSheet.create({
   },
 
   codeInput: {
+    color: Colors.text,
     flex: 1,
     height: 48,
     borderWidth: 1,
@@ -679,7 +681,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     paddingVertical: 12,
     paddingHorizontal: 14,

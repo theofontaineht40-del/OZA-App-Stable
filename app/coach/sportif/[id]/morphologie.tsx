@@ -140,6 +140,7 @@ export default function MorphologieScreen() {
           <View style={styles.halfField}>
             <Text style={styles.fieldLabel}>Poids (kg)</Text>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               placeholder="Ex : 72"
               keyboardType="numeric"
@@ -150,6 +151,7 @@ export default function MorphologieScreen() {
           <View style={styles.halfField}>
             <Text style={styles.fieldLabel}>Taille (cm)</Text>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               placeholder="Ex : 178"
               keyboardType="numeric"
@@ -170,6 +172,7 @@ export default function MorphologieScreen() {
           <View style={styles.thirdField}>
             <Text style={styles.fieldLabel}>Masse grasse (%)</Text>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               keyboardType="numeric"
               value={masseGrasse}
@@ -179,6 +182,7 @@ export default function MorphologieScreen() {
           <View style={styles.thirdField}>
             <Text style={styles.fieldLabel}>Masse musculaire (kg)</Text>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               keyboardType="numeric"
               value={masseMusculaire}
@@ -188,6 +192,7 @@ export default function MorphologieScreen() {
           <View style={styles.thirdField}>
             <Text style={styles.fieldLabel}>Masse maigre (kg)</Text>
             <TextInput
+  placeholderTextColor={Colors.textSecondary}
               style={styles.input}
               keyboardType="numeric"
               value={masseMaigre}
@@ -215,6 +220,7 @@ export default function MorphologieScreen() {
 
         <Text style={styles.fieldLabel}>Notes</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Notes complémentaires (optionnel)"
@@ -272,6 +278,7 @@ function MiniInput({
     <View style={styles.gridItem}>
       <Text style={styles.miniLabel}>{label}</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         keyboardType="numeric"
         value={value}
@@ -350,7 +357,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -390,6 +397,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 46,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -400,6 +408,7 @@ const styles = StyleSheet.create({
   },
 
   textArea: {
+    color: Colors.text,
     minHeight: 60,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -412,7 +421,7 @@ const styles = StyleSheet.create({
   },
 
   imcPreview: {
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 12,
     paddingVertical: 10,
     paddingHorizontal: 14,
@@ -465,7 +474,7 @@ const styles = StyleSheet.create({
   },
 
   chartCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -521,7 +530,7 @@ const styles = StyleSheet.create({
   },
 
   entryRow: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

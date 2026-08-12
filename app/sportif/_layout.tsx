@@ -20,7 +20,7 @@ export default function SportifTabsLayout() {
           paddingBottom: 24,
           borderTopWidth: 1,
           borderTopColor: Colors.grayMedium,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.surface,
         },
       }}
     >

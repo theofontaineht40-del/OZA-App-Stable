@@ -252,6 +252,7 @@ export default function SeanceExecutionScreen() {
                   <View style={styles.actualField}>
                     <Text style={styles.actualLabel}>Séries</Text>
                     <TextInput
+  placeholderTextColor={Colors.textSecondary}
                       style={styles.actualInput}
                       value={state.seriesReelles}
                       onChangeText={(t) => updateExercise(ex.id, { seriesReelles: t })}
@@ -261,6 +262,7 @@ export default function SeanceExecutionScreen() {
                   <View style={styles.actualField}>
                     <Text style={styles.actualLabel}>Répétitions</Text>
                     <TextInput
+  placeholderTextColor={Colors.textSecondary}
                       style={styles.actualInput}
                       value={state.repetitionsReelles}
                       onChangeText={(t) => updateExercise(ex.id, { repetitionsReelles: t })}
@@ -269,6 +271,7 @@ export default function SeanceExecutionScreen() {
                   <View style={styles.actualField}>
                     <Text style={styles.actualLabel}>Poids (kg)</Text>
                     <TextInput
+  placeholderTextColor={Colors.textSecondary}
                       style={styles.actualInput}
                       keyboardType="numeric"
                       value={state.chargeReelle}
@@ -302,6 +305,7 @@ export default function SeanceExecutionScreen() {
 
       <Text style={styles.fieldLabel}>Durée réelle de la séance (minutes)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         placeholder="60"
         keyboardType="number-pad"
@@ -320,6 +324,7 @@ export default function SeanceExecutionScreen() {
 
       <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.commentInput}
         placeholder="Ressenti, points à retenir..."
         multiline
@@ -429,7 +434,7 @@ const styles = StyleSheet.create({
   },
 
   blocCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     borderLeftWidth: 4,
     padding: 16,
@@ -492,7 +497,7 @@ const styles = StyleSheet.create({
   actualInput: {
     height: 40,
     borderRadius: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     textAlign: "center",
     fontSize: 13,
     fontWeight: "600",
@@ -539,6 +544,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 52,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -549,6 +555,7 @@ const styles = StyleSheet.create({
   },
 
   commentInput: {
+    color: Colors.text,
     minHeight: 90,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -564,7 +571,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

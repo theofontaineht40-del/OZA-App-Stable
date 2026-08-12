@@ -133,6 +133,7 @@ export default function ProfilProScreen() {
 
       <Text style={styles.fieldLabel}>Présentation</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={[styles.input, styles.bioInput]}
         placeholder="Présentez votre approche, votre expérience..."
         value={bio}
@@ -141,10 +142,12 @@ export default function ProfilProScreen() {
       />
 
       <Text style={styles.fieldLabel}>Ville</Text>
-      <TextInput style={styles.input} placeholder="Paris" value={ville} onChangeText={setVille} />
+      <TextInput
+  placeholderTextColor={Colors.textSecondary} style={styles.input} placeholder="Paris" value={ville} onChangeText={setVille} />
 
       <Text style={styles.fieldLabel}>Tarif indicatif (€ / heure)</Text>
       <TextInput
+  placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         placeholder="60"
         keyboardType="numeric"
@@ -261,6 +264,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 48,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -271,6 +275,7 @@ const styles = StyleSheet.create({
   },
 
   bioInput: {
+    color: Colors.text,
     height: 90,
     textAlignVertical: "top",
     paddingTop: 12,
@@ -310,7 +315,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,

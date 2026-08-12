@@ -115,6 +115,7 @@ export default function HygieneVieScreen() {
       <View style={styles.card}>
         <Text style={styles.fieldLabel}>Sommeil (heures / nuit)</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.input}
           placeholder="Ex : 7.5"
           keyboardType="numeric"
@@ -127,6 +128,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Hydratation (litres / jour)</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.input}
           placeholder="Ex : 2"
           keyboardType="numeric"
@@ -138,6 +140,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Petit-déjeuner</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : flocons d'avoine, fruits, œufs..."
@@ -147,6 +150,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Déjeuner</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : riz, poulet, légumes..."
@@ -156,6 +160,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Dîner</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : poisson, pâtes, salade..."
@@ -165,6 +170,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Collations</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Ex : fruits secs, yaourt, barre protéinée..."
@@ -174,6 +180,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Compléments alimentaires</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.input}
           placeholder="Ex : whey, créatine, vitamine D"
           value={complements}
@@ -185,6 +192,7 @@ export default function HygieneVieScreen() {
 
         <Text style={styles.fieldLabel}>Notes</Text>
         <TextInput
+  placeholderTextColor={Colors.textSecondary}
           style={styles.textArea}
           multiline
           placeholder="Notes complémentaires (optionnel)"
@@ -289,7 +297,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 24,
@@ -316,6 +324,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    color: Colors.text,
     height: 48,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -326,6 +335,7 @@ const styles = StyleSheet.create({
   },
 
   textArea: {
+    color: Colors.text,
     minHeight: 60,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
@@ -396,7 +406,7 @@ const styles = StyleSheet.create({
   },
 
   entryRow: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

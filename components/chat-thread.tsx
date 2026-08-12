@@ -193,6 +193,7 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
         <TextInput
           style={styles.textInput}
           placeholder="Message..."
+          placeholderTextColor={Colors.textSecondary}
           value={text}
           onChangeText={setText}
           multiline
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   },
 
   bubbleOther: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderBottomLeftRadius: 4,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -374,7 +375,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: Colors.grayMedium,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
   },
 
   attachButton: {
@@ -393,6 +394,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     fontSize: 14,
+    color: Colors.text,
   },
 
   sendButton: {
@@ -412,7 +414,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 12,
     padding: 10,
     marginBottom: 6,
@@ -423,7 +425,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -448,7 +450,7 @@ const styles = StyleSheet.create({
   },
 
   pickerCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 20,

@@ -12,10 +12,11 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
+import { Colors } from "../constants/colors";
 import { registerUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
 
-const PINK = "#FF2D7A";
+const PINK = Colors.primary;
 
 export default function RegisterScreen() {
   const [firstName, setFirstName] = useState("");
@@ -89,7 +90,7 @@ export default function RegisterScreen() {
       <TextInput
         style={styles.input}
         placeholder="Prénom"
-        placeholderTextColor={"#666"}
+        placeholderTextColor={Colors.textSecondary}
         value={firstName}
         onChangeText={setFirstName}
       />
@@ -97,7 +98,7 @@ export default function RegisterScreen() {
       <TextInput
         style={styles.input}
         placeholder="Nom"
-        placeholderTextColor={"#666"}
+        placeholderTextColor={Colors.textSecondary}
         value={lastName}
         onChangeText={setLastName}
       />
@@ -105,7 +106,7 @@ export default function RegisterScreen() {
       <TextInput
         style={styles.input}
         placeholder="Adresse e-mail"
-        placeholderTextColor={"#666"}
+        placeholderTextColor={Colors.textSecondary}
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
@@ -115,7 +116,7 @@ export default function RegisterScreen() {
       <TextInput
         style={styles.input}
         placeholder="Mot de passe"
-        placeholderTextColor={"#666"}
+        placeholderTextColor={Colors.textSecondary}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -124,7 +125,7 @@ export default function RegisterScreen() {
       <TextInput
         style={styles.input}
         placeholder="Confirmer le mot de passe"
-        placeholderTextColor={"#666"}
+        placeholderTextColor={Colors.textSecondary}
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
@@ -192,7 +193,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.background,
   },
 
   container: {
@@ -216,31 +217,33 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "700",
-    color: "#111",
+    color: Colors.text,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: Colors.textSecondary,
     marginBottom: 35,
   },
 
   input: {
     height: 56,
     borderWidth: 1,
-    borderColor: "#E5E5E5",
+    borderColor: Colors.border,
     borderRadius: 14,
     paddingHorizontal: 16,
     marginBottom: 16,
     fontSize: 16,
+    color: Colors.text,
+    backgroundColor: Colors.surface,
   },
 
   roleTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
-    color: "#111",
+    color: Colors.text,
   },
 
   roleContainer: {
@@ -251,22 +254,23 @@ const styles = StyleSheet.create({
   roleButton: {
     flex: 1,
     borderWidth: 2,
-    borderColor: "#DDD",
+    borderColor: Colors.border,
     borderRadius: 14,
     paddingVertical: 16,
     marginHorizontal: 5,
     alignItems: "center",
+    backgroundColor: Colors.surface,
   },
 
   roleButtonActive: {
     borderColor: PINK,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
   },
 
   roleText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111",
+    color: Colors.text,
   },
 
   roleTextActive: {
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#FFF",
+    color: Colors.white,
     fontWeight: "700",
     fontSize: 18,
   },
@@ -294,7 +298,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: "#666",
+    color: Colors.textSecondary,
     fontSize: 15,
   },
 

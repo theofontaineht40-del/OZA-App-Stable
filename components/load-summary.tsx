@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 
   indicatorCard: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 8,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   },
 
   chartCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,

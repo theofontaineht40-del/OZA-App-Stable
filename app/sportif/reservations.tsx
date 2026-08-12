@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   bookingRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF1F7",
+    backgroundColor: Colors.accentTint,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   slotRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,

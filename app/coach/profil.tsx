@@ -1,11 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import { uploadCoachPhoto } from "../../services/discovery";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
 import { generateCoachCode } from "../../services/tracking";
@@ -15,10 +17,13 @@ type ProfileData = {
   lastName: string;
   email: string;
   coachCode: string;
+  photoUrl: string | null;
 };
 
 export default function ProfilScreen() {
+  const [uid, setUid] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -26,6 +31,7 @@ export default function ProfilScreen() {
         router.replace("/login");
         return;
       }
+      setUid(user.uid);
 
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
@@ -45,6 +51,7 @@ export default function ProfilScreen() {
         lastName: data.lastName,
         email: data.email,
         coachCode,
+        photoUrl: data.photoUrl ?? null,
       });
     });
 
@@ -56,6 +63,24 @@ export default function ProfilScreen() {
     router.replace("/login");
   }
 
+  async function handlePickPhoto() {
+    if (!uid) return;
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
+    if (result.canceled) return;
+    setUploadingPhoto(true);
+    try {
+      const url = await uploadCoachPhoto(uid, result.assets[0].uri);
+      setProfile((prev) => (prev ? { ...prev, photoUrl: url } : prev));
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
+
   const initials = profile
     ? `${profile.firstName?.[0] ?? ""}${profile.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
@@ -63,9 +88,18 @@ export default function ProfilScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initials}</Text>
-        </View>
+        <TouchableOpacity style={styles.avatar} onPress={handlePickPhoto} disabled={uploadingPhoto}>
+          {uploadingPhoto ? (
+            <ActivityIndicator color={Colors.white} />
+          ) : profile?.photoUrl ? (
+            <Image source={{ uri: profile.photoUrl }} style={styles.avatarPhoto} resizeMode="cover" />
+          ) : (
+            <Text style={styles.avatarText}>{initials}</Text>
+          )}
+          <View style={styles.avatarEditBadge}>
+            <Ionicons name="camera" size={13} color={Colors.white} />
+          </View>
+        </TouchableOpacity>
         <Text style={styles.name}>
           {profile ? `${profile.firstName} ${profile.lastName}` : ""}
         </Text>
@@ -139,6 +173,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
+    overflow: "hidden",
+  },
+
+  avatarPhoto: {
+    width: "100%",
+    height: "100%",
+  },
+
+  avatarEditBadge: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: Colors.text,
+    borderWidth: 2,
+    borderColor: Colors.surface,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   avatarText: {

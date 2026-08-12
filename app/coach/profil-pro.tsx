@@ -69,7 +69,17 @@ export default function ProfilProScreen() {
 
   async function handlePickPhoto() {
     if (!uid) return;
-    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.7 });
+    // allowsEditing + aspect carré : sur iOS/Android ça ouvre l'outil de
+    // recadrage natif de l'OS avant l'upload, pour un vrai cadrage choisi par
+    // l'utilisateur plutôt qu'un crop automatique subi (non supporté sur web,
+    // où le cadre carré ci-dessous fait déjà un bien meilleur travail par
+    // défaut que l'ancien cadre très large en 140×pleine-largeur).
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
     if (result.canceled) return;
     setUploadingPhoto(true);
     try {
@@ -118,18 +128,24 @@ export default function ProfilProScreen() {
         visibilité.
       </Text>
 
-      <TouchableOpacity style={styles.photoPicker} onPress={handlePickPhoto} disabled={uploadingPhoto}>
-        {uploadingPhoto ? (
-          <ActivityIndicator color={Colors.primary} />
-        ) : photoUrl ? (
-          <Image source={{ uri: photoUrl }} style={styles.photoPreview} />
-        ) : (
-          <>
-            <Ionicons name="camera-outline" size={24} color={Colors.textSecondary} />
-            <Text style={styles.photoPickerText}>Ajouter une photo</Text>
-          </>
-        )}
-      </TouchableOpacity>
+      <View style={styles.photoPickerRow}>
+        <TouchableOpacity style={styles.photoPicker} onPress={handlePickPhoto} disabled={uploadingPhoto}>
+          {uploadingPhoto ? (
+            <ActivityIndicator color={Colors.primary} />
+          ) : photoUrl ? (
+            <Image source={{ uri: photoUrl }} style={styles.photoPreview} resizeMode="cover" />
+          ) : (
+            <>
+              <Ionicons name="camera-outline" size={22} color={Colors.textSecondary} />
+            </>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePickPhoto} disabled={uploadingPhoto}>
+          <Text style={styles.photoPickerText}>
+            {photoUrl ? "Changer la photo" : "Ajouter une photo"}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <Text style={styles.fieldLabel}>Présentation</Text>
       <TextInput
@@ -233,22 +249,33 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
+  // Un cadre carré (et pas un large bandeau pleine-largeur comme avant) fait
+  // que le recadrage "cover" tombe sur un carré centré cohérent avec un
+  // portrait, au lieu de trancher le haut et le bas d'une photo verticale.
+  photoPickerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginBottom: 20,
+  },
+
   photoPicker: {
-    height: 140,
-    borderRadius: 18,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
     borderStyle: "dashed",
     justifyContent: "center",
     alignItems: "center",
-    gap: 6,
-    marginBottom: 20,
     overflow: "hidden",
+    backgroundColor: Colors.surfaceAlt,
   },
 
   photoPickerText: {
-    fontSize: 12,
-    color: Colors.textSecondary,
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.primary,
   },
 
   photoPreview: {

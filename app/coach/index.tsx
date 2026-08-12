@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
@@ -12,10 +11,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Svg, { Circle, Defs, LinearGradient as SvgLinearGradient, Line, Stop } from "react-native-svg";
 
+import MiniSparkline from "../../components/mini-sparkline";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import { riskColor } from "../../components/load-summary";
-import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import {
   acwrRiskLevel,
@@ -33,6 +33,20 @@ import {
   SportifSummary,
 } from "../../services/tracking";
 import { showAlert } from "../../utils/alert";
+
+// Palette "premium dark" propre à cet écran — prototype de la nouvelle
+// direction artistique, validé ici avant extension au reste de l'appli.
+// Volontairement pas dans constants/colors.ts pour ne pas affecter les
+// autres écrans tant que la direction n'est pas confirmée.
+const DARK = {
+  bg: "#080808",
+  card: "#111111",
+  cardAlt: "#1A1A1A",
+  border: "#242424",
+  text: "#FFFFFF",
+  textSecondary: "#A0A0A0",
+  accent: "#FF2D7A",
+};
 
 export default function CoachHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
@@ -105,7 +119,9 @@ export default function CoachHome() {
     last7.some((d) => d.date === s.date)
   ).length;
 
-  const todaySlots = slots.filter((s) => s.date === today && s.status === "confirme");
+  const todaySlots = slots
+    .filter((s) => s.date === today && s.status === "confirme")
+    .sort((a, b) => a.heureDebut.localeCompare(b.heureDebut));
 
   function getSportifLoadInfo(sportifId: string) {
     const sportifSessions = sessions.filter((s) => s.sportifId === sportifId);
@@ -116,160 +132,194 @@ export default function CoachHome() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
-      <Animated.View
-        style={{ opacity: fade, transform: [{ translateY: slide }] }}
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
-        <Text style={styles.subtitle}>Prêt pour vos séances du jour ?</Text>
-
-        <LinearGradient
-          colors={[Colors.primary, Colors.primaryDark]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.hero}
+        <Animated.View
+          style={{ opacity: fade, transform: [{ translateY: slide }] }}
         >
-          <Text style={styles.heroLabel}>Aujourd'hui</Text>
-          <View style={styles.heroRow}>
-            <View>
-              <Text style={styles.heroValue}>{sessionsToday}</Text>
-              <Text style={styles.heroCaption}>séances enregistrées</Text>
-            </View>
-            <View style={styles.heroDivider} />
-            <View>
-              <Text style={styles.heroValue}>{sportifs.length}</Text>
-              <Text style={styles.heroCaption}>sportifs suivis</Text>
-            </View>
+          <View style={styles.header}>
+            <HeaderTexture />
+            <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
+            <Text style={styles.subtitle}>Prêt pour vos séances du jour ?</Text>
           </View>
-        </LinearGradient>
 
-        <View style={styles.statsRow}>
-          <StatCard icon="people-outline" label="Sportifs actifs" value={String(sportifs.length)} />
-          <StatCard icon="flame-outline" label="Séances / semaine" value={String(sessionsThisWeek)} />
-        </View>
-
-        <Text style={styles.sectionTitle}>Mes sportifs</Text>
-        {sportifs.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <TeamIllustration size={72} />
-            <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
-            <Text style={styles.emptyText}>
-              Partagez votre code coach depuis votre profil pour associer vos
-              sportifs.
-            </Text>
-            <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
-              <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          sportifs.map((sportif) => {
-            const { weeklyLoad, riskLevel } = getSportifLoadInfo(sportif.uid);
-            return (
-              <TouchableOpacity
-                key={sportif.uid}
-                style={styles.sportifRow}
-                onPress={() => router.push(`/coach/sportif/${sportif.uid}`)}
-              >
-                <View style={styles.sportifAvatar}>
-                  <Text style={styles.sportifAvatarText}>
-                    {`${sportif.firstName?.[0] ?? ""}${sportif.lastName?.[0] ?? ""}`.toUpperCase()}
+          <View style={styles.body}>
+            <View style={styles.heroCard}>
+              <Text style={styles.heroLabel}>AUJOURD'HUI</Text>
+              <View style={styles.heroRow}>
+                <View style={styles.heroStat}>
+                  <Text style={styles.heroValue}>{sessionsToday}</Text>
+                  <Text style={styles.heroCaption}>séances enregistrées</Text>
+                </View>
+                <View style={styles.heroDivider} />
+                <View style={styles.heroStat}>
+                  <Text style={[styles.heroValue, styles.heroValueAccent]}>
+                    {sportifs.length}
                   </Text>
+                  <Text style={styles.heroCaption}>sportifs suivis</Text>
                 </View>
-                <View style={styles.sportifInfo}>
-                  <Text style={styles.sportifName}>
-                    {sportif.firstName} {sportif.lastName}
-                  </Text>
-                  <View style={styles.sportifLoadRow}>
-                    <View
-                      style={[styles.riskDot, { backgroundColor: riskColor(riskLevel) }]}
-                    />
-                    <Text style={styles.sportifLoadText}>
-                      {weeklyLoad} UA cette semaine
-                    </Text>
-                  </View>
+                <View style={styles.heroChart}>
+                  <MiniSparkline values={last7.map((d) => d.load)} width={100} height={44} color={DARK.accent} />
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-              </TouchableOpacity>
-            );
-          })
-        )}
-
-        {specialisteRelations.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Suivi en tant qu'intervenant</Text>
-            {specialisteRelations.map((relation) => (
-              <TouchableOpacity
-                key={relation.id}
-                style={styles.sportifRow}
-                onPress={() => router.push(`/coach/sportif/${relation.sportifId}`)}
-              >
-                <View style={[styles.sportifAvatar, styles.specialisteAvatar]}>
-                  <Ionicons name="star-outline" size={18} color={Colors.white} />
-                </View>
-                <View style={styles.sportifInfo}>
-                  <Text style={styles.sportifName}>
-                    {relation.sportifFirstName} {relation.sportifLastName}
-                  </Text>
-                  <Text style={styles.sportifLoadText}>{relation.specialite}</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
-
-        <Text style={styles.sectionTitle}>Planning du jour</Text>
-        {todaySlots.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Ionicons name="sparkles-outline" size={28} color={Colors.primary} />
-            <Text style={styles.emptyTitle}>Aucune séance aujourd'hui</Text>
-            <Text style={styles.emptyText}>
-              Profitez-en pour préparer vos prochains programmes.
-            </Text>
-          </View>
-        ) : (
-          todaySlots.map((slot) => (
-            <View key={slot.id} style={styles.planningRow}>
-              <Ionicons name="time-outline" size={18} color={Colors.primary} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.planningTime}>
-                  {slot.heureDebut} — {slot.heureFin}
-                </Text>
-                <Text style={styles.planningName}>{slot.sportifName}</Text>
               </View>
             </View>
-          ))
-        )}
 
-        <Text style={styles.sectionTitle}>Accès rapides</Text>
-        <View style={styles.quickGrid}>
-          <QuickAction
-            icon="calendar-outline"
-            label="Réservations"
-            onPress={() => router.push("/coach/reservations")}
-          />
-          <QuickAction
-            icon="barbell-outline"
-            label="Programmes"
-            onPress={() => router.push("/coach/programmes")}
-          />
-          <QuickAction
-            icon="chatbubble-outline"
-            label="Messagerie"
-            onPress={() => router.push("/coach/messages")}
-          />
-          <QuickAction
-            icon="notifications-outline"
-            label="Notifications"
-            onPress={comingSoon}
-          />
-        </View>
-      </Animated.View>
-    </ScrollView>
+            <View style={styles.statsRow}>
+              <StatCard icon="people-outline" label="Sportifs actifs" value={String(sportifs.length)} />
+              <StatCard icon="flame-outline" label="Séances / semaine" value={String(sessionsThisWeek)} />
+            </View>
+
+            <Text style={styles.sectionTitle}>Mes sportifs</Text>
+            {sportifs.length === 0 ? (
+              <View style={styles.emptyCard}>
+                <TeamIllustration size={72} />
+                <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
+                <Text style={styles.emptyText}>
+                  Partagez votre code coach depuis votre profil pour associer vos
+                  sportifs.
+                </Text>
+                <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
+                  <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              sportifs.map((sportif) => {
+                const { weeklyLoad, riskLevel } = getSportifLoadInfo(sportif.uid);
+                return (
+                  <TouchableOpacity
+                    key={sportif.uid}
+                    style={styles.sportifRow}
+                    onPress={() => router.push(`/coach/sportif/${sportif.uid}`)}
+                  >
+                    <View style={styles.sportifAvatar}>
+                      <Text style={styles.sportifAvatarText}>
+                        {`${sportif.firstName?.[0] ?? ""}${sportif.lastName?.[0] ?? ""}`.toUpperCase()}
+                      </Text>
+                    </View>
+                    <View style={styles.sportifInfo}>
+                      <Text style={styles.sportifName}>
+                        {sportif.firstName} {sportif.lastName}
+                      </Text>
+                      <View style={styles.sportifLoadRow}>
+                        <View
+                          style={[styles.riskDot, { backgroundColor: riskColor(riskLevel) }]}
+                        />
+                        <Text style={styles.sportifLoadText}>
+                          {weeklyLoad} UA cette semaine
+                        </Text>
+                      </View>
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={DARK.textSecondary} />
+                  </TouchableOpacity>
+                );
+              })
+            )}
+
+            {specialisteRelations.length > 0 && (
+              <>
+                <Text style={styles.sectionTitle}>Suivi en tant qu'intervenant</Text>
+                {specialisteRelations.map((relation) => (
+                  <TouchableOpacity
+                    key={relation.id}
+                    style={styles.sportifRow}
+                    onPress={() => router.push(`/coach/sportif/${relation.sportifId}`)}
+                  >
+                    <View style={[styles.sportifAvatar, styles.specialisteAvatar]}>
+                      <Ionicons name="star-outline" size={18} color={DARK.text} />
+                    </View>
+                    <View style={styles.sportifInfo}>
+                      <Text style={styles.sportifName}>
+                        {relation.sportifFirstName} {relation.sportifLastName}
+                      </Text>
+                      <Text style={styles.sportifLoadText}>{relation.specialite}</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={DARK.textSecondary} />
+                  </TouchableOpacity>
+                ))}
+              </>
+            )}
+
+            <Text style={styles.sectionTitle}>Planning du jour</Text>
+            {todaySlots.length === 0 ? (
+              <View style={styles.emptyCard}>
+                <Ionicons name="sparkles-outline" size={28} color={DARK.accent} />
+                <Text style={styles.emptyTitle}>Aucune séance aujourd'hui</Text>
+                <Text style={styles.emptyText}>
+                  Profitez-en pour préparer vos prochains programmes.
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.timeline}>
+                {todaySlots.map((slot, i) => (
+                  <View key={slot.id} style={styles.timelineRow}>
+                    <View style={styles.timelineRail}>
+                      <View style={styles.timelineDot} />
+                      {i < todaySlots.length - 1 && <View style={styles.timelineLine} />}
+                    </View>
+                    <View style={styles.timelineCard}>
+                      <Text style={styles.planningTime}>
+                        {slot.heureDebut} — {slot.heureFin}
+                      </Text>
+                      <Text style={styles.planningName}>{slot.sportifName}</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <Text style={styles.sectionTitle}>Accès rapides</Text>
+            <View style={styles.quickGrid}>
+              <QuickAction
+                icon="calendar-outline"
+                label="Réservations"
+                onPress={() => router.push("/coach/reservations")}
+              />
+              <QuickAction
+                icon="barbell-outline"
+                label="Programmes"
+                onPress={() => router.push("/coach/programmes")}
+              />
+              <QuickAction
+                icon="chatbubble-outline"
+                label="Messagerie"
+                onPress={() => router.push("/coach/messages")}
+              />
+              <QuickAction
+                icon="notifications-outline"
+                label="Notifications"
+                onPress={comingSoon}
+              />
+            </View>
+          </View>
+        </Animated.View>
+      </ScrollView>
+    </View>
+  );
+}
+
+// Texture graphique discrète dans le header (lignes fines + points), en
+// attendant une vraie photo N&B d'athlète/salle à intégrer plus tard —
+// évite de fabriquer une image sans avoir de photo sous licence à disposition.
+function HeaderTexture() {
+  return (
+    <View style={styles.headerTexture} pointerEvents="none">
+      <Svg width="100%" height="100%" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+        <Defs>
+          <SvgLinearGradient id="fade" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor="#FF2D7A" stopOpacity={0.5} />
+            <Stop offset="100%" stopColor="#FF2D7A" stopOpacity={0} />
+          </SvgLinearGradient>
+        </Defs>
+        <Line x1="260" y1="-20" x2="440" y2="160" stroke="url(#fade)" strokeWidth={1} />
+        <Line x1="300" y1="-20" x2="480" y2="160" stroke="url(#fade)" strokeWidth={1} />
+        <Line x1="340" y1="-20" x2="520" y2="160" stroke="url(#fade)" strokeWidth={1} />
+        <Circle cx="365" cy="35" r="70" stroke="#FF2D7A" strokeOpacity={0.18} strokeWidth={1} fill="none" />
+      </Svg>
+    </View>
   );
 }
 
@@ -284,7 +334,7 @@ function StatCard({
 }) {
   return (
     <View style={styles.statCard}>
-      <Ionicons name={icon} size={18} color={Colors.primary} />
+      <Ionicons name={icon} size={18} color={DARK.accent} />
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
     </View>
@@ -320,7 +370,7 @@ function QuickAction({
         style={styles.quickActionInner}
       >
         <View style={styles.quickActionIcon}>
-          <Ionicons name={icon} size={22} color={Colors.primary} />
+          <Ionicons name={icon} size={22} color={DARK.accent} />
         </View>
         <Text style={styles.quickActionText}>{label}</Text>
       </TouchableOpacity>
@@ -331,44 +381,65 @@ function QuickAction({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: DARK.bg,
+  },
+
+  scroll: {
+    flex: 1,
   },
 
   content: {
-    padding: 24,
-    paddingTop: 70,
     paddingBottom: 40,
+  },
+
+  header: {
+    backgroundColor: DARK.bg,
+    paddingTop: 70,
+    paddingBottom: 28,
+    paddingHorizontal: 24,
+    overflow: "hidden",
+  },
+
+  headerTexture: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 
   greeting: {
     fontSize: 28,
     fontWeight: "700",
-    color: Colors.text,
+    color: DARK.text,
   },
 
   subtitle: {
-    fontSize: 16,
-    color: Colors.textSecondary,
+    fontSize: 15,
+    color: DARK.textSecondary,
     marginTop: 4,
-    marginBottom: 24,
   },
 
-  hero: {
+  body: {
+    paddingHorizontal: 24,
+    paddingTop: 22,
+  },
+
+  heroCard: {
+    backgroundColor: DARK.card,
     borderRadius: 24,
-    padding: 24,
+    borderWidth: 1,
+    borderColor: DARK.border,
+    padding: 22,
     marginBottom: 24,
-    shadowColor: Colors.primaryDark,
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 4,
   },
 
   heroLabel: {
-    color: "#FFE3EE",
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 12,
+    color: DARK.textSecondary,
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 1,
+    marginBottom: 16,
   },
 
   heroRow: {
@@ -376,23 +447,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  heroStat: {
+    marginRight: 24,
+  },
+
   heroValue: {
-    color: Colors.white,
-    fontSize: 32,
+    color: DARK.text,
+    fontSize: 30,
     fontWeight: "700",
   },
 
+  heroValueAccent: {
+    color: DARK.accent,
+  },
+
   heroCaption: {
-    color: "#FFE3EE",
-    fontSize: 13,
+    color: DARK.textSecondary,
+    fontSize: 12,
     marginTop: 2,
   },
 
   heroDivider: {
     width: 1,
-    height: 40,
-    backgroundColor: "rgba(255,255,255,0.3)",
-    marginHorizontal: 28,
+    height: 36,
+    backgroundColor: DARK.border,
+    marginRight: 24,
+  },
+
+  heroChart: {
+    marginLeft: "auto",
   },
 
   statsRow: {
@@ -403,35 +486,32 @@ const styles = StyleSheet.create({
 
   statCard: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: DARK.card,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: DARK.border,
     paddingVertical: 16,
     paddingHorizontal: 10,
     alignItems: "center",
     gap: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
   },
 
   statValue: {
     fontSize: 18,
     fontWeight: "700",
-    color: Colors.text,
+    color: DARK.text,
   },
 
   statLabel: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: DARK.textSecondary,
     textAlign: "center",
   },
 
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
-    color: Colors.text,
+    color: DARK.text,
     marginBottom: 14,
   },
 
@@ -439,33 +519,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: DARK.card,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: DARK.border,
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
   },
 
   sportifAvatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.primary,
+    backgroundColor: DARK.accent,
     justifyContent: "center",
     alignItems: "center",
   },
 
   specialisteAvatar: {
-    backgroundColor: Colors.text,
+    backgroundColor: DARK.cardAlt,
+    borderWidth: 1,
+    borderColor: DARK.border,
   },
 
   sportifAvatarText: {
-    color: Colors.white,
+    color: DARK.text,
     fontWeight: "700",
     fontSize: 14,
   },
@@ -477,7 +556,7 @@ const styles = StyleSheet.create({
   sportifName: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text,
+    color: DARK.text,
   },
 
   sportifLoadRow: {
@@ -495,40 +574,65 @@ const styles = StyleSheet.create({
 
   sportifLoadText: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: DARK.textSecondary,
   },
 
-  planningRow: {
+  timeline: {
+    marginBottom: 28,
+  },
+
+  timelineRow: {
     flexDirection: "row",
+  },
+
+  timelineRail: {
+    width: 20,
     alignItems: "center",
-    gap: 12,
-    backgroundColor: Colors.white,
+  },
+
+  timelineDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: DARK.accent,
+    marginTop: 18,
+  },
+
+  timelineLine: {
+    width: 1,
+    flex: 1,
+    backgroundColor: DARK.border,
+  },
+
+  timelineCard: {
+    flex: 1,
+    backgroundColor: DARK.card,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: DARK.border,
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    marginLeft: 8,
   },
 
   planningTime: {
     fontSize: 14,
     fontWeight: "700",
-    color: Colors.text,
+    color: DARK.text,
   },
 
   planningName: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: DARK.textSecondary,
     marginTop: 2,
   },
 
   emptyCard: {
-    backgroundColor: Colors.grayLight,
+    backgroundColor: DARK.card,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: DARK.border,
     paddingVertical: 28,
     alignItems: "center",
     marginBottom: 28,
@@ -537,14 +641,14 @@ const styles = StyleSheet.create({
 
   emptyButton: {
     marginTop: 10,
-    backgroundColor: Colors.primary,
+    backgroundColor: DARK.accent,
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
 
   emptyButtonText: {
-    color: Colors.white,
+    color: DARK.text,
     fontWeight: "700",
     fontSize: 14,
   },
@@ -552,13 +656,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: Colors.text,
+    color: DARK.text,
     marginTop: 4,
   },
 
   emptyText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: DARK.textSecondary,
     textAlign: "center",
     paddingHorizontal: 30,
   },
@@ -574,22 +678,19 @@ const styles = StyleSheet.create({
   },
 
   quickActionInner: {
-    backgroundColor: Colors.white,
+    backgroundColor: DARK.card,
     borderRadius: 18,
+    borderWidth: 1,
+    borderColor: DARK.border,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
   },
 
   quickActionIcon: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#FFF1F7",
+    backgroundColor: DARK.cardAlt,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -598,6 +699,6 @@ const styles = StyleSheet.create({
   quickActionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
+    color: DARK.text,
   },
 });

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
+import DecorBlobs from "../components/decor-blobs";
 import { Colors } from "../constants/colors";
 
 const VALUE_PROPS: {
@@ -57,11 +58,13 @@ export default function WelcomeScreen() {
   const floatY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] });
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.screen}>
+      <DecorBlobs />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <Animated.Image
           source={require("../assets/images/logo.png")}
@@ -103,14 +106,19 @@ export default function WelcomeScreen() {
           <Text style={styles.secondaryText}>Créer un compte</Text>
         </AnimatedPressable>
       </Animated.View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+
+  container: {
+    flex: 1,
   },
 
   content: {
@@ -161,6 +169,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF1F7",
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 3,
   },
 
   valuePropTextWrap: {
@@ -187,6 +200,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 14,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 6,
   },
 
   primaryText: {

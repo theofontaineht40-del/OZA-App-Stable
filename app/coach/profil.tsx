@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import ImageCropModal from "../../components/image-crop-modal";
 import { uploadCoachPhoto } from "../../services/discovery";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
@@ -24,6 +25,7 @@ export default function ProfilScreen() {
   const [uid, setUid] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [cropUri, setCropUri] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -72,9 +74,15 @@ export default function ProfilScreen() {
       aspect: [1, 1],
     });
     if (result.canceled) return;
+    setCropUri(result.assets[0].uri);
+  }
+
+  async function handleCropConfirm(croppedUri: string) {
+    setCropUri(null);
+    if (!uid) return;
     setUploadingPhoto(true);
     try {
-      const url = await uploadCoachPhoto(uid, result.assets[0].uri);
+      const url = await uploadCoachPhoto(uid, croppedUri);
       setProfile((prev) => (prev ? { ...prev, photoUrl: url } : prev));
     } finally {
       setUploadingPhoto(false);
@@ -140,6 +148,13 @@ export default function ProfilScreen() {
         <Ionicons name="log-out-outline" size={20} color={Colors.primary} />
         <Text style={styles.logoutText}>Se déconnecter</Text>
       </TouchableOpacity>
+
+      <ImageCropModal
+        visible={!!cropUri}
+        imageUri={cropUri}
+        onCancel={() => setCropUri(null)}
+        onConfirm={handleCropConfirm}
+      />
     </View>
   );
 }

@@ -16,6 +16,7 @@ import {
 } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import ImageCropModal from "../../components/image-crop-modal";
 import { Specialite, SPECIALITES } from "../../constants/specialites";
 import { auth } from "../../firebase";
 import {
@@ -34,6 +35,7 @@ export default function ProfilProScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [cropUri, setCropUri] = useState<string | null>(null);
 
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [bio, setBio] = useState("");
@@ -81,9 +83,15 @@ export default function ProfilProScreen() {
       aspect: [1, 1],
     });
     if (result.canceled) return;
+    setCropUri(result.assets[0].uri);
+  }
+
+  async function handleCropConfirm(croppedUri: string) {
+    setCropUri(null);
+    if (!uid) return;
     setUploadingPhoto(true);
     try {
-      const url = await uploadCoachPhoto(uid, result.assets[0].uri);
+      const url = await uploadCoachPhoto(uid, croppedUri);
       setPhotoUrl(url);
     } finally {
       setUploadingPhoto(false);
@@ -207,6 +215,13 @@ export default function ProfilProScreen() {
           <Text style={styles.primaryButtonText}>Enregistrer</Text>
         )}
       </TouchableOpacity>
+
+      <ImageCropModal
+        visible={!!cropUri}
+        imageUri={cropUri}
+        onCancel={() => setCropUri(null)}
+        onConfirm={handleCropConfirm}
+      />
     </ScrollView>
   );
 }

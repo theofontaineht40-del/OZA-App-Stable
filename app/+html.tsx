@@ -13,12 +13,22 @@ export default function Root({ children }: PropsWithChildren) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
         />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="OZA" />
-        <meta name="theme-color" content="#FF2D7A" />
+        {/* Direction premium dark : sans ça, la bande sous l'encoche/l'heure
+            (safe-area iOS, zone de rebond du scroll) reste blanche par
+            défaut alors que tout le reste de l'appli est passé en noir. */}
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#080808" />
+        <style
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `html, body { background-color: #080808; }`,
+          }}
+        />
         <ScrollViewStyleReset />
       </head>
       <body>{children}</body>

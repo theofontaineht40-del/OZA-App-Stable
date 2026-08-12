@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -54,6 +55,9 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
   const [filterSport, setFilterSport] = useState<Sport | null>(null);
   const [filterQualite, setFilterQualite] = useState<QualitePhysique | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const { width: windowWidth } = useWindowDimensions();
+  const thumbSize = windowWidth >= 1024 ? 96 : windowWidth >= 768 ? 80 : 64;
 
   const [nom, setNom] = useState("");
   const [groupesMusculaires, setGroupesMusculaires] = useState<GroupeMusculaire[]>([]);
@@ -277,11 +281,14 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
                 {filtered.map((ex) => (
                   <TouchableOpacity key={ex.id} style={styles.exerciseRow} onPress={() => handleSelect(ex)}>
                     {ex.videoUrl ? (
-                      <InlineLoopingVideo videoUrl={ex.videoUrl} size={64} borderRadius={14} />
+                      <InlineLoopingVideo videoUrl={ex.videoUrl} size={thumbSize} borderRadius={14} />
                     ) : ex.photoUrl ? (
-                      <Image source={{ uri: ex.photoUrl }} style={styles.exerciseThumb} />
+                      <Image
+                        source={{ uri: ex.photoUrl }}
+                        style={[styles.exerciseThumb, { width: thumbSize, height: thumbSize }]}
+                      />
                     ) : (
-                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={64} />
+                      <MovementIllustration pattern={ex.pattern ?? "isolation"} size={thumbSize} />
                     )}
                     <View style={{ flex: 1 }}>
                       <Text style={styles.exerciseName}>{ex.nom}</Text>

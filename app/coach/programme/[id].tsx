@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -447,20 +448,26 @@ function ExerciceCard({
 
   const libraryExercise = library.find((e) => e.id === exercice.exerciceId);
 
+  // Sur tablette/desktop, l'écran est bien plus large que haut : garder la
+  // bannière à 180px la faisait paraître minuscule et étirée. On l'agrandit
+  // au-delà du format téléphone pour que la photo reste le point focal.
+  const { width: windowWidth } = useWindowDimensions();
+  const bannerHeight = windowWidth >= 1024 ? 420 : windowWidth >= 768 ? 320 : 180;
+
   return (
     <View style={styles.exerciceCard}>
       <TouchableOpacity
-        style={styles.exerciceBanner}
+        style={[styles.exerciceBanner, { height: bannerHeight }]}
         onPress={() => libraryExercise?.videoUrl && setShowVideo(true)}
         activeOpacity={libraryExercise?.videoUrl ? 0.85 : 1}
       >
         {libraryExercise?.videoUrl ? (
-          <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={180} borderRadius={16} />
+          <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={bannerHeight} borderRadius={16} />
         ) : libraryExercise?.photoUrl ? (
           <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="contain" />
         ) : (
           <View style={styles.exerciceBannerIllustration}>
-            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={100} />
+            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={Math.min(bannerHeight * 0.55, 160)} />
           </View>
         )}
         {libraryExercise?.videoUrl && (
@@ -785,7 +792,6 @@ const styles = StyleSheet.create({
 
   exerciceBanner: {
     width: "100%",
-    height: 180,
     borderRadius: 16,
     overflow: "hidden",
     marginBottom: 10,

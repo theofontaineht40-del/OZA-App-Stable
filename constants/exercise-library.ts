@@ -101,6 +101,7 @@ export type ExerciseTemplate = {
   pattern?: MovementPattern;
   photoUrl?: string | null;
   videoUrl?: string | null;
+  execution?: string[];
   custom?: boolean;
 };
 
@@ -138,7 +139,7 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
   { id: "developpe-militaire-halteres", nom: "Développé militaire haltères", groupesMusculaires: ["Épaules", "Triceps"], materiel: ["Haltères"], sports: ["Musculation"], qualitesPhysiques: ["Force"], icon: "fitness-outline", pattern: "push_vertical", photoUrl: `${IMAGE_BASE}/developpe-militaire-halteres.png?v=${IMAGE_VERSION}` },
   { id: "elevations-laterales", nom: "Élévations latérales", groupesMusculaires: ["Épaules"], materiel: ["Haltères"], sports: ["Musculation"], qualitesPhysiques: ["Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/elevations-laterales.png?v=${IMAGE_VERSION}` },
   { id: "tractions", nom: "Tractions", groupesMusculaires: ["Dos", "Biceps"], materiel: ["Poids du corps"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force"], icon: "body-outline", pattern: "pull_vertical", photoUrl: `${IMAGE_BASE}/tractions.png?v=${IMAGE_VERSION}` },
-  { id: "tirage-vertical", nom: "Tirage vertical", groupesMusculaires: ["Dos", "Biceps"], materiel: ["Machine"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "pull_vertical", photoUrl: `${IMAGE_BASE}/tirage-vertical.png?v=${IMAGE_VERSION}` },
+  { id: "tirage-vertical", nom: "Tirage vertical", groupesMusculaires: ["Dos", "Biceps"], materiel: ["Machine"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "pull_vertical", photoUrl: `${IMAGE_BASE}/tirage-vertical.png?v=${IMAGE_VERSION}`, execution: ["Saisir la barre en prise large", "Tirer la barre vers le haut de la poitrine", "Rentrer les omoplates", "Contrôler la phase excentrique"] },
   { id: "rowing-barre", nom: "Rowing barre", groupesMusculaires: ["Dos"], materiel: ["Barre"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "barbell-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/rowing-barre.png?v=${IMAGE_VERSION}` },
   { id: "rowing-haltere", nom: "Rowing haltère", groupesMusculaires: ["Dos"], materiel: ["Haltères", "Banc"], sports: ["Musculation"], qualitesPhysiques: ["Hypertrophie"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/rowing-haltere.png?v=${IMAGE_VERSION}` },
   { id: "tirage-horizontal", nom: "Tirage horizontal", groupesMusculaires: ["Dos", "Biceps"], materiel: ["Machine"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/tirage-horizontal.png?v=${IMAGE_VERSION}` },

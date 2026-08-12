@@ -16,6 +16,7 @@ import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { MovementIllustration } from "../../../components/exercise-illustrations";
+import ImagePreviewModal from "../../../components/image-preview-modal";
 import InlineLoopingVideo from "../../../components/inline-looping-video";
 import VideoPreviewModal from "../../../components/video-preview-modal";
 import { Colors } from "../../../constants/colors";
@@ -445,48 +446,72 @@ function ExerciceCard({
   const [reposRepetitions, setReposRepetitions] = useState(exercice.reposRepetitions);
   const [commentaires, setCommentaires] = useState(exercice.commentaires);
   const [showVideo, setShowVideo] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   const libraryExercise = library.find((e) => e.id === exercice.exerciceId);
+  const hasMedia = !!(libraryExercise?.videoUrl || libraryExercise?.photoUrl);
 
-  // Sur tablette/desktop, l'écran est bien plus large que haut : garder la
-  // bannière à 180px la faisait paraître minuscule et étirée. On l'agrandit
-  // au-delà du format téléphone pour que la photo reste le point focal.
+  // Desktop : deux colonnes côte à côte (paramètres d'effort à gauche, gros
+  // visuel à droite) pour garder l'image grande ET les paramètres visibles en
+  // même temps. En dessous de 1024px, tout se réempile en une colonne.
   const { width: windowWidth } = useWindowDimensions();
-  const bannerHeight = windowWidth >= 1024 ? 420 : windowWidth >= 768 ? 320 : 180;
+  const isDesktop = windowWidth >= 1024;
+  const bannerHeight = isDesktop ? 460 : windowWidth >= 768 ? 340 : 200;
 
-  return (
-    <View style={styles.exerciceCard}>
-      <TouchableOpacity
-        style={[styles.exerciceBanner, { height: bannerHeight }]}
-        onPress={() => libraryExercise?.videoUrl && setShowVideo(true)}
-        activeOpacity={libraryExercise?.videoUrl ? 0.85 : 1}
-      >
-        {libraryExercise?.videoUrl ? (
-          <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={bannerHeight} borderRadius={16} />
-        ) : libraryExercise?.photoUrl ? (
-          <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="contain" />
-        ) : (
-          <View style={styles.exerciceBannerIllustration}>
-            <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={Math.min(bannerHeight * 0.55, 160)} />
-          </View>
-        )}
-        {libraryExercise?.videoUrl && (
-          <View style={styles.exerciceBannerPlay}>
-            <Ionicons name="play" size={20} color={Colors.white} />
-          </View>
-        )}
-      </TouchableOpacity>
+  function openMedia() {
+    if (libraryExercise?.videoUrl) setShowVideo(true);
+    else if (libraryExercise?.photoUrl) setShowImage(true);
+  }
 
-      <View style={styles.exerciceHeaderRow}>
-        <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
+  const nameHeader = (
+    <View style={styles.exerciceHeaderRow}>
+      <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
-          <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onDelete}>
-          <Ionicons name="close" size={18} color={Colors.textSecondary} />
-        </TouchableOpacity>
-      </View>
+          {!!libraryExercise?.groupesMusculaires?.length && (
+            <Text style={styles.exerciceMuscleSubtitle}>
+              {libraryExercise.groupesMusculaires.join(" · ")}
+            </Text>
+          )}
+        </View>
+        <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onDelete} hitSlop={8}>
+        <Ionicons name="close" size={18} color={Colors.textSecondary} />
+      </TouchableOpacity>
+    </View>
+  );
 
+  const imageBlock = (
+    <TouchableOpacity
+      style={[styles.exerciceBanner, { height: bannerHeight }]}
+      onPress={openMedia}
+      activeOpacity={hasMedia ? 0.85 : 1}
+    >
+      {libraryExercise?.videoUrl ? (
+        <InlineLoopingVideo videoUrl={libraryExercise.videoUrl} width="100%" height={bannerHeight} borderRadius={16} />
+      ) : libraryExercise?.photoUrl ? (
+        <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exerciceBannerMedia} resizeMode="contain" />
+      ) : (
+        <View style={styles.exerciceBannerIllustration}>
+          <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={Math.min(bannerHeight * 0.4, 160)} />
+        </View>
+      )}
+      {libraryExercise?.videoUrl && (
+        <View style={styles.exerciceBannerPlay}>
+          <Ionicons name="play" size={20} color={Colors.white} />
+        </View>
+      )}
+      {hasMedia && (
+        <View style={styles.exerciceBannerExpand}>
+          <Ionicons name="expand-outline" size={16} color={Colors.white} />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+
+  const paramsCard = (
+    <View style={styles.paramsCard}>
       <View style={styles.labelRow}>
         <Text style={styles.fieldLabel}>Séries × répétitions</Text>
         <TouchableOpacity
@@ -497,7 +522,7 @@ function ExerciceCard({
       </View>
       <View style={styles.setsRepsRow}>
         <TextInput
-  placeholderTextColor={Colors.textSecondary}
+          placeholderTextColor={Colors.textSecondary}
           style={styles.setsRepsInput}
           value={series}
           onChangeText={setSeries}
@@ -506,7 +531,7 @@ function ExerciceCard({
         />
         <Text style={styles.setsRepsX}>×</Text>
         <TextInput
-  placeholderTextColor={Colors.textSecondary}
+          placeholderTextColor={Colors.textSecondary}
           style={styles.setsRepsInput}
           value={repetitions}
           onChangeText={setRepetitions}
@@ -528,7 +553,13 @@ function ExerciceCard({
         </TouchableOpacity>
       </View>
       <TextInput
-  placeholderTextColor={Colors.textSecondary} style={styles.input} value={tempo} onChangeText={setTempo} onBlur={() => onUpdate({ tempo })} placeholder="2/0/1/2" />
+        placeholderTextColor={Colors.textSecondary}
+        style={styles.input}
+        value={tempo}
+        onChangeText={setTempo}
+        onBlur={() => onUpdate({ tempo })}
+        placeholder="2/0/1/2"
+      />
 
       <View style={styles.labelRow}>
         <Text style={styles.fieldLabel}>Charge</Text>
@@ -560,19 +591,24 @@ function ExerciceCard({
             </Text>
           </TouchableOpacity>
         ))}
-        <TextInput
-  placeholderTextColor={Colors.textSecondary}
-          style={styles.chargeValeurInput}
-          value={chargeValeur}
-          onChangeText={setChargeValeur}
-          onBlur={() => onUpdate({ chargeValeur })}
-          keyboardType="numeric"
-        />
       </View>
+      {/* La charge en RPE conditionne directement l'intensité de la séance :
+          on lui donne le traitement visuel le plus marqué de la carte. */}
+      <TextInput
+        placeholderTextColor={Colors.textSecondary}
+        style={[
+          styles.chargeValeurInput,
+          exercice.chargeType === "rpe" && styles.chargeValeurInputRpe,
+        ]}
+        value={chargeValeur}
+        onChangeText={setChargeValeur}
+        onBlur={() => onUpdate({ chargeValeur })}
+        keyboardType="numeric"
+      />
 
       <Text style={styles.fieldLabel}>Poids indicatif (kg)</Text>
       <TextInput
-  placeholderTextColor={Colors.textSecondary}
+        placeholderTextColor={Colors.textSecondary}
         style={styles.input}
         value={poidsIndicatif}
         onChangeText={setPoidsIndicatif}
@@ -585,7 +621,7 @@ function ExerciceCard({
         <View style={{ flex: 1 }}>
           <Text style={styles.fieldLabel}>Repos séries</Text>
           <TextInput
-  placeholderTextColor={Colors.textSecondary}
+            placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             value={reposSeries}
             onChangeText={setReposSeries}
@@ -608,7 +644,7 @@ function ExerciceCard({
             </TouchableOpacity>
           </View>
           <TextInput
-  placeholderTextColor={Colors.textSecondary}
+            placeholderTextColor={Colors.textSecondary}
             style={styles.input}
             value={reposRepetitions}
             onChangeText={setReposRepetitions}
@@ -620,7 +656,7 @@ function ExerciceCard({
 
       <Text style={styles.fieldLabel}>Commentaires</Text>
       <TextInput
-  placeholderTextColor={Colors.textSecondary}
+        placeholderTextColor={Colors.textSecondary}
         style={[styles.input, styles.commentInput]}
         value={commentaires}
         onChangeText={setCommentaires}
@@ -628,11 +664,68 @@ function ExerciceCard({
         placeholder="Notes pour le sportif..."
         multiline
       />
+    </View>
+  );
+
+  const hasExecution = !!libraryExercise?.execution?.length;
+  const hasMuscles = !!libraryExercise?.groupesMusculaires?.length;
+  const detailsBlock = hasExecution || hasMuscles ? (
+    <View style={isDesktop ? styles.detailsRow : styles.detailsStack}>
+      {hasExecution && (
+        <View style={styles.detailCard}>
+          <Text style={styles.detailTitle}>Exécution</Text>
+          {libraryExercise!.execution!.map((step, i) => (
+            <View key={i} style={styles.executionStepRow}>
+              <View style={styles.executionDot} />
+              <Text style={styles.executionStepText}>{step}</Text>
+            </View>
+          ))}
+        </View>
+      )}
+      {hasMuscles && (
+        <View style={styles.detailCard}>
+          <Text style={styles.detailTitle}>Muscles sollicités</Text>
+          <View style={styles.muscleChipsRow}>
+            {libraryExercise!.groupesMusculaires.map((g) => (
+              <View key={g} style={styles.muscleChip}>
+                <Text style={styles.muscleChipText}>{g}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
+    </View>
+  ) : null;
+
+  return (
+    <View style={styles.exerciceCard}>
+      {isDesktop ? (
+        <View style={styles.desktopRow}>
+          <View style={styles.desktopParamsCol}>{paramsCard}</View>
+          <View style={styles.desktopVisualCol}>
+            {nameHeader}
+            {imageBlock}
+            {detailsBlock}
+          </View>
+        </View>
+      ) : (
+        <>
+          {nameHeader}
+          {imageBlock}
+          {paramsCard}
+          {detailsBlock}
+        </>
+      )}
 
       <VideoPreviewModal
         visible={showVideo}
         videoUrl={libraryExercise?.videoUrl ?? null}
         onClose={() => setShowVideo(false)}
+      />
+      <ImagePreviewModal
+        visible={showImage}
+        imageUrl={libraryExercise?.photoUrl ?? null}
+        onClose={() => setShowImage(false)}
       />
     </View>
   );
@@ -784,10 +877,37 @@ const styles = StyleSheet.create({
   },
 
   exerciceCard: {
-    backgroundColor: Colors.grayLight,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 14,
-    marginBottom: 10,
+    marginBottom: 14,
+    backgroundColor: Colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  // Desktop : paramètres à gauche (~34%) et visuel (nom + image + détails) à
+  // droite (~66%), pour garder la photo grande sans jamais la sacrifier au
+  // profit des champs de séries/charge/repos.
+  desktopRow: {
+    flexDirection: "row",
+    gap: 20,
+    alignItems: "flex-start",
+  },
+
+  desktopParamsCol: {
+    width: "34%",
+  },
+
+  desktopVisualCol: {
+    flex: 1,
+  },
+
+  paramsCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 14,
   },
 
   exerciceBanner: {
@@ -795,10 +915,25 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     marginBottom: 10,
-    backgroundColor: Colors.surface,
+    // Fond sombre cohérent avec le thème plutôt qu'une carte blanche isolée —
+    // les photos gardent leur propre fond blanc (généré), mais la marge
+    // sombre autour évite que ça tranche trop fort sur le reste de l'écran.
+    backgroundColor: Colors.background,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: 10,
+  },
+
+  exerciceBannerExpand: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(17,17,17,0.55)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   // Les photos générées ont un fond blanc figé dans l'image — en plein cadre
@@ -850,6 +985,12 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
 
+  exerciceMuscleSubtitle: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+
   labelRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -874,7 +1015,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 44,
     borderRadius: 10,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceAlt,
     textAlign: "center",
     fontSize: 18,
     fontWeight: "700",
@@ -891,7 +1032,7 @@ const styles = StyleSheet.create({
     color: Colors.text,
     height: 42,
     borderRadius: 10,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceAlt,
     paddingHorizontal: 12,
     fontSize: 13,
     marginBottom: 14,
@@ -915,7 +1056,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceAlt,
     justifyContent: "center",
   },
 
@@ -934,19 +1075,103 @@ const styles = StyleSheet.create({
   },
 
   chargeValeurInput: {
-    flex: 1,
+    width: "100%",
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceAlt,
     textAlign: "center",
     fontSize: 13,
     fontWeight: "700",
     color: Colors.text,
+    marginBottom: 14,
+  },
+
+  // RPE = donnée de programmation la plus consultée en séance : traitement
+  // visuel nettement plus marqué que les autres champs de la carte.
+  chargeValeurInputRpe: {
+    height: 52,
+    borderRadius: 12,
+    backgroundColor: Colors.accentTint,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+    fontSize: 24,
+    fontWeight: "800",
+    color: Colors.primary,
   },
 
   row: {
     flexDirection: "row",
     gap: 12,
+  },
+
+  detailsRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 14,
+  },
+
+  detailsStack: {
+    gap: 12,
+    marginTop: 14,
+  },
+
+  detailCard: {
+    flex: 1,
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 14,
+  },
+
+  detailTitle: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: Colors.textSecondary,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+    marginBottom: 10,
+  },
+
+  executionStepRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    marginBottom: 8,
+  },
+
+  executionDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: Colors.primary,
+    marginTop: 7,
+  },
+
+  executionStepText: {
+    flex: 1,
+    fontSize: 13,
+    color: Colors.text,
+    lineHeight: 19,
+  },
+
+  muscleChipsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+
+  muscleChip: {
+    backgroundColor: Colors.accentTint,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+
+  muscleChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.primary,
   },
 
   addExerciceButton: {

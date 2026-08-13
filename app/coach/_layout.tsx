@@ -1,10 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 
+import MessageToast from "../../components/message-toast";
 import { Colors } from "../../constants/colors";
+import { useUnreadConversations } from "../../hooks/use-unread-conversations";
 
 export default function CoachTabsLayout() {
+  const { unreadCount, newMessageEvent } = useUnreadConversations("coach");
+
   return (
+    <>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -55,6 +60,8 @@ export default function CoachTabsLayout() {
         name="messages/index"
         options={{
           title: "Messages",
+          tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
+          tabBarBadgeStyle: { backgroundColor: Colors.primary },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubble" color={color} size={size} />
           ),
@@ -75,5 +82,10 @@ export default function CoachTabsLayout() {
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />
       <Tabs.Screen name="profil-pro" options={{ href: null }} />
     </Tabs>
+    <MessageToast
+      event={newMessageEvent}
+      onPress={(sportifId) => router.push(`/coach/messages/${sportifId}`)}
+    />
+    </>
   );
 }

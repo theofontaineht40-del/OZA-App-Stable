@@ -111,12 +111,21 @@ export default function SportifMessagesListScreen() {
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{row.name}</Text>
-              <Text style={styles.preview} numberOfLines={1}>
+              <View style={styles.nameRow}>
+                <Text style={styles.name}>{row.name}</Text>
+                {row.conversation?.unreadBySportif && (
+                  <View style={styles.unreadBadge}>
+                    <Text style={styles.unreadBadgeText}>Non lu</Text>
+                  </View>
+                )}
+              </View>
+              <Text
+                style={[styles.preview, row.conversation?.unreadBySportif && styles.previewUnread]}
+                numberOfLines={1}
+              >
                 {row.conversation?.lastMessageText || row.badge || "Aucun message"}
               </Text>
             </View>
-            {row.conversation?.unreadBySportif && <View style={styles.unreadDot} />}
           </TouchableOpacity>
         ))
       )}
@@ -210,6 +219,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
   name: {
     fontSize: 15,
     fontWeight: "600",
@@ -222,10 +237,21 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  unreadDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+  previewUnread: {
+    color: Colors.text,
+    fontWeight: "600",
+  },
+
+  unreadBadge: {
     backgroundColor: Colors.primary,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+
+  unreadBadgeText: {
+    color: Colors.white,
+    fontSize: 10,
+    fontWeight: "700",
   },
 });

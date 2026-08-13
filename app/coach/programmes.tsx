@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import AnimatedPressable from "../../components/animated-pressable";
 import ConfirmModal from "../../components/confirm-modal";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import PlanificationTimeline from "../../components/planification-timeline";
@@ -270,7 +271,7 @@ export default function ProgrammesScreen() {
         <>
           <Text style={styles.sectionTitle}>Programmes coachés</Text>
           {assignedProgrammes.map((p) => (
-            <TouchableOpacity
+            <AnimatedPressable
               key={p.id}
               style={styles.programmeRow}
               onPress={() => router.push(`/coach/programme/${p.id}`)}
@@ -287,7 +288,7 @@ export default function ProgrammesScreen() {
               <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
                 <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
-            </TouchableOpacity>
+            </AnimatedPressable>
           ))}
         </>
       )}
@@ -296,7 +297,7 @@ export default function ProgrammesScreen() {
         <>
           <Text style={styles.sectionTitle}>Programmes non assignés</Text>
           {orphanProgrammes.map((p) => (
-            <TouchableOpacity
+            <AnimatedPressable
               key={p.id}
               style={styles.programmeRow}
               onPress={() => router.push(`/coach/programme/${p.id}`)}
@@ -313,7 +314,7 @@ export default function ProgrammesScreen() {
               <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
                 <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
-            </TouchableOpacity>
+            </AnimatedPressable>
           ))}
         </>
       )}

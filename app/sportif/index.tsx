@@ -14,6 +14,7 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
+import { HeaderTexture } from "../../components/decor";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { buildDailyLoadSeries } from "../../services/load";
@@ -101,8 +102,11 @@ export default function SportifHome() {
       <Animated.View
         style={{ opacity: fade, transform: [{ translateY: slide }] }}
       >
-        <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
-        <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
+        <View style={styles.header}>
+          <HeaderTexture />
+          <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
+          <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
+        </View>
 
         <LinearGradient
           colors={[Colors.primary, Colors.primaryDark]}
@@ -145,7 +149,7 @@ export default function SportifHome() {
         {programmes.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>Mon programme</Text>
-            <TouchableOpacity
+            <AnimatedPressable
               style={styles.programmeCard}
               onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
             >
@@ -160,7 +164,7 @@ export default function SportifHome() {
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-            </TouchableOpacity>
+            </AnimatedPressable>
           </>
         )}
 
@@ -288,6 +292,11 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
     paddingBottom: 40,
+  },
+
+  header: {
+    position: "relative",
+    overflow: "hidden",
   },
 
   greeting: {

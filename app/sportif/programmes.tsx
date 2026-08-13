@@ -4,6 +4,8 @@ import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import AnimatedPressable from "../../components/animated-pressable";
+import { AmbientWash } from "../../components/decor";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
@@ -45,11 +47,13 @@ export default function SportifProgrammesScreen() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.container}>
+      <AmbientWash />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
       <Text style={styles.title}>Programmes</Text>
 
@@ -66,7 +70,7 @@ export default function SportifProgrammesScreen() {
         </View>
       ) : (
         programmes.map((p) => (
-          <TouchableOpacity
+          <AnimatedPressable
             key={p.id}
             style={styles.programmeRow}
             onPress={() => router.push(`/sportif/programme/${p.id}`)}
@@ -81,11 +85,12 @@ export default function SportifProgrammesScreen() {
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-          </TouchableOpacity>
+          </AnimatedPressable>
         ))
       )}
       </Animated.View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -93,6 +98,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+
+  scroll: {
+    flex: 1,
   },
 
   content: {

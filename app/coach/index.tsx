@@ -11,8 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Svg, { Circle, Defs, LinearGradient as SvgLinearGradient, Line, Stop } from "react-native-svg";
 
+import AnimatedPressable from "../../components/animated-pressable";
+import { HeaderTexture } from "../../components/decor";
 import MiniSparkline from "../../components/mini-sparkline";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import { riskColor } from "../../components/load-summary";
@@ -190,7 +191,7 @@ export default function CoachHome() {
               sportifs.map((sportif) => {
                 const { weeklyLoad, riskLevel } = getSportifLoadInfo(sportif.uid);
                 return (
-                  <TouchableOpacity
+                  <AnimatedPressable
                     key={sportif.uid}
                     style={styles.sportifRow}
                     onPress={() => router.push(`/coach/sportif/${sportif.uid}`)}
@@ -214,7 +215,7 @@ export default function CoachHome() {
                       </View>
                     </View>
                     <Ionicons name="chevron-forward" size={18} color={DARK.textSecondary} />
-                  </TouchableOpacity>
+                  </AnimatedPressable>
                 );
               })
             )}
@@ -301,28 +302,6 @@ export default function CoachHome() {
   );
 }
 
-// Texture graphique discrète dans le header (lignes fines + points), en
-// attendant une vraie photo N&B d'athlète/salle à intégrer plus tard —
-// évite de fabriquer une image sans avoir de photo sous licence à disposition.
-function HeaderTexture() {
-  return (
-    <View style={styles.headerTexture} pointerEvents="none">
-      <Svg width="100%" height="100%" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
-        <Defs>
-          <SvgLinearGradient id="fade" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FF2D7A" stopOpacity={0.5} />
-            <Stop offset="100%" stopColor="#FF2D7A" stopOpacity={0} />
-          </SvgLinearGradient>
-        </Defs>
-        <Line x1="260" y1="-20" x2="440" y2="160" stroke="url(#fade)" strokeWidth={1} />
-        <Line x1="300" y1="-20" x2="480" y2="160" stroke="url(#fade)" strokeWidth={1} />
-        <Line x1="340" y1="-20" x2="520" y2="160" stroke="url(#fade)" strokeWidth={1} />
-        <Circle cx="365" cy="35" r="70" stroke="#FF2D7A" strokeOpacity={0.18} strokeWidth={1} fill="none" />
-      </Svg>
-    </View>
-  );
-}
-
 function StatCard({
   icon,
   label,
@@ -398,14 +377,6 @@ const styles = StyleSheet.create({
     paddingBottom: 28,
     paddingHorizontal: 24,
     overflow: "hidden",
-  },
-
-  headerTexture: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
 
   greeting: {

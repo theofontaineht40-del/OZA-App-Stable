@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import { AvatarHalo } from "../../components/decor";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
 
@@ -55,6 +56,7 @@ export default function ProfilScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        <AvatarHalo />
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{initials}</Text>
         </View>
@@ -108,6 +110,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 2,
     marginBottom: 24,
+    overflow: "hidden",
   },
 
   avatar: {

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
+import { AvatarHalo } from "../../components/decor";
 import ImageCropModal from "../../components/image-crop-modal";
 import { uploadCoachPhoto } from "../../services/discovery";
 import { auth, db } from "../../firebase";
@@ -96,6 +97,7 @@ export default function ProfilScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        <AvatarHalo />
         <TouchableOpacity style={styles.avatar} onPress={handlePickPhoto} disabled={uploadingPhoto}>
           {uploadingPhoto ? (
             <ActivityIndicator color={Colors.white} />
@@ -178,6 +180,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 2,
     marginBottom: 24,
+    overflow: "hidden",
   },
 
   avatar: {

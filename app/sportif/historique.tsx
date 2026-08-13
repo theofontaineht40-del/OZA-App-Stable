@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { GraphGridTexture } from "../../components/decor";
 import ProgressionChart, { ProgressionPoint } from "../../components/progression-chart";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
@@ -55,8 +56,11 @@ export default function HistoriqueScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Historique des séances</Text>
-      <Text style={styles.subtitle}>Vos séances enregistrées</Text>
+      <View style={styles.header}>
+        <GraphGridTexture />
+        <Text style={styles.title}>Historique des séances</Text>
+        <Text style={styles.subtitle}>Vos séances enregistrées</Text>
+      </View>
 
       {exerciceNames.length > 0 && (
         <View style={styles.progressionSection}>
@@ -129,6 +133,11 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
     paddingBottom: 60,
+  },
+
+  header: {
+    position: "relative",
+    overflow: "hidden",
   },
 
   title: {

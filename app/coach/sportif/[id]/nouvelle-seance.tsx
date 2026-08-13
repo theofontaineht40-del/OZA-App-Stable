@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import PulseDot from "../../../../components/pulse-dot";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { getRelation } from "../../../../services/relations";
@@ -127,7 +128,7 @@ export default function CoachNouvelleSeanceScreen() {
       </Text>
       <View style={styles.rpeRow}>
         {RPE_SCALE.map((value) => (
-          <TouchableOpacity
+          <PulseDot
             key={value}
             style={[styles.rpeDot, rpe === value && styles.rpeDotActive]}
             onPress={() => setRpe(value)}
@@ -135,7 +136,7 @@ export default function CoachNouvelleSeanceScreen() {
             <Text style={[styles.rpeDotText, rpe === value && styles.rpeDotTextActive]}>
               {value}
             </Text>
-          </TouchableOpacity>
+          </PulseDot>
         ))}
       </View>
 

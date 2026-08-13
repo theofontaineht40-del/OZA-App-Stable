@@ -7,7 +7,12 @@ import { Colors } from "../constants/colors";
 type Props = { size?: number };
 
 const INK = Colors.black;
-const FILL = "#FFE3EE";
+// Le fond des illustrations passe du rose clair d'origine (pré-thème sombre)
+// à la surface anthracite, cohérent avec les cartes du reste de l'appli.
+const FILL = Colors.surfaceAlt;
+// Pour les traits/formes posés directement sur ce fond sombre (pas sur une
+// forme blanche par-dessus) : INK (quasi noir) y serait invisible.
+const INK_ON_FILL = Colors.textSecondary;
 
 // Léger flottement continu (translation + rotation) pour donner un peu de
 // vie aux illustrations qui remplissent les écrans vides, sans distraire de
@@ -65,11 +70,11 @@ export function ProgrammeIllustration({ size = 96 }: Props) {
     <FloatingIllustration seed={2}>
       <Svg width={size} height={size} viewBox="0 0 96 96">
         <Circle cx="48" cy="48" r="44" fill={FILL} />
-        <Line x1="20" y1="48" x2="76" y2="48" stroke={INK} strokeWidth={4} strokeLinecap="round" />
+        <Line x1="20" y1="48" x2="76" y2="48" stroke={INK_ON_FILL} strokeWidth={4} strokeLinecap="round" />
         <Rect x="14" y="36" width="12" height="24" rx="4" fill={Colors.primary} />
         <Rect x="70" y="36" width="12" height="24" rx="4" fill={Colors.primary} />
-        <Rect x="28" y="41" width="8" height="14" rx="3" fill={INK} />
-        <Rect x="60" y="41" width="8" height="14" rx="3" fill={INK} />
+        <Rect x="28" y="41" width="8" height="14" rx="3" fill={INK_ON_FILL} />
+        <Rect x="60" y="41" width="8" height="14" rx="3" fill={INK_ON_FILL} />
         <Path
           d="M40 30l2 8M56 30l-2 8"
           stroke={Colors.primaryDark}

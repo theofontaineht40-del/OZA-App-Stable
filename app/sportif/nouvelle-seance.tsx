@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import PulseDot from "../../components/pulse-dot";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { addSession, addWellnessEntry } from "../../services/tracking";
@@ -120,7 +121,7 @@ export default function NouvelleSeanceScreen() {
               <Text style={styles.wellnessLabel}>{item.label}</Text>
               <View style={styles.scaleRow}>
                 {[1, 2, 3, 4, 5].map((value) => (
-                  <TouchableOpacity
+                  <PulseDot
                     key={value}
                     style={[
                       styles.scaleDot,
@@ -136,7 +137,7 @@ export default function NouvelleSeanceScreen() {
                     >
                       {value}
                     </Text>
-                  </TouchableOpacity>
+                  </PulseDot>
                 ))}
               </View>
             </View>
@@ -155,7 +156,7 @@ export default function NouvelleSeanceScreen() {
           </Text>
           <View style={styles.rpeRow}>
             {RPE_SCALE.map((value) => (
-              <TouchableOpacity
+              <PulseDot
                 key={value}
                 style={[styles.rpeDot, rpe === value && styles.rpeDotActive]}
                 onPress={() => setRpe(value)}
@@ -168,7 +169,7 @@ export default function NouvelleSeanceScreen() {
                 >
                   {value}
                 </Text>
-              </TouchableOpacity>
+              </PulseDot>
             ))}
           </View>
 

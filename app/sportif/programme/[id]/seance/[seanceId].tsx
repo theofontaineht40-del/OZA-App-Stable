@@ -2,9 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +14,8 @@ import {
   View,
 } from "react-native";
 
+import PulseDot from "../../../../../components/pulse-dot";
+import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
 import { Colors } from "../../../../../constants/colors";
 import { auth, db } from "../../../../../firebase";
 import { ChargeType, getProgramme, Programme } from "../../../../../services/programmes";
@@ -49,6 +52,40 @@ type ExerciseState = {
   complete: boolean;
 };
 
+function ExerciceCheck({
+  complete,
+  name,
+  onToggle,
+}: {
+  complete: boolean;
+  name: string;
+  onToggle: () => void;
+}) {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  function handlePress() {
+    onToggle();
+    scale.setValue(1);
+    Animated.sequence([
+      Animated.timing(scale, { toValue: 1.3, duration: 100, useNativeDriver: true }),
+      Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 4 }),
+    ]).start();
+  }
+
+  return (
+    <TouchableOpacity style={styles.exerciceHeader} onPress={handlePress} activeOpacity={0.8}>
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <Ionicons
+          name={complete ? "checkmark-circle" : "ellipse-outline"}
+          size={22}
+          color={complete ? Colors.primary : Colors.grayMedium}
+        />
+      </Animated.View>
+      <Text style={styles.exerciceName}>{name}</Text>
+    </TouchableOpacity>
+  );
+}
+
 export default function SeanceExecutionScreen() {
   const { id, seanceId } = useLocalSearchParams<{ id: string; seanceId: string }>();
   const [uid, setUid] = useState<string | null>(null);
@@ -66,6 +103,11 @@ export default function SeanceExecutionScreen() {
   const [duration, setDuration] = useState("");
   const [commentaire, setCommentaire] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [completedSummary, setCompletedSummary] = useState<{
+    rpe: number;
+    duration: number;
+    load: number;
+  } | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -159,8 +201,7 @@ export default function SeanceExecutionScreen() {
           exerciseLogs,
         },
       });
-      showAlert("Séance enregistrée", "Votre charge d'entraînement a été calculée.");
-      router.push("/sportif");
+      setCompletedSummary({ rpe, duration: durationNumber, load: rpe * durationNumber });
     } finally {
       setSubmitting(false);
     }
@@ -201,7 +242,7 @@ export default function SeanceExecutionScreen() {
             <Text style={styles.wellnessLabel}>{item.label}</Text>
             <View style={styles.scaleRow}>
               {[1, 2, 3, 4, 5].map((value) => (
-                <TouchableOpacity
+                <PulseDot
                   key={value}
                   style={[styles.scaleDot, wellness[item.key] === value && styles.scaleDotActive]}
                   onPress={() => setWellnessValue(item.key, value)}
@@ -214,7 +255,7 @@ export default function SeanceExecutionScreen() {
                   >
                     {value}
                   </Text>
-                </TouchableOpacity>
+                </PulseDot>
               ))}
             </View>
           </View>
@@ -231,17 +272,11 @@ export default function SeanceExecutionScreen() {
             if (!state) return null;
             return (
               <View key={ex.id} style={styles.exerciceCard}>
-                <TouchableOpacity
-                  style={styles.exerciceHeader}
-                  onPress={() => toggleComplete(ex.id)}
-                >
-                  <Ionicons
-                    name={state.complete ? "checkmark-circle" : "ellipse-outline"}
-                    size={22}
-                    color={state.complete ? Colors.primary : Colors.grayMedium}
-                  />
-                  <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
-                </TouchableOpacity>
+                <ExerciceCheck
+                  complete={state.complete}
+                  name={ex.exerciceNom}
+                  onToggle={() => toggleComplete(ex.id)}
+                />
                 <Text style={styles.prescrit}>
                   Prescrit : {ex.series} × {ex.repetitions}
                   {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
@@ -291,7 +326,7 @@ export default function SeanceExecutionScreen() {
       </Text>
       <View style={styles.rpeRow}>
         {RPE_SCALE.map((value) => (
-          <TouchableOpacity
+          <PulseDot
             key={value}
             style={[styles.rpeDot, rpe === value && styles.rpeDotActive]}
             onPress={() => setRpe(value)}
@@ -299,7 +334,7 @@ export default function SeanceExecutionScreen() {
             <Text style={[styles.rpeDotText, rpe === value && styles.rpeDotTextActive]}>
               {value}
             </Text>
-          </TouchableOpacity>
+          </PulseDot>
         ))}
       </View>
 
@@ -340,6 +375,14 @@ export default function SeanceExecutionScreen() {
           <Text style={styles.primaryButtonText}>Terminer la séance</Text>
         )}
       </TouchableOpacity>
+
+      <SessionCompleteOverlay
+        visible={!!completedSummary}
+        rpe={completedSummary?.rpe ?? 0}
+        duration={completedSummary?.duration ?? 0}
+        load={completedSummary?.load ?? 0}
+        onDone={() => router.push("/sportif")}
+      />
     </ScrollView>
   );
 }

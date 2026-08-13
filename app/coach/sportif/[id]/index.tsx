@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { GraphGridTexture } from "../../../../components/decor";
 import { LoadSummary } from "../../../../components/load-summary";
 import ProgressionChart, { ProgressionPoint } from "../../../../components/progression-chart";
 import { Colors } from "../../../../constants/colors";
@@ -167,8 +168,11 @@ export default function SportifDetailScreen() {
         <Text style={styles.backText}>Mes sportifs</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>{name ?? ""}</Text>
-      <Text style={styles.subtitle}>Charge d'entraînement — 28 derniers jours</Text>
+      <View style={styles.header}>
+        <GraphGridTexture />
+        <Text style={styles.title}>{name ?? ""}</Text>
+        <Text style={styles.subtitle}>Charge d'entraînement — 28 derniers jours</Text>
+      </View>
 
       <TouchableOpacity
         style={styles.evaluationLink}
@@ -352,6 +356,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.text,
     fontWeight: "600",
+  },
+
+  header: {
+    position: "relative",
+    overflow: "hidden",
   },
 
   title: {

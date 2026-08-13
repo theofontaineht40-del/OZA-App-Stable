@@ -165,12 +165,20 @@ export default function ImageCropModal({ visible, imageUri, onCancel, onConfirm 
 const styles: Record<string, React.CSSProperties> = {
   backdrop: {
     position: "fixed",
-    inset: 0,
+    // `inset` plutôt que top/left/right/bottom cassait silencieusement sur
+    // certains navigateurs mobiles (support CSS plus tardif que sur desktop) :
+    // le panneau se retrouvait sans position définie, donc invisible/inerte.
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: "rgba(0,0,0,0.75)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1000,
+    padding: 16,
+    boxSizing: "border-box",
   },
 
   panel: {
@@ -204,7 +212,10 @@ const styles: Record<string, React.CSSProperties> = {
 
   circleMask: {
     position: "absolute",
-    inset: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     borderRadius: VIEWPORT / 2,
     boxShadow: `inset 0 0 0 2px ${Colors.primary}`,
     pointerEvents: "none",

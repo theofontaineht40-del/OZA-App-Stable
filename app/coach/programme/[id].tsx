@@ -237,7 +237,12 @@ export default function ProgrammeEditorScreen() {
         </View>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.seanceTabs}>
+      <View style={styles.seanceTabsWrapper}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.seanceTabs}
+      >
         {programme.seances.map((s, i) => (
           <View
             key={s.id}
@@ -288,6 +293,7 @@ export default function ProgrammeEditorScreen() {
           <Ionicons name="add" size={18} color={Colors.primary} />
         </TouchableOpacity>
       </ScrollView>
+      </View>
 
       <View style={styles.seanceHeaderRow}>
         <TextInput
@@ -804,11 +810,14 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  seanceTabs: {
+  seanceTabsWrapper: {
     height: 44,
-    paddingHorizontal: 20,
     marginBottom: 8,
-    flexGrow: 0,
+  },
+
+  seanceTabs: {
+    paddingHorizontal: 20,
+    alignItems: "center",
   },
 
   seanceTab: {

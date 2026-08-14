@@ -26,6 +26,7 @@ export type Specialite = (typeof SPECIALITES)[number];
 // rééducation/réathlétisation, mais ne sont pas mis en avant dans la
 // marketplace publique.
 export const DECOUVRIR_SPECIALITES: Specialite[] = [
+  "Préparateur physique",
   "Coach mobilité",
   "Coach yoga",
   "Coach Pilates",

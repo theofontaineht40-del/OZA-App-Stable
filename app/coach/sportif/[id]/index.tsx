@@ -16,6 +16,7 @@ import {
   getSessionsForCoach,
   getWellnessForCoach,
   SessionRecord,
+  WellnessEntry,
 } from "../../../../services/tracking";
 
 export default function SportifDetailScreen() {
@@ -23,7 +24,7 @@ export default function SportifDetailScreen() {
   const [name, setName] = useState<string | null>(null);
   const [relation, setRelation] = useState<Relation | null | undefined>(undefined);
   const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
-  const [wellness, setWellness] = useState<{ date: string; score: number } | null>(null);
+  const [wellness, setWellness] = useState<WellnessEntry[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -70,9 +71,9 @@ export default function SportifDetailScreen() {
           const wellnessData = (await getWellnessForCoach(coachId)).filter(
             (w) => w.sportifId === id
           );
-          setWellness(wellnessData[0] ?? null);
+          setWellness(wellnessData);
         } catch {
-          setWellness(null);
+          setWellness([]);
         }
       } else {
         setSessions([]);
@@ -156,6 +157,21 @@ export default function SportifDetailScreen() {
   }
 
   const dailyLoads28 = buildDailyLoadSeries(sessions, 28);
+  const latestWellness = wellness[0] ?? null;
+  const wellnessHistory: ProgressionPoint[] = wellness
+    .slice(0, 28)
+    .slice()
+    .reverse()
+    .map((w) => ({ date: w.date, value: w.score }));
+  const wellnessBreakdown: { label: string; value: number }[] = latestWellness
+    ? [
+        { label: "Sommeil", value: latestWellness.sommeil },
+        { label: "Fatigue", value: latestWellness.fatigue },
+        { label: "Courbatures", value: latestWellness.courbatures },
+        { label: "Stress", value: latestWellness.stress },
+        { label: "Humeur", value: latestWellness.humeur },
+      ]
+    : [];
 
   return (
     <ScrollView
@@ -255,14 +271,29 @@ export default function SportifDetailScreen() {
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
 
-      {wellness && (
-        <View style={styles.wellnessCard}>
-          <Ionicons name="happy-outline" size={20} color={Colors.primary} />
-          <View>
-            <Text style={styles.wellnessScore}>
-              Bien-être : {wellness.score.toFixed(1)} / 5
-            </Text>
-            <Text style={styles.wellnessDate}>Dernier questionnaire : {wellness.date}</Text>
+      {latestWellness && (
+        <View style={styles.progressionSection}>
+          <View style={styles.wellnessHeaderRow}>
+            <Ionicons name="happy-outline" size={20} color={Colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.wellnessScore}>
+                Bien-être (Hooper) : {latestWellness.score.toFixed(1)} / 5
+              </Text>
+              <Text style={styles.wellnessDate}>
+                Dernier check-in : {latestWellness.date}
+              </Text>
+            </View>
+          </View>
+
+          <ProgressionChart points={wellnessHistory} />
+
+          <View style={styles.wellnessBreakdownRow}>
+            {wellnessBreakdown.map((item) => (
+              <View key={item.label} style={styles.wellnessBreakdownChip}>
+                <Text style={styles.wellnessBreakdownValue}>{item.value}</Text>
+                <Text style={styles.wellnessBreakdownLabel}>{item.label}</Text>
+              </View>
+            ))}
           </View>
         </View>
       )}
@@ -437,15 +468,11 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
 
-  wellnessCard: {
+  wellnessHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.accentTint,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 12,
   },
 
   wellnessScore: {
@@ -458,6 +485,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+
+  wellnessBreakdownRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 12,
+  },
+
+  wellnessBreakdownChip: {
+    flex: 1,
+    minWidth: 64,
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+
+  wellnessBreakdownValue: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.primary,
+  },
+
+  wellnessBreakdownLabel: {
+    fontSize: 10,
+    color: Colors.textSecondary,
+    marginTop: 2,
+    textAlign: "center",
   },
 
   sessionsHeaderRow: {

@@ -17,6 +17,12 @@ import {
   WellnessInput,
 } from "./load";
 
+export type WellnessEntry = WellnessInput & {
+  sportifId: string;
+  date: string;
+  score: number;
+};
+
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sans caractères ambigus
 
 export function generateCoachCode(): string {
@@ -231,13 +237,23 @@ export async function getWellnessForSportif(
 // Le coach ne peut pas interroger `wellness` filtré par sportifId (règles
 // Firestore : seul un filtre sur coachId est prouvable pour une liste). On
 // récupère donc tout son propre périmètre puis on filtre côté client.
-export async function getWellnessForCoach(
-  coachUid: string
-): Promise<{ sportifId: string; date: string; score: number }[]> {
+export async function getWellnessForCoach(coachUid: string): Promise<WellnessEntry[]> {
   const q = query(collection(db, "wellness"), where("coachId", "==", coachUid));
   const snap = await getDocs(q);
 
   return snap.docs
-    .map((d) => ({ sportifId: d.data().sportifId, date: d.data().date, score: d.data().score }))
+    .map((d) => {
+      const data = d.data();
+      return {
+        sportifId: data.sportifId,
+        date: data.date,
+        score: data.score,
+        sommeil: data.sommeil,
+        fatigue: data.fatigue,
+        courbatures: data.courbatures,
+        stress: data.stress,
+        humeur: data.humeur,
+      };
+    })
     .sort((a, b) => b.date.localeCompare(a.date));
 }

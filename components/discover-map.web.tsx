@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import type * as Leaflet from "leaflet";
 import type {
@@ -9,6 +9,7 @@ import type {
 
 import { Colors } from "../constants/colors";
 import { escapeHtml } from "../utils/escape-html";
+import { spreadOverlappingPins } from "../utils/spread-map-pins";
 
 export type MapCoachPin = {
   uid: string;
@@ -85,18 +86,19 @@ function LoadedMap({
 }: Props & { bundle: LeafletBundle }) {
   const { L, MapContainer, TileLayer, Marker } = bundle;
   const mapRef = useRef<Leaflet.Map | null>(null);
+  const spread = useMemo(() => spreadOverlappingPins(coaches), [coaches]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    if (coaches.length === 0) return;
-    if (coaches.length === 1) {
-      map.setView([coaches[0].lat, coaches[0].lng], 12);
+    if (spread.length === 0) return;
+    if (spread.length === 1) {
+      map.setView([spread[0].lat, spread[0].lng], 12);
       return;
     }
-    const bounds = L.latLngBounds(coaches.map((c) => [c.lat, c.lng] as [number, number]));
+    const bounds = L.latLngBounds(spread.map((c) => [c.lat, c.lng] as [number, number]));
     map.fitBounds(bounds, { padding: [40, 40] });
-  }, [coaches, L]);
+  }, [spread, L]);
 
   function pinIcon(active: boolean, label: string) {
     return L.divIcon({
@@ -123,7 +125,7 @@ function LoadedMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {coaches.map((c) => (
+        {spread.map((c) => (
           <Marker
             key={c.uid}
             position={[c.lat, c.lng]}

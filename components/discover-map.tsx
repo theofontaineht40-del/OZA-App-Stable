@@ -4,6 +4,7 @@ import WebView, { WebViewMessageEvent } from "react-native-webview";
 
 import { Colors } from "../constants/colors";
 import { escapeHtml } from "../utils/escape-html";
+import { spreadOverlappingPins } from "../utils/spread-map-pins";
 
 export type MapCoachPin = {
   uid: string;
@@ -24,8 +25,9 @@ const FRANCE_CENTER = { lat: 46.6, lng: 2.4 };
 // OpenStreetMap dans une WebView, avec les mêmes tuiles que la version web
 // (components/discover-map.web.tsx) pour un rendu identique.
 function buildHtml(coaches: MapCoachPin[], selectedUid: string | null): string {
+  const spread = spreadOverlappingPins(coaches);
   const markers = JSON.stringify(
-    coaches.map((c) => ({ uid: c.uid, lat: c.lat, lng: c.lng, label: escapeHtml(c.label), active: c.uid === selectedUid }))
+    spread.map((c) => ({ uid: c.uid, lat: c.lat, lng: c.lng, label: escapeHtml(c.label), active: c.uid === selectedUid }))
   );
 
   return `<!DOCTYPE html>

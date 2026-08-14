@@ -20,13 +20,14 @@ import { auth, db } from "../../firebase";
 import { buildDailyLoadSeries } from "../../services/load";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
-import { getSessionsForSportif, SessionRecord } from "../../services/tracking";
+import { getLatestWellnessScore, getSessionsForSportif, SessionRecord } from "../../services/tracking";
 
 export default function SportifHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [upcomingSlots, setUpcomingSlots] = useState<Slot[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [checkinDone, setCheckinDone] = useState(true);
   const [loading, setLoading] = useState(true);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
@@ -42,14 +43,16 @@ export default function SportifHome() {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-        const [sessionData, slotData, programmeData] = await Promise.all([
+        const [sessionData, slotData, programmeData, todayScore] = await Promise.all([
           getSessionsForSportif(user.uid),
           getSlotsForSportif(user.uid),
           getProgrammesForSportif(user.uid),
+          getLatestWellnessScore(user.uid),
         ]);
         setSessions(sessionData);
         setUpcomingSlots(slotData);
         setProgrammes(programmeData);
+        setCheckinDone(todayScore !== null);
       } finally {
         setLoading(false);
       }
@@ -107,6 +110,24 @@ export default function SportifHome() {
           <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
           <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
         </View>
+
+        {!checkinDone && (
+          <AnimatedPressable
+            style={styles.checkinCard}
+            onPress={() => router.push("/sportif/checkin")}
+          >
+            <View style={styles.checkinIconWrap}>
+              <Ionicons name="pulse-outline" size={20} color={Colors.primary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.checkinTitle}>Check-in du jour</Text>
+              <Text style={styles.checkinText}>
+                Sommeil, fatigue, stress... 30 secondes pour votre coach.
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
+          </AnimatedPressable>
+        )}
 
         <LinearGradient
           colors={[Colors.primary, Colors.primaryDark]}
@@ -310,6 +331,40 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 24,
+  },
+
+  checkinCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+
+  checkinIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: Colors.accentTint,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  checkinTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  checkinText: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
   },
 
   hero: {

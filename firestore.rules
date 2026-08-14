@@ -175,8 +175,13 @@ service cloud.firestore {
     // Lisible par le sportif lui-même et par le coach qui suivait la séance
     // au moment de la saisie (voir services/tracking.ts::addWellnessEntry).
     match /wellness/{wellnessId} {
+      // L'id (sportifUid_date) est vérifié en premier, avant resource.data :
+      // un sportif qui regarde si son check-in du jour existe déjà lit un
+      // document potentiellement inexistant, et une règle basée uniquement
+      // sur resource.data échoue en "permission-denied" dans ce cas (même
+      // gotcha que /conversations plus bas).
       allow read: if isSignedIn() && (
-        resource.data.sportifId == request.auth.uid ||
+        wellnessId.split("_")[0] == request.auth.uid ||
         resource.data.coachId == request.auth.uid
       );
       allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;

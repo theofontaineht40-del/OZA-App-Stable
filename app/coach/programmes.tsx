@@ -44,6 +44,7 @@ export default function ProgrammesScreen() {
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [expandedSportifId, setExpandedSportifId] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -230,11 +231,12 @@ export default function ProgrammesScreen() {
       ) : (
         sportifs.map((s) => {
           const planification = planifications[s.uid];
+          const expanded = expandedSportifId === s.uid;
           return (
             <View key={s.uid} style={styles.sportifCard}>
               <TouchableOpacity
                 style={styles.sportifHeader}
-                onPress={() => router.push(`/coach/sportif/${s.uid}`)}
+                onPress={() => setExpandedSportifId(expanded ? null : s.uid)}
               >
                 <View style={styles.avatar}>
                   <Text style={styles.avatarText}>
@@ -252,16 +254,22 @@ export default function ProgrammesScreen() {
                     </Text>
                   )}
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+                <Ionicons
+                  name={expanded ? "chevron-down" : "chevron-forward"}
+                  size={18}
+                  color={Colors.textSecondary}
+                />
               </TouchableOpacity>
 
-              <PlanificationTimeline
-                blocks={planification?.blocks ?? []}
-                weeksTotal={planification?.weeksTotal ?? 8}
-                startDate={planification?.startDate ?? null}
-                programmeNames={programmeNames}
-                onPressBlock={(block) => handlePressBlock(s.uid, block)}
-              />
+              {expanded && (
+                <PlanificationTimeline
+                  blocks={planification?.blocks ?? []}
+                  weeksTotal={planification?.weeksTotal ?? 8}
+                  startDate={planification?.startDate ?? null}
+                  programmeNames={programmeNames}
+                  onPressBlock={(block) => handlePressBlock(s.uid, block)}
+                />
+              )}
             </View>
           );
         })

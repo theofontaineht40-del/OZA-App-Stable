@@ -118,6 +118,17 @@ export default function ProgrammeEditorScreen() {
     );
   }
 
+  function handleMoveSeance(seanceId: string, direction: -1 | 1) {
+    updateSeances((seances) => {
+      const index = seances.findIndex((s) => s.id === seanceId);
+      const target = index + direction;
+      if (target < 0 || target >= seances.length) return seances;
+      const copy = [...seances];
+      [copy[index], copy[target]] = [copy[target], copy[index]];
+      return copy;
+    });
+  }
+
   function handleDeleteSeance() {
     if (programme!.seances.length <= 1) return;
     setDeleteSeanceConfirm(true);
@@ -227,16 +238,51 @@ export default function ProgrammeEditorScreen() {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.seanceTabs}>
-        {programme.seances.map((s) => (
-          <TouchableOpacity
+        {programme.seances.map((s, i) => (
+          <View
             key={s.id}
             style={[styles.seanceTab, activeSeance.id === s.id && styles.seanceTabActive]}
-            onPress={() => setActiveSeanceId(s.id)}
           >
-            <Text style={[styles.seanceTabText, activeSeance.id === s.id && styles.seanceTabTextActive]}>
-              {s.nom}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleMoveSeance(s.id, -1)}
+              disabled={i === 0}
+              hitSlop={6}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={14}
+                color={
+                  i === 0
+                    ? Colors.grayMedium
+                    : activeSeance.id === s.id
+                    ? Colors.white
+                    : Colors.textSecondary
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveSeanceId(s.id)}>
+              <Text style={[styles.seanceTabText, activeSeance.id === s.id && styles.seanceTabTextActive]}>
+                {s.nom}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleMoveSeance(s.id, 1)}
+              disabled={i === programme.seances.length - 1}
+              hitSlop={6}
+            >
+              <Ionicons
+                name="chevron-forward"
+                size={14}
+                color={
+                  i === programme.seances.length - 1
+                    ? Colors.grayMedium
+                    : activeSeance.id === s.id
+                    ? Colors.white
+                    : Colors.textSecondary
+                }
+              />
+            </TouchableOpacity>
+          </View>
         ))}
         <TouchableOpacity style={styles.seanceAddTab} onPress={handleAddSeance}>
           <Ionicons name="add" size={18} color={Colors.primary} />
@@ -766,7 +812,10 @@ const styles = StyleSheet.create({
   },
 
   seanceTab: {
-    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 12,
     height: 36,
     borderRadius: 18,
     borderWidth: 1,

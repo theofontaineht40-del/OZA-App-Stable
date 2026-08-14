@@ -51,9 +51,6 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterGroupe, setFilterGroupe] = useState<GroupeMusculaire | null>(null);
-  const [filterMateriel, setFilterMateriel] = useState<Materiel | null>(null);
-  const [filterSport, setFilterSport] = useState<Sport | null>(null);
-  const [filterQualite, setFilterQualite] = useState<QualitePhysique | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const { width: windowWidth } = useWindowDimensions();
@@ -88,9 +85,6 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
     setVideoUri(null);
     setSearch("");
     setFilterGroupe(null);
-    setFilterMateriel(null);
-    setFilterSport(null);
-    setFilterQualite(null);
   }
 
   function handleClose() {
@@ -157,9 +151,6 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
   const filtered = library.filter((ex) => {
     if (search && !ex.nom.toLowerCase().includes(search.toLowerCase())) return false;
     if (filterGroupe && !ex.groupesMusculaires.includes(filterGroupe)) return false;
-    if (filterMateriel && !ex.materiel.includes(filterMateriel)) return false;
-    if (filterSport && !ex.sports.includes(filterSport)) return false;
-    if (filterQualite && !ex.qualitesPhysiques.includes(filterQualite)) return false;
     return true;
   });
 
@@ -261,13 +252,6 @@ export default function ExercisePickerModal({ visible, coachId, onClose, onSelec
               selected={filterGroupe}
               onSelect={setFilterGroupe}
             />
-            <SingleFilterRow options={MATERIELS} selected={filterMateriel} onSelect={setFilterMateriel} />
-            <SingleFilterRow options={SPORTS} selected={filterSport} onSelect={setFilterSport} />
-            <SingleFilterRow
-              options={QUALITES_PHYSIQUES}
-              selected={filterQualite}
-              onSelect={setFilterQualite}
-            />
 
             <TouchableOpacity style={styles.createRow} onPress={() => setShowCreateForm(true)}>
               <Ionicons name="add-circle" size={20} color={Colors.primary} />
@@ -321,19 +305,25 @@ function SingleFilterRow<T extends string>({
   onSelect: (value: T | null) => void;
 }) {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
-      {options.map((opt) => (
-        <TouchableOpacity
-          key={opt}
-          style={[styles.filterChip, selected === opt && styles.filterChipActive]}
-          onPress={() => onSelect(selected === opt ? null : opt)}
-        >
-          <Text style={[styles.filterChipText, selected === opt && styles.filterChipTextActive]}>
-            {opt}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+    <View style={styles.filterRowWrapper}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterRow}
+      >
+        {options.map((opt) => (
+          <TouchableOpacity
+            key={opt}
+            style={[styles.filterChip, selected === opt && styles.filterChipActive]}
+            onPress={() => onSelect(selected === opt ? null : opt)}
+          >
+            <Text style={[styles.filterChipText, selected === opt && styles.filterChipTextActive]}>
+              {opt}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -413,9 +403,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  filterRowWrapper: {
+    height: 44,
+    marginBottom: 8,
+  },
+
   filterRow: {
     paddingHorizontal: 24,
-    marginBottom: 8,
+    alignItems: "center",
   },
 
   chipsWrap: {

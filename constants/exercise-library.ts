@@ -172,6 +172,8 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
   { id: "velo", nom: "Vélo", groupesMusculaires: ["Quadriceps", "Full body"], materiel: ["Machine"], sports: ["Général"], qualitesPhysiques: ["Endurance"], icon: "bicycle-outline", pattern: "locomotion", photoUrl: `${IMAGE_BASE}/velo.png?v=${IMAGE_VERSION}` },
   { id: "gainage-lateral", nom: "Gainage latéral", groupesMusculaires: ["Abdominaux"], materiel: ["Poids du corps"], sports: ["Général"], qualitesPhysiques: ["Gainage"], icon: "body-outline", pattern: "core" },
   { id: "mollets-debout", nom: "Mollets debout", groupesMusculaires: ["Mollets"], materiel: ["Machine", "Haltères"], sports: ["Musculation"], qualitesPhysiques: ["Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/mollets-debout.png?v=${IMAGE_VERSION}` },
+  { id: "planche-copenhague", nom: "Planche latérale Copenhague", groupesMusculaires: ["Abdominaux", "Quadriceps"], materiel: ["Banc"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Gainage", "Force"], icon: "body-outline", pattern: "core", photoUrl: `${IMAGE_BASE}/planche-copenhague.png?v=${IMAGE_VERSION}` },
+  { id: "ecarte-poulie-unilateral", nom: "Écarté poulie unilatéral", groupesMusculaires: ["Pectoraux", "Épaules"], materiel: ["Machine"], sports: ["Musculation"], qualitesPhysiques: ["Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/ecarte-poulie-unilateral.png?v=${IMAGE_VERSION}` },
 ];
 
 export const BLOC_COLORS = [

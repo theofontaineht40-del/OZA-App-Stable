@@ -21,6 +21,12 @@ import ProgressionChart, { ProgressionPoint } from "./progression-chart";
 
 type VariableKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
 
+// Échelle 1-5 pour les 5 variables, TOUJOURS "plus haut = mieux" (5 = très
+// bon état, 1 = très mauvais), y compris pour fatigue/courbatures/stress :
+// un score de fatigue qui baisse signifie une dégradation de l'état de
+// fatigue (plus fatigué), pas une amélioration. Tous les libellés ci-dessous
+// parlent donc explicitement d'"état en dégradation/amélioration", jamais
+// de "hausse/baisse" seule qui prêterait à confusion.
 const VARIABLES: { key: VariableKey; label: string; icon: string }[] = [
   { key: "sommeil", label: "Sommeil", icon: "😴" },
   { key: "fatigue", label: "Fatigue", icon: "🔋" },
@@ -36,9 +42,9 @@ const STATUS_ICON: Record<WellnessStatus, string> = {
 };
 
 const STATUS_LABEL: Record<WellnessStatus, string> = {
-  green: "État favorable",
-  orange: "Vigilance",
-  red: "Attention",
+  green: "Récupération favorable",
+  orange: "Récupération à surveiller",
+  red: "Récupération défavorable",
 };
 
 const STATUS_COLOR: Record<WellnessStatus, string> = {
@@ -62,6 +68,12 @@ function daysAgo(dateStr: string, days: number): boolean {
   return d >= cutoff;
 }
 
+function trendLabel(direction: "up" | "down", subject: string, days: number): string {
+  return `${direction === "down" ? "🔴" : "🟢"} État de ${subject} en ${
+    direction === "down" ? "dégradation" : "amélioration"
+  } depuis ${days} jours`;
+}
+
 // entriesDesc : historique bien-être du sportif, le plus récent en premier
 // (même forme que renvoyée par getWellnessForCoach, déjà filtrée sur ce
 // sportif). dailyLoads28 : réutilisé tel quel depuis la page appelante
@@ -82,6 +94,7 @@ export default function WellnessReport({
   const avg7 = average(entriesDesc.slice(0, 7).map((e) => e.score));
   const avg28 = average(entriesDesc.slice(0, 28).map((e) => e.score));
   const personalBaseline = history.length >= 4 ? average(history.slice(0, 28).map((e) => e.score)) : null;
+  const deltaVs28 = latest && avg28 > 0 ? latest.score - avg28 : 0;
 
   const globalStatus: WellnessStatus | null = latest
     ? wellnessStatus(latest.score, personalBaseline)
@@ -99,6 +112,27 @@ export default function WellnessReport({
   const windowStats = computeWellnessTrendStats(windowEntries.map((e) => e.score));
   const globalTrend = detectConsecutiveTrend(entriesDesc.slice(0, 14).map((e) => e.score).reverse());
 
+  // Détail par variable, calculé une seule fois : sert à la fois à l'affichage
+  // des 5 indicateurs et à identifier les "facteurs de dégradation" pour
+  // l'Analyse OZA plus bas, sans dupliquer la logique.
+  const variableStats = useMemo(
+    () =>
+      latest
+        ? VARIABLES.map((v) => {
+            const varHistory = history.map((e) => e[v.key]);
+            const baseline = varHistory.length >= 4 ? average(varHistory.slice(0, 28)) : null;
+            const value = latest[v.key];
+            const status = wellnessStatus(value, baseline);
+            const trend = detectConsecutiveTrend(
+              entriesDesc.slice(0, 14).map((e) => e[v.key]).reverse()
+            );
+            const delta = baseline !== null ? value - baseline : null;
+            return { ...v, value, baseline, status, trend, delta };
+          })
+        : [],
+    [latest, history, entriesDesc]
+  );
+
   // Charge d'entraînement (déjà calculée ailleurs sur la page, on ne fait
   // que relire les mêmes données pour le croisement).
   const last7Loads = dailyLoads28.slice(-7);
@@ -111,10 +145,49 @@ export default function WellnessReport({
   const weeklyLoad = sumLoads(last7Loads);
   const prevWeeklyLoad = sumLoads(prev7Loads);
   const loadTrendPercent = prevWeeklyLoad > 0 ? ((weeklyLoad - prevWeeklyLoad) / prevWeeklyLoad) * 100 : 0;
+  const hasLoadHistory = dailyLoads28.some((d) => d.load > 0);
 
-  const loadIsHigh = acwrLevel === "risque" || acwrLevel === "danger" || monotonyLevel === "high";
-  const wellnessIsDown = globalStatus === "orange" || globalStatus === "red";
-  const showOzaAnalysis = latest && dailyLoads28.some((d) => d.load > 0) && wellnessIsDown && loadIsHigh;
+  const loadHigh = acwrLevel === "risque" || acwrLevel === "danger" || monotonyLevel === "high";
+  const loadDanger = acwrLevel === "danger";
+  const loadAcceptable = acwrLevel === "optimale";
+  const wellnessDown = globalStatus === "orange" || globalStatus === "red";
+  const wellnessUp = globalStatus === "green" && deltaVs28 >= 0.4;
+
+  const degradingFactors = variableStats
+    .filter((v) => v.delta !== null && v.delta <= -0.4)
+    .sort((a, b) => (a.delta ?? 0) - (b.delta ?? 0))
+    .slice(0, 3);
+
+  // Ne jamais interpréter une seule donnée isolément : l'Analyse OZA ne
+  // s'affiche que lorsqu'il y a assez d'historique (bien-être + charge) pour
+  // croiser au moins deux signaux, selon les 4 cas de figure demandés.
+  type OzaCase = {
+    icon: string;
+    headline: string;
+    showSuggestion: boolean;
+  };
+
+  const ozaCase: OzaCase | null = useMemo(() => {
+    if (!latest || !hasLoadHistory || history.length < 4) return null;
+
+    if (wellnessDown && loadDanger) {
+      return { icon: "🔴", headline: "Vigilance renforcée sur la récupération", showSuggestion: true };
+    }
+    if (wellnessDown && loadHigh) {
+      return { icon: "🔴", headline: "Récupération à surveiller", showSuggestion: true };
+    }
+    if (wellnessDown && !loadHigh) {
+      return {
+        icon: "🟠",
+        headline: "Dégradation du bien-être sans augmentation évidente de la charge",
+        showSuggestion: false,
+      };
+    }
+    if (wellnessUp && loadHigh && loadAcceptable) {
+      return { icon: "🟢", headline: "Bonne tolérance apparente à la charge", showSuggestion: false };
+    }
+    return null;
+  }, [latest, hasLoadHistory, history.length, wellnessDown, wellnessUp, loadHigh, loadDanger, loadAcceptable]);
 
   if (!latest) {
     return (
@@ -128,12 +201,13 @@ export default function WellnessReport({
 
   return (
     <View style={styles.card}>
-      {/* 1. Score global + 2. statut */}
+      {/* 1. Score global */}
       <View style={styles.headerRow}>
         <View>
           <Text style={styles.headerLabel}>BIEN-ÊTRE</Text>
           <Text style={styles.headerScore}>{latest.score.toFixed(1)} / 5</Text>
         </View>
+        {/* 2. Statut */}
         {globalStatus && (
           <View style={[styles.statusPill, { borderColor: STATUS_COLOR[globalStatus] }]}>
             <Text style={styles.statusPillText}>
@@ -152,11 +226,11 @@ export default function WellnessReport({
             <Text
               style={[
                 styles.evolutionDeltaText,
-                { color: latest.score - avg28 >= 0 ? Colors.riskLow : Colors.riskHigh },
+                { color: deltaVs28 >= 0 ? Colors.riskLow : Colors.riskHigh },
               ]}
             >
-              {latest.score - avg28 >= 0 ? "+" : ""}
-              {(latest.score - avg28).toFixed(1)} vs 28j
+              {deltaVs28 >= 0 ? "+" : ""}
+              {deltaVs28.toFixed(1)} vs 28j
             </Text>
           </View>
         )}
@@ -164,8 +238,7 @@ export default function WellnessReport({
 
       {globalTrend && (
         <Text style={styles.trendNote}>
-          {globalTrend.direction === "down" ? "🔴" : "🟢"} Bien-être en{" "}
-          {globalTrend.direction === "down" ? "baisse" : "hausse"} depuis {globalTrend.days} jours
+          {trendLabel(globalTrend.direction, "bien-être", globalTrend.days)}
         </Text>
       )}
 
@@ -202,33 +275,26 @@ export default function WellnessReport({
       {/* 5. Les 5 indicateurs */}
       <Text style={styles.sectionLabel}>Analyse des 5 variables</Text>
       <View style={styles.variablesList}>
-        {VARIABLES.map((v) => {
-          const varHistory = history.map((e) => e[v.key]);
-          const varBaseline = varHistory.length >= 4 ? average(varHistory.slice(0, 28)) : null;
-          const varStatus = wellnessStatus(latest[v.key], varBaseline);
-          const varTrend = detectConsecutiveTrend(
-            entriesDesc.slice(0, 14).map((e) => e[v.key]).reverse()
-          );
-          const isAnomaly = varBaseline !== null && latest[v.key] - varBaseline <= -1.0;
+        {variableStats.map((v) => {
+          const isAnomaly = v.delta !== null && v.delta <= -1.0;
 
           return (
             <View key={v.key} style={styles.variableRow}>
               <Text style={styles.variableIcon}>{v.icon}</Text>
               <Text style={styles.variableLabel}>{v.label}</Text>
-              <Text style={styles.variableValue}>{latest[v.key].toFixed(1)}</Text>
-              <Text style={styles.variableStatus}>{STATUS_ICON[varStatus]}</Text>
-              {(isAnomaly || varTrend) && (
+              <Text style={styles.variableValue}>{v.value.toFixed(1)}</Text>
+              <Text style={styles.variableStatus}>{STATUS_ICON[v.status]}</Text>
+              {(isAnomaly || v.trend) && (
                 <View style={styles.variableNoteWrap}>
                   {isAnomaly && (
                     <Text style={styles.variableNote}>
-                      Point de vigilance : {v.label.toLowerCase()} en dessous de la normale
-                      personnelle ({varBaseline!.toFixed(1)} habituel).
+                      Point de vigilance : état de {v.label.toLowerCase()} nettement en dessous
+                      de la normale personnelle ({v.baseline!.toFixed(1)} habituel).
                     </Text>
                   )}
-                  {varTrend && (
+                  {v.trend && (
                     <Text style={styles.variableNote}>
-                      {v.label} en {varTrend.direction === "down" ? "baisse" : "hausse"} depuis{" "}
-                      {varTrend.days} jours.
+                      {trendLabel(v.trend.direction, v.label.toLowerCase(), v.trend.days)}
                     </Text>
                   )}
                 </View>
@@ -238,26 +304,44 @@ export default function WellnessReport({
         })}
       </View>
 
-      {/* 6. Analyse OZA */}
-      {showOzaAnalysis && (
+      {/* 6. Analyse OZA — 7. croisement avec la charge et 8. suggestion sont
+          intégrés dans cette même carte, dans cet ordre. */}
+      {ozaCase && (
         <View style={styles.ozaCard}>
-          <Text style={styles.ozaTitle}>🟠 Analyse OZA — Attention récupération</Text>
-          <Text style={styles.ozaBullet}>
-            • Bien-être {windowStats.trendPercent <= 0 ? "↓" : "↑"} {Math.abs(windowStats.trendPercent).toFixed(0)}
-            {" "}% sur {windowDays}j
+          <Text style={styles.ozaTitle}>
+            {ozaCase.icon} {ozaCase.headline}
           </Text>
-          <Text style={styles.ozaBullet}>
-            • Charge d'entraînement {loadTrendPercent >= 0 ? "↑" : "↓"}{" "}
-            {Math.abs(loadTrendPercent).toFixed(0)} % sur 7j
+
+          {avg28 > 0 && (
+            <Text style={styles.ozaText}>
+              Le bien-être est {deltaVs28 >= 0 ? "supérieur" : "inférieur"} de{" "}
+              {Math.abs(deltaVs28).toFixed(1)} point{Math.abs(deltaVs28) >= 2 ? "s" : ""} à la
+              moyenne habituelle.
+            </Text>
+          )}
+
+          {degradingFactors.length > 0 && (
+            <View style={styles.ozaFactors}>
+              <Text style={styles.ozaText}>Les principaux facteurs de dégradation sont :</Text>
+              {degradingFactors.map((f) => (
+                <Text key={f.key} style={styles.ozaBullet}>
+                  • {f.label}
+                </Text>
+              ))}
+            </View>
+          )}
+
+          <Text style={styles.ozaText}>
+            La charge récente est {loadHigh ? "élevée" : "stable"} (ACWR {acwr.toFixed(2)} ·
+            Monotony {monotony.toFixed(2)} · Strain {Math.round(strain)}).
           </Text>
-          <Text style={styles.ozaBullet}>
-            • ACWR {acwr.toFixed(2)} · Monotony {monotony.toFixed(2)} · Strain{" "}
-            {Math.round(strain)}
-          </Text>
-          <Text style={styles.ozaSuggestion}>
-            Suggestion : envisager une réduction du volume sur la prochaine séance. Cette
-            analyse est une aide à la décision — le choix final revient au coach.
-          </Text>
+
+          {ozaCase.showSuggestion && (
+            <Text style={styles.ozaSuggestion}>
+              Suggestion : envisager une réduction du volume de la prochaine séance. Cette
+              analyse est une aide à la décision — le choix final revient au coach.
+            </Text>
+          )}
         </View>
       )}
     </View>
@@ -510,13 +594,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: Colors.text,
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+
+  ozaText: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    lineHeight: 17,
+    marginBottom: 6,
+  },
+
+  ozaFactors: {
+    marginBottom: 6,
   },
 
   ozaBullet: {
     fontSize: 12,
-    color: Colors.textSecondary,
-    marginBottom: 4,
+    color: Colors.text,
+    fontWeight: "600",
+    marginTop: 2,
+    marginLeft: 4,
   },
 
   ozaSuggestion: {

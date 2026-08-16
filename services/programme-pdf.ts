@@ -229,6 +229,21 @@ async function renderHtmlToCanvas(html: string): Promise<HTMLCanvasElement> {
     const frameDoc = iframe.contentDocument;
     if (!frameDoc) throw new Error("no iframe document");
 
+    // iframe.onload ne garantit pas que les <img> (chargées depuis jsDelivr)
+    // ont fini de charger — mesurer scrollHeight trop tôt tronque tout ce
+    // qui suit dans le document (ex: la séance 2 coupée dans le PDF).
+    const images = Array.from(frameDoc.images);
+    await Promise.all(
+      images.map((img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise<void>((resolve) => {
+              img.addEventListener("load", () => resolve());
+              img.addEventListener("error", () => resolve());
+            })
+      )
+    );
+
     const contentHeight = frameDoc.documentElement.scrollHeight;
     iframe.style.height = `${contentHeight}px`;
 

@@ -102,3 +102,78 @@ export function monotonyRiskLevel(monotony: number): RiskLevel {
   if (monotony <= 2) return "medium";
   return "high";
 }
+
+// ── Interprétation du bien-être (Hooper) ──
+// Échelle 1-5 par item, "plus haut = mieux" (cf. computeWellnessScore).
+
+export type WellnessStatus = "green" | "orange" | "red";
+
+// Le statut se base en priorité sur l'écart à la moyenne personnelle du
+// sportif (un score de 3,1 n'est pas alarmant dans l'absolu, mais l'est si
+// ce sportif tourne habituellement à 4,2) plutôt que sur un seuil universel.
+// Sans historique suffisant (< 5 entrées), on retombe sur des seuils absolus
+// raisonnables pour ne pas laisser le statut indéfini.
+export function wellnessStatus(current: number, personalAverage: number | null): WellnessStatus {
+  if (personalAverage !== null) {
+    const delta = current - personalAverage;
+    if (delta <= -1.0) return "red";
+    if (delta <= -0.4) return "orange";
+    return "green";
+  }
+  if (current >= 3.5) return "green";
+  if (current >= 2.5) return "orange";
+  return "red";
+}
+
+export type WellnessTrendStats = {
+  average: number;
+  min: number;
+  max: number;
+  trendPercent: number; // évolution seconde moitié vs première moitié de la fenêtre
+};
+
+export function computeWellnessTrendStats(scores: number[]): WellnessTrendStats {
+  if (scores.length === 0) {
+    return { average: 0, min: 0, max: 0, trendPercent: 0 };
+  }
+  const avg = average(scores);
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+
+  if (scores.length < 4) {
+    return { average: avg, min, max, trendPercent: 0 };
+  }
+  const mid = Math.floor(scores.length / 2);
+  const firstHalfAvg = average(scores.slice(0, mid));
+  const secondHalfAvg = average(scores.slice(mid));
+  const trendPercent = firstHalfAvg > 0 ? ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100 : 0;
+
+  return { average: avg, min, max, trendPercent };
+}
+
+// Détecte une tendance directionnelle soutenue en fin de série (plateaux
+// tolérés) : ex. [4,4,3,3,2,2,2] → { direction: "down", days: 7 }. Ne
+// remonte une tendance que sur au moins 3 jours pour éviter le bruit.
+export function detectConsecutiveTrend(
+  scoresChronological: number[],
+  minDays = 3
+): { direction: "up" | "down"; days: number } | null {
+  const n = scoresChronological.length;
+  if (n < minDays) return null;
+
+  let downDays = 1;
+  for (let i = n - 1; i > 0; i--) {
+    if (scoresChronological[i] <= scoresChronological[i - 1]) downDays++;
+    else break;
+  }
+  if (downDays >= minDays) return { direction: "down", days: downDays };
+
+  let upDays = 1;
+  for (let i = n - 1; i > 0; i--) {
+    if (scoresChronological[i] >= scoresChronological[i - 1]) upDays++;
+    else break;
+  }
+  if (upDays >= minDays) return { direction: "up", days: upDays };
+
+  return null;
+}

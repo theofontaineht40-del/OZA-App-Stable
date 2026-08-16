@@ -11,9 +11,9 @@ import { addWellnessEntry, getLatestWellnessScore } from "../../services/trackin
 
 const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
   { key: "sommeil", label: "Qualité du sommeil" },
-  { key: "fatigue", label: "Fatigue (5 = en forme)" },
-  { key: "courbatures", label: "Courbatures (5 = aucune)" },
-  { key: "stress", label: "Stress (5 = détendu)" },
+  { key: "fatigue", label: "Fatigue (10 = en forme)" },
+  { key: "courbatures", label: "Courbatures (10 = aucune)" },
+  { key: "stress", label: "Stress (10 = détendu)" },
   { key: "humeur", label: "Humeur" },
 ];
 
@@ -30,11 +30,11 @@ export default function CheckinScreen() {
   const [uid, setUid] = useState<string | null>(null);
   const [coachId, setCoachId] = useState<string | null>(null);
   const [wellness, setWellness] = useState<WellnessState>({
-    sommeil: 3,
-    fatigue: 3,
-    courbatures: 3,
-    stress: 3,
-    humeur: 3,
+    sommeil: 5,
+    fatigue: 5,
+    courbatures: 5,
+    stress: 5,
+    humeur: 5,
   });
   const [alreadyDone, setAlreadyDone] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -99,7 +99,7 @@ export default function CheckinScreen() {
         <View key={item.key} style={styles.wellnessRow}>
           <Text style={styles.wellnessLabel}>{item.label}</Text>
           <View style={styles.scaleRow}>
-            {[1, 2, 3, 4, 5].map((value) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
               <PulseDot
                 key={value}
                 style={[styles.scaleDot, wellness[item.key] === value && styles.scaleDotActive]}
@@ -182,13 +182,14 @@ const styles = StyleSheet.create({
 
   scaleRow: {
     flexDirection: "row",
-    gap: 10,
+    flexWrap: "wrap",
+    gap: 8,
   },
 
   scaleDot: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 36,
+    height: 36,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.grayMedium,
     justifyContent: "center",
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   },
 
   scaleDotText: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "600",
     color: Colors.text,
   },

@@ -21,7 +21,7 @@ import ProgressionChart, { ProgressionPoint } from "./progression-chart";
 
 type VariableKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
 
-// Échelle 1-5 pour les 5 variables, TOUJOURS "plus haut = mieux" (5 = très
+// Échelle 1-10 pour les 5 variables, TOUJOURS "plus haut = mieux" (10 = très
 // bon état, 1 = très mauvais), y compris pour fatigue/courbatures/stress :
 // un score de fatigue qui baisse signifie une dégradation de l'état de
 // fatigue (plus fatigué), pas une amélioration. Tous les libellés ci-dessous
@@ -151,10 +151,10 @@ export default function WellnessReport({
   const loadDanger = acwrLevel === "danger";
   const loadAcceptable = acwrLevel === "optimale";
   const wellnessDown = globalStatus === "orange" || globalStatus === "red";
-  const wellnessUp = globalStatus === "green" && deltaVs28 >= 0.4;
+  const wellnessUp = globalStatus === "green" && deltaVs28 >= 0.8;
 
   const degradingFactors = variableStats
-    .filter((v) => v.delta !== null && v.delta <= -0.4)
+    .filter((v) => v.delta !== null && v.delta <= -0.8)
     .sort((a, b) => (a.delta ?? 0) - (b.delta ?? 0))
     .slice(0, 3);
 
@@ -205,7 +205,7 @@ export default function WellnessReport({
       <View style={styles.headerRow}>
         <View>
           <Text style={styles.headerLabel}>BIEN-ÊTRE</Text>
-          <Text style={styles.headerScore}>{latest.score.toFixed(1)} / 5</Text>
+          <Text style={styles.headerScore}>{latest.score.toFixed(1)} / 10</Text>
         </View>
         {/* 2. Statut */}
         {globalStatus && (
@@ -276,7 +276,7 @@ export default function WellnessReport({
       <Text style={styles.sectionLabel}>Analyse des 5 variables</Text>
       <View style={styles.variablesList}>
         {variableStats.map((v) => {
-          const isAnomaly = v.delta !== null && v.delta <= -1.0;
+          const isAnomaly = v.delta !== null && v.delta <= -2.0;
 
           return (
             <View key={v.key} style={styles.variableRow}>

@@ -23,7 +23,7 @@ export function computeSessionLoad(rpe: number, durationMinutes: number): number
   return rpe * durationMinutes;
 }
 
-// Convention: 5 = excellent état, 1 = très mauvais, pour les 5 items.
+// Convention: 10 = excellent état, 1 = très mauvais, pour les 5 items.
 // Le score global est donc toujours "plus haut = mieux".
 export function computeWellnessScore(input: WellnessInput): number {
   const { sommeil, fatigue, courbatures, stress, humeur } = input;
@@ -104,24 +104,24 @@ export function monotonyRiskLevel(monotony: number): RiskLevel {
 }
 
 // ── Interprétation du bien-être (Hooper) ──
-// Échelle 1-5 par item, "plus haut = mieux" (cf. computeWellnessScore).
+// Échelle 1-10 par item, "plus haut = mieux" (cf. computeWellnessScore).
 
 export type WellnessStatus = "green" | "orange" | "red";
 
 // Le statut se base en priorité sur l'écart à la moyenne personnelle du
-// sportif (un score de 3,1 n'est pas alarmant dans l'absolu, mais l'est si
-// ce sportif tourne habituellement à 4,2) plutôt que sur un seuil universel.
+// sportif (un score de 6,2 n'est pas alarmant dans l'absolu, mais l'est si
+// ce sportif tourne habituellement à 8,4) plutôt que sur un seuil universel.
 // Sans historique suffisant (< 5 entrées), on retombe sur des seuils absolus
 // raisonnables pour ne pas laisser le statut indéfini.
 export function wellnessStatus(current: number, personalAverage: number | null): WellnessStatus {
   if (personalAverage !== null) {
     const delta = current - personalAverage;
-    if (delta <= -1.0) return "red";
-    if (delta <= -0.4) return "orange";
+    if (delta <= -2.0) return "red";
+    if (delta <= -0.8) return "orange";
     return "green";
   }
-  if (current >= 3.5) return "green";
-  if (current >= 2.5) return "orange";
+  if (current >= 7) return "green";
+  if (current >= 5) return "orange";
   return "red";
 }
 

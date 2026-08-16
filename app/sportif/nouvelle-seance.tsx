@@ -16,33 +16,18 @@ import {
 import PulseDot from "../../components/pulse-dot";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
-import { addSession, addWellnessEntry } from "../../services/tracking";
+import { addSession } from "../../services/tracking";
 import { showAlert } from "../../utils/alert";
-
-const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
-  { key: "sommeil", label: "Qualité du sommeil" },
-  { key: "fatigue", label: "Fatigue (5 = en forme)" },
-  { key: "courbatures", label: "Courbatures (5 = aucune)" },
-  { key: "stress", label: "Stress (5 = détendu)" },
-  { key: "humeur", label: "Humeur" },
-];
-
-type WellnessKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
-type WellnessState = Record<WellnessKey, number>;
 
 const RPE_SCALE = Array.from({ length: 11 }, (_, i) => i); // 0 à 10
 
+// Le ressenti quotidien (Hooper : sommeil/fatigue/courbatures/stress/humeur)
+// est enregistré séparément via le check-in du jour (app/sportif/checkin.tsx),
+// indépendamment du fait qu'une séance soit loggée ou non — cet écran ne
+// couvre donc plus que le RPE de la séance elle-même.
 export default function NouvelleSeanceScreen() {
   const [uid, setUid] = useState<string | null>(null);
   const [coachId, setCoachId] = useState<string | null>(null);
-  const [step, setStep] = useState<1 | 2>(1);
-  const [wellness, setWellness] = useState<WellnessState>({
-    sommeil: 3,
-    fatigue: 3,
-    courbatures: 3,
-    stress: 3,
-    humeur: 3,
-  });
   const [rpe, setRpe] = useState<number | null>(null);
   const [duration, setDuration] = useState("");
   const [commentaire, setCommentaire] = useState("");
@@ -62,10 +47,6 @@ export default function NouvelleSeanceScreen() {
     return unsubscribe;
   }, []);
 
-  function setWellnessValue(key: WellnessKey, value: number) {
-    setWellness((prev) => ({ ...prev, [key]: value }));
-  }
-
   async function handleSubmit() {
     if (!uid) return;
 
@@ -81,7 +62,6 @@ export default function NouvelleSeanceScreen() {
 
     setSubmitting(true);
     try {
-      await addWellnessEntry(uid, wellness, coachId);
       await addSession({
         sportifUid: uid,
         coachId,
@@ -103,124 +83,62 @@ export default function NouvelleSeanceScreen() {
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.title}>Nouvelle séance</Text>
-      <Text style={styles.subtitle}>
-        {step === 1
-          ? "Comment vous sentez-vous aujourd'hui ?"
-          : "Comment s'est passée votre séance ?"}
-      </Text>
+      <Text style={styles.subtitle}>Comment s'est passée votre séance ?</Text>
 
-      <View style={styles.stepIndicator}>
-        <View style={[styles.stepDot, step === 1 && styles.stepDotActive]} />
-        <View style={[styles.stepDot, step === 2 && styles.stepDotActive]} />
+      <Text style={styles.fieldLabel}>
+        RPE de séance — échelle de Borg (0 = repos, 10 = effort maximal)
+      </Text>
+      <View style={styles.rpeRow}>
+        {RPE_SCALE.map((value) => (
+          <PulseDot
+            key={value}
+            style={[styles.rpeDot, rpe === value && styles.rpeDotActive]}
+            onPress={() => setRpe(value)}
+          >
+            <Text style={[styles.rpeDotText, rpe === value && styles.rpeDotTextActive]}>
+              {value}
+            </Text>
+          </PulseDot>
+        ))}
       </View>
 
-      {step === 1 && (
-        <View>
-          {WELLNESS_ITEMS.map((item) => (
-            <View key={item.key} style={styles.wellnessRow}>
-              <Text style={styles.wellnessLabel}>{item.label}</Text>
-              <View style={styles.scaleRow}>
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <PulseDot
-                    key={value}
-                    style={[
-                      styles.scaleDot,
-                      wellness[item.key] === value && styles.scaleDotActive,
-                    ]}
-                    onPress={() => setWellnessValue(item.key, value)}
-                  >
-                    <Text
-                      style={[
-                        styles.scaleDotText,
-                        wellness[item.key] === value && styles.scaleDotTextActive,
-                      ]}
-                    >
-                      {value}
-                    </Text>
-                  </PulseDot>
-                ))}
-              </View>
-            </View>
-          ))}
+      <Text style={styles.fieldLabel}>Durée réelle de la séance (minutes)</Text>
+      <TextInput
+        placeholderTextColor={Colors.textSecondary}
+        style={styles.input}
+        placeholder="60"
+        keyboardType="number-pad"
+        value={duration}
+        onChangeText={setDuration}
+      />
 
-          <TouchableOpacity style={styles.primaryButton} onPress={() => setStep(2)}>
-            <Text style={styles.primaryButtonText}>Continuer</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {step === 2 && (
-        <View>
-          <Text style={styles.fieldLabel}>
-            RPE de séance — échelle de Borg (0 = repos, 10 = effort maximal)
+      {rpe !== null && duration ? (
+        <View style={styles.loadPreview}>
+          <Ionicons name="flash-outline" size={18} color={Colors.primary} />
+          <Text style={styles.loadPreviewText}>
+            Charge estimée : {rpe * (parseInt(duration, 10) || 0)} UA
           </Text>
-          <View style={styles.rpeRow}>
-            {RPE_SCALE.map((value) => (
-              <PulseDot
-                key={value}
-                style={[styles.rpeDot, rpe === value && styles.rpeDotActive]}
-                onPress={() => setRpe(value)}
-              >
-                <Text
-                  style={[
-                    styles.rpeDotText,
-                    rpe === value && styles.rpeDotTextActive,
-                  ]}
-                >
-                  {value}
-                </Text>
-              </PulseDot>
-            ))}
-          </View>
-
-          <Text style={styles.fieldLabel}>Durée réelle de la séance (minutes)</Text>
-          <TextInput
-  placeholderTextColor={Colors.textSecondary}
-            style={styles.input}
-            placeholder="60"
-            keyboardType="number-pad"
-            value={duration}
-            onChangeText={setDuration}
-          />
-
-          {rpe !== null && duration ? (
-            <View style={styles.loadPreview}>
-              <Ionicons name="flash-outline" size={18} color={Colors.primary} />
-              <Text style={styles.loadPreviewText}>
-                Charge estimée : {rpe * (parseInt(duration, 10) || 0)} UA
-              </Text>
-            </View>
-          ) : null}
-
-          <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
-          <TextInput
-  placeholderTextColor={Colors.textSecondary}
-            style={styles.commentInput}
-            placeholder="Ressenti, points à retenir..."
-            multiline
-            numberOfLines={3}
-            value={commentaire}
-            onChangeText={setCommentaire}
-          />
-
-          <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.secondaryButton} onPress={() => setStep(1)}>
-              <Text style={styles.secondaryButtonText}>Retour</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.primaryButtonFlex}
-              onPress={handleSubmit}
-              disabled={submitting}
-            >
-              {submitting ? (
-                <ActivityIndicator color={Colors.white} />
-              ) : (
-                <Text style={styles.primaryButtonText}>Enregistrer</Text>
-              )}
-            </TouchableOpacity>
-          </View>
         </View>
-      )}
+      ) : null}
+
+      <Text style={styles.fieldLabel}>Commentaire (optionnel)</Text>
+      <TextInput
+        placeholderTextColor={Colors.textSecondary}
+        style={styles.commentInput}
+        placeholder="Ressenti, points à retenir..."
+        multiline
+        numberOfLines={3}
+        value={commentaire}
+        onChangeText={setCommentaire}
+      />
+
+      <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit} disabled={submitting}>
+        {submitting ? (
+          <ActivityIndicator color={Colors.white} />
+        ) : (
+          <Text style={styles.primaryButtonText}>Enregistrer</Text>
+        )}
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -248,64 +166,6 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 20,
-  },
-
-  stepIndicator: {
-    flexDirection: "row",
-    gap: 8,
-    marginBottom: 28,
-  },
-
-  stepDot: {
-    width: 32,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: Colors.grayMedium,
-  },
-
-  stepDotActive: {
-    backgroundColor: Colors.primary,
-  },
-
-  wellnessRow: {
-    marginBottom: 20,
-  },
-
-  wellnessLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.text,
-    marginBottom: 10,
-  },
-
-  scaleRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  scaleDot: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  scaleDotActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-
-  scaleDotText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text,
-  },
-
-  scaleDotTextActive: {
-    color: Colors.white,
   },
 
   fieldLabel: {
@@ -389,11 +249,6 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
 
-  actionsRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-
   primaryButton: {
     backgroundColor: Colors.primary,
     height: 56,
@@ -403,33 +258,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  primaryButtonFlex: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    height: 56,
-    borderRadius: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   primaryButtonText: {
     color: Colors.white,
-    fontWeight: "700",
-    fontSize: 16,
-  },
-
-  secondaryButton: {
-    flex: 1,
-    height: 56,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  secondaryButtonText: {
-    color: Colors.text,
     fontWeight: "700",
     fontSize: 16,
   },

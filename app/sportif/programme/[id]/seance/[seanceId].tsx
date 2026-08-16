@@ -19,25 +19,14 @@ import SessionCompleteOverlay from "../../../../../components/session-complete-o
 import { Colors } from "../../../../../constants/colors";
 import { auth, db } from "../../../../../firebase";
 import { ChargeType, getProgramme, Programme } from "../../../../../services/programmes";
-import { addSession, addWellnessEntry, ExerciseLog } from "../../../../../services/tracking";
+import { addSession, ExerciseLog } from "../../../../../services/tracking";
 import { showAlert } from "../../../../../utils/alert";
-
-type WellnessKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
-type WellnessState = Record<WellnessKey, number>;
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
   "1rm": "% 1RM",
   rpe: "RPE",
   libre: "kg",
 };
-
-const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
-  { key: "sommeil", label: "Sommeil" },
-  { key: "fatigue", label: "Fatigue" },
-  { key: "courbatures", label: "Courbatures" },
-  { key: "stress", label: "Stress" },
-  { key: "humeur", label: "Humeur" },
-];
 
 const RPE_SCALE = Array.from({ length: 11 }, (_, i) => i);
 
@@ -86,19 +75,16 @@ function ExerciceCheck({
   );
 }
 
+// Le ressenti quotidien (Hooper) est enregistré séparément via le check-in
+// du jour (app/sportif/checkin.tsx), indépendamment du fait qu'une séance
+// soit loggée ou non — cet écran ne couvre donc que l'exécution de la
+// séance et le RPE.
 export default function SeanceExecutionScreen() {
   const { id, seanceId } = useLocalSearchParams<{ id: string; seanceId: string }>();
   const [uid, setUid] = useState<string | null>(null);
   const [coachId, setCoachId] = useState<string | null>(null);
   const [programme, setProgramme] = useState<Programme | null>(null);
   const [exerciseStates, setExerciseStates] = useState<Record<string, ExerciseState>>({});
-  const [wellness, setWellness] = useState<WellnessState>({
-    sommeil: 3,
-    fatigue: 3,
-    courbatures: 3,
-    stress: 3,
-    humeur: 3,
-  });
   const [rpe, setRpe] = useState<number | null>(null);
   const [duration, setDuration] = useState("");
   const [commentaire, setCommentaire] = useState("");
@@ -148,10 +134,6 @@ export default function SeanceExecutionScreen() {
     }).catch(() => setProgramme(null));
   }, [id, seanceId]);
 
-  function setWellnessValue(key: WellnessKey, value: number) {
-    setWellness((prev) => ({ ...prev, [key]: value }));
-  }
-
   function updateExercise(exerciceId: string, patch: Partial<ExerciseState>) {
     setExerciseStates((prev) => ({ ...prev, [exerciceId]: { ...prev[exerciceId], ...patch } }));
   }
@@ -187,7 +169,6 @@ export default function SeanceExecutionScreen() {
 
     setSubmitting(true);
     try {
-      await addWellnessEntry(uid, wellness, coachId);
       await addSession({
         sportifUid: uid,
         coachId,
@@ -234,33 +215,6 @@ export default function SeanceExecutionScreen() {
       <Text style={styles.subtitle}>
         {programme.nom} · {doneCount}/{totalCount} exercices faits
       </Text>
-
-      <Text style={styles.sectionTitle}>Comment vous sentez-vous ?</Text>
-      <View style={styles.wellnessGrid}>
-        {WELLNESS_ITEMS.map((item) => (
-          <View key={item.key} style={styles.wellnessItem}>
-            <Text style={styles.wellnessLabel}>{item.label}</Text>
-            <View style={styles.scaleRow}>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <PulseDot
-                  key={value}
-                  style={[styles.scaleDot, wellness[item.key] === value && styles.scaleDotActive]}
-                  onPress={() => setWellnessValue(item.key, value)}
-                >
-                  <Text
-                    style={[
-                      styles.scaleDotText,
-                      wellness[item.key] === value && styles.scaleDotTextActive,
-                    ]}
-                  >
-                    {value}
-                  </Text>
-                </PulseDot>
-              ))}
-            </View>
-          </View>
-        ))}
-      </View>
 
       <Text style={styles.sectionTitle}>Exercices</Text>
       {seance.blocs.map((bloc) => (
@@ -429,51 +383,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text,
     marginBottom: 12,
-  },
-
-  wellnessGrid: {
-    marginBottom: 24,
-  },
-
-  wellnessItem: {
-    marginBottom: 14,
-  },
-
-  wellnessLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: Colors.text,
-    marginBottom: 8,
-  },
-
-  scaleRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-
-  scaleDot: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  scaleDotActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-
-  scaleDotText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: Colors.text,
-  },
-
-  scaleDotTextActive: {
-    color: Colors.white,
   },
 
   blocCard: {

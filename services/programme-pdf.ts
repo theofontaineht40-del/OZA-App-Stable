@@ -202,25 +202,92 @@ async function buildPhotoMap(coachId: string): Promise<Map<string, string | null
   return new Map(library.map((e) => [e.id, e.photoUrl ?? null]));
 }
 
+function sanitizeFileName(name: string): string {
+  return name.replace(/[^\p{L}\p{N}\- _]/gu, "").trim() || "programme";
+}
+
+// Rend le HTML dans un iframe hors-écran (même document, donc html2canvas
+// peut lire les styles calculés), le temps de le rasteriser en image.
+async function renderHtmlToCanvas(html: string): Promise<HTMLCanvasElement> {
+  const html2canvas = (await import("html2canvas")).default;
+
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.left = "-99999px";
+  iframe.style.top = "0";
+  iframe.style.width = "794px"; // ~A4 à 96dpi
+  iframe.style.height = "1123px";
+  document.body.appendChild(iframe);
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      iframe.onload = () => resolve();
+      iframe.onerror = () => reject(new Error("iframe load failed"));
+      iframe.srcdoc = html;
+    });
+
+    const frameDoc = iframe.contentDocument;
+    if (!frameDoc) throw new Error("no iframe document");
+
+    const contentHeight = frameDoc.documentElement.scrollHeight;
+    iframe.style.height = `${contentHeight}px`;
+
+    return await html2canvas(frameDoc.body, {
+      useCORS: true,
+      width: 794,
+      windowWidth: 794,
+      height: contentHeight,
+      windowHeight: contentHeight,
+    });
+  } finally {
+    document.body.removeChild(iframe);
+  }
+}
+
+// Découpe la longue image rendue en pages A4 successives pour produire un
+// vrai PDF téléchargeable en un clic (pas de boîte d'impression) — jsPDF
+// gère lui-même le déclenchement du download via pdf.save().
+async function canvasToPdfDownload(canvas: HTMLCanvasElement, fileName: string): Promise<void> {
+  // Import direct du build ESM navigateur : le "main" du package pointe vers
+  // le build Node (require() dynamique que Metro ne sait pas transformer),
+  // Metro n'applique pas le champ "browser" comme le ferait Webpack.
+  const { jsPDF } = await import("jspdf/dist/jspdf.es.min.js");
+  const pdf = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgData = canvas.toDataURL("image/png");
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pageHeight;
+
+  while (heightLeft > 0) {
+    position -= pageHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+  }
+
+  pdf.save(`${fileName}.pdf`);
+}
+
 // Sur natif (iOS/Android), printToFileAsync génère un vrai fichier PDF que
-// l'on partage/enregistre via le sélecteur système. Sur web, expo-print
-// délègue à Print.printAsync du navigateur, qui imprime la page courante
-// entière plutôt que le HTML fourni — inutilisable ici. On ouvre donc
-// nous-mêmes une fenêtre isolée ne contenant que le programme, sur laquelle
-// on déclenche window.print() : le coach choisit "Enregistrer en PDF" depuis
-// cette boîte, ce qui reste le geste standard pour "télécharger" sur le web.
+// l'on partage/enregistre via le sélecteur système. Sur web, expo-print ne
+// permet pas de générer un fichier (il délègue à l'impression navigateur) —
+// on rend donc le programme dans un iframe hors-écran, on le rasterise avec
+// html2canvas, puis jsPDF assemble les pages et déclenche un vrai
+// téléchargement de fichier .pdf, sans boîte de dialogue d'impression.
 export async function downloadProgrammePdf(programme: Programme): Promise<void> {
   const photosByExerciceId = await buildPhotoMap(programme.coachId);
   const html = buildProgrammePdfHtml(programme, photosByExerciceId);
 
   if (Platform.OS === "web") {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) throw new Error("popup blocked");
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.onload = () => printWindow.print();
+    const canvas = await renderHtmlToCanvas(html);
+    await canvasToPdfDownload(canvas, sanitizeFileName(programme.nom));
     return;
   }
 

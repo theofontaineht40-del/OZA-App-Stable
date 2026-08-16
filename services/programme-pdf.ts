@@ -1,6 +1,7 @@
 import * as Print from "expo-print";
 import { Platform } from "react-native";
 
+import { getExerciseLibrary } from "./exercises";
 import { Bloc, BlocExercice, ChargeType, Programme, Seance } from "./programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -16,51 +17,72 @@ function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;");
 }
 
-function exerciceRowHtml(exercice: BlocExercice): string {
+function exerciceRowHtml(exercice: BlocExercice, photoUrl: string | null | undefined): string {
   const charge = exercice.chargeValeur
     ? `${escapeHtml(exercice.chargeValeur)} ${CHARGE_LABELS[exercice.chargeType]}`
     : "—";
   const repos = [exercice.reposSeries, exercice.reposRepetitions]
     .filter(Boolean)
     .join(" / ") || "—";
+  const thumb = photoUrl
+    ? `<img class="ex-thumb" src="${escapeHtml(photoUrl)}" />`
+    : `<div class="ex-thumb ex-thumb-empty"></div>`;
 
   return `
     <tr>
-      <td class="ex-nom">${escapeHtml(exercice.exerciceNom)}</td>
-      <td>${escapeHtml(exercice.series) || "—"} × ${escapeHtml(exercice.repetitions) || "—"}</td>
-      <td>${escapeHtml(exercice.tempo) || "—"}</td>
-      <td>${charge}${exercice.poidsIndicatif ? ` (${escapeHtml(exercice.poidsIndicatif)} kg)` : ""}</td>
-      <td>${repos}</td>
+      <td class="col-exercice">
+        <div class="ex-cell">
+          ${thumb}
+          <span class="ex-nom">${escapeHtml(exercice.exerciceNom)}</span>
+        </div>
+      </td>
+      <td class="col-stat">${escapeHtml(exercice.series) || "—"}</td>
+      <td class="col-stat">${escapeHtml(exercice.repetitions) || "—"}</td>
+      <td class="col-stat">${escapeHtml(exercice.tempo) || "—"}</td>
+      <td class="col-stat">${charge}</td>
+      <td class="col-stat">${exercice.poidsIndicatif ? `${escapeHtml(exercice.poidsIndicatif)} kg` : "—"}</td>
+      <td class="col-stat">${repos}</td>
     </tr>
-    ${exercice.commentaires ? `<tr class="ex-comment-row"><td colspan="5">${escapeHtml(exercice.commentaires)}</td></tr>` : ""}
+    ${exercice.commentaires ? `<tr class="ex-comment-row"><td colspan="7">${escapeHtml(exercice.commentaires)}</td></tr>` : ""}
   `;
 }
 
-function blocHtml(bloc: Bloc): string {
+function blocHtml(bloc: Bloc, photosByExerciceId: Map<string, string | null>): string {
   if (bloc.exercices.length === 0) return "";
   return `
     <div class="bloc" style="border-left-color: ${bloc.couleur}">
       <h3>${escapeHtml(bloc.nom)}${bloc.objectif ? ` <span class="objectif">— ${escapeHtml(bloc.objectif)}</span>` : ""}</h3>
       <table>
+        <colgroup>
+          <col class="col-exercice" />
+          <col class="col-stat" />
+          <col class="col-stat" />
+          <col class="col-stat" />
+          <col class="col-stat" />
+          <col class="col-stat" />
+          <col class="col-stat" />
+        </colgroup>
         <thead>
           <tr>
-            <th>Exercice</th>
-            <th>Séries × reps</th>
-            <th>Tempo</th>
-            <th>Charge</th>
-            <th>Repos</th>
+            <th class="col-exercice">Exercice</th>
+            <th class="col-stat">Séries</th>
+            <th class="col-stat">Reps</th>
+            <th class="col-stat">Tempo</th>
+            <th class="col-stat">Charge</th>
+            <th class="col-stat">Poids</th>
+            <th class="col-stat">Repos</th>
           </tr>
         </thead>
         <tbody>
-          ${bloc.exercices.map(exerciceRowHtml).join("")}
+          ${bloc.exercices.map((e) => exerciceRowHtml(e, photosByExerciceId.get(e.exerciceId))).join("")}
         </tbody>
       </table>
     </div>
   `;
 }
 
-function seanceHtml(seance: Seance): string {
-  const blocsHtml = seance.blocs.map(blocHtml).join("");
+function seanceHtml(seance: Seance, photosByExerciceId: Map<string, string | null>): string {
+  const blocsHtml = seance.blocs.map((b) => blocHtml(b, photosByExerciceId)).join("");
   if (!blocsHtml.trim()) return "";
   return `
     <section class="seance">
@@ -70,7 +92,10 @@ function seanceHtml(seance: Seance): string {
   `;
 }
 
-export function buildProgrammePdfHtml(programme: Programme): string {
+export function buildProgrammePdfHtml(
+  programme: Programme,
+  photosByExerciceId: Map<string, string | null> = new Map()
+): string {
   const dateLabel = new Date().toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "long",
@@ -109,30 +134,50 @@ export function buildProgrammePdfHtml(programme: Programme): string {
             padding: 8px 12px;
             border-radius: 8px;
             margin: 24px 0 12px;
+            break-after: avoid;
           }
+          .seance { break-inside: avoid-page; }
           .seance:first-of-type h2 { margin-top: 0; }
           .bloc {
             border-left: 4px solid #FF2D7A;
             padding-left: 12px;
             margin-bottom: 18px;
+            break-inside: avoid-page;
           }
           .bloc h3 { font-size: 13px; margin: 0 0 8px; }
           .objectif { font-weight: 400; color: #666666; }
-          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+
+          table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 10.5px; }
+          col.col-exercice { width: 34%; }
+          col.col-stat { width: 11%; }
+          th, td { padding: 6px 6px; border-bottom: 1px solid #F0F0F0; text-align: center; }
+          th.col-exercice, td.col-exercice { text-align: left; }
           th {
-            text-align: left;
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #888888;
             border-bottom: 1px solid #E0E0E0;
-            padding: 6px 8px;
+            font-weight: 600;
           }
-          td { padding: 6px 8px; border-bottom: 1px solid #F0F0F0; }
+          td.col-stat { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+          .ex-cell { display: flex; align-items: center; gap: 8px; }
+          .ex-thumb {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #F2F2F2;
+          }
+          .ex-thumb-empty { border: 1px solid #E0E0E0; }
           .ex-nom { font-weight: 600; }
+
           .ex-comment-row td {
             font-style: italic;
             color: #666666;
+            text-align: left;
             padding-top: 0;
             border-bottom: 1px solid #F0F0F0;
           }
@@ -146,10 +191,15 @@ export function buildProgrammePdfHtml(programme: Programme): string {
         </div>
         <h1>${escapeHtml(programme.nom)}</h1>
         <p class="subtitle">${programme.sportifName ? `Pour ${escapeHtml(programme.sportifName)}` : "Programme non assigné"}</p>
-        ${programme.seances.map(seanceHtml).join("") || `<p class="empty">Aucune séance renseignée.</p>`}
+        ${programme.seances.map((s) => seanceHtml(s, photosByExerciceId)).join("") || `<p class="empty">Aucune séance renseignée.</p>`}
       </body>
     </html>
   `;
+}
+
+async function buildPhotoMap(coachId: string): Promise<Map<string, string | null>> {
+  const library = await getExerciseLibrary(coachId);
+  return new Map(library.map((e) => [e.id, e.photoUrl ?? null]));
 }
 
 // Sur natif (iOS/Android), printToFileAsync génère un vrai fichier PDF que
@@ -160,7 +210,8 @@ export function buildProgrammePdfHtml(programme: Programme): string {
 // on déclenche window.print() : le coach choisit "Enregistrer en PDF" depuis
 // cette boîte, ce qui reste le geste standard pour "télécharger" sur le web.
 export async function downloadProgrammePdf(programme: Programme): Promise<void> {
-  const html = buildProgrammePdfHtml(programme);
+  const photosByExerciceId = await buildPhotoMap(programme.coachId);
+  const html = buildProgrammePdfHtml(programme, photosByExerciceId);
 
   if (Platform.OS === "web") {
     const printWindow = window.open("", "_blank");

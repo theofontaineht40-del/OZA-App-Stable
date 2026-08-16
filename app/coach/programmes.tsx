@@ -25,6 +25,7 @@ import {
   PlanBlock,
   Planification,
 } from "../../services/planification";
+import { downloadProgrammePdf } from "../../services/programme-pdf";
 import {
   createProgramme,
   deleteProgramme,
@@ -32,6 +33,7 @@ import {
   Programme,
 } from "../../services/programmes";
 import { getMySportifs, SportifSummary } from "../../services/tracking";
+import { showAlert } from "../../utils/alert";
 
 export default function ProgrammesScreen() {
   const [uid, setUid] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export default function ProgrammesScreen() {
   const [saving, setSaving] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [expandedSportifId, setExpandedSportifId] = useState<string | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -108,6 +111,17 @@ export default function ProgrammesScreen() {
 
   function handleDelete(id: string) {
     setDeleteTargetId(id);
+  }
+
+  async function handleDownload(programme: Programme) {
+    setDownloadingId(programme.id);
+    try {
+      await downloadProgrammePdf(programme);
+    } catch {
+      showAlert("Téléchargement impossible", "Réessayez dans quelques instants.");
+    } finally {
+      setDownloadingId(null);
+    }
   }
 
   async function confirmDelete() {
@@ -293,6 +307,18 @@ export default function ProgrammesScreen() {
                 </Text>
                 <Text style={styles.programmeMeta}>{programmeDateLabel(p)}</Text>
               </View>
+              <TouchableOpacity
+                onPress={() => handleDownload(p)}
+                disabled={downloadingId === p.id}
+                hitSlop={10}
+                style={styles.rowActionButton}
+              >
+                {downloadingId === p.id ? (
+                  <ActivityIndicator size="small" color={Colors.textSecondary} />
+                ) : (
+                  <Ionicons name="download-outline" size={18} color={Colors.textSecondary} />
+                )}
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
                 <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
@@ -319,6 +345,18 @@ export default function ProgrammesScreen() {
                   {p.seances.length} séance{p.seances.length > 1 ? "s" : ""}
                 </Text>
               </View>
+              <TouchableOpacity
+                onPress={() => handleDownload(p)}
+                disabled={downloadingId === p.id}
+                hitSlop={10}
+                style={styles.rowActionButton}
+              >
+                {downloadingId === p.id ? (
+                  <ActivityIndicator size="small" color={Colors.textSecondary} />
+                ) : (
+                  <Ionicons name="download-outline" size={18} color={Colors.textSecondary} />
+                )}
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
                 <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
@@ -569,5 +607,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+
+  rowActionButton: {
+    marginRight: 4,
   },
 });

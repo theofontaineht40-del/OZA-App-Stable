@@ -42,6 +42,7 @@ export default function ProfilProScreen() {
   const [specialites, setSpecialites] = useState<Specialite[]>([]);
   const [tarifHoraire, setTarifHoraire] = useState("");
   const [ville, setVille] = useState("");
+  const [entreprise, setEntreprise] = useState("");
   const [discoverable, setDiscoverable] = useState(false);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function ProfilProScreen() {
           setSpecialites(profile.specialites);
           setTarifHoraire(profile.tarifHoraire ? String(profile.tarifHoraire) : "");
           setVille(profile.ville);
+          setEntreprise(profile.entreprise);
           setDiscoverable(profile.discoverable);
         }
       } finally {
@@ -107,6 +109,7 @@ export default function ProfilProScreen() {
         specialites,
         tarifHoraire: tarifHoraire ? parseInt(tarifHoraire, 10) : null,
         ville: ville.trim(),
+        entreprise: entreprise.trim(),
         discoverable,
       });
       router.back();
@@ -168,6 +171,10 @@ export default function ProfilProScreen() {
       <Text style={styles.fieldLabel}>Ville</Text>
       <TextInput
   placeholderTextColor={Colors.textSecondary} style={styles.input} placeholder="Paris" value={ville} onChangeText={setVille} />
+
+      <Text style={styles.fieldLabel}>Entreprise / studio (optionnel)</Text>
+      <TextInput
+  placeholderTextColor={Colors.textSecondary} style={styles.input} placeholder="Ex: OZA Coaching" value={entreprise} onChangeText={setEntreprise} />
 
       <Text style={styles.fieldLabel}>Tarif indicatif (€ / heure)</Text>
       <TextInput

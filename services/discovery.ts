@@ -14,6 +14,7 @@ export type CoachProfile = {
   specialites: Specialite[];
   tarifHoraire: number | null;
   ville: string;
+  entreprise: string;
   discoverable: boolean;
 };
 
@@ -28,6 +29,7 @@ function normalize(uid: string, data: any): CoachProfile {
     specialites: data.specialites ?? [],
     tarifHoraire: data.tarifHoraire ?? null,
     ville: data.ville ?? "",
+    entreprise: data.entreprise ?? "",
     discoverable: data.discoverable ?? false,
   };
 }
@@ -45,6 +47,7 @@ export async function updateCoachPublicProfile(
     specialites: Specialite[];
     tarifHoraire: number | null;
     ville: string;
+    entreprise: string;
     discoverable: boolean;
   }
 ): Promise<void> {

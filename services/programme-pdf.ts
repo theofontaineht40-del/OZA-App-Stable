@@ -1,6 +1,7 @@
 import * as Print from "expo-print";
 import { Platform } from "react-native";
 
+import { getCoachProfile } from "./discovery";
 import { getExerciseLibrary } from "./exercises";
 import { Bloc, BlocExercice, ChargeType, Programme, Seance } from "./programmes";
 
@@ -92,9 +93,15 @@ function seanceHtml(seance: Seance, photosByExerciceId: Map<string, string | nul
   `;
 }
 
+export type PdfCoachInfo = {
+  nom: string;
+  entreprise: string;
+};
+
 export function buildProgrammePdfHtml(
   programme: Programme,
-  photosByExerciceId: Map<string, string | null> = new Map()
+  photosByExerciceId: Map<string, string | null> = new Map(),
+  coachInfo: PdfCoachInfo | null = null
 ): string {
   const dateLabel = new Date().toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -124,7 +131,8 @@ export function buildProgrammePdfHtml(
             margin-bottom: 24px;
           }
           .logo { font-size: 22px; font-weight: 800; color: #FF2D7A; letter-spacing: 1px; }
-          .meta { text-align: right; font-size: 12px; color: #666666; }
+          .meta { text-align: right; font-size: 12px; color: #666666; line-height: 1.5; }
+          .meta strong { color: #111111; }
           h1 { font-size: 20px; margin: 0 0 4px; }
           .subtitle { font-size: 13px; color: #666666; margin: 0 0 24px; }
           h2 {
@@ -187,7 +195,11 @@ export function buildProgrammePdfHtml(
       <body>
         <div class="header">
           <div class="logo">OZA</div>
-          <div class="meta">Généré le ${dateLabel}</div>
+          <div class="meta">
+            ${coachInfo?.nom ? `<div><strong>${escapeHtml(coachInfo.nom)}</strong></div>` : ""}
+            ${coachInfo?.entreprise ? `<div>${escapeHtml(coachInfo.entreprise)}</div>` : ""}
+            <div>Généré le ${dateLabel}</div>
+          </div>
         </div>
         <h1>${escapeHtml(programme.nom)}</h1>
         <p class="subtitle">${programme.sportifName ? `Pour ${escapeHtml(programme.sportifName)}` : "Programme non assigné"}</p>
@@ -297,8 +309,14 @@ async function canvasToPdfDownload(canvas: HTMLCanvasElement, fileName: string):
 // html2canvas, puis jsPDF assemble les pages et déclenche un vrai
 // téléchargement de fichier .pdf, sans boîte de dialogue d'impression.
 export async function downloadProgrammePdf(programme: Programme): Promise<void> {
-  const photosByExerciceId = await buildPhotoMap(programme.coachId);
-  const html = buildProgrammePdfHtml(programme, photosByExerciceId);
+  const [photosByExerciceId, coachProfile] = await Promise.all([
+    buildPhotoMap(programme.coachId),
+    getCoachProfile(programme.coachId),
+  ]);
+  const coachInfo: PdfCoachInfo | null = coachProfile
+    ? { nom: `${coachProfile.firstName} ${coachProfile.lastName}`.trim(), entreprise: coachProfile.entreprise }
+    : null;
+  const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
 
   if (Platform.OS === "web") {
     const canvas = await renderHtmlToCanvas(html);

@@ -218,9 +218,21 @@ function sanitizeFileName(name: string): string {
   return name.replace(/[^\p{L}\p{N}\- _]/gu, "").trim() || "programme";
 }
 
+type Range = { top: number; bottom: number };
+
+type RenderedProgramme = {
+  canvas: HTMLCanvasElement;
+  // Rectangles (en px canvas) des blocs — ne jamais couper une page à
+  // l'intérieur d'un de ces intervalles, pour ne pas trancher un bloc
+  // d'exercices en deux entre la fin d'une page et le début de la suivante.
+  noSplitRanges: Range[];
+};
+
+const CANVAS_SCALE = 2;
+
 // Rend le HTML dans un iframe hors-écran (même document, donc html2canvas
 // peut lire les styles calculés), le temps de le rasteriser en image.
-async function renderHtmlToCanvas(html: string): Promise<HTMLCanvasElement> {
+async function renderHtmlToCanvas(html: string): Promise<RenderedProgramme> {
   const html2canvas = (await import("html2canvas")).default;
 
   const iframe = document.createElement("iframe");
@@ -259,22 +271,50 @@ async function renderHtmlToCanvas(html: string): Promise<HTMLCanvasElement> {
     const contentHeight = frameDoc.documentElement.scrollHeight;
     iframe.style.height = `${contentHeight}px`;
 
-    return await html2canvas(frameDoc.body, {
+    // Mesurée avant rasterisation, pendant que .bloc est encore un élément
+    // DOM adressable — après html2canvas on n'a plus qu'une image plate.
+    const noSplitRanges: Range[] = Array.from(frameDoc.querySelectorAll<HTMLElement>(".bloc")).map(
+      (el) => ({
+        top: el.getBoundingClientRect().top * CANVAS_SCALE,
+        bottom: el.getBoundingClientRect().bottom * CANVAS_SCALE,
+      })
+    );
+
+    const canvas = await html2canvas(frameDoc.body, {
       useCORS: true,
+      scale: CANVAS_SCALE,
       width: 794,
       windowWidth: 794,
       height: contentHeight,
       windowHeight: contentHeight,
     });
+
+    return { canvas, noSplitRanges };
   } finally {
     document.body.removeChild(iframe);
   }
 }
 
-// Découpe la longue image rendue en pages A4 successives pour produire un
-// vrai PDF téléchargeable en un clic (pas de boîte d'impression) — jsPDF
-// gère lui-même le déclenchement du download via pdf.save().
-async function canvasToPdfDownload(canvas: HTMLCanvasElement, fileName: string): Promise<void> {
+// Un bloc d'exercices ne doit jamais être coupé entre deux pages : si la
+// limite naturelle de page tombe au milieu d'un bloc, on recule la coupure
+// au début de ce bloc (quitte à laisser un peu de blanc en bas de page).
+// Si le bloc lui-même dépasse une pleine page, on ne peut rien faire de
+// mieux qu'une coupure brute — le cas ne se présente pas en pratique ici.
+function findPageBreak(naiveEnd: number, cursor: number, canvasHeight: number, ranges: Range[]): number {
+  if (naiveEnd >= canvasHeight) return canvasHeight;
+  const straddling = ranges.find((r) => r.top < naiveEnd && r.bottom > naiveEnd);
+  if (straddling && straddling.top > cursor) return straddling.top;
+  return naiveEnd;
+}
+
+// Découpe la longue image rendue en pages A4 successives, en évitant de
+// couper un bloc en deux, pour produire un vrai PDF téléchargeable en un
+// clic (pas de boîte d'impression) — jsPDF gère lui-même le déclenchement
+// du download via pdf.save().
+async function canvasToPdfDownload(
+  { canvas, noSplitRanges }: RenderedProgramme,
+  fileName: string
+): Promise<void> {
   // Import direct du build ESM navigateur : le "main" du package pointe vers
   // le build Node (require() dynamique que Metro ne sait pas transformer),
   // Metro n'applique pas le champ "browser" comme le ferait Webpack.
@@ -282,21 +322,32 @@ async function canvasToPdfDownload(canvas: HTMLCanvasElement, fileName: string):
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
+  // Hauteur d'une page A4, convertie en px canvas à la même échelle que
+  // l'image (largeur de page = largeur du canvas).
+  const pageHeightPx = (pageHeight * canvas.width) / pageWidth;
 
-  const imgData = canvas.toDataURL("image/png");
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  const sliceCanvas = document.createElement("canvas");
+  sliceCanvas.width = canvas.width;
+  const sliceCtx = sliceCanvas.getContext("2d");
+  if (!sliceCtx) throw new Error("no 2d context");
 
-  let heightLeft = imgHeight;
-  let position = 0;
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
+  let cursor = 0;
+  let firstPage = true;
+  while (cursor < canvas.height) {
+    const naiveEnd = Math.min(cursor + pageHeightPx, canvas.height);
+    const end = findPageBreak(naiveEnd, cursor, canvas.height, noSplitRanges);
+    const sliceHeight = end - cursor;
 
-  while (heightLeft > 0) {
-    position -= pageHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+    sliceCanvas.height = sliceHeight;
+    sliceCtx.clearRect(0, 0, sliceCanvas.width, sliceHeight);
+    sliceCtx.drawImage(canvas, 0, cursor, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+    if (!firstPage) pdf.addPage();
+    const imgHeight = (sliceHeight * pageWidth) / canvas.width;
+    pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, imgHeight);
+
+    cursor = end;
+    firstPage = false;
   }
 
   pdf.save(`${fileName}.pdf`);
@@ -319,8 +370,8 @@ export async function downloadProgrammePdf(programme: Programme): Promise<void> 
   const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
 
   if (Platform.OS === "web") {
-    const canvas = await renderHtmlToCanvas(html);
-    await canvasToPdfDownload(canvas, sanitizeFileName(programme.nom));
+    const rendered = await renderHtmlToCanvas(html);
+    await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom));
     return;
   }
 

@@ -175,6 +175,7 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
   { id: "planche-copenhague", nom: "Planche latérale Copenhague", groupesMusculaires: ["Abdominaux", "Quadriceps"], materiel: ["Banc"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Gainage", "Force"], icon: "body-outline", pattern: "core", photoUrl: `${IMAGE_BASE}/planche-copenhague.png?v=${IMAGE_VERSION}` },
   { id: "rotation-externe-r1", nom: "Rotation externe R1 (poulie)", groupesMusculaires: ["Épaules"], materiel: ["Machine"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Mobilité", "Force"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/rotation-externe-r1.png?v=${IMAGE_VERSION}` },
   { id: "face-pull", nom: "Face pull", groupesMusculaires: ["Dos", "Épaules"], materiel: ["Machine", "Corde"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Hypertrophie", "Mobilité"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/face-pull.png?v=${IMAGE_VERSION}` },
+  { id: "reverse-lunge", nom: "Reverse lunge", groupesMusculaires: ["Quadriceps", "Fessiers"], materiel: ["Haltères"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Coordination"], icon: "walk-outline", pattern: "lunge", photoUrl: `${IMAGE_BASE}/reverse-lunge.png?v=${IMAGE_VERSION}` },
 ];
 
 export const BLOC_COLORS = [

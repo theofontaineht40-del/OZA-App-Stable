@@ -23,14 +23,18 @@ export const Colors = {
   white: "#F5F7FA",
   background: "#061634",
   navBackground: "rgba(2, 11, 31, 0.85)",
-  surface: "rgba(255, 255, 255, 0.10)",
-  surfaceAlt: "rgba(255, 255, 255, 0.20)",
-  accentTint: "rgba(59, 130, 246, 0.18)",
-  grayLight: "rgba(255, 255, 255, 0.08)",
-  grayMedium: "rgba(255, 255, 255, 0.22)",
+  // Verre dépoli clair (blanc, pas teinté navy) à opacité plus soutenue :
+  // un blanc à 10% se fondait complètement dans les photos de fond, mais un
+  // verre trop sombre/teinté ne se distinguait plus non plus — il faut du
+  // blanc, juste plus opaque qu'au départ, pour que le widget reste clair.
+  surface: "rgba(255, 255, 255, 0.18)",
+  surfaceAlt: "rgba(255, 255, 255, 0.28)",
+  accentTint: "rgba(59, 130, 246, 0.22)",
+  grayLight: "rgba(255, 255, 255, 0.14)",
+  grayMedium: "rgba(255, 255, 255, 0.30)",
   text: "#F5F7FA",
-  textSecondary: "rgba(245, 247, 250, 0.70)",
-  border: "rgba(255, 255, 255, 0.15)",
+  textSecondary: "rgba(245, 247, 250, 0.72)",
+  border: "rgba(255, 255, 255, 0.30)",
   riskUnder: "#0A84FF",
   riskLow: "#34C759",
   riskMedium: "#FF9F0A",

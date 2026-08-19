@@ -32,6 +32,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    // `right`/`bottom` seuls ne suffisent pas à étirer l'<img> sous-jacent
+    // sur react-native-web au-delà de sa largeur naturelle (~850px, la
+    // largeur des sources) — un fond restait donc coupé à mi-écran sur les
+    // très larges viewports desktop. `width`/`height: 100%` forcent
+    // l'étirement réel quelle que soit la largeur du conteneur.
+    width: "100%",
+    height: "100%",
   },
 
   overlay: {

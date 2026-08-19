@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   },
 
   bubbleTimeMine: {
-    color: "#FFE3EE",
+    color: "#DBEAFE",
   },
 
   inputRow: {

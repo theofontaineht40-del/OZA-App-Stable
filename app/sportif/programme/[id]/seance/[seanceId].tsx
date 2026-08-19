@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import PhotoBackground from "../../../../../components/photo-background";
 import PulseDot from "../../../../../components/pulse-dot";
 import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
 import { Colors } from "../../../../../constants/colors";
@@ -201,6 +202,8 @@ export default function SeanceExecutionScreen() {
   const totalCount = Object.values(exerciseStates).length;
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="gym" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -338,6 +341,7 @@ export default function SeanceExecutionScreen() {
         onDone={() => router.push("/sportif")}
       />
     </ScrollView>
+    </View>
   );
 }
 

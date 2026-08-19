@@ -1,10 +1,31 @@
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { View } from "react-native";
+
+import AppBackground from "../components/app-background";
+import { Colors } from "../constants/colors";
 
 SplashScreen.preventAutoHideAsync();
+
+// Sans ThemeProvider explicite, Expo Router laisse React Navigation sur son
+// thème clair par défaut (fond #F2F2F2 derrière chaque écran) — invisible
+// avec l'ancien fond noir plein cadre, mais ça masquait complètement le
+// dégradé de <AppBackground /> une fois les écrans passés en transparent.
+const NavTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: "transparent",
+    card: "transparent",
+    text: Colors.text,
+    border: Colors.border,
+    primary: Colors.primary,
+  },
+};
 
 // @expo/vector-icons charge sa police via un effet interne à chaque icône,
 // qui ne s'exécute jamais pendant le pré-rendu statique d'Expo Router
@@ -29,12 +50,22 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="register" />
-      <Stack.Screen name="coach" />
-      <Stack.Screen name="sportif" />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      <AppBackground />
+      <ThemeProvider value={NavTheme}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: "transparent" },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="coach" />
+          <Stack.Screen name="sportif" />
+        </Stack>
+      </ThemeProvider>
+    </View>
   );
 }

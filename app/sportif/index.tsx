@@ -15,6 +15,7 @@ import {
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
+import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { buildDailyLoadSeries } from "../../services/load";
@@ -97,11 +98,13 @@ export default function SportifHome() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={{ flex: 1 }}>
+      <PhotoBackground variant="gym" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
       <Animated.View
         style={{ opacity: fade, transform: [{ translateY: slide }] }}
       >
@@ -244,7 +247,8 @@ export default function SportifHome() {
           />
         </View>
       </Animated.View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -379,7 +383,7 @@ const styles = StyleSheet.create({
   },
 
   heroLabel: {
-    color: "#FFE3EE",
+    color: "#DBEAFE",
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 12,
@@ -397,7 +401,7 @@ const styles = StyleSheet.create({
   },
 
   heroCaption: {
-    color: "#FFE3EE",
+    color: "#DBEAFE",
     fontSize: 13,
     marginTop: 2,
   },

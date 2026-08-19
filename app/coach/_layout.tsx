@@ -13,8 +13,9 @@ export default function CoachTabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textSecondary,
+        sceneStyle: { backgroundColor: Colors.background },
+        tabBarActiveTintColor: Colors.primaryLight,
+        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.55)",
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
@@ -24,8 +25,8 @@ export default function CoachTabsLayout() {
           paddingTop: 8,
           paddingBottom: 24,
           borderTopWidth: 1,
-          borderTopColor: Colors.grayMedium,
-          backgroundColor: Colors.surface,
+          borderTopColor: Colors.border,
+          backgroundColor: Colors.navBackground,
         },
       }}
     >

@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
+import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { registerUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
@@ -71,6 +72,8 @@ export default function RegisterScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="texture" />
     <ScrollView
       style={styles.scrollContainer}
       contentContainerStyle={styles.container}
@@ -187,6 +190,7 @@ export default function RegisterScreen() {
       </View>
       </Animated.View>
     </ScrollView>
+    </View>
   );
 }
 

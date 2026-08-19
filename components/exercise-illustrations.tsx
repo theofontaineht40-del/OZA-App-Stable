@@ -20,7 +20,7 @@ export type MovementPattern =
 
 type Props = { pattern: MovementPattern; size?: number };
 
-const BG = "#FFE3EE";
+const BG = "#DBEAFE";
 
 // Dégradés (au lieu d'un noir plat) pour donner un effet "rendu"/volume au
 // petit personnage, plutôt qu'un simple pictogramme filaire.

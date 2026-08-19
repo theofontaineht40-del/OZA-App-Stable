@@ -23,11 +23,11 @@ export default function Root({ children }: PropsWithChildren) {
             (safe-area iOS, zone de rebond du scroll) reste blanche par
             défaut alors que tout le reste de l'appli est passé en noir. */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#080808" />
+        <meta name="theme-color" content="#071A3A" />
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: `html, body { background-color: #080808; }`,
+            __html: `html, body { background-color: #071A3A; }`,
           }}
         />
         <ScrollViewStyleReset />

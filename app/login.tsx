@@ -12,6 +12,7 @@ import {
 
 import { doc, getDoc } from "firebase/firestore";
 import AnimatedPressable from "../components/animated-pressable";
+import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
@@ -64,6 +65,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <PhotoBackground variant="texture" />
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
           <Image source={require("../assets/images/logo.png")} style={styles.logo} resizeMode="contain" />

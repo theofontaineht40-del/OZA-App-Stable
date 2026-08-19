@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
+import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 
 const VALUE_PROPS: {
@@ -57,6 +58,8 @@ export default function WelcomeScreen() {
   const floatY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] });
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="texture" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -104,6 +107,7 @@ export default function WelcomeScreen() {
         </AnimatedPressable>
       </Animated.View>
     </ScrollView>
+    </View>
   );
 }
 

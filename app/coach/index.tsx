@@ -17,6 +17,8 @@ import { HeaderTexture } from "../../components/decor";
 import MiniSparkline from "../../components/mini-sparkline";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import { riskColor } from "../../components/load-summary";
+import PhotoBackground from "../../components/photo-background";
+import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import {
   acwrRiskLevel,
@@ -35,18 +37,18 @@ import {
 } from "../../services/tracking";
 import { showAlert } from "../../utils/alert";
 
-// Palette "premium dark" propre à cet écran — prototype de la nouvelle
-// direction artistique, validé ici avant extension au reste de l'appli.
-// Volontairement pas dans constants/colors.ts pour ne pas affecter les
-// autres écrans tant que la direction n'est pas confirmée.
+// Alias vers le système de tokens central : cet écran a été le prototype de
+// la direction "premium dark" avec sa propre palette locale ; conservé comme
+// simple alias pour que ce fichier suive désormais constants/colors.ts sans
+// devoir toucher ses ~45 usages de DARK.*.
 const DARK = {
-  bg: "#080808",
-  card: "#111111",
-  cardAlt: "#1A1A1A",
-  border: "#242424",
-  text: "#FFFFFF",
-  textSecondary: "#A0A0A0",
-  accent: "#FF2D7A",
+  bg: Colors.background,
+  card: Colors.surface,
+  cardAlt: Colors.surfaceAlt,
+  border: Colors.border,
+  text: Colors.text,
+  textSecondary: Colors.textSecondary,
+  accent: Colors.primary,
 };
 
 export default function CoachHome() {
@@ -134,6 +136,7 @@ export default function CoachHome() {
 
   return (
     <View style={styles.container}>
+      <PhotoBackground variant="gym" />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}

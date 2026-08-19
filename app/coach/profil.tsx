@@ -9,6 +9,7 @@ import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } fr
 import { Colors } from "../../constants/colors";
 import { AvatarHalo } from "../../components/decor";
 import ImageCropModal from "../../components/image-crop-modal";
+import PhotoBackground from "../../components/photo-background";
 import { uploadCoachPhoto } from "../../services/discovery";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
@@ -96,6 +97,7 @@ export default function ProfilScreen() {
 
   return (
     <View style={styles.container}>
+      <PhotoBackground variant="texture" />
       <View style={styles.card}>
         <AvatarHalo />
         <TouchableOpacity style={styles.avatar} onPress={handlePickPhoto} disabled={uploadingPhoto}>

@@ -1,24 +1,44 @@
-// Direction artistique "premium dark" — validée d'abord sur la page
-// d'accueil coach avant d'être étendue à toute l'app. `white`/`black` restent
-// des couleurs littérales fixes (texte/icônes sur l'accent rose, qui reste
-// vif quel que soit le thème) ; `background`/`surface`/`text`/`border` etc.
-// sont les tokens sémantiques qui portent le thème.
+// Direction artistique "sport premium data" — bleu électrique + blanc +
+// glassmorphism. `white`/`black` restent des couleurs littérales fixes
+// (texte/icônes sur l'accent, qui reste vif quel que soit le thème) ;
+// `background`/`surface`/`text`/`border` etc. sont les tokens sémantiques
+// qui portent le thème.
+//
+// `background` est un bleu uni (pas transparent) : react-native-screens
+// n'est pas actif sur l'export web de ce projet, donc le bottom-tabs
+// d'expo-router ne fait que superposer les écrans (zIndex -1/0) sans les
+// démonter ni les masquer réellement — seul un fond opaque sur l'écran
+// actif empêche de voir les autres onglets en transparence derrière lui.
+// <AppBackground /> (dégradé + halos, app/_layout.tsx) reste utilisé pour
+// les écrans hors onglets (login/register/accueil) qui n'ont pas ce
+// problème d'empilement.
 export const Colors = {
-  primary: "#FF2D7A",
-  primaryDark: "#D81B60",
-  black: "#111111",
-  white: "#FFFFFF",
-  background: "#080808",
-  surface: "#111111",
-  surfaceAlt: "#1A1A1A",
-  accentTint: "rgba(255, 45, 122, 0.14)",
-  grayLight: "#111111",
-  grayMedium: "#242424",
-  text: "#FFFFFF",
-  textSecondary: "#A0A0A0",
-  border: "#242424",
+  primary: "#3B82F6",
+  primaryDark: "#0B2A66",
+  primaryLight: "#60A5FA",
+  // Rose OZA : accent de marque (logo, quelques indicateurs), jamais la
+  // couleur dominante — le bleu reste dominant partout ailleurs.
+  accent: "#FF1674",
+  black: "#020B1F",
+  white: "#F5F7FA",
+  background: "#061634",
+  navBackground: "rgba(2, 11, 31, 0.85)",
+  surface: "rgba(255, 255, 255, 0.10)",
+  surfaceAlt: "rgba(255, 255, 255, 0.20)",
+  accentTint: "rgba(59, 130, 246, 0.18)",
+  grayLight: "rgba(255, 255, 255, 0.08)",
+  grayMedium: "rgba(255, 255, 255, 0.22)",
+  text: "#F5F7FA",
+  textSecondary: "rgba(245, 247, 250, 0.70)",
+  border: "rgba(255, 255, 255, 0.15)",
   riskUnder: "#0A84FF",
   riskLow: "#34C759",
   riskMedium: "#FF9F0A",
   riskHigh: "#FF3B30",
+};
+
+// Fond d'écran partagé (voir components/app-background.tsx) : bleu nuit →
+// bleu électrique → bleu profond, avec quelques halos très subtils.
+export const Gradients = {
+  app: ["#020B1F", "#2563EB", "#061634"] as const,
 };

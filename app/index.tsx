@@ -11,7 +11,6 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
-import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 
 const VALUE_PROPS: {
@@ -59,7 +58,6 @@ export default function WelcomeScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="texture" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -70,6 +68,7 @@ export default function WelcomeScreen() {
           source={require("../assets/images/logo.png")}
           style={[styles.logo, { transform: [{ translateY: floatY }] }]}
           resizeMode="contain"
+          tintColor={Colors.white}
         />
 
         <Text style={styles.headline}>L'entraînement, piloté intelligemment.</Text>
@@ -114,7 +113,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -134,14 +133,14 @@ const styles = StyleSheet.create({
   headline: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     textAlign: "center",
     marginBottom: 10,
   },
 
   subtitle: {
     fontSize: 15,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     lineHeight: 22,
     textAlign: "center",
     marginBottom: 32,
@@ -174,13 +173,13 @@ const styles = StyleSheet.create({
   valuePropTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 3,
   },
 
   valuePropText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     lineHeight: 19,
   },
 

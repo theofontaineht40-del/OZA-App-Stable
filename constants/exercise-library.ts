@@ -180,13 +180,13 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
 ];
 
 export const BLOC_COLORS = [
-  "#2563EB",
+  "#14B8A6",
   "#FF9F0A",
   "#34C759",
-  "#60A5FA",
+  "#5EEAD4",
   "#AF52DE",
   "#5E5CE6",
-  "#0B2A66",
+  "#0B2E2D",
   "#8E8E93",
 ];
 

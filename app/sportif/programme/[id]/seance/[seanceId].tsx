@@ -203,14 +203,14 @@ export default function SeanceExecutionScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="gym" />
+    <PhotoBackground variant="seances" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
+        <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
         <Text style={styles.backText}>Retour</Text>
       </TouchableOpacity>
 
@@ -348,7 +348,7 @@ export default function SeanceExecutionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -365,19 +365,19 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.text,
+    color: Colors.textOnDark,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
   },
 
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
   },
 
@@ -478,8 +478,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -502,8 +501,7 @@ const styles = StyleSheet.create({
   input: {
     color: Colors.text,
     height: 52,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     fontSize: 16,
@@ -513,8 +511,7 @@ const styles = StyleSheet.create({
   commentInput: {
     color: Colors.text,
     minHeight: 90,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 12,

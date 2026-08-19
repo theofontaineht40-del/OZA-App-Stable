@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
 import { ChargeType, getProgramme, Programme } from "../../../../services/programmes";
 
@@ -33,9 +34,10 @@ export default function SportifProgrammeViewScreen() {
 
   return (
     <View style={styles.container}>
+      <PhotoBackground variant="programmes" />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color={Colors.text} />
+          <Ionicons name="chevron-back" size={24} color={Colors.textOnDark} />
         </TouchableOpacity>
         <Text style={styles.programmeNom}>{programme.nom}</Text>
       </View>
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   programmeNom: {
     fontSize: 22,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   seanceTabs: {
@@ -165,14 +167,14 @@ const styles = StyleSheet.create({
   },
 
   seanceTabActive: {
-    backgroundColor: Colors.surfaceAlt,
-    borderColor: Colors.text,
+    backgroundColor: Colors.primaryDark,
+    borderColor: Colors.primaryDark,
   },
 
   seanceTabText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   seanceTabTextActive: {
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
   },
 
   blocCard: {

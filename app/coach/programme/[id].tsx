@@ -18,6 +18,7 @@ import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { MovementIllustration } from "../../../components/exercise-illustrations";
 import ImagePreviewModal from "../../../components/image-preview-modal";
 import InlineLoopingVideo from "../../../components/inline-looping-video";
+import PhotoBackground from "../../../components/photo-background";
 import VideoPreviewModal from "../../../components/video-preview-modal";
 import { Colors } from "../../../constants/colors";
 import { BLOC_COLORS, EXERCISE_LIBRARY, ExerciseTemplate } from "../../../constants/exercise-library";
@@ -219,13 +220,14 @@ export default function ProgrammeEditorScreen() {
 
   return (
     <View style={styles.container}>
+      <PhotoBackground variant="programmes" />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color={Colors.text} />
+          <Ionicons name="chevron-back" size={24} color={Colors.textOnDark} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <TextInput
-  placeholderTextColor={Colors.textSecondary}
+  placeholderTextColor={Colors.textOnDarkSecondary}
             style={styles.programmeNomInput}
             value={programme.nom}
             onChangeText={(text) => setProgramme((prev) => (prev ? { ...prev, nom: text } : prev))}
@@ -258,10 +260,10 @@ export default function ProgrammeEditorScreen() {
                 size={14}
                 color={
                   i === 0
-                    ? Colors.grayMedium
+                    ? Colors.textOnDarkSecondary
                     : activeSeance.id === s.id
                     ? Colors.white
-                    : Colors.textSecondary
+                    : Colors.textOnDark
                 }
               />
             </TouchableOpacity>
@@ -280,10 +282,10 @@ export default function ProgrammeEditorScreen() {
                 size={14}
                 color={
                   i === programme.seances.length - 1
-                    ? Colors.grayMedium
+                    ? Colors.textOnDarkSecondary
                     : activeSeance.id === s.id
                     ? Colors.white
-                    : Colors.textSecondary
+                    : Colors.textOnDark
                 }
               />
             </TouchableOpacity>
@@ -801,12 +803,12 @@ const styles = StyleSheet.create({
   programmeNomInput: {
     fontSize: 22,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   programmeSportifLabel: {
     fontSize: 12,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 2,
   },
 
@@ -834,14 +836,14 @@ const styles = StyleSheet.create({
   },
 
   seanceTabActive: {
-    backgroundColor: Colors.surfaceAlt,
-    borderColor: Colors.text,
+    backgroundColor: Colors.primaryDark,
+    borderColor: Colors.primaryDark,
   },
 
   seanceTabText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   seanceTabTextActive: {

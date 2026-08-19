@@ -56,7 +56,7 @@ export default function ProfilScreen() {
 
   return (
     <View style={styles.container}>
-      <PhotoBackground variant="texture" />
+      <PhotoBackground variant="profil" />
       <View style={styles.card}>
         <AvatarHalo />
         <View style={styles.avatar}>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
   },
 

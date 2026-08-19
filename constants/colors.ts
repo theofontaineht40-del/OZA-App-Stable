@@ -1,48 +1,53 @@
-// Direction artistique "sport premium data" — bleu électrique + blanc +
-// glassmorphism. `white`/`black` restent des couleurs littérales fixes
-// (texte/icônes sur l'accent, qui reste vif quel que soit le thème) ;
-// `background`/`surface`/`text`/`border` etc. sont les tokens sémantiques
-// qui portent le thème.
+// Direction artistique "sport premium data" — teal profond + crème, dans la
+// lignée Whoop / Apple Fitness : fond clair et cartes blanches pour l'usage
+// quotidien (stats, programmes, messages), grandes cartes/écrans teal foncé
+// réservés aux moments "hero" (connexion, bien-être du jour, navigation).
 //
-// `background` est un bleu uni (pas transparent) : react-native-screens
+// `text`/`textSecondary` sont calibrés pour du texte sombre sur fond clair
+// (le cas par défaut de tout l'app). Les quelques écrans/cartes qui restent
+// teal foncé (auth, nav bar, hero cards) utilisent explicitement
+// `textOnDark`/`textOnDarkSecondary` plutôt que `text`, pas d'inversion
+// automatique.
+//
+// `background` est une couleur unie (pas transparente) : react-native-screens
 // n'est pas actif sur l'export web de ce projet, donc le bottom-tabs
 // d'expo-router ne fait que superposer les écrans (zIndex -1/0) sans les
-// démonter ni les masquer réellement — seul un fond opaque sur l'écran
-// actif empêche de voir les autres onglets en transparence derrière lui.
-// <AppBackground /> (dégradé + halos, app/_layout.tsx) reste utilisé pour
-// les écrans hors onglets (login/register/accueil) qui n'ont pas ce
-// problème d'empilement.
+// démonter ni les masquer réellement — seul un fond opaque sur l'écran actif
+// empêche de voir les autres onglets en transparence derrière lui.
+// <AppBackground /> (dégradé + halo, app/_layout.tsx) reste utilisé pour les
+// écrans hors onglets (login/register/accueil) qui n'ont pas ce problème
+// d'empilement.
 export const Colors = {
-  primary: "#3B82F6",
-  primaryDark: "#0B2A66",
-  primaryLight: "#60A5FA",
-  // Rose OZA : accent de marque (logo, quelques indicateurs), jamais la
-  // couleur dominante — le bleu reste dominant partout ailleurs.
-  accent: "#FF1674",
-  black: "#020B1F",
-  white: "#F5F7FA",
-  background: "#061634",
-  navBackground: "rgba(2, 11, 31, 0.85)",
-  // Verre dépoli clair (blanc, pas teinté navy) à opacité plus soutenue :
-  // un blanc à 10% se fondait complètement dans les photos de fond, mais un
-  // verre trop sombre/teinté ne se distinguait plus non plus — il faut du
-  // blanc, juste plus opaque qu'au départ, pour que le widget reste clair.
-  surface: "rgba(255, 255, 255, 0.18)",
-  surfaceAlt: "rgba(255, 255, 255, 0.28)",
-  accentTint: "rgba(59, 130, 246, 0.22)",
-  grayLight: "rgba(255, 255, 255, 0.14)",
-  grayMedium: "rgba(255, 255, 255, 0.30)",
-  text: "#F5F7FA",
-  textSecondary: "rgba(245, 247, 250, 0.72)",
-  border: "rgba(255, 255, 255, 0.30)",
+  primary: "#14B8A6",
+  primaryDark: "#0B2E2D",
+  primaryLight: "#5EEAD4",
+  // Alias de `primary` : plus de rose OZA comme accent séparé, le teal est
+  // la seule couleur de marque désormais.
+  accent: "#14B8A6",
+  black: "#0B1F1E",
+  white: "#FFFFFF",
+  background: "#F6F4EE",
+  navBackground: "#0C2E2D",
+  surface: "#FFFFFF",
+  surfaceAlt: "#F0EDE4",
+  accentTint: "#E1F5F0",
+  grayLight: "#EFEDE6",
+  grayMedium: "rgba(11, 31, 30, 0.16)",
+  text: "#101C1B",
+  textSecondary: "rgba(16, 28, 27, 0.60)",
+  // Texte/icônes posés sur une surface teal foncé (auth, nav bar, hero
+  // cards) — jamais utilisés sur les fonds clairs par défaut.
+  textOnDark: "#FFFFFF",
+  textOnDarkSecondary: "rgba(255, 255, 255, 0.72)",
+  border: "rgba(11, 31, 30, 0.10)",
   riskUnder: "#0A84FF",
   riskLow: "#34C759",
   riskMedium: "#FF9F0A",
   riskHigh: "#FF3B30",
 };
 
-// Fond d'écran partagé (voir components/app-background.tsx) : bleu nuit →
-// bleu électrique → bleu profond, avec quelques halos très subtils.
+// Fond d'écran partagé (voir components/app-background.tsx) : teal profond
+// avec un halo lumineux subtil, pour les écrans hors onglets (login/register).
 export const Gradients = {
-  app: ["#020B1F", "#2563EB", "#061634"] as const,
+  app: ["#0B2E2D", "#146B62", "#0B2E2D"] as const,
 };

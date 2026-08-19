@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import PhotoBackground from "../../components/photo-background";
 import PulseDot from "../../components/pulse-dot";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
@@ -77,6 +78,8 @@ export default function NouvelleSeanceScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="seances" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -140,13 +143,14 @@ export default function NouvelleSeanceScreen() {
         )}
       </TouchableOpacity>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -158,12 +162,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 15,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 20,
   },
@@ -171,7 +175,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
     marginTop: 4,
   },
@@ -187,8 +191,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -211,8 +214,7 @@ const styles = StyleSheet.create({
   input: {
     color: Colors.text,
     height: 52,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     fontSize: 16,
@@ -222,8 +224,7 @@ const styles = StyleSheet.create({
   commentInput: {
     color: Colors.text,
     minHeight: 90,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 12,

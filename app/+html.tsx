@@ -19,15 +19,15 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="OZA" />
-        {/* Direction premium dark : sans ça, la bande sous l'encoche/l'heure
-            (safe-area iOS, zone de rebond du scroll) reste blanche par
-            défaut alors que tout le reste de l'appli est passé en noir. */}
+        {/* Évite un flash de couleur sous l'encoche/l'heure (safe-area iOS,
+            zone de rebond du scroll) avant l'hydratation, en attendant que
+            le fond crème réel de l'app prenne le relais. */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#071A3A" />
+        <meta name="theme-color" content="#F6F4EE" />
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: `html, body { background-color: #071A3A; }`,
+            __html: `html, body { background-color: #F6F4EE; }`,
           }}
         />
         <ScrollViewStyleReset />

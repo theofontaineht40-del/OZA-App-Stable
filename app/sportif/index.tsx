@@ -99,7 +99,7 @@ export default function SportifHome() {
 
   return (
     <View style={{ flex: 1 }}>
-      <PhotoBackground variant="gym" />
+      <PhotoBackground variant="accueil" />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
@@ -310,7 +310,7 @@ function QuickAction({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -327,12 +327,12 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 28,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
   },
 
   heroLabel: {
-    color: "#DBEAFE",
+    color: Colors.textOnDarkSecondary,
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 12,
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   },
 
   heroCaption: {
-    color: "#DBEAFE",
+    color: Colors.textOnDarkSecondary,
     fontSize: 13,
     marginTop: 2,
   },
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
-    backgroundColor: Colors.surfaceAlt,
+    backgroundColor: Colors.primaryDark,
     borderRadius: 16,
     height: 54,
     marginBottom: 24,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 14,
   },
 

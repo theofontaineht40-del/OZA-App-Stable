@@ -58,7 +58,7 @@ function newId(): string {
 }
 
 export function newBloc(): Bloc {
-  return { id: newId(), nom: "Bloc 1", objectif: "", couleur: "#2563EB", exercices: [] };
+  return { id: newId(), nom: "Bloc 1", objectif: "", couleur: "#14B8A6", exercices: [] };
 }
 
 export function newSeance(index: number): Seance {

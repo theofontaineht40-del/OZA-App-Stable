@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import PhotoBackground from "../../../../components/photo-background";
 import PulseDot from "../../../../components/pulse-dot";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
@@ -98,8 +99,9 @@ export default function CoachNouvelleSeanceScreen() {
   if (!authorized) {
     return (
       <View style={styles.container}>
+        <PhotoBackground variant="seances" />
         <View style={styles.centeredEmpty}>
-          <Ionicons name="lock-closed-outline" size={40} color={Colors.grayMedium} />
+          <Ionicons name="lock-closed-outline" size={40} color={Colors.textOnDarkSecondary} />
           <Text style={styles.emptyTitle}>Accès non autorisé</Text>
           <Text style={styles.emptyText}>
             Seul le coach principal de ce sportif peut ajouter une séance.
@@ -110,13 +112,15 @@ export default function CoachNouvelleSeanceScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="seances" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
+        <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
         <Text style={styles.backText}>Retour</Text>
       </TouchableOpacity>
 
@@ -178,13 +182,14 @@ export default function CoachNouvelleSeanceScreen() {
         )}
       </TouchableOpacity>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -201,19 +206,19 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.text,
+    color: Colors.textOnDark,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 14,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -229,20 +234,20 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginTop: 4,
   },
 
   emptyText: {
     fontSize: 14,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     textAlign: "center",
   },
 
   fieldLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
   },
 
@@ -257,8 +262,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -281,8 +285,7 @@ const styles = StyleSheet.create({
   input: {
     color: Colors.text,
     height: 52,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     fontSize: 16,
@@ -292,8 +295,7 @@ const styles = StyleSheet.create({
   commentInput: {
     color: Colors.text,
     minHeight: 90,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 12,

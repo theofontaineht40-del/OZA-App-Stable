@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import PhotoBackground from "../../components/photo-background";
 import PulseDot from "../../components/pulse-dot";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
@@ -79,6 +80,8 @@ export default function CheckinScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="profil" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -127,17 +130,18 @@ export default function CheckinScreen() {
         )}
       </TouchableOpacity>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
-    padding: 24,
+    padding: 32,
     paddingTop: 70,
     paddingBottom: 60,
   },
@@ -145,12 +149,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 15,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 20,
   },
@@ -170,28 +174,26 @@ const styles = StyleSheet.create({
   },
 
   wellnessRow: {
-    marginBottom: 20,
+    marginBottom: 34,
   },
 
   wellnessLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
-    marginBottom: 10,
+    color: Colors.textOnDark,
+    marginBottom: 12,
   },
 
   scaleRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
+    justifyContent: "space-between",
   },
 
   scaleDot: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    width: 27,
+    height: 27,
+    borderRadius: 9,
+    backgroundColor: Colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   },
 
   scaleDotText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "600",
     color: Colors.text,
   },

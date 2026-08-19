@@ -6,6 +6,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 
 import { Colors } from "../../constants/colors";
 import { CalendarIllustration, CoachIllustration } from "../../components/empty-illustrations";
+import PhotoBackground from "../../components/photo-background";
 import { auth, db } from "../../firebase";
 import {
   getAvailableSlotsForCoach,
@@ -116,10 +117,11 @@ export default function ReservationsScreen() {
   if (relations.length === 0) {
     return (
       <View style={styles.container}>
+        <PhotoBackground variant="seances" />
         <View style={styles.centeredEmpty}>
           <CoachIllustration size={88} />
-          <Text style={styles.emptyTitle}>Aucun coach associé</Text>
-          <Text style={styles.emptyText}>
+          <Text style={styles.emptyTitleOnDark}>Aucun coach associé</Text>
+          <Text style={styles.emptyTextOnDark}>
             Renseignez le code de votre coach depuis "Mon équipe" pour réserver des séances.
           </Text>
           <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/sportif/equipe")}>
@@ -131,6 +133,8 @@ export default function ReservationsScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="seances" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -200,13 +204,14 @@ export default function ReservationsScreen() {
       )}
       </Animated.View>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -240,21 +245,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 20,
   },
 
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 12,
     marginTop: 8,
   },
 
   emptySmall: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginBottom: 20,
   },
 
@@ -276,6 +281,20 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 13,
     color: Colors.textSecondary,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+
+  emptyTitleOnDark: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.textOnDark,
+    marginTop: 4,
+  },
+
+  emptyTextOnDark: {
+    fontSize: 13,
+    color: Colors.textOnDarkSecondary,
     textAlign: "center",
     paddingHorizontal: 20,
   },

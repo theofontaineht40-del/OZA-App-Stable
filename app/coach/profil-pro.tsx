@@ -17,6 +17,7 @@ import {
 
 import { Colors } from "../../constants/colors";
 import ImageCropModal from "../../components/image-crop-modal";
+import PhotoBackground from "../../components/photo-background";
 import { Specialite, SPECIALITES } from "../../constants/specialites";
 import { auth } from "../../firebase";
 import {
@@ -123,13 +124,15 @@ export default function ProfilProScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="profil" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
+        <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
         <Text style={styles.backText}>Profil</Text>
       </TouchableOpacity>
 
@@ -230,13 +233,14 @@ export default function ProfilProScreen() {
         onConfirm={handleCropConfirm}
       />
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -253,19 +257,19 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.text,
+    color: Colors.textOnDark,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
     marginBottom: 20,
     lineHeight: 18,
@@ -308,15 +312,14 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 8,
   },
 
   input: {
     color: Colors.text,
     height: 48,
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 12,
     paddingHorizontal: 14,
     fontSize: 14,
@@ -338,8 +341,7 @@ const styles = StyleSheet.create({
   },
 
   chip: {
-    borderWidth: 1,
-    borderColor: Colors.grayMedium,
+    backgroundColor: Colors.surface,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,

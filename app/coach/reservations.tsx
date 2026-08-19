@@ -15,6 +15,7 @@ import {
 
 import DateField from "../../components/date-field";
 import { CalendarIllustration } from "../../components/empty-illustrations";
+import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
 import {
@@ -116,6 +117,8 @@ export default function ReservationsScreen() {
   }, {});
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="seances" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -258,13 +261,14 @@ export default function ReservationsScreen() {
       )}
       </Animated.View>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   card: {

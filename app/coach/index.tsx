@@ -136,7 +136,7 @@ export default function CoachHome() {
 
   return (
     <View style={styles.container}>
-      <PhotoBackground variant="gym" />
+      <PhotoBackground variant="accueil" />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -167,7 +167,7 @@ export default function CoachHome() {
                   <Text style={styles.heroCaption}>sportifs suivis</Text>
                 </View>
                 <View style={styles.heroChart}>
-                  <MiniSparkline values={last7.map((d) => d.load)} width={100} height={44} color={DARK.accent} />
+                  <MiniSparkline values={last7.map((d) => d.load)} width={100} height={44} color={Colors.primaryLight} />
                 </View>
               </View>
             </View>
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    backgroundColor: DARK.bg,
+    backgroundColor: "transparent",
     paddingTop: 70,
     paddingBottom: 28,
     paddingHorizontal: 24,
@@ -385,12 +385,12 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 28,
     fontWeight: "700",
-    color: DARK.text,
+    color: Colors.textOnDark,
   },
 
   subtitle: {
     fontSize: 15,
-    color: DARK.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginTop: 4,
   },
 
@@ -400,16 +400,14 @@ const styles = StyleSheet.create({
   },
 
   heroCard: {
-    backgroundColor: DARK.card,
+    backgroundColor: Colors.primaryDark,
     borderRadius: 24,
-    borderWidth: 1,
-    borderColor: DARK.border,
     padding: 22,
     marginBottom: 24,
   },
 
   heroLabel: {
-    color: DARK.textSecondary,
+    color: Colors.textOnDarkSecondary,
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 1,
@@ -426,17 +424,17 @@ const styles = StyleSheet.create({
   },
 
   heroValue: {
-    color: DARK.text,
+    color: Colors.textOnDark,
     fontSize: 30,
     fontWeight: "700",
   },
 
   heroValueAccent: {
-    color: DARK.accent,
+    color: Colors.primaryLight,
   },
 
   heroCaption: {
-    color: DARK.textSecondary,
+    color: Colors.textOnDarkSecondary,
     fontSize: 12,
     marginTop: 2,
   },
@@ -444,7 +442,7 @@ const styles = StyleSheet.create({
   heroDivider: {
     width: 1,
     height: 36,
-    backgroundColor: DARK.border,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     marginRight: 24,
   },
 
@@ -485,7 +483,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: DARK.text,
+    color: Colors.textOnDark,
     marginBottom: 14,
   },
 
@@ -518,7 +516,7 @@ const styles = StyleSheet.create({
   },
 
   sportifAvatarText: {
-    color: DARK.text,
+    color: Colors.white,
     fontWeight: "700",
     fontSize: 14,
   },
@@ -622,7 +620,7 @@ const styles = StyleSheet.create({
   },
 
   emptyButtonText: {
-    color: DARK.text,
+    color: Colors.white,
     fontWeight: "700",
     fontSize: 14,
   },

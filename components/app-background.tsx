@@ -12,8 +12,8 @@ import Svg, {
 
 // Fond partagé de toute l'app (monté une seule fois à la racine, voir
 // app/_layout.tsx) : une vraie image de fond (dégradé multi-stops + halos
-// flous en SVG, plutôt que des Views plates) — bleu nuit → bleu électrique
-// → bleu profond, avec de la profondeur et un peu de mouvement sans verser
+// flous en SVG, plutôt que des Views plates) — teal profond avec un halo
+// lumineux subtil, avec de la profondeur et un peu de mouvement sans verser
 // dans un rendu "gaming". Les écrans eux-mêmes restent transparents pour
 // laisser voir ce fond derrière leurs widgets.
 export default function AppBackground() {
@@ -22,22 +22,22 @@ export default function AppBackground() {
       <Svg width="100%" height="100%" viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice">
         <Defs>
           <SvgLinearGradient id="base" x1="10%" y1="0%" x2="90%" y2="100%">
-            <Stop offset="0%" stopColor="#071A3A" />
-            <Stop offset="32%" stopColor="#123A7A" />
-            <Stop offset="55%" stopColor="#2563EB" />
-            <Stop offset="80%" stopColor="#123A7A" />
-            <Stop offset="100%" stopColor="#0B2A66" />
+            <Stop offset="0%" stopColor="#081F1E" />
+            <Stop offset="32%" stopColor="#0E3D3B" />
+            <Stop offset="55%" stopColor="#146B62" />
+            <Stop offset="80%" stopColor="#0E3D3B" />
+            <Stop offset="100%" stopColor="#0B2E2D" />
           </SvgLinearGradient>
           <RadialGradient id="glow1" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#60A5FA" stopOpacity={0.65} />
-            <Stop offset="100%" stopColor="#60A5FA" stopOpacity={0} />
+            <Stop offset="0%" stopColor="#5EEAD4" stopOpacity={0.55} />
+            <Stop offset="100%" stopColor="#5EEAD4" stopOpacity={0} />
           </RadialGradient>
           <RadialGradient id="glow2" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#3B82F6" stopOpacity={0.6} />
-            <Stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
+            <Stop offset="0%" stopColor="#14B8A6" stopOpacity={0.55} />
+            <Stop offset="100%" stopColor="#14B8A6" stopOpacity={0} />
           </RadialGradient>
           <RadialGradient id="glow3" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.22} />
+            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.18} />
             <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0} />
           </RadialGradient>
           <Filter id="blurLg" x="-50%" y="-50%" width="200%" height="200%">

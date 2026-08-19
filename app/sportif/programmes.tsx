@@ -5,10 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
-import { AmbientWash } from "../../components/decor";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
-import PhotoBackground from "../../components/photo-background";
 import { auth } from "../../firebase";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 
@@ -49,8 +47,6 @@ export default function SportifProgrammesScreen() {
 
   return (
     <View style={styles.container}>
-      <PhotoBackground variant="gym" />
-      <AmbientWash />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}

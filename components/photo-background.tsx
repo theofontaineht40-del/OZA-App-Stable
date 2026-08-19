@@ -1,23 +1,26 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
 
-// Deux vraies photos fournies par le coach (pas générées, pas remplacées) :
-// - "gym" pour les écrans liés à l'entraînement (accueil, programme, séance).
-// - "texture" pour les écrans plus premium/sobres (connexion, profil).
-// Un voile bleu nuit semi-transparent garde le texte et les widgets
-// glassmorphism lisibles par-dessus, sans dénaturer la photo.
+// Fonds abstraits fournis par le coach (pas générés, pas remplacés), un par
+// grande section de l'app : "accueil", "programmes", "seances", "profil".
+// Un voile noir léger garde le texte lisible par-dessus les zones les plus
+// lumineuses (halos teal) sans écraser l'image.
 const SOURCES = {
-  gym: require("../assets/images/bg-gym.png"),
-  texture: require("../assets/images/bg-texture.jpg"),
+  accueil: require("../assets/images/bg-accueil.png"),
+  programmes: require("../assets/images/bg-programmes.png"),
+  seances: require("../assets/images/bg-seances.png"),
+  profil: require("../assets/images/bg-profil.png"),
 };
 
-export default function PhotoBackground({ variant }: { variant: "gym" | "texture" }) {
+type Variant = keyof typeof SOURCES;
+
+export default function PhotoBackground({ variant }: { variant: Variant }) {
   return (
     <ImageBackground
       source={SOURCES[variant]}
       style={[styles.fill, { pointerEvents: "none" }]}
       resizeMode="cover"
     >
-      <View style={[styles.overlay, variant === "gym" ? styles.overlayGym : styles.overlayTexture]} />
+      <View style={styles.overlay} />
     </ImageBackground>
   );
 }
@@ -37,17 +40,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-
-  // La photo de salle est déjà très sombre — un voile léger suffit à garder
-  // le contraste des textes sans l'écraser.
-  overlayGym: {
-    backgroundColor: "rgba(2, 11, 31, 0.55)",
-  },
-
-  // La texture carbone est plus claire par endroits (reflet en bas à
-  // gauche) : voile un peu plus marqué pour une lisibilité constante.
-  overlayTexture: {
-    backgroundColor: "rgba(2, 11, 31, 0.72)",
+    backgroundColor: "rgba(0, 0, 0, 0.12)",
   },
 });

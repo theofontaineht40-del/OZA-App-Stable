@@ -12,13 +12,12 @@ import {
 
 import { doc, getDoc } from "firebase/firestore";
 import AnimatedPressable from "../components/animated-pressable";
-import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
 
-const PINK = Colors.primary;
+const TEAL = Colors.primary;
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -65,10 +64,14 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <PhotoBackground variant="texture" />
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
-          <Image source={require("../assets/images/logo.png")} style={styles.logo} resizeMode="contain" />
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+            tintColor={Colors.white}
+          />
         </View>
 
         <Text style={styles.title}>Connexion</Text>
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
     paddingHorizontal: 30,
   },
 
@@ -135,13 +138,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginBottom: 35,
   },
 
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: PINK,
+    backgroundColor: TEAL,
     height: 58,
     borderRadius: 14,
     justifyContent: "center",
@@ -179,11 +182,11 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
   },
 
   registerText: {
-    color: PINK,
+    color: Colors.primaryLight,
     fontWeight: "700",
   },
 });

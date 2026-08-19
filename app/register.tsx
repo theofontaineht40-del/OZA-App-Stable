@@ -12,12 +12,11 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
-import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { registerUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
 
-const PINK = Colors.primary;
+const TEAL = Colors.primary;
 
 export default function RegisterScreen() {
   const [firstName, setFirstName] = useState("");
@@ -73,7 +72,6 @@ export default function RegisterScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="texture" />
     <ScrollView
       style={styles.scrollContainer}
       contentContainerStyle={styles.container}
@@ -81,7 +79,12 @@ export default function RegisterScreen() {
     >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
-          <Image source={require("../assets/images/logo.png")} style={styles.logo} resizeMode="contain" />
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+            tintColor={Colors.white}
+          />
         </View>
 
         <Text style={styles.title}>Créer un compte</Text>
@@ -197,7 +200,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   container: {
@@ -221,13 +224,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginBottom: 35,
   },
 
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 
   roleContainer: {
@@ -267,7 +270,7 @@ const styles = StyleSheet.create({
   },
 
   roleButtonActive: {
-    borderColor: PINK,
+    borderColor: TEAL,
     backgroundColor: Colors.accentTint,
   },
 
@@ -278,11 +281,11 @@ const styles = StyleSheet.create({
   },
 
   roleTextActive: {
-    color: PINK,
+    color: TEAL,
   },
 
   button: {
-    backgroundColor: PINK,
+    backgroundColor: TEAL,
     height: 58,
     borderRadius: 16,
     justifyContent: "center",
@@ -302,12 +305,12 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     fontSize: 15,
   },
 
   loginText: {
-    color: PINK,
+    color: Colors.primaryLight,
     fontWeight: "700",
     fontSize: 15,
   },

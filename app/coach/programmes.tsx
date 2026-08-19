@@ -17,7 +17,6 @@ import AnimatedPressable from "../../components/animated-pressable";
 import ConfirmModal from "../../components/confirm-modal";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import PlanificationTimeline from "../../components/planification-timeline";
-import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
 import {
@@ -158,7 +157,6 @@ export default function ProgrammesScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="gym" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}

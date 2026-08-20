@@ -27,17 +27,14 @@ export default function Root({ children }: PropsWithChildren) {
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            // `100vh` ne suit pas la barre d'outils rétractable de Safari
-            // iOS : au scroll, elle se rétracte, révèle de la hauteur en
-            // plus, et ce fond crème brut apparaissait en bas le temps que
-            // le fond de l'app (peint via une hauteur figée) le rattrape.
-            // `100dvh` (dynamic viewport height) suit ces variations. Une
-            // vraie `height` (pas juste `min-height`) est nécessaire pour
-            // que #root, qui hérite en `height:100%` (reset Expo juste en
-            // dessous), ait une base de calcul non ambiguë — sinon un écart
-            // d'arrondi sous-pixel apparaît/disparaît selon le niveau de
-            // zoom, un symptôme observé sur iOS.
-            __html: `html, body, #root { background-color: #F6F4EE; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh; }`,
+            // Une `height` fixe sur #root (plutôt que `min-height`) cassait
+            // le scroll sur les écrans dont le contenu dépasse un écran
+            // (body a `overflow:hidden` dans le reset Expo juste en dessous
+            // : avec une hauteur figée, tout ce qui débordait devenait
+            // inatteignable). `min-height` suffit à éviter le fond crème
+            // brut en dessous du contenu sans jamais contraindre la hauteur
+            // réelle vers le bas.
+            __html: `html, body, #root { background-color: #F6F4EE; min-height: 100vh; min-height: 100dvh; }`,
           }}
         />
         <ScrollViewStyleReset />

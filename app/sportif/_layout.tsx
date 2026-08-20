@@ -39,15 +39,7 @@ export default function SportifTabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="decouvrir"
-        options={{
-          title: "Découvrir",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="location" color={color} size={size} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="decouvrir" options={{ href: null }} />
       <Tabs.Screen
         name="reservations"
         options={{

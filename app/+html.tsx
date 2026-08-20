@@ -31,8 +31,13 @@ export default function Root({ children }: PropsWithChildren) {
             // iOS : au scroll, elle se rétracte, révèle de la hauteur en
             // plus, et ce fond crème brut apparaissait en bas le temps que
             // le fond de l'app (peint via une hauteur figée) le rattrape.
-            // `100dvh` (dynamic viewport height) suit ces variations.
-            __html: `html, body, #root { background-color: #F6F4EE; min-height: 100vh; min-height: 100dvh; }`,
+            // `100dvh` (dynamic viewport height) suit ces variations. Une
+            // vraie `height` (pas juste `min-height`) est nécessaire pour
+            // que #root, qui hérite en `height:100%` (reset Expo juste en
+            // dessous), ait une base de calcul non ambiguë — sinon un écart
+            // d'arrondi sous-pixel apparaît/disparaît selon le niveau de
+            // zoom, un symptôme observé sur iOS.
+            __html: `html, body, #root { background-color: #F6F4EE; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh; }`,
           }}
         />
         <ScrollViewStyleReset />

@@ -5,6 +5,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import AppBackground from "../components/app-background";
 import { Colors } from "../constants/colors";
@@ -50,22 +51,24 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <AppBackground />
-      <ThemeProvider value={NavTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: "transparent" },
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="register" />
-          <Stack.Screen name="coach" />
-          <Stack.Screen name="sportif" />
-        </Stack>
-      </ThemeProvider>
-    </View>
+    <SafeAreaProvider>
+      <View style={{ flex: 1 }}>
+        <AppBackground />
+        <ThemeProvider value={NavTheme}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: "transparent" },
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="coach" />
+            <Stack.Screen name="sportif" />
+          </Stack>
+        </ThemeProvider>
+      </View>
+    </SafeAreaProvider>
   );
 }

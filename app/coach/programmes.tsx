@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -27,6 +28,7 @@ import {
 } from "../../services/planification";
 import { downloadProgrammePdf } from "../../services/programme-pdf";
 import {
+  assignProgrammeToSportif,
   createProgramme,
   deleteProgramme,
   getProgrammesForCoach,
@@ -46,6 +48,8 @@ export default function ProgrammesScreen() {
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [assignTargetId, setAssignTargetId] = useState<string | null>(null);
+  const [assigningId, setAssigningId] = useState<string | null>(null);
   const [expandedSportifId, setExpandedSportifId] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
@@ -129,6 +133,19 @@ export default function ProgrammesScreen() {
     await deleteProgramme(deleteTargetId);
     setDeleteTargetId(null);
     await refresh();
+  }
+
+  async function handleAssign(sportif: SportifSummary) {
+    if (!assignTargetId) return;
+    setAssigningId(sportif.uid);
+    try {
+      const sportifName = `${sportif.firstName} ${sportif.lastName}`.trim();
+      await assignProgrammeToSportif(assignTargetId, sportif.uid, sportifName);
+      setAssignTargetId(null);
+      await refresh();
+    } finally {
+      setAssigningId(null);
+    }
   }
 
   function handlePressBlock(sportifId: string, block: PlanBlock) {
@@ -347,6 +364,13 @@ export default function ProgrammesScreen() {
                 </Text>
               </View>
               <TouchableOpacity
+                onPress={() => setAssignTargetId(p.id)}
+                hitSlop={10}
+                style={styles.rowActionButton}
+              >
+                <Ionicons name="person-add-outline" size={18} color={Colors.textSecondary} />
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => handleDownload(p)}
                 disabled={downloadingId === p.id}
                 hitSlop={10}
@@ -366,6 +390,52 @@ export default function ProgrammesScreen() {
         </>
       )}
       </Animated.View>
+
+      <Modal
+        visible={assignTargetId !== null}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setAssignTargetId(null)}
+      >
+        <View style={styles.assignBackdrop}>
+          <View style={styles.assignCard}>
+            <Text style={styles.assignTitle}>Assigner à un sportif</Text>
+            {sportifs.length === 0 ? (
+              <Text style={styles.assignEmptyText}>Aucun sportif suivi pour l'instant.</Text>
+            ) : (
+              sportifs.map((s) => (
+                <TouchableOpacity
+                  key={s.uid}
+                  style={styles.assignRow}
+                  onPress={() => handleAssign(s)}
+                  disabled={assigningId !== null}
+                >
+                  <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>
+                      {`${s.firstName?.[0] ?? ""}${s.lastName?.[0] ?? ""}`.toUpperCase()}
+                    </Text>
+                  </View>
+                  <Text style={styles.assignRowText}>
+                    {s.firstName} {s.lastName}
+                  </Text>
+                  {assigningId === s.uid ? (
+                    <ActivityIndicator size="small" color={Colors.textSecondary} />
+                  ) : (
+                    <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+                  )}
+                </TouchableOpacity>
+              ))
+            )}
+            <TouchableOpacity
+              style={styles.assignCancelButton}
+              onPress={() => setAssignTargetId(null)}
+              disabled={assigningId !== null}
+            >
+              <Text style={styles.assignCancelText}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <ConfirmModal
         visible={deleteTargetId !== null}
@@ -613,5 +683,64 @@ const styles = StyleSheet.create({
 
   rowActionButton: {
     marginRight: 4,
+  },
+
+  assignBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+
+  assignCard: {
+    width: "100%",
+    maxWidth: 380,
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 22,
+  },
+
+  assignTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 16,
+  },
+
+  assignEmptyText: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    marginBottom: 16,
+  },
+
+  assignRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 10,
+  },
+
+  assignRowText: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  assignCancelButton: {
+    height: 46,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 12,
+  },
+
+  assignCancelText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text,
   },
 });

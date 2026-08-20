@@ -27,7 +27,12 @@ export default function Root({ children }: PropsWithChildren) {
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: `html, body { background-color: #F6F4EE; }`,
+            // `100vh` ne suit pas la barre d'outils rétractable de Safari
+            // iOS : au scroll, elle se rétracte, révèle de la hauteur en
+            // plus, et ce fond crème brut apparaissait en bas le temps que
+            // le fond de l'app (peint via une hauteur figée) le rattrape.
+            // `100dvh` (dynamic viewport height) suit ces variations.
+            __html: `html, body, #root { background-color: #F6F4EE; min-height: 100vh; min-height: 100dvh; }`,
           }}
         />
         <ScrollViewStyleReset />

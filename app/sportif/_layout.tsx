@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, Tabs } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import MessageToast from "../../components/message-toast";
 import { Colors } from "../../constants/colors";
@@ -7,6 +8,7 @@ import { useUnreadConversations } from "../../hooks/use-unread-conversations";
 
 export default function SportifTabsLayout() {
   const { unreadCount, newMessageEvent } = useUnreadConversations("sportif");
+  const insets = useSafeAreaInsets();
 
   return (
     <>
@@ -21,9 +23,9 @@ export default function SportifTabsLayout() {
           fontWeight: "600",
         },
         tabBarStyle: {
-          height: 82,
+          height: 82 + insets.bottom,
           paddingTop: 8,
-          paddingBottom: 24,
+          paddingBottom: 24 + insets.bottom,
           borderTopWidth: 1,
           borderTopColor: Colors.border,
           backgroundColor: Colors.navBackground,

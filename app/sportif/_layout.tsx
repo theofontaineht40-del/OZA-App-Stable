@@ -8,7 +8,11 @@ import { useUnreadConversations } from "../../hooks/use-unread-conversations";
 
 export default function SportifTabsLayout() {
   const { unreadCount, newMessageEvent } = useUnreadConversations("sportif");
-  const insets = useSafeAreaInsets();
+  // Plafonné : la mesure web de useSafeAreaInsets() peut renvoyer une
+  // valeur aberrante (bien plus grande que la vraie zone d'accueil iOS,
+  // ~34pt max), ce qui créait un grand vide sous la barre au lieu de la
+  // simple bande de sécurité attendue.
+  const bottomInset = Math.min(useSafeAreaInsets().bottom, 34);
 
   return (
     <>
@@ -23,9 +27,9 @@ export default function SportifTabsLayout() {
           fontWeight: "600",
         },
         tabBarStyle: {
-          height: 82 + insets.bottom,
+          height: 82 + bottomInset,
           paddingTop: 8,
-          paddingBottom: 24 + insets.bottom,
+          paddingBottom: 24 + bottomInset,
           borderTopWidth: 1,
           borderTopColor: Colors.border,
           backgroundColor: Colors.navBackground,

@@ -4,7 +4,15 @@ import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { Colors } from "../../constants/colors";
 import { AvatarHalo } from "../../components/decor";
@@ -98,6 +106,10 @@ export default function ProfilScreen() {
   return (
     <View style={styles.container}>
       <PhotoBackground variant="profil" />
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.card}>
         <AvatarHalo />
         <TouchableOpacity style={styles.avatar} onPress={handlePickPhoto} disabled={uploadingPhoto}>
@@ -159,6 +171,7 @@ export default function ProfilScreen() {
         onCancel={() => setCropUri(null)}
         onConfirm={handleCropConfirm}
       />
+      </ScrollView>
     </View>
   );
 }
@@ -167,8 +180,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+
+  content: {
     padding: 24,
     paddingTop: 70,
+    paddingBottom: 40,
   },
 
   card: {

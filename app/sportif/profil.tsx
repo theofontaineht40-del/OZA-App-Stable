@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
 import { AvatarHalo } from "../../components/decor";
@@ -57,6 +57,10 @@ export default function ProfilScreen() {
   return (
     <View style={styles.container}>
       <PhotoBackground variant="profil" />
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.card}>
         <AvatarHalo />
         <View style={styles.avatar}>
@@ -89,6 +93,7 @@ export default function ProfilScreen() {
         <Ionicons name="log-out-outline" size={20} color={Colors.primary} />
         <Text style={styles.logoutText}>Se déconnecter</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -97,8 +102,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+
+  content: {
     padding: 24,
     paddingTop: 70,
+    paddingBottom: 40,
   },
 
   card: {

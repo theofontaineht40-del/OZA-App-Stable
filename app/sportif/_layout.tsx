@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, Tabs } from "expo-router";
 
+import CustomBottomTabBar from "../../components/bottom-tab-bar";
 import MessageToast from "../../components/message-toast";
 import { Colors } from "../../constants/colors";
 import { useUnreadConversations } from "../../hooks/use-unread-conversations";
@@ -11,32 +12,10 @@ export default function SportifTabsLayout() {
   return (
     <>
     <Tabs
+      tabBar={(props) => <CustomBottomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: Colors.background, paddingBottom: 82 },
-        tabBarActiveTintColor: Colors.primaryLight,
-        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.55)",
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "600",
-        },
-        tabBarStyle: {
-          // Ancré directement au vrai bord bas du viewport via `position:
-          // fixed` (au lieu de dépendre de la hauteur calculée du conteneur
-          // flex parent, qui laissait un espace variable en dessous sur
-          // certains iPhone) — le navigateur gère `fixed`+`bottom:0` de
-          // façon fiable même quand sa propre UI change dynamiquement.
-          position: "fixed" as any,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 82,
-          paddingTop: 8,
-          paddingBottom: 24,
-          borderTopWidth: 1,
-          borderTopColor: Colors.border,
-          backgroundColor: Colors.navBackground,
-        },
       }}
     >
       <Tabs.Screen

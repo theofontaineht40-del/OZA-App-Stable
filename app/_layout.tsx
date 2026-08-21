@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { View } from "react-native";
 
 import AppBackground from "../components/app-background";
-import DebugViewportBadge from "../components/debug-viewport-badge";
 import { Colors } from "../constants/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -53,7 +52,6 @@ export default function RootLayout() {
   return (
     <View style={{ flex: 1 }}>
       <AppBackground />
-      <DebugViewportBadge />
       <ThemeProvider value={NavTheme}>
         <Stack
           screenOptions={{

@@ -1,17 +1,16 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "../constants/colors";
 
 // Remplace le BottomTabBar par défaut de @react-navigation/bottom-tabs.
-// Celui-ci enveloppe son style dans un Animated.View avec en permanence un
-// `transform: [{ translateY }]` (même au repos, pour l'animation
-// show/hide) — hors, un `transform` sur un élément `position: fixed` crée
-// un nouveau bloc de référence pour LUI-MÊME sur certaines versions de
-// WebKit (iOS Safari), le faisant alors se positionner par rapport à un
-// ancêtre transformé plutôt que le vrai viewport. Ce composant est un
-// simple <View> sans aucune animation ni transform : le `position: fixed`
-// qu'on lui applique reste donc fiable sur tous les navigateurs.
+// Volontairement PAS en `position: fixed`/`absolute` : sur certains
+// iPhone/Safari, un `fixed` (même sans transform concurrent) laissait un
+// vide résiduel entre la barre et le vrai bord de l'écran — un bug
+// impossible à reproduire en local. En flux normal (dernier enfant d'une
+// colonne flex dont le conteneur des écrans est en `flex: 1`), la barre se
+// retrouve mécaniquement collée à la fin du conteneur réel, sans dépendre
+// du positionnement `fixed` par rapport au viewport.
 export default function CustomBottomTabBar({
   state,
   descriptors,
@@ -75,10 +74,6 @@ export default function CustomBottomTabBar({
 
 const styles = StyleSheet.create({
   bar: {
-    ...(Platform.OS === "web" ? { position: "fixed" as any } : { position: "absolute" }),
-    bottom: 0,
-    left: 0,
-    right: 0,
     flexDirection: "row",
     paddingTop: 8,
     borderTopWidth: 1,

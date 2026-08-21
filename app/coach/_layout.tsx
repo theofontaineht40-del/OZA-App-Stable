@@ -15,7 +15,7 @@ export default function CoachTabsLayout() {
       tabBar={(props) => <CustomBottomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: Colors.background, paddingBottom: 82 },
+        sceneStyle: { backgroundColor: Colors.background },
       }}
     >
       <Tabs.Screen

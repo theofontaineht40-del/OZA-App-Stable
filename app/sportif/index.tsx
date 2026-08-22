@@ -114,23 +114,32 @@ export default function SportifHome() {
           <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
         </View>
 
-        {!checkinDone && (
-          <AnimatedPressable
-            style={styles.checkinCard}
-            onPress={() => router.push("/sportif/checkin")}
+        <AnimatedPressable
+          style={styles.checkinCard}
+          onPress={() => router.push("/sportif/checkin")}
+        >
+          <View
+            style={[
+              styles.checkinIconWrap,
+              checkinDone && styles.checkinIconWrapDone,
+            ]}
           >
-            <View style={styles.checkinIconWrap}>
-              <Ionicons name="pulse-outline" size={20} color={Colors.primary} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.checkinTitle}>Check-in du jour</Text>
-              <Text style={styles.checkinText}>
-                Sommeil, fatigue, stress... 30 secondes pour votre coach.
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
-          </AnimatedPressable>
-        )}
+            <Ionicons
+              name={checkinDone ? "checkmark-circle" : "pulse-outline"}
+              size={20}
+              color={checkinDone ? Colors.riskLow : Colors.primary}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.checkinTitle}>Check-in du jour</Text>
+            <Text style={styles.checkinText}>
+              {checkinDone
+                ? "Complété aujourd'hui — vous pouvez le modifier."
+                : "Sommeil, fatigue, stress... 30 secondes pour votre coach."}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
+        </AnimatedPressable>
 
         <LinearGradient
           colors={[Colors.primary, Colors.primaryDark]}
@@ -357,6 +366,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accentTint,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  checkinIconWrapDone: {
+    backgroundColor: "rgba(52, 199, 89, 0.16)",
   },
 
   checkinTitle: {

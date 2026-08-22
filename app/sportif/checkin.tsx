@@ -10,12 +10,17 @@ import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { addWellnessEntry, getLatestWellnessScore } from "../../services/tracking";
 
+// Chaque libellé est formulé dans le sens positif de l'échelle (10 = bon
+// état) : "Fatigue"/"Courbatures"/"Stress" sont des notions négatives qui
+// entraient en conflit avec ce sens (10 = pas fatigué demande de "penser à
+// l'envers"), d'où "Énergie"/"Récupération"/"Détente" à la place — le mot
+// pointe directement vers ce que représente un score élevé.
 const WELLNESS_ITEMS: { key: WellnessKey; label: string }[] = [
-  { key: "sommeil", label: "Qualité du sommeil" },
-  { key: "fatigue", label: "Fatigue (10 = en forme)" },
-  { key: "courbatures", label: "Courbatures (10 = aucune)" },
-  { key: "stress", label: "Stress (10 = détendu)" },
-  { key: "humeur", label: "Humeur" },
+  { key: "sommeil", label: "Qualité du sommeil (10 = excellent)" },
+  { key: "fatigue", label: "Énergie du jour (10 = en pleine forme)" },
+  { key: "courbatures", label: "Récupération musculaire (10 = bien récupéré)" },
+  { key: "stress", label: "Détente (10 = très détendu)" },
+  { key: "humeur", label: "Humeur (10 = excellente)" },
 ];
 
 type WellnessKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";

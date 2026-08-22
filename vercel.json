@@ -1,5 +1,11 @@
 {
   "buildCommand": "npx expo export --platform web",
   "outputDirectory": "dist",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "crons": [
+    {
+      "path": "/api/reminder-checkin",
+      "schedule": "0 19 * * *"
+    }
+  ]
 }

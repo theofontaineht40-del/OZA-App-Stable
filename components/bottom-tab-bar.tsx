@@ -24,8 +24,8 @@ export default function CustomBottomTabBar({
       style={[
         styles.bar,
         {
-          height: 82 + bottomInset,
-          paddingBottom: 24 + bottomInset,
+          height: 66 + bottomInset,
+          paddingBottom: 10 + bottomInset,
         },
       ]}
     >

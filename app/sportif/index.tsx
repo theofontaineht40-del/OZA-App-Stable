@@ -15,9 +15,11 @@ import {
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
+import GoalCard from "../../components/goal-card";
 import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
+import { getGoal, Goal } from "../../services/goals";
 import { buildDailyLoadSeries } from "../../services/load";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
@@ -29,6 +31,7 @@ export default function SportifHome() {
   const [upcomingSlots, setUpcomingSlots] = useState<Slot[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
+  const [goal, setGoalState] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
@@ -44,16 +47,18 @@ export default function SportifHome() {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-        const [sessionData, slotData, programmeData, todayScore] = await Promise.all([
+        const [sessionData, slotData, programmeData, todayScore, goalData] = await Promise.all([
           getSessionsForSportif(user.uid),
           getSlotsForSportif(user.uid),
           getProgrammesForSportif(user.uid),
           getLatestWellnessScore(user.uid),
+          getGoal(user.uid),
         ]);
         setSessions(sessionData);
         setUpcomingSlots(slotData);
         setProgrammes(programmeData);
         setCheckinDone(todayScore !== null);
+        setGoalState(goalData);
       } finally {
         setLoading(false);
       }
@@ -140,6 +145,8 @@ export default function SportifHome() {
           </View>
           <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
         </AnimatedPressable>
+
+        <GoalCard goal={goal} />
 
         <LinearGradient
           colors={[Colors.primary, Colors.primaryDark]}

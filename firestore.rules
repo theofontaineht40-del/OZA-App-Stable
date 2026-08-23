@@ -128,6 +128,14 @@ service cloud.firestore {
       allow write: if isPrincipalOf(sportifId);
     }
 
+    // Objectif personnel : défini et modifié par le sportif lui-même (pas le
+    // coach), qui reste lisible par le coach principal pour suivre la
+    // motivation de son client.
+    match /goals/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isSignedIn() && sportifId == request.auth.uid;
+    }
+
     match /planifications/{sportifId} {
       allow read: if canAccessSportifData(sportifId);
       allow write: if isPrincipalOf(sportifId);

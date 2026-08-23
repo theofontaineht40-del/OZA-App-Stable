@@ -196,6 +196,42 @@ export async function getSessionsForSportif(sportifUid: string): Promise<Session
   return sessions.sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export type PersonalRecord = {
+  exerciceNom: string;
+  value: number;
+  previousBest: number;
+};
+
+// Un "record battu" suppose une charge précédente à dépasser : la première
+// fois qu'un exercice est loggé, ce n'est pas encore un record (rien à
+// comparer), donc on ignore les exercices sans historique antérieur.
+export function detectPersonalRecords(
+  pastSessions: SessionRecord[],
+  newExerciseLogs: ExerciseLog[]
+): PersonalRecord[] {
+  const previousMax: Record<string, number> = {};
+  for (const session of pastSessions) {
+    for (const log of session.exerciseLogs ?? []) {
+      const value = parseFloat(log.chargeReelle);
+      if (isNaN(value)) continue;
+      if (!(log.exerciceNom in previousMax) || value > previousMax[log.exerciceNom]) {
+        previousMax[log.exerciceNom] = value;
+      }
+    }
+  }
+
+  const records: PersonalRecord[] = [];
+  for (const log of newExerciseLogs) {
+    const value = parseFloat(log.chargeReelle);
+    if (isNaN(value)) continue;
+    const previousBest = previousMax[log.exerciceNom];
+    if (previousBest !== undefined && value > previousBest) {
+      records.push({ exerciceNom: log.exerciceNom, value, previousBest });
+    }
+  }
+  return records;
+}
+
 export async function addWellnessEntry(
   sportifUid: string,
   input: WellnessInput,

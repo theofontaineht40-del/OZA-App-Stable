@@ -16,12 +16,23 @@ import {
 
 import PhotoBackground from "../../../../../components/photo-background";
 import PulseDot from "../../../../../components/pulse-dot";
+import RestTimerBar from "../../../../../components/rest-timer-bar";
 import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
 import { Colors } from "../../../../../constants/colors";
 import { auth, db } from "../../../../../firebase";
+import { useRestTimer } from "../../../../../hooks/use-rest-timer";
 import { ChargeType, getProgramme, Programme } from "../../../../../services/programmes";
-import { addSession, ExerciseLog } from "../../../../../services/tracking";
+import {
+  addSession,
+  detectPersonalRecords,
+  ExerciseLog,
+  getSessionsForSportif,
+  PersonalRecord,
+  SessionRecord,
+} from "../../../../../services/tracking";
 import { showAlert } from "../../../../../utils/alert";
+
+const REST_DURATION_SECONDS = 90;
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
   "1rm": "% 1RM",
@@ -94,7 +105,10 @@ export default function SeanceExecutionScreen() {
     rpe: number;
     duration: number;
     load: number;
+    personalRecords: PersonalRecord[];
   } | null>(null);
+  const [pastSessions, setPastSessions] = useState<SessionRecord[]>([]);
+  const restTimer = useRestTimer();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -103,8 +117,12 @@ export default function SeanceExecutionScreen() {
         return;
       }
       setUid(user.uid);
-      const snap = await getDoc(doc(db, "users", user.uid));
+      const [snap, sessions] = await Promise.all([
+        getDoc(doc(db, "users", user.uid)),
+        getSessionsForSportif(user.uid),
+      ]);
       setCoachId(snap.exists() ? snap.data().coachId ?? null : null);
+      setPastSessions(sessions);
     });
 
     return unsubscribe;
@@ -168,6 +186,8 @@ export default function SeanceExecutionScreen() {
       complete: ex.complete,
     }));
 
+    const personalRecords = detectPersonalRecords(pastSessions, exerciseLogs);
+
     setSubmitting(true);
     try {
       await addSession({
@@ -183,7 +203,7 @@ export default function SeanceExecutionScreen() {
           exerciseLogs,
         },
       });
-      setCompletedSummary({ rpe, duration: durationNumber, load: rpe * durationNumber });
+      setCompletedSummary({ rpe, duration: durationNumber, load: rpe * durationNumber, personalRecords });
     } finally {
       setSubmitting(false);
     }
@@ -271,6 +291,14 @@ export default function SeanceExecutionScreen() {
                     />
                   </View>
                 </View>
+
+                <TouchableOpacity
+                  style={styles.restButton}
+                  onPress={() => restTimer.start(REST_DURATION_SECONDS)}
+                >
+                  <Ionicons name="time-outline" size={16} color={Colors.primary} />
+                  <Text style={styles.restButtonText}>Repos {REST_DURATION_SECONDS}s</Text>
+                </TouchableOpacity>
               </View>
             );
           })}
@@ -338,9 +366,21 @@ export default function SeanceExecutionScreen() {
         rpe={completedSummary?.rpe ?? 0}
         duration={completedSummary?.duration ?? 0}
         load={completedSummary?.load ?? 0}
+        personalRecords={completedSummary?.personalRecords ?? []}
         onDone={() => router.push("/sportif")}
       />
     </ScrollView>
+
+    {restTimer.active && (
+      <RestTimerBar
+        secondsLeft={restTimer.secondsLeft}
+        totalSeconds={restTimer.totalSeconds}
+        running={restTimer.running}
+        onPauseResume={() => (restTimer.running ? restTimer.pause() : restTimer.resume())}
+        onAdjust={restTimer.addSeconds}
+        onDismiss={restTimer.dismiss}
+      />
+    )}
     </View>
   );
 }
@@ -458,6 +498,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: Colors.text,
+  },
+
+  restButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    marginTop: 10,
+    paddingVertical: 8,
+    borderRadius: 10,
+    backgroundColor: Colors.accentTint,
+  },
+
+  restButtonText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.primary,
   },
 
   fieldLabel: {

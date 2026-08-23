@@ -3,19 +3,28 @@ import { useEffect, useRef } from "react";
 import { Animated, Modal, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "../constants/colors";
+import { PersonalRecord } from "../services/tracking";
 
 type Props = {
   visible: boolean;
   rpe: number;
   duration: number;
   load: number;
+  personalRecords?: PersonalRecord[];
   onDone: () => void;
 };
 
 // Remplace l'ancienne Alert native (non animable) en fin de séance par une
 // confirmation in-app : ✓ qui "pop", puis résumé qui apparaît progressivement,
 // avant de renvoyer automatiquement vers l'accueil.
-export default function SessionCompleteOverlay({ visible, rpe, duration, load, onDone }: Props) {
+export default function SessionCompleteOverlay({
+  visible,
+  rpe,
+  duration,
+  load,
+  personalRecords = [],
+  onDone,
+}: Props) {
   const backdrop = useRef(new Animated.Value(0)).current;
   const checkScale = useRef(new Animated.Value(0)).current;
   const summaryOpacity = useRef(new Animated.Value(0)).current;
@@ -36,7 +45,9 @@ export default function SessionCompleteOverlay({ visible, rpe, duration, load, o
       Animated.timing(summaryOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
     ]).start();
 
-    const timer = setTimeout(onDone, 2000);
+    // Laisse plus de temps à l'écran avant le retour automatique quand il y a
+    // un record à lire — sinon 2s suffisent à peine à voir le résumé.
+    const timer = setTimeout(onDone, personalRecords.length > 0 ? 3200 : 2000);
     return () => clearTimeout(timer);
   }, [visible]);
 
@@ -68,6 +79,19 @@ export default function SessionCompleteOverlay({ visible, rpe, duration, load, o
                 <Text style={styles.statLabel}>UA</Text>
               </View>
             </View>
+
+            {personalRecords.length > 0 && (
+              <View style={styles.prSection}>
+                {personalRecords.map((pr) => (
+                  <View key={pr.exerciceNom} style={styles.prRow}>
+                    <Ionicons name="trophy" size={16} color={Colors.riskLow} />
+                    <Text style={styles.prText}>
+                      Nouveau record · {pr.exerciceNom} : {pr.value}kg (avant {pr.previousBest}kg)
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </Animated.View>
         </View>
       </Animated.View>
@@ -147,5 +171,28 @@ const styles = StyleSheet.create({
     width: 1,
     height: 28,
     backgroundColor: Colors.border,
+  },
+
+  prSection: {
+    width: "100%",
+    marginTop: 18,
+    gap: 8,
+  },
+
+  prRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "rgba(52, 199, 89, 0.12)",
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+
+  prText: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.riskLow,
   },
 });

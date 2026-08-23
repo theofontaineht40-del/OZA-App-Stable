@@ -33,7 +33,16 @@ export default function Root({ children }: PropsWithChildren) {
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: `html, body, #root { margin: 0; padding: 0; background-color: #0C2E2D; min-height: 100vh; min-height: 100dvh; }`,
+            __html: `
+              html, body, #root { margin: 0; padding: 0; background-color: #0C2E2D; min-height: 100vh; min-height: 100dvh; }
+              /* En mode "ajouté à l'écran d'accueil" (standalone), 100dvh
+                 sur #root ne couvre pas toujours la zone de sécurité tout en
+                 bas (home indicator) sur iOS — ce qui laissait apparaître le
+                 noir par défaut du système sous la barre du bas au lieu du
+                 teal de l'app. On réserve explicitement cette hauteur sur
+                 body, qui a déjà le même fond teal, pour la peindre à coup sûr. */
+              body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+            `,
           }}
         />
         <ScrollViewStyleReset />

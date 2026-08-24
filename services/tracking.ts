@@ -11,6 +11,7 @@ import {
 
 import { db } from "../firebase";
 import {
+  computeHooperValues,
   computeSessionLoad,
   computeWellnessScore,
   todayKey,
@@ -21,6 +22,11 @@ export type WellnessEntry = WellnessInput & {
   sportifId: string;
   date: string;
   score: number;
+  hooperSommeil: number;
+  hooperStress: number;
+  hooperFatigue: number;
+  hooperCourbatures: number;
+  hooperIndex: number;
 };
 
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sans caractères ambigus
@@ -232,21 +238,49 @@ export function detectPersonalRecords(
   return records;
 }
 
+// La localisation des courbatures/gênes est purement informative : elle
+// n'entre ni dans le hooper_index ni dans l'ACWR (voir app/sportif/checkin.tsx).
+// Stockée telle quelle (pas de note d'intensité par zone) pour permettre côté
+// coach deux traitements distincts : zones musculaires récurrentes → ajuster
+// le volume de la séance suivante ; toute zone articulaire cochée → alerte
+// prioritaire (technique / décharge / avis professionnel de santé).
+export type SorenessInput = {
+  typeGene: ("musculaire" | "articulaire")[];
+  zonesMusculaires: string[];
+  zonesArticulaires: string[];
+};
+
+const EMPTY_SORENESS: SorenessInput = { typeGene: [], zonesMusculaires: [], zonesArticulaires: [] };
+
 export async function addWellnessEntry(
   sportifUid: string,
   input: WellnessInput,
-  coachId: string | null = null
+  coachId: string | null = null,
+  soreness: SorenessInput = EMPTY_SORENESS
 ): Promise<number> {
   const score = computeWellnessScore(input);
+  const hooper = computeHooperValues(input);
   const date = todayKey();
 
   // Un seul enregistrement de bien-être par jour et par sportif (upsert).
+  // Les champs sommeil/stress/fatigue/courbatures restent au format affiché
+  // (10 = bon état) pour rester compatibles avec les colonnes déjà utilisées
+  // pour le suivi de charge ; les valeurs Hooper (sens inverse) et l'index
+  // total sont stockés à côté, jamais à la place.
   await setDoc(doc(db, "wellness", `${sportifUid}_${date}`), {
     sportifId: sportifUid,
     coachId,
     date,
     ...input,
     score,
+    hooperSommeil: hooper.sommeil,
+    hooperStress: hooper.stress,
+    hooperFatigue: hooper.fatigue,
+    hooperCourbatures: hooper.courbatures,
+    hooperIndex: hooper.hooperIndex,
+    typeGene: soreness.typeGene,
+    zonesMusculaires: soreness.zonesMusculaires,
+    zonesArticulaires: soreness.zonesArticulaires,
     createdAt: new Date(),
   });
 
@@ -288,7 +322,11 @@ export async function getWellnessForCoach(coachUid: string): Promise<WellnessEnt
         fatigue: data.fatigue,
         courbatures: data.courbatures,
         stress: data.stress,
-        humeur: data.humeur,
+        hooperSommeil: data.hooperSommeil,
+        hooperStress: data.hooperStress,
+        hooperFatigue: data.hooperFatigue,
+        hooperCourbatures: data.hooperCourbatures,
+        hooperIndex: data.hooperIndex,
       };
     })
     .sort((a, b) => b.date.localeCompare(a.date));

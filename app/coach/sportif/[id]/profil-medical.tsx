@@ -237,7 +237,12 @@ export default function ProfilMedicalScreen() {
           </TouchableOpacity>
         </View>
 
-        <BodyChart view={view} intensityByZone={intensityByZone} onSelectZone={selectZone} />
+        <BodyChart
+          view={view}
+          intensityByZone={intensityByZone}
+          selectedZone={selectedZone}
+          onSelectZone={selectZone}
+        />
 
         {selectedZone && (
           <View style={styles.painForm}>

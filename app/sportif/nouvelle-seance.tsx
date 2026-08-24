@@ -22,7 +22,7 @@ import { showAlert } from "../../utils/alert";
 
 const RPE_SCALE = Array.from({ length: 11 }, (_, i) => i); // 0 à 10
 
-// Le ressenti quotidien (Hooper : sommeil/fatigue/courbatures/stress/humeur)
+// Le ressenti quotidien (Hooper Index : sommeil/fatigue/courbatures/stress)
 // est enregistré séparément via le check-in du jour (app/sportif/checkin.tsx),
 // indépendamment du fait qu'une séance soit loggée ou non — cet écran ne
 // couvre donc plus que le RPE de la séance elle-même.

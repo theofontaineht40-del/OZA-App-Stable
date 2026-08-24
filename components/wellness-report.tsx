@@ -19,20 +19,20 @@ import {
 import { WellnessEntry } from "../services/tracking";
 import ProgressionChart, { ProgressionPoint } from "./progression-chart";
 
-type VariableKey = "sommeil" | "fatigue" | "courbatures" | "stress" | "humeur";
+type VariableKey = "sommeil" | "fatigue" | "courbatures" | "stress";
 
-// Échelle 1-10 pour les 5 variables, TOUJOURS "plus haut = mieux" (10 = très
-// bon état, 1 = très mauvais), y compris pour fatigue/courbatures/stress :
-// un score de fatigue qui baisse signifie une dégradation de l'état de
-// fatigue (plus fatigué), pas une amélioration. Tous les libellés ci-dessous
-// parlent donc explicitement d'"état en dégradation/amélioration", jamais
-// de "hausse/baisse" seule qui prêterait à confusion.
+// Échelle 1-10 pour les 4 variables (Hooper Index adapté), TOUJOURS "plus
+// haut = mieux" (10 = très bon état, 1 = très mauvais), y compris pour
+// fatigue/courbatures/stress : un score de fatigue qui baisse signifie une
+// dégradation de l'état de fatigue (plus fatigué), pas une amélioration.
+// Tous les libellés ci-dessous parlent donc explicitement d'"état en
+// dégradation/amélioration", jamais de "hausse/baisse" seule qui prêterait
+// à confusion.
 const VARIABLES: { key: VariableKey; label: string; icon: string }[] = [
   { key: "sommeil", label: "Sommeil", icon: "😴" },
   { key: "fatigue", label: "Fatigue", icon: "🔋" },
   { key: "courbatures", label: "Courbatures", icon: "💪" },
   { key: "stress", label: "Stress", icon: "🧠" },
-  { key: "humeur", label: "Humeur", icon: "🙂" },
 ];
 
 const STATUS_ICON: Record<WellnessStatus, string> = {

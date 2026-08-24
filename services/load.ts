@@ -8,7 +8,6 @@ export type WellnessInput = {
   fatigue: number;
   courbatures: number;
   stress: number;
-  humeur: number;
 };
 
 export type RiskLevel = "low" | "medium" | "high";
@@ -23,11 +22,36 @@ export function computeSessionLoad(rpe: number, durationMinutes: number): number
   return rpe * durationMinutes;
 }
 
-// Convention: 10 = excellent état, 1 = très mauvais, pour les 5 items.
+// Convention: 10 = excellent état, 1 = très mauvais, pour les 4 items.
 // Le score global est donc toujours "plus haut = mieux".
 export function computeWellnessScore(input: WellnessInput): number {
-  const { sommeil, fatigue, courbatures, stress, humeur } = input;
-  return (sommeil + fatigue + courbatures + stress + humeur) / 5;
+  const { sommeil, fatigue, courbatures, stress } = input;
+  return (sommeil + fatigue + courbatures + stress) / 4;
+}
+
+export type HooperValues = {
+  sommeil: number;
+  stress: number;
+  fatigue: number;
+  courbatures: number;
+  hooperIndex: number;
+};
+
+// Hooper Index (Hooper & Mackinnon, 1995), adapté sur une échelle 1-10 au
+// lieu de l'échelle originale 1-7 pour rester cohérent avec le reste de
+// l'UI. Le Hooper Index original va dans le sens inverse de nos champs
+// affichés (1 = bon état, 10 = mauvais état) : on convertit donc chaque
+// valeur affichée via `11 - valeur` avant de sommer. Range résultant : 4
+// (forme optimale) à 40 (surmenage max), à comparer à la moyenne glissante
+// du sportif plutôt qu'à un seuil absolu — les seuils publiés dans la
+// littérature (échelle 1-7, range 4-28) ne s'appliquent pas tels quels ici ;
+// pour un usage comparatif à la littérature, multiplier par 28/40.
+export function computeHooperValues(input: WellnessInput): HooperValues {
+  const sommeil = 11 - input.sommeil;
+  const stress = 11 - input.stress;
+  const fatigue = 11 - input.fatigue;
+  const courbatures = 11 - input.courbatures;
+  return { sommeil, stress, fatigue, courbatures, hooperIndex: sommeil + stress + fatigue + courbatures };
 }
 
 export function average(values: number[]): number {
@@ -103,8 +127,10 @@ export function monotonyRiskLevel(monotony: number): RiskLevel {
   return "high";
 }
 
-// ── Interprétation du bien-être (Hooper) ──
-// Échelle 1-10 par item, "plus haut = mieux" (cf. computeWellnessScore).
+// ── Interprétation du bien-être ──
+// Échelle 1-10 par item, "plus haut = mieux" (cf. computeWellnessScore) —
+// c'est le score affiché/agrégé, distinct du Hooper Index (computeHooperValues)
+// qui va dans le sens inverse et sert au suivi de charge.
 
 export type WellnessStatus = "green" | "orange" | "red";
 

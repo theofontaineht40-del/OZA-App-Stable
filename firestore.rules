@@ -105,9 +105,12 @@ service cloud.firestore {
         allow read: if canAccessSportifData(sportifId);
         allow write: if isPrincipalOf(sportifId);
       }
+      // Écriture aussi ouverte au sportif lui-même : contrairement au reste
+      // du dossier médical (clinique, coach uniquement), les points de
+      // douleur peuvent venir de son check-in quotidien.
       match /painPoints/{pointId} {
         allow read: if canAccessSportifData(sportifId);
-        allow write: if isPrincipalOf(sportifId);
+        allow write: if isPrincipalOf(sportifId) || (isSignedIn() && sportifId == request.auth.uid);
       }
     }
 

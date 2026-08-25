@@ -5,10 +5,17 @@ import { ImageBackground, StyleSheet, View } from "react-native";
 // Un voile noir léger garde le texte lisible par-dessus les zones les plus
 // lumineuses (halos teal) sans écraser l'image.
 const SOURCES = {
-  accueil: require("../assets/images/bg-accueil.png"),
+  accueil: require("../assets/images/image de fond oza.png"),
   programmes: require("../assets/images/bg-programmes.png"),
   seances: require("../assets/images/bg-seances.png"),
   profil: require("../assets/images/bg-profil.png"),
+};
+
+const OVERLAY_OPACITY: Record<Variant, number> = {
+  accueil: 0,
+  programmes: 0.12,
+  seances: 0.12,
+  profil: 0.12,
 };
 
 type Variant = keyof typeof SOURCES;
@@ -20,7 +27,7 @@ export default function PhotoBackground({ variant }: { variant: Variant }) {
       style={[styles.fill, { pointerEvents: "none" }]}
       resizeMode="cover"
     >
-      <View style={styles.overlay} />
+      <View style={[styles.overlay, { backgroundColor: `rgba(0, 0, 0, ${OVERLAY_OPACITY[variant]})` }]} />
     </ImageBackground>
   );
 }
@@ -47,6 +54,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.12)",
   },
 });

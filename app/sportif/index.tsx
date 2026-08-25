@@ -1,25 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
-import GoalCard from "../../components/goal-card";
 import PhotoBackground from "../../components/photo-background";
+import PremiumStatWidget from "../../components/premium-stat-widget";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
-import { getGoal, Goal } from "../../services/goals";
+import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
 import { buildDailyLoadSeries } from "../../services/load";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
@@ -102,6 +94,9 @@ export default function SportifHome() {
     else break;
   }
 
+  const goalProgress = goal ? computeGoalProgress(goal) : null;
+  const goalDone = goalProgress !== null && goalProgress >= 1;
+
   return (
     <View style={{ flex: 1 }}>
       <PhotoBackground variant="accueil" />
@@ -119,54 +114,26 @@ export default function SportifHome() {
           <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
         </View>
 
-        <AnimatedPressable
+        <Text style={styles.sectionLabel}>Aujourd'hui</Text>
+
+        <TouchableOpacity
           style={styles.checkinCard}
+          activeOpacity={0.75}
           onPress={() => router.push("/sportif/checkin")}
         >
-          <View
-            style={[
-              styles.checkinIconWrap,
-              checkinDone && styles.checkinIconWrapDone,
-            ]}
-          >
-            <Ionicons
-              name={checkinDone ? "checkmark-circle" : "pulse-outline"}
-              size={20}
-              color={checkinDone ? Colors.riskLow : Colors.primary}
-            />
-          </View>
+          <Ionicons
+            name={checkinDone ? "checkmark-circle" : "pulse-outline"}
+            size={18}
+            color={checkinDone ? Colors.riskLow : "#5BFCE0"}
+          />
           <View style={{ flex: 1 }}>
-            <Text style={styles.checkinTitle}>Check-in du jour</Text>
-            <Text style={styles.checkinText}>
-              {checkinDone
-                ? "Complété aujourd'hui — vous pouvez le modifier."
-                : "Sommeil, fatigue, stress... 30 secondes pour votre coach."}
+            <Text style={styles.checkinCardTitle}>Check-in du jour</Text>
+            <Text style={styles.checkinCardSubtitle}>
+              {checkinDone ? "Complété — vous pouvez le modifier" : "Pas encore fait"}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
-        </AnimatedPressable>
-
-        <GoalCard goal={goal} />
-
-        <LinearGradient
-          colors={[Colors.primary, Colors.primaryDark]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.hero}
-        >
-          <Text style={styles.heroLabel}>Cette semaine</Text>
-          <View style={styles.heroRow}>
-            <View>
-              <Text style={styles.heroValue}>{weeklySessionCount}</Text>
-              <Text style={styles.heroCaption}>séances réalisées</Text>
-            </View>
-            <View style={styles.heroDivider} />
-            <View>
-              <Text style={styles.heroValue}>{weeklyMinutes}</Text>
-              <Text style={styles.heroCaption}>min d'entraînement</Text>
-            </View>
-          </View>
-        </LinearGradient>
+          <Ionicons name="chevron-forward" size={16} color={Colors.textOnDarkSecondary} />
+        </TouchableOpacity>
 
         <AnimatedPressable
           style={styles.ctaButton}
@@ -176,89 +143,82 @@ export default function SportifHome() {
           <Text style={styles.ctaButtonText}>Enregistrer une séance</Text>
         </AnimatedPressable>
 
-        <View style={styles.statsRow}>
-          <StatCard icon="trophy-outline" label="Séances totales" value={String(sessions.length)} />
-          <StatCard icon="flame-outline" label="Streak (jours)" value={String(streak)} />
-          <StatCard
-            icon="list-outline"
-            label="Programmes actifs"
-            value={String(programmes.length)}
+        <View style={styles.todayList}>
+          {programmes.length > 0 && (
+            <>
+              <ListRow
+                icon="barbell"
+                title={programmes[0].nom}
+                subtitle={`${programmes[0].seances.length} séance${
+                  programmes[0].seances.length > 1 ? "s" : ""
+                }`}
+                onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
+              />
+              <Divider />
+            </>
+          )}
+
+          <ListRow
+            icon="time-outline"
+            title="Prochaine séance"
+            subtitle={
+              upcomingSlots.length === 0
+                ? "Aucune séance prévue"
+                : `${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut} — ${upcomingSlots[0].heureFin}`
+            }
+            onPress={() => router.push("/sportif/reservations")}
+          />
+          <Divider />
+
+          <ListRow
+            icon={goalDone ? "checkmark-circle" : "flag"}
+            iconColor={goalDone ? Colors.riskLow : Colors.primary}
+            title={goal ? goal.description : "Définir un objectif"}
+            subtitle={
+              goal
+                ? `${goal.currentValue}${goal.unit} → ${goal.targetValue}${goal.unit}`
+                : "Un but concret à suivre, semaine après semaine"
+            }
+            progress={goalProgress ?? undefined}
+            onPress={() => router.push("/sportif/objectif")}
           />
         </View>
 
-        {programmes.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Mon programme</Text>
-            <AnimatedPressable
-              style={styles.programmeCard}
-              onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
-            >
-              <View style={styles.programmeIconWrap}>
-                <Ionicons name="barbell" size={20} color={Colors.primary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.programmeName}>{programmes[0].nom}</Text>
-                <Text style={styles.programmeMeta}>
-                  {programmes[0].seances.length} séance
-                  {programmes[0].seances.length > 1 ? "s" : ""}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-            </AnimatedPressable>
-          </>
-        )}
-
-        <Text style={styles.sectionTitle}>Prochaine séance</Text>
-        {upcomingSlots.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Ionicons name="sparkles-outline" size={28} color={Colors.primary} />
-            <Text style={styles.emptyTitle}>Aucune séance prévue</Text>
-            <Text style={styles.emptyText}>
-              Réservez votre prochaine séance avec un coach.
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.planningRow}>
-            <Ionicons name="time-outline" size={18} color={Colors.primary} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.planningDate}>{upcomingSlots[0].date}</Text>
-              <Text style={styles.planningTime}>
-                {upcomingSlots[0].heureDebut} — {upcomingSlots[0].heureFin}
-              </Text>
-            </View>
-            <Text
-              style={[
-                styles.planningStatus,
-                upcomingSlots[0].status === "confirme"
-                  ? styles.planningStatusConfirmed
-                  : styles.planningStatusPending,
-              ]}
-            >
-              {upcomingSlots[0].status === "confirme" ? "Confirmée" : "En attente"}
-            </Text>
-          </View>
-        )}
+        <PremiumStatWidget
+          weeklySessionCount={weeklySessionCount}
+          weeklyMinutes={weeklyMinutes}
+          goalProgress={goalProgress}
+          streak={streak}
+          onAddSeance={() => router.push("/sportif/nouvelle-seance")}
+          onViewActivity={() => router.push("/sportif/historique")}
+          onViewGoal={() => router.push("/sportif/objectif")}
+          onContinueStreak={() => router.push("/sportif/nouvelle-seance")}
+        />
 
         <Text style={styles.sectionTitle}>Accès rapides</Text>
         <View style={styles.quickGrid}>
           <QuickAction
             icon="calendar-outline"
             label="Réserver"
+            delay={0}
             onPress={() => router.push("/sportif/reservations")}
           />
           <QuickAction
             icon="barbell-outline"
             label="Mes programmes"
+            delay={250}
             onPress={() => router.push("/sportif/programmes")}
           />
           <QuickAction
             icon="stats-chart-outline"
             label="Historique"
+            delay={500}
             onPress={() => router.push("/sportif/historique")}
           />
           <QuickAction
             icon="chatbubble-outline"
             label="Messagerie"
+            delay={750}
             onPress={() => router.push("/sportif/messages")}
           />
         </View>
@@ -268,21 +228,55 @@ export default function SportifHome() {
   );
 }
 
-function StatCard({
+function Divider() {
+  return <View style={styles.divider} />;
+}
+
+function ListRow({
   icon,
-  label,
-  value,
+  iconColor,
+  title,
+  subtitle,
+  accent,
+  progress,
+  onPress,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-  value: string;
+  iconColor?: string;
+  title: string;
+  subtitle: string;
+  accent?: boolean;
+  progress?: number;
+  onPress: () => void;
 }) {
   return (
-    <View style={styles.statCard}>
-      <Ionicons name={icon} size={18} color={Colors.primary} />
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
-    </View>
+    <TouchableOpacity
+      style={[styles.listRow, accent && styles.listRowAccent]}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
+      <Ionicons name={icon} size={18} color={iconColor ?? Colors.primary} />
+      <View style={{ flex: 1 }}>
+        <Text style={styles.listRowTitle} numberOfLines={1}>
+          {title}
+        </Text>
+        <Text style={styles.listRowSubtitle} numberOfLines={1}>
+          {subtitle}
+        </Text>
+        {progress !== undefined && (
+          <View style={styles.goalProgressTrack}>
+            <View
+              style={[
+                styles.goalProgressFill,
+                { width: `${Math.round(progress * 100)}%` },
+                progress >= 1 && styles.goalProgressFillDone,
+              ]}
+            />
+          </View>
+        )}
+      </View>
+      <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+    </TouchableOpacity>
   );
 }
 
@@ -290,12 +284,47 @@ function QuickAction({
   icon,
   label,
   onPress,
+  delay = 0,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   onPress: () => void;
+  delay?: number;
 }) {
   const scale = useRef(new Animated.Value(1)).current;
+  const glow = useRef(new Animated.Value(0.35)).current;
+  const float = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const glowLoop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(glow, { toValue: 1, duration: 1500, useNativeDriver: false }),
+        Animated.timing(glow, { toValue: 0.35, duration: 1500, useNativeDriver: false }),
+      ])
+    );
+    const floatLoop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(float, {
+          toValue: -7,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(float, {
+          toValue: 0,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    glowLoop.start();
+    floatLoop.start();
+    return () => {
+      glowLoop.stop();
+      floatLoop.stop();
+    };
+  }, []);
 
   function pressIn() {
     Animated.spring(scale, { toValue: 0.96, useNativeDriver: true }).start();
@@ -306,18 +335,19 @@ function QuickAction({
   }
 
   return (
-    <Animated.View style={[styles.quickAction, { transform: [{ scale }] }]}>
+    <Animated.View style={[styles.quickAction, { transform: [{ scale }, { translateY: float }] }]}>
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={onPress}
         onPressIn={pressIn}
         onPressOut={pressOut}
-        style={styles.quickActionInner}
       >
-        <View style={styles.quickActionIcon}>
-          <Ionicons name={icon} size={22} color={Colors.primary} />
-        </View>
-        <Text style={styles.quickActionText}>{label}</Text>
+        <Animated.View style={[styles.quickActionInner, { shadowOpacity: glow }]}>
+          <View style={styles.quickActionIcon}>
+            <Ionicons name={icon} size={22} color="#5BFCE0" />
+          </View>
+          <Text style={styles.quickActionText}>{label}</Text>
+        </Animated.View>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -353,84 +383,100 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: Colors.textOnDarkSecondary,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+    marginBottom: 10,
+  },
+
   checkinCard: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.surfaceAlt,
+    backgroundColor: "rgba(3, 20, 18, 0.35)",
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: "#5BFCE0",
     paddingVertical: 14,
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 14,
+    shadowColor: "#5BFCE0",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 14,
   },
 
-  checkinIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: Colors.accentTint,
-    justifyContent: "center",
+  checkinCardTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.textOnDark,
+  },
+
+  checkinCardSubtitle: {
+    fontSize: 12,
+    color: Colors.textOnDarkSecondary,
+    marginTop: 2,
+  },
+
+  todayList: {
+    backgroundColor: Colors.surface,
+    borderRadius: 18,
+    marginBottom: 24,
+    overflow: "hidden",
+  },
+
+  listRow: {
+    flexDirection: "row",
     alignItems: "center",
+    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderLeftWidth: 3,
+    borderLeftColor: "transparent",
   },
 
-  checkinIconWrapDone: {
-    backgroundColor: "rgba(52, 199, 89, 0.16)",
+  listRowAccent: {
+    borderLeftColor: Colors.primary,
   },
 
-  checkinTitle: {
-    fontSize: 15,
-    fontWeight: "700",
+  listRowTitle: {
+    fontSize: 14,
+    fontWeight: "600",
     color: Colors.text,
   },
 
-  checkinText: {
+  listRowSubtitle: {
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
   },
 
-  hero: {
-    borderRadius: 24,
-    padding: 24,
-    marginBottom: 16,
-    shadowColor: Colors.primaryDark,
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 4,
+  goalProgressTrack: {
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: Colors.grayLight,
+    overflow: "hidden",
+    marginTop: 8,
   },
 
-  heroLabel: {
-    color: Colors.textOnDarkSecondary,
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 12,
+  goalProgressFill: {
+    height: 5,
+    backgroundColor: Colors.primary,
+    borderRadius: 3,
   },
 
-  heroRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  goalProgressFillDone: {
+    backgroundColor: Colors.riskLow,
   },
 
-  heroValue: {
-    color: Colors.white,
-    fontSize: 32,
-    fontWeight: "700",
-  },
-
-  heroCaption: {
-    color: Colors.textOnDarkSecondary,
-    fontSize: 13,
-    marginTop: 2,
-  },
-
-  heroDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: "rgba(255,255,255,0.3)",
-    marginHorizontal: 28,
+  divider: {
+    height: 1,
+    backgroundColor: Colors.border,
+    marginLeft: 46,
   },
 
   ctaButton: {
@@ -438,10 +484,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: "rgba(3, 20, 18, 0.35)",
     borderRadius: 16,
     height: 54,
-    marginBottom: 24,
+    marginBottom: 32,
+    borderWidth: 2,
+    borderColor: "#5BFCE0",
+    shadowColor: "#5BFCE0",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 14,
   },
 
   ctaButtonText: {
@@ -450,145 +503,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
-  statsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 32,
-  },
-
-  statCard: {
-    flex: 1,
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 10,
-    alignItems: "center",
-    gap: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-
-  statValue: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: Colors.text,
-  },
-
-  statLabel: {
-    fontSize: 11,
-    color: Colors.textSecondary,
-    textAlign: "center",
-  },
-
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
     color: Colors.textOnDark,
     marginBottom: 14,
-  },
-
-  programmeCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 28,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-
-  programmeIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: Colors.accentTint,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  programmeName: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text,
-  },
-
-  programmeMeta: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginTop: 2,
-  },
-
-  planningRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 28,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-
-  planningDate: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.text,
-  },
-
-  planningTime: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginTop: 2,
-  },
-
-  planningStatus: {
-    fontSize: 11,
-    fontWeight: "700",
-  },
-
-  planningStatusPending: {
-    color: Colors.riskMedium,
-  },
-
-  planningStatusConfirmed: {
-    color: Colors.primary,
-  },
-
-  emptyCard: {
-    backgroundColor: Colors.grayLight,
-    borderRadius: 20,
-    paddingVertical: 28,
-    alignItems: "center",
-    marginBottom: 28,
-    gap: 6,
-  },
-
-  emptyTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: Colors.text,
-    marginTop: 4,
-  },
-
-  emptyText: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    textAlign: "center",
-    paddingHorizontal: 30,
   },
 
   quickGrid: {
@@ -602,22 +521,23 @@ const styles = StyleSheet.create({
   },
 
   quickActionInner: {
-    backgroundColor: Colors.surface,
+    backgroundColor: "rgba(3, 20, 18, 0.35)",
     borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: "#5BFCE0",
     paddingVertical: 20,
     paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    shadowColor: "#5BFCE0",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 12,
+    elevation: 8,
   },
 
   quickActionIcon: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: Colors.accentTint,
+    backgroundColor: "rgba(91, 252, 224, 0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -626,6 +546,6 @@ const styles = StyleSheet.create({
   quickActionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text,
+    color: Colors.textOnDark,
   },
 });

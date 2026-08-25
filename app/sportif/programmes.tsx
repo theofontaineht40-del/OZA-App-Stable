@@ -6,6 +6,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
+import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
@@ -46,9 +47,10 @@ export default function SportifProgrammesScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
+      <PhotoBackground variant="accueil" />
       <ScrollView
-        style={styles.scroll}
+        style={styles.container}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -95,11 +97,7 @@ export default function SportifProgrammesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
-  },
-
-  scroll: {
-    flex: 1,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 20,
   },
 

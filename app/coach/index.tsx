@@ -3,14 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
@@ -135,10 +128,10 @@ export default function CoachHome() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <PhotoBackground variant="accueil" />
       <ScrollView
-        style={styles.scroll}
+        style={styles.container}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -280,21 +273,25 @@ export default function CoachHome() {
               <QuickAction
                 icon="calendar-outline"
                 label="Réservations"
+                delay={0}
                 onPress={() => router.push("/coach/reservations")}
               />
               <QuickAction
                 icon="barbell-outline"
                 label="Programmes"
+                delay={250}
                 onPress={() => router.push("/coach/programmes")}
               />
               <QuickAction
                 icon="chatbubble-outline"
                 label="Messagerie"
+                delay={500}
                 onPress={() => router.push("/coach/messages")}
               />
               <QuickAction
                 icon="notifications-outline"
                 label="Notifications"
+                delay={750}
                 onPress={comingSoon}
               />
             </View>
@@ -327,12 +324,39 @@ function QuickAction({
   icon,
   label,
   onPress,
+  delay = 0,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   onPress: () => void;
+  delay?: number;
 }) {
   const scale = useRef(new Animated.Value(1)).current;
+  const glow = useRef(new Animated.Value(0.35)).current;
+  const float = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const glowLoop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(glow, { toValue: 1, duration: 1500, useNativeDriver: false }),
+        Animated.timing(glow, { toValue: 0.35, duration: 1500, useNativeDriver: false }),
+      ])
+    );
+    const floatLoop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(float, { toValue: -7, duration: 1500, useNativeDriver: true }),
+        Animated.timing(float, { toValue: 0, duration: 1500, useNativeDriver: true }),
+      ])
+    );
+    glowLoop.start();
+    floatLoop.start();
+    return () => {
+      glowLoop.stop();
+      floatLoop.stop();
+    };
+  }, []);
 
   function pressIn() {
     Animated.spring(scale, { toValue: 0.96, useNativeDriver: true }).start();
@@ -343,18 +367,14 @@ function QuickAction({
   }
 
   return (
-    <Animated.View style={[styles.quickAction, { transform: [{ scale }] }]}>
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={onPress}
-        onPressIn={pressIn}
-        onPressOut={pressOut}
-        style={styles.quickActionInner}
-      >
-        <View style={styles.quickActionIcon}>
-          <Ionicons name={icon} size={22} color={DARK.accent} />
-        </View>
-        <Text style={styles.quickActionText}>{label}</Text>
+    <Animated.View style={[styles.quickAction, { transform: [{ scale }, { translateY: float }] }]}>
+      <TouchableOpacity activeOpacity={0.85} onPress={onPress} onPressIn={pressIn} onPressOut={pressOut}>
+        <Animated.View style={[styles.quickActionInner, { shadowOpacity: glow }]}>
+          <View style={styles.quickActionIcon}>
+            <Ionicons name={icon} size={22} color="#5BFCE0" />
+          </View>
+          <Text style={styles.quickActionText}>{label}</Text>
+        </Animated.View>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -363,11 +383,7 @@ function QuickAction({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DARK.bg,
-  },
-
-  scroll: {
-    flex: 1,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -650,19 +666,23 @@ const styles = StyleSheet.create({
   },
 
   quickActionInner: {
-    backgroundColor: DARK.card,
+    backgroundColor: "rgba(3, 20, 18, 0.35)",
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: DARK.border,
+    borderWidth: 1.5,
+    borderColor: "#5BFCE0",
     paddingVertical: 20,
     paddingHorizontal: 16,
+    shadowColor: "#5BFCE0",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 12,
+    elevation: 8,
   },
 
   quickActionIcon: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: DARK.cardAlt,
+    backgroundColor: "rgba(91, 252, 224, 0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -671,6 +691,6 @@ const styles = StyleSheet.create({
   quickActionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: DARK.text,
+    color: Colors.textOnDark,
   },
 });

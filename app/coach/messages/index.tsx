@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { TeamIllustration } from "../../../components/empty-illustrations";
+import PhotoBackground from "../../../components/photo-background";
 import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForCoach } from "../../../services/messages";
@@ -52,6 +53,8 @@ export default function MessagesListScreen() {
     });
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground variant="accueil" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -104,13 +107,14 @@ export default function MessagesListScreen() {
         ))
       )}
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "transparent",
   },
 
   content: {
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 20,
   },
 

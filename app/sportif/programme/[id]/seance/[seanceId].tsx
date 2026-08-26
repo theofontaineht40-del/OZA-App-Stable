@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import PhotoBackground from "../../../../../components/photo-background";
+import ProgressionChart, { ProgressionPoint } from "../../../../../components/progression-chart";
 import PulseDot from "../../../../../components/pulse-dot";
 import RestTimerBar from "../../../../../components/rest-timer-bar";
 import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
@@ -108,7 +109,25 @@ export default function SeanceExecutionScreen() {
     personalRecords: PersonalRecord[];
   } | null>(null);
   const [pastSessions, setPastSessions] = useState<SessionRecord[]>([]);
+  const [expandedExerciceId, setExpandedExerciceId] = useState<string | null>(null);
   const restTimer = useRestTimer();
+
+  // Historique de charge par nom d'exercice, à partir des séances déjà
+  // loggées — même logique que app/sportif/historique.tsx, réutilisée ici
+  // pour afficher l'évolution directement au moment où l'exercice est refait.
+  const progressionByExercice = useMemo(() => {
+    const map: Record<string, ProgressionPoint[]> = {};
+    pastSessions.forEach((session) => {
+      session.exerciseLogs?.forEach((log) => {
+        const value = parseFloat(log.chargeReelle);
+        if (isNaN(value)) return;
+        if (!map[log.exerciceNom]) map[log.exerciceNom] = [];
+        map[log.exerciceNom].push({ date: session.date, value });
+      });
+    });
+    Object.values(map).forEach((points) => points.sort((a, b) => a.date.localeCompare(b.date)));
+    return map;
+  }, [pastSessions]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -247,6 +266,11 @@ export default function SeanceExecutionScreen() {
           {bloc.exercices.map((ex) => {
             const state = exerciseStates[ex.id];
             if (!state) return null;
+            const history = progressionByExercice[ex.exerciceNom] ?? [];
+            const last = history[history.length - 1];
+            const prev = history[history.length - 2];
+            const delta = last && prev ? last.value - prev.value : null;
+            const expanded = expandedExerciceId === ex.id;
             return (
               <View key={ex.id} style={styles.exerciceCard}>
                 <ExerciceCheck
@@ -259,6 +283,38 @@ export default function SeanceExecutionScreen() {
                   {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
                   {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif}kg` : ""}
                 </Text>
+
+                {history.length > 0 && (
+                  <TouchableOpacity
+                    style={styles.evolutionRow}
+                    onPress={() => setExpandedExerciceId(expanded ? null : ex.id)}
+                  >
+                    <Text style={styles.lastPerfText}>
+                      Dernière fois : {last.value}kg
+                      {delta !== null && delta !== 0 ? (
+                        <Text style={{ color: delta > 0 ? Colors.riskLow : Colors.riskHigh }}>
+                          {"  "}
+                          {delta > 0 ? "+" : ""}
+                          {delta}kg
+                        </Text>
+                      ) : null}
+                    </Text>
+                    <View style={styles.evolutionLink}>
+                      <Text style={styles.evolutionLinkText}>Évolution</Text>
+                      <Ionicons
+                        name={expanded ? "chevron-up" : "chevron-down"}
+                        size={13}
+                        color={Colors.primary}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
+                {expanded && (
+                  <View style={styles.progressionWrap}>
+                    <ProgressionChart points={history} />
+                  </View>
+                )}
 
                 <View style={styles.actualRow}>
                   <View style={styles.actualField}>
@@ -475,6 +531,39 @@ const styles = StyleSheet.create({
   prescrit: {
     fontSize: 12,
     color: Colors.textSecondary,
+    marginBottom: 12,
+  },
+
+  evolutionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: -4,
+    marginBottom: 12,
+  },
+
+  lastPerfText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  evolutionLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+  },
+
+  evolutionLinkText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: Colors.primary,
+  },
+
+  progressionWrap: {
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    paddingVertical: 8,
     marginBottom: 12,
   },
 

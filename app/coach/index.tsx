@@ -348,9 +348,6 @@ export default function CoachHome() {
                     Charge interne
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.tab} onPress={comingSoon}>
-                  <Text style={styles.tabText}>Charge externe</Text>
-                </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.tab, loadTab === "acwr" && styles.tabActive]}
                   onPress={() => setLoadTab("acwr")}
@@ -465,12 +462,6 @@ export default function CoachHome() {
                 ))}
                 <Text style={styles.wellnessTrendText}>{wellnessBreakdown.trendLabel}</Text>
               </View>
-            </View>
-
-            {/* ── 7. ÉVOLUTION DU HOOPER ── */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Évolution du bien-être</Text>
-              <AreaChart points={wellnessBreakdown.series7d} color={Colors.primaryLight} height={130} />
             </View>
 
             {/* ── 8. RÉPARTITION DES STATUTS ── */}

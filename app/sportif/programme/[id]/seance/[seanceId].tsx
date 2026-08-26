@@ -367,7 +367,10 @@ export default function SeanceExecutionScreen() {
         duration={completedSummary?.duration ?? 0}
         load={completedSummary?.load ?? 0}
         personalRecords={completedSummary?.personalRecords ?? []}
-        onDone={() => router.push("/sportif")}
+        onDone={() => {
+          setCompletedSummary(null);
+          router.push("/sportif");
+        }}
       />
     </ScrollView>
 

@@ -25,9 +25,20 @@ export default function MiniSparkline({ values, width = 120, height = 40, color 
     y: height - ((v - min) / range) * height,
   }));
 
-  const linePath = points
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
-    .join(" ");
+  // Courbe lissée (quadratique via le milieu de chaque segment) plutôt que
+  // des angles droits : une semaine avec une grosse séance isolée au milieu
+  // de jours à 0 produit sinon un pic en angle vif qui ressemble à un bug
+  // d'affichage plutôt qu'à une vraie variation de charge.
+  let linePath = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const midX = (prev.x + curr.x) / 2;
+    const midY = (prev.y + curr.y) / 2;
+    linePath += ` Q ${prev.x.toFixed(1)} ${prev.y.toFixed(1)} ${midX.toFixed(1)} ${midY.toFixed(1)}`;
+  }
+  const last0 = points[points.length - 1];
+  linePath += ` T ${last0.x.toFixed(1)} ${last0.y.toFixed(1)}`;
 
   const areaPath = `${linePath} L ${width} ${height} L 0 ${height} Z`;
   const last = points[points.length - 1];

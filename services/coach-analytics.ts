@@ -177,11 +177,14 @@ export function computeCoachAnalysis(rows: SportifRow[]): CoachAnalysis {
 
 export type TrainingLoadStats = {
   series7d: { date: string; load: number }[];
+  series28d: { date: string; load: number }[];
   load7d: number;
   loadDeltaPercent: number | null;
   monotony: number;
   strain: number;
   recoveryDays: number;
+  acute: number;
+  chronic: number;
   acwr: number;
   acwrLevel: AcwrLevel;
 };
@@ -191,15 +194,18 @@ export function computeTrainingLoadStats(sessions: SessionRecord[]): TrainingLoa
   const { thisWeek, lastWeek } = splitLastTwoWeeks(dailyLoads);
   const load7d = sumLoads(thisWeek);
   const loadPrev7d = sumLoads(lastWeek);
-  const { acwr } = computeAcuteChronicWorkloadRatio(dailyLoads);
+  const { acute, chronic, acwr } = computeAcuteChronicWorkloadRatio(dailyLoads);
 
   return {
     series7d: thisWeek,
+    series28d: dailyLoads,
     load7d,
     loadDeltaPercent: weekOverWeekDelta(load7d, loadPrev7d),
     monotony: computeMonotony(thisWeek),
     strain: computeStrain(thisWeek),
     recoveryDays: thisWeek.filter((d) => d.load === 0).length,
+    acute,
+    chronic,
     acwr,
     acwrLevel: acwrRiskLevel(acwr),
   };

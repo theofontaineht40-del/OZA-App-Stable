@@ -26,6 +26,7 @@ import {
   computeTrainingLoadStats,
   computeWellnessBreakdown,
   SportifRow,
+  TrainingLoadStats,
 } from "../../services/coach-analytics";
 import { getRelationsForCoach, Relation } from "../../services/relations";
 import { getSlotsForCoach, Slot } from "../../services/reservations";
@@ -141,6 +142,7 @@ export default function CoachHome() {
     return attention?.uid ?? vigilance?.uid ?? sportifRows[0]?.uid ?? null;
   }, [sportifRows]);
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
+  const [loadTab, setLoadTab] = useState<"interne" | "acwr">("interne");
   const effectiveSportifId = selectedSportifId ?? defaultSportifId;
   const selectedSportif = sportifs.find((s) => s.uid === effectiveSportifId) ?? null;
 
@@ -338,51 +340,67 @@ export default function CoachHome() {
               )}
 
               <View style={styles.tabRow}>
-                <View style={[styles.tab, styles.tabActive]}>
-                  <Text style={[styles.tabText, styles.tabTextActive]}>Charge interne</Text>
-                </View>
+                <TouchableOpacity
+                  style={[styles.tab, loadTab === "interne" && styles.tabActive]}
+                  onPress={() => setLoadTab("interne")}
+                >
+                  <Text style={[styles.tabText, loadTab === "interne" && styles.tabTextActive]}>
+                    Charge interne
+                  </Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.tab} onPress={comingSoon}>
                   <Text style={styles.tabText}>Charge externe</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.tab} onPress={comingSoon}>
-                  <Text style={styles.tabText}>ACWR détaillé</Text>
+                <TouchableOpacity
+                  style={[styles.tab, loadTab === "acwr" && styles.tabActive]}
+                  onPress={() => setLoadTab("acwr")}
+                >
+                  <Text style={[styles.tabText, loadTab === "acwr" && styles.tabTextActive]}>
+                    ACWR détaillé
+                  </Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.loadHeaderRow}>
-                <Text style={styles.loadValue}>{trainingLoad.load7d} UA</Text>
-                {trainingLoad.loadDeltaPercent !== null && (
-                  <View
-                    style={[
-                      styles.deltaPill,
-                      { backgroundColor: trainingLoad.loadDeltaPercent >= 0 ? "rgba(255, 59, 48, 0.1)" : "rgba(52, 199, 89, 0.12)" },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.deltaPillText,
-                        { color: trainingLoad.loadDeltaPercent >= 0 ? Colors.riskHigh : Colors.riskLow },
-                      ]}
-                    >
-                      {trainingLoad.loadDeltaPercent >= 0 ? "+" : ""}
-                      {Math.round(trainingLoad.loadDeltaPercent)}% vs semaine précédente
-                    </Text>
+              {loadTab === "interne" ? (
+                <>
+                  <View style={styles.loadHeaderRow}>
+                    <Text style={styles.loadValue}>{trainingLoad.load7d} UA</Text>
+                    {trainingLoad.loadDeltaPercent !== null && (
+                      <View
+                        style={[
+                          styles.deltaPill,
+                          { backgroundColor: trainingLoad.loadDeltaPercent >= 0 ? "rgba(255, 59, 48, 0.1)" : "rgba(52, 199, 89, 0.12)" },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.deltaPillText,
+                            { color: trainingLoad.loadDeltaPercent >= 0 ? Colors.riskHigh : Colors.riskLow },
+                          ]}
+                        >
+                          {trainingLoad.loadDeltaPercent >= 0 ? "+" : ""}
+                          {Math.round(trainingLoad.loadDeltaPercent)}% vs semaine précédente
+                        </Text>
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
 
-              <AreaChart
-                points={trainingLoad.series7d.map((d) => ({ date: d.date, value: d.load }))}
-                color={Colors.primary}
-                height={130}
-              />
+                  <AreaChart
+                    points={trainingLoad.series7d.map((d) => ({ date: d.date, value: d.load }))}
+                    color={Colors.primary}
+                    height={130}
+                  />
 
-              <View style={styles.metricsGrid}>
-                <MetricTile label="Monotonie" value={trainingLoad.monotony.toFixed(2)} />
-                <MetricTile label="Strain" value={String(Math.round(trainingLoad.strain))} />
-                <MetricTile label="Jours de récup." value={String(trainingLoad.recoveryDays)} />
-                <MetricTile label="ACWR" value={trainingLoad.acwr.toFixed(2)} />
-              </View>
+                  <View style={styles.metricsGrid}>
+                    <MetricTile label="Monotonie" value={trainingLoad.monotony.toFixed(2)} />
+                    <MetricTile label="Strain" value={String(Math.round(trainingLoad.strain))} />
+                    <MetricTile label="Jours de récup." value={String(trainingLoad.recoveryDays)} />
+                    <MetricTile label="ACWR" value={trainingLoad.acwr.toFixed(2)} />
+                  </View>
+                </>
+              ) : (
+                <AcwrDetail stats={trainingLoad} />
+              )}
             </View>
 
             <View style={styles.twoColRow}>
@@ -590,6 +608,90 @@ function KpiCard({
           <MiniSparkline values={sparkline} width={70} height={28} color={Colors.primaryLight} />
         </View>
       )}
+    </View>
+  );
+}
+
+const ACWR_LABEL: Record<TrainingLoadStats["acwrLevel"], string> = {
+  "sous-charge": "Sous-charge",
+  optimale: "Zone optimale",
+  risque: "Zone à risque",
+  danger: "Danger",
+};
+
+const ACWR_COLOR: Record<TrainingLoadStats["acwrLevel"], string> = {
+  "sous-charge": Colors.riskUnder,
+  optimale: Colors.riskLow,
+  risque: Colors.riskMedium,
+  danger: Colors.riskHigh,
+};
+
+// Zones sur une échelle 0 → 2.0 (au-delà de 2.0 on plafonne visuellement,
+// le chiffre exact reste affiché à côté). Bornes = acwrRiskLevel dans
+// services/load.ts, pas un nouveau barème pour ce seul écran.
+const ACWR_GAUGE_MAX = 2.0;
+const ACWR_ZONES: { level: TrainingLoadStats["acwrLevel"]; from: number; to: number }[] = [
+  { level: "sous-charge", from: 0, to: 0.8 },
+  { level: "optimale", from: 0.8, to: 1.3 },
+  { level: "risque", from: 1.3, to: 1.5 },
+  { level: "danger", from: 1.5, to: ACWR_GAUGE_MAX },
+];
+
+function AcwrDetail({ stats }: { stats: TrainingLoadStats }) {
+  const markerPercent = Math.min(stats.acwr / ACWR_GAUGE_MAX, 1) * 100;
+
+  return (
+    <View>
+      <View style={styles.acwrHeaderRow}>
+        <Text style={[styles.acwrBigValue, { color: ACWR_COLOR[stats.acwrLevel] }]}>
+          {stats.acwr.toFixed(2)}
+        </Text>
+        <View style={[styles.acwrZonePill, { backgroundColor: `${ACWR_COLOR[stats.acwrLevel]}1A` }]}>
+          <Text style={[styles.acwrZoneText, { color: ACWR_COLOR[stats.acwrLevel] }]}>
+            {ACWR_LABEL[stats.acwrLevel]}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.acwrGaugeTrack}>
+        {ACWR_ZONES.map((zone) => (
+          <View
+            key={zone.level}
+            style={{
+              flex: zone.to - zone.from,
+              backgroundColor: ACWR_COLOR[zone.level],
+              opacity: 0.35,
+            }}
+          />
+        ))}
+        <View style={[styles.acwrMarker, { left: `${markerPercent}%` }]} />
+      </View>
+      <View style={styles.acwrGaugeLabelsRow}>
+        <Text style={styles.acwrGaugeLabel}>0</Text>
+        <Text style={styles.acwrGaugeLabel}>0.8</Text>
+        <Text style={styles.acwrGaugeLabel}>1.3</Text>
+        <Text style={styles.acwrGaugeLabel}>1.5</Text>
+        <Text style={styles.acwrGaugeLabel}>2.0+</Text>
+      </View>
+
+      <View style={styles.metricsGrid}>
+        <MetricTile label="Charge aiguë (7j)" value={String(Math.round(stats.acute))} />
+        <MetricTile label="Charge chronique (moy. 28j)" value={String(Math.round(stats.chronic))} />
+        <MetricTile label="Monotonie" value={stats.monotony.toFixed(2)} />
+        <MetricTile label="Strain" value={String(Math.round(stats.strain))} />
+      </View>
+
+      <Text style={styles.acwrCaption}>
+        ACWR = charge aiguë (moyenne des 7 derniers jours) ÷ charge chronique (moyenne des 28
+        derniers jours). Entre 0,8 et 1,3 : progression maîtrisée. Au-delà de 1,5 : risque de
+        blessure significativement accru.
+      </Text>
+
+      <AreaChart
+        points={stats.series28d.map((d) => ({ date: d.date, value: d.load }))}
+        color={ACWR_COLOR[stats.acwrLevel]}
+        height={110}
+      />
     </View>
   );
 }
@@ -1038,6 +1140,66 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 10,
     marginTop: 16,
+  },
+
+  acwrHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 16,
+  },
+
+  acwrBigValue: {
+    fontSize: 32,
+    fontWeight: "700",
+  },
+
+  acwrZonePill: {
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+  },
+
+  acwrZoneText: {
+    fontSize: 12,
+    fontWeight: "700",
+  },
+
+  acwrGaugeTrack: {
+    flexDirection: "row",
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: DARK.cardAlt,
+    position: "relative",
+  },
+
+  acwrMarker: {
+    position: "absolute",
+    top: -3,
+    width: 4,
+    height: 16,
+    borderRadius: 2,
+    backgroundColor: DARK.text,
+    marginLeft: -2,
+  },
+
+  acwrGaugeLabelsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 6,
+  },
+
+  acwrGaugeLabel: {
+    fontSize: 10,
+    color: DARK.textSecondary,
+  },
+
+  acwrCaption: {
+    fontSize: 11,
+    color: DARK.textSecondary,
+    lineHeight: 16,
+    marginTop: 16,
+    marginBottom: 12,
   },
 
   metricTile: {

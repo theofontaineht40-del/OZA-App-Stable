@@ -19,15 +19,17 @@ export default function AreaChart({
   points,
   color = Colors.primary,
   height = 120,
+  showLabels = points.length <= 7,
 }: {
   points: { date: string; value: number }[];
   color?: string;
   height?: number;
+  showLabels?: boolean;
 }) {
   if (points.length < 2) return null;
 
   const width = 300;
-  const chartHeight = height - 24;
+  const chartHeight = showLabels ? height - 24 : height;
   const values = points.map((p) => p.value);
   const max = Math.max(...values, 1);
   const min = Math.min(...values, 0);
@@ -65,13 +67,15 @@ export default function AreaChart({
         <Path d={linePath} stroke={color} strokeWidth={2.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
         <Circle cx={lastPoint.x} cy={lastPoint.y} r={4} fill={color} />
       </Svg>
-      <View style={styles.labels}>
-        {points.map((p, i) => (
-          <Text key={i} style={styles.label}>
-            {dayLabel(p.date)}
-          </Text>
-        ))}
-      </View>
+      {showLabels && (
+        <View style={styles.labels}>
+          {points.map((p, i) => (
+            <Text key={i} style={styles.label}>
+              {dayLabel(p.date)}
+            </Text>
+          ))}
+        </View>
+      )}
     </View>
   );
 }

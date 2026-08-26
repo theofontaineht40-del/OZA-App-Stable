@@ -128,8 +128,26 @@ export default function CoachHome() {
   );
 
   const analysis = useMemo(() => computeCoachAnalysis(sportifRows), [sportifRows]);
-  const trainingLoad = useMemo(() => computeTrainingLoadStats(sessions), [sessions]);
   const wellnessBreakdown = useMemo(() => computeWellnessBreakdown(wellness), [wellness]);
+
+  // ACWR/monotonie/strain n'ont de sens que par individu (mélanger la charge
+  // de plusieurs sportifs dans un seul calcul ne représente personne) : ce
+  // widget porte donc toujours sur UN sportif, sélectionné ci-dessous — pas
+  // sur l'ensemble de l'équipe. Par défaut, celui qui a le plus besoin
+  // d'attention (sinon le premier de la liste).
+  const defaultSportifId = useMemo(() => {
+    const attention = sportifRows.find((r) => r.status === "attention");
+    const vigilance = sportifRows.find((r) => r.status === "vigilance");
+    return attention?.uid ?? vigilance?.uid ?? sportifRows[0]?.uid ?? null;
+  }, [sportifRows]);
+  const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
+  const effectiveSportifId = selectedSportifId ?? defaultSportifId;
+  const selectedSportif = sportifs.find((s) => s.uid === effectiveSportifId) ?? null;
+
+  const trainingLoad = useMemo(
+    () => computeTrainingLoadStats(sessions.filter((s) => s.sportifId === effectiveSportifId)),
+    [sessions, effectiveSportifId]
+  );
 
   const today = todayKey();
   const tomorrow = tomorrowKey();
@@ -293,7 +311,32 @@ export default function CoachHome() {
 
             {/* ── 4. CHARGE D'ENTRAÎNEMENT ── */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Charge d'entraînement</Text>
+              <Text style={styles.cardTitle}>
+                Charge d'entraînement
+                {selectedSportif ? ` — ${selectedSportif.firstName} ${selectedSportif.lastName}` : ""}
+              </Text>
+
+              {sportifs.length > 0 && (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.sportifPickerRow}>
+                  {sportifs.map((s) => (
+                    <TouchableOpacity
+                      key={s.uid}
+                      style={[styles.sportifChip, effectiveSportifId === s.uid && styles.sportifChipActive]}
+                      onPress={() => setSelectedSportifId(s.uid)}
+                    >
+                      <Text
+                        style={[
+                          styles.sportifChipText,
+                          effectiveSportifId === s.uid && styles.sportifChipTextActive,
+                        ]}
+                      >
+                        {s.firstName}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
+
               <View style={styles.tabRow}>
                 <View style={[styles.tab, styles.tabActive]}>
                   <Text style={[styles.tabText, styles.tabTextActive]}>Charge interne</Text>
@@ -910,6 +953,33 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: DARK.text,
     marginBottom: 14,
+  },
+
+  sportifPickerRow: {
+    marginBottom: 14,
+    flexGrow: 0,
+  },
+
+  sportifChip: {
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    backgroundColor: DARK.cardAlt,
+    marginRight: 8,
+  },
+
+  sportifChipActive: {
+    backgroundColor: Colors.primaryDark,
+  },
+
+  sportifChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: DARK.textSecondary,
+  },
+
+  sportifChipTextActive: {
+    color: Colors.white,
   },
 
   tabRow: {

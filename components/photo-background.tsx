@@ -6,9 +6,9 @@ import { ImageBackground, StyleSheet, View } from "react-native";
 // lumineuses (halos teal) sans écraser l'image.
 const SOURCES = {
   accueil: require("../assets/images/image de fond oza.png"),
-  programmes: require("../assets/images/image fond 2.png"),
-  seances: require("../assets/images/image fond 2.png"),
-  profil: require("../assets/images/image fond 2.png"),
+  programmes: require("../assets/images/image de fond oza.png"),
+  seances: require("../assets/images/image de fond oza.png"),
+  profil: require("../assets/images/image de fond oza.png"),
 };
 
 const OVERLAY_OPACITY: Record<Variant, number> = {

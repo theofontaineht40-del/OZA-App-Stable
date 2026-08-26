@@ -7,6 +7,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 
 import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
+import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
 import PremiumStatWidget from "../../components/premium-stat-widget";
 import { Colors } from "../../constants/colors";
@@ -15,6 +16,7 @@ import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
 import { buildDailyLoadSeries } from "../../services/load";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
+import { getNextSeance, getSeanceExerciseNames } from "../../services/session-muscles";
 import { getLatestWellnessScore, getSessionsForSportif, SessionRecord } from "../../services/tracking";
 
 export default function SportifHome() {
@@ -95,7 +97,8 @@ export default function SportifHome() {
   }
 
   const goalProgress = goal ? computeGoalProgress(goal) : null;
-  const goalDone = goalProgress !== null && goalProgress >= 1;
+
+  const nextSeance = getNextSeance(programmes[0] ?? null, sessions);
 
   return (
     <View style={{ flex: 1 }}>
@@ -158,30 +161,25 @@ export default function SportifHome() {
             </>
           )}
 
-          <ListRow
-            icon="time-outline"
-            title="Prochaine séance"
-            subtitle={
-              upcomingSlots.length === 0
-                ? "Aucune séance prévue"
-                : `${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut} — ${upcomingSlots[0].heureFin}`
-            }
-            onPress={() => router.push("/sportif/reservations")}
-          />
-          <Divider />
-
-          <ListRow
-            icon={goalDone ? "checkmark-circle" : "flag"}
-            iconColor={goalDone ? Colors.riskLow : Colors.primary}
-            title={goal ? goal.description : "Définir un objectif"}
-            subtitle={
-              goal
-                ? `${goal.currentValue}${goal.unit} → ${goal.targetValue}${goal.unit}`
-                : "Un but concret à suivre, semaine après semaine"
-            }
-            progress={goalProgress ?? undefined}
-            onPress={() => router.push("/sportif/objectif")}
-          />
+          {nextSeance ? (
+            <NextSessionWidget
+              workoutName={nextSeance.nom}
+              subtitle={programmes[0]?.nom}
+              exercises={getSeanceExerciseNames(nextSeance)}
+              onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
+            />
+          ) : (
+            <ListRow
+              icon="time-outline"
+              title="Prochaine séance"
+              subtitle={
+                upcomingSlots.length === 0
+                  ? "Aucune séance prévue"
+                  : `${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut} — ${upcomingSlots[0].heureFin}`
+              }
+              onPress={() => router.push("/sportif/reservations")}
+            />
+          )}
         </View>
 
         <PremiumStatWidget

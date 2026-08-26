@@ -10,6 +10,7 @@ import { AvatarHalo } from "../../components/decor";
 import PhotoBackground from "../../components/photo-background";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
+import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
 
 type ProfileData = {
   firstName: string;
@@ -21,6 +22,7 @@ type ProfileData = {
 
 export default function ProfilScreen() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [goal, setGoalState] = useState<Goal | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -29,7 +31,10 @@ export default function ProfilScreen() {
         return;
       }
 
-      const userSnap = await getDoc(doc(db, "users", user.uid));
+      const [userSnap, goalData] = await Promise.all([
+        getDoc(doc(db, "users", user.uid)),
+        getGoal(user.uid),
+      ]);
       if (userSnap.exists()) {
         const data = userSnap.data();
         setProfile({
@@ -40,10 +45,14 @@ export default function ProfilScreen() {
           coachLastName: data.coachLastName,
         });
       }
+      setGoalState(goalData);
     });
 
     return unsubscribe;
   }, []);
+
+  const goalProgress = goal ? computeGoalProgress(goal) : null;
+  const goalDone = goalProgress !== null && goalProgress >= 1;
 
   async function handleLogout() {
     await logoutUser();
@@ -85,6 +94,34 @@ export default function ProfilScreen() {
               ? `Coach principal : ${profile.coachFirstName} ${profile.coachLastName}`
               : "Aucun coach principal pour l'instant"}
           </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/objectif")}>
+        <Ionicons
+          name={goalDone ? "checkmark-circle" : "flag-outline"}
+          size={22}
+          color={goalDone ? Colors.riskLow : Colors.primary}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.equipeTitle}>{goal ? goal.description : "Définir un objectif"}</Text>
+          <Text style={styles.equipeSubtitle}>
+            {goal
+              ? `${goal.currentValue}${goal.unit} → ${goal.targetValue}${goal.unit}`
+              : "Un but concret à suivre, semaine après semaine"}
+          </Text>
+          {goalProgress !== null && (
+            <View style={styles.goalTrack}>
+              <View
+                style={[
+                  styles.goalFill,
+                  { width: `${Math.round(goalProgress * 100)}%` },
+                  goalDone && styles.goalFillDone,
+                ]}
+              />
+            </View>
+          )}
         </View>
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
@@ -198,6 +235,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+
+  goalTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.grayLight,
+    marginTop: 10,
+    overflow: "hidden",
+  },
+
+  goalFill: {
+    height: "100%",
+    borderRadius: 3,
+    backgroundColor: Colors.primary,
+  },
+
+  goalFillDone: {
+    backgroundColor: Colors.riskLow,
   },
 
   logoutButton: {

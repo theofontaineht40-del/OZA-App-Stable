@@ -125,6 +125,11 @@ export function buildSportifRow(
   const load7d = sumLoads(thisWeek);
   const loadPrev7d = sumLoads(lastWeek);
   const { acwr } = computeAcuteChronicWorkloadRatio(dailyLoads);
+  // Voir computeTrainingLoadStats : sans charge antérieure aux 7 derniers
+  // jours, la "chronique" n'a pas de sens et l'ACWR ne doit pas déclencher
+  // de statut d'alerte à lui seul.
+  const hasEnoughHistory = sumLoads(dailyLoads.slice(0, 21)) > 0;
+  const effectiveAcwrLevel = hasEnoughHistory ? acwrRiskLevel(acwr) : "optimale";
 
   const sportifWellness = wellness
     .filter((w) => w.sportifId === sportif.uid)
@@ -145,7 +150,7 @@ export function buildSportifRow(
     wellnessScore: latest?.score ?? null,
     load7d,
     loadDeltaPercent: weekOverWeekDelta(load7d, loadPrev7d),
-    status: combineStatus(acwrRiskLevel(acwr), latest ? wellnessStatus(latest.score, personalAvg) : null),
+    status: combineStatus(effectiveAcwrLevel, latest ? wellnessStatus(latest.score, personalAvg) : null),
     lastSessionDate,
   };
 }
@@ -187,6 +192,12 @@ export type TrainingLoadStats = {
   chronic: number;
   acwr: number;
   acwrLevel: AcwrLevel;
+  // Un ACWR n'est fiable que si la charge "chronique" reflète un vrai passé
+  // d'entraînement, pas juste la même semaine que la charge "aiguë" — sinon
+  // chronic ≈ acute/4 mécaniquement et le ratio explose sans rien dire d'un
+  // vrai pic de charge. On exige au moins un peu de charge enregistrée
+  // AVANT les 7 derniers jours (jours -8 à -28 de la fenêtre).
+  hasEnoughHistory: boolean;
 };
 
 export function computeTrainingLoadStats(sessions: SessionRecord[]): TrainingLoadStats {
@@ -195,6 +206,7 @@ export function computeTrainingLoadStats(sessions: SessionRecord[]): TrainingLoa
   const load7d = sumLoads(thisWeek);
   const loadPrev7d = sumLoads(lastWeek);
   const { acute, chronic, acwr } = computeAcuteChronicWorkloadRatio(dailyLoads);
+  const priorWeeksLoad = sumLoads(dailyLoads.slice(0, 21));
 
   return {
     series7d: thisWeek,
@@ -204,6 +216,7 @@ export function computeTrainingLoadStats(sessions: SessionRecord[]): TrainingLoa
     monotony: computeMonotony(thisWeek),
     strain: computeStrain(thisWeek),
     recoveryDays: thisWeek.filter((d) => d.load === 0).length,
+    hasEnoughHistory: priorWeeksLoad > 0,
     acute,
     chronic,
     acwr,

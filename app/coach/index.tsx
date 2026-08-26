@@ -392,10 +392,14 @@ export default function CoachHome() {
                   />
 
                   <View style={styles.metricsGrid}>
-                    <MetricTile label="Monotonie" value={trainingLoad.monotony.toFixed(2)} />
-                    <MetricTile label="Strain" value={String(Math.round(trainingLoad.strain))} />
-                    <MetricTile label="Jours de récup." value={String(trainingLoad.recoveryDays)} />
-                    <MetricTile label="ACWR" value={trainingLoad.acwr.toFixed(2)} />
+                    <MetricTile label="Monotonie" value={trainingLoad.monotony.toFixed(2)} basis="47%" />
+                    <MetricTile label="Strain" value={String(Math.round(trainingLoad.strain))} basis="47%" />
+                    <MetricTile label="Jours de récup." value={String(trainingLoad.recoveryDays)} basis="47%" />
+                    <MetricTile
+                      label="ACWR"
+                      value={trainingLoad.hasEnoughHistory ? trainingLoad.acwr.toFixed(2) : "—"}
+                      basis="47%"
+                    />
                   </View>
                 </>
               ) : (
@@ -642,37 +646,51 @@ function AcwrDetail({ stats }: { stats: TrainingLoadStats }) {
 
   return (
     <View>
-      <View style={styles.acwrHeaderRow}>
-        <Text style={[styles.acwrBigValue, { color: ACWR_COLOR[stats.acwrLevel] }]}>
-          {stats.acwr.toFixed(2)}
-        </Text>
-        <View style={[styles.acwrZonePill, { backgroundColor: `${ACWR_COLOR[stats.acwrLevel]}1A` }]}>
-          <Text style={[styles.acwrZoneText, { color: ACWR_COLOR[stats.acwrLevel] }]}>
-            {ACWR_LABEL[stats.acwrLevel]}
+      {stats.hasEnoughHistory ? (
+        <>
+          <View style={styles.acwrHeaderRow}>
+            <Text style={[styles.acwrBigValue, { color: ACWR_COLOR[stats.acwrLevel] }]}>
+              {stats.acwr.toFixed(2)}
+            </Text>
+            <View style={[styles.acwrZonePill, { backgroundColor: `${ACWR_COLOR[stats.acwrLevel]}1A` }]}>
+              <Text style={[styles.acwrZoneText, { color: ACWR_COLOR[stats.acwrLevel] }]}>
+                {ACWR_LABEL[stats.acwrLevel]}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.acwrGaugeTrack}>
+            {ACWR_ZONES.map((zone) => (
+              <View
+                key={zone.level}
+                style={{
+                  flex: zone.to - zone.from,
+                  backgroundColor: ACWR_COLOR[zone.level],
+                  opacity: 0.35,
+                }}
+              />
+            ))}
+            <View style={[styles.acwrMarker, { left: `${markerPercent}%` }]} />
+          </View>
+          <View style={styles.acwrGaugeLabelsRow}>
+            <Text style={styles.acwrGaugeLabel}>0</Text>
+            <Text style={styles.acwrGaugeLabel}>0.8</Text>
+            <Text style={styles.acwrGaugeLabel}>1.3</Text>
+            <Text style={styles.acwrGaugeLabel}>1.5</Text>
+            <Text style={styles.acwrGaugeLabel}>2.0+</Text>
+          </View>
+        </>
+      ) : (
+        <View style={styles.acwrInsufficientBanner}>
+          <Ionicons name="information-circle-outline" size={16} color={DARK.textSecondary} />
+          <Text style={styles.acwrInsufficientText}>
+            Historique trop court pour un ACWR fiable : toute la charge enregistrée tombe dans les
+            7 derniers jours, donc la "charge chronique" ci-dessous ne reflète pas un vrai passé
+            d'entraînement — le ratio serait trompeur. Il redeviendra pertinent après quelques
+            semaines de suivi.
           </Text>
         </View>
-      </View>
-
-      <View style={styles.acwrGaugeTrack}>
-        {ACWR_ZONES.map((zone) => (
-          <View
-            key={zone.level}
-            style={{
-              flex: zone.to - zone.from,
-              backgroundColor: ACWR_COLOR[zone.level],
-              opacity: 0.35,
-            }}
-          />
-        ))}
-        <View style={[styles.acwrMarker, { left: `${markerPercent}%` }]} />
-      </View>
-      <View style={styles.acwrGaugeLabelsRow}>
-        <Text style={styles.acwrGaugeLabel}>0</Text>
-        <Text style={styles.acwrGaugeLabel}>0.8</Text>
-        <Text style={styles.acwrGaugeLabel}>1.3</Text>
-        <Text style={styles.acwrGaugeLabel}>1.5</Text>
-        <Text style={styles.acwrGaugeLabel}>2.0+</Text>
-      </View>
+      )}
 
       <View style={styles.metricsGrid}>
         <MetricTile label="Charge aiguë (7j)" value={String(Math.round(stats.acute))} />
@@ -696,9 +714,20 @@ function AcwrDetail({ stats }: { stats: TrainingLoadStats }) {
   );
 }
 
-function MetricTile({ label, value }: { label: string; value: string }) {
+function MetricTile({
+  label,
+  value,
+  basis,
+}: {
+  label: string;
+  value: string;
+  // Largeur relative de la tuile dans sa grille — "47%" pour 2 par rangée,
+  // non renseigné = 4 par rangée (styles.metricTile) sur une carte de cette
+  // taille.
+  basis?: "47%";
+}) {
   return (
-    <View style={styles.metricTile}>
+    <View style={[styles.metricTile, basis ? { minWidth: basis } : null]}>
       <Text style={styles.metricValue}>{value}</Text>
       <Text style={styles.metricLabel}>{label}</Text>
     </View>
@@ -1192,6 +1221,22 @@ const styles = StyleSheet.create({
   acwrGaugeLabel: {
     fontSize: 10,
     color: DARK.textSecondary,
+  },
+
+  acwrInsufficientBanner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    backgroundColor: DARK.cardAlt,
+    borderRadius: 14,
+    padding: 14,
+  },
+
+  acwrInsufficientText: {
+    flex: 1,
+    fontSize: 12,
+    color: DARK.textSecondary,
+    lineHeight: 17,
   },
 
   acwrCaption: {

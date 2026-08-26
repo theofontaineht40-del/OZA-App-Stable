@@ -45,9 +45,7 @@ export default function SessionCompleteOverlay({
       Animated.timing(summaryOpacity, { toValue: 1, duration: 300, useNativeDriver: true }),
     ]).start();
 
-    // Laisse plus de temps à l'écran avant le retour automatique quand il y a
-    // un record à lire — sinon 2s suffisent à peine à voir le résumé.
-    const timer = setTimeout(onDone, personalRecords.length > 0 ? 3200 : 2000);
+    const timer = setTimeout(onDone, 3000);
     return () => clearTimeout(timer);
   }, [visible]);
 

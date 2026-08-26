@@ -6,6 +6,27 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["expo", "start", "--web", "-c", "--port", "8102"],
       "port": 8102
+    },
+    {
+      "name": "oza-web-8103",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["expo", "start", "--web", "--port", "8103"],
+      "port": 8103
+    },
+    {
+      "name": "test-muscle-viz",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "/Users/theofontaine/Desktop/OZA /OZA-App/test-muscle-viz",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5175",
+        "--strictPort"
+      ],
+      "port": 5175
     }
   ]
 }

@@ -13,6 +13,7 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../../components/access-denied";
+import BackButton from "../../../../components/back-button";
 import { Colors } from "../../../../constants/colors";
 import {
   anomaliesForView,

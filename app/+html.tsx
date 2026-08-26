@@ -1,6 +1,8 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { type PropsWithChildren } from "react";
 
+import { Colors } from "../constants/colors";
+
 // Personnalise le document HTML racine généré par l'export web. Sans ce
 // fichier, Expo ne pose qu'une favicon classique : iOS n'a alors aucune
 // icône dédiée pour "Ajouter à l'écran d'accueil" et affiche un carré
@@ -19,22 +21,21 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="OZA" />
-        {/* La barre de navigation du bas est teal foncé sur tous les écrans
-            connectés ; le fond brut html/body/#root (visible dans les
-            écarts d'arrondi sous-pixel ou de zone de sécurité iOS que le
-            navigateur laisse parfois apparaître) doit donc être teal foncé
-            lui aussi plutôt que la couleur crème par défaut de l'app, pour
-            que tout écart résiduel soit invisible au lieu d'être une bande
-            blanche. `min-height` (jamais `height`) : une hauteur figée sur
-            #root casse le scroll dès qu'un écran dépasse une page (body a
+        {/* Le fond brut html/body/#root (visible dans les écarts d'arrondi
+            sous-pixel ou de zone de sécurité iOS que le navigateur laisse
+            parfois apparaître, notamment la barre du bas / home indicator)
+            reprend le teal clair de la marque plutôt que la couleur crème
+            par défaut de l'app, pour que tout écart résiduel reste discret.
+            `min-height` (jamais `height`) : une hauteur figée sur #root
+            casse le scroll dès qu'un écran dépasse une page (body a
             `overflow:hidden` dans le reset Expo juste en dessous). */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#0C2E2D" />
+        <meta name="theme-color" content={Colors.primaryLight} />
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
             __html: `
-              html, body, #root { margin: 0; padding: 0; background-color: #0C2E2D; min-height: 100vh; min-height: 100dvh; }
+              html, body, #root { margin: 0; padding: 0; background-color: ${Colors.primaryLight}; min-height: 100vh; min-height: 100dvh; }
               /* En mode "ajouté à l'écran d'accueil" (standalone), 100dvh
                  sur #root ne couvre pas toujours la zone de sécurité tout en
                  bas (home indicator) sur iOS — ce qui laissait apparaître le

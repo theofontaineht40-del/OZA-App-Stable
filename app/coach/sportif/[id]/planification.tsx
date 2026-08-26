@@ -13,6 +13,7 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../../components/access-denied";
+import BackButton from "../../../../components/back-button";
 import DateField from "../../../../components/date-field";
 import ProgrammeLinkModal from "../../../../components/programme-link-modal";
 import { Colors } from "../../../../constants/colors";
@@ -227,10 +228,7 @@ export default function PlanificationScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
-        <Text style={styles.backText}>Retour</Text>
-      </TouchableOpacity>
+      <BackButton />
 
       <Text style={styles.title}>Planification</Text>
       <Text style={styles.subtitle}>

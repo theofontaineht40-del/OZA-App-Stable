@@ -26,6 +26,7 @@ import {
   addSession,
   detectPersonalRecords,
   ExerciseLog,
+  findLastPerformance,
   getSessionsForSportif,
   PersonalRecord,
   SessionRecord,
@@ -260,6 +261,21 @@ export default function SeanceExecutionScreen() {
                   {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif}kg` : ""}
                 </Text>
 
+                {(() => {
+                  const lastPerf = findLastPerformance(pastSessions, ex.exerciceNom);
+                  if (!lastPerf) return null;
+                  return (
+                    <View style={styles.lastPerfRow}>
+                      <Ionicons name="time-outline" size={13} color={Colors.primary} />
+                      <Text style={styles.lastPerf}>
+                        Dernière fois : {lastPerf.seriesReelles} × {lastPerf.repetitionsReelles}
+                        {" · "}
+                        {lastPerf.chargeReelle ? `${lastPerf.chargeReelle} kg` : "poids non renseigné"}
+                      </Text>
+                    </View>
+                  );
+                })()}
+
                 <View style={styles.actualRow}>
                   <View style={styles.actualField}>
                     <Text style={styles.actualLabel}>Séries</Text>
@@ -367,7 +383,10 @@ export default function SeanceExecutionScreen() {
         duration={completedSummary?.duration ?? 0}
         load={completedSummary?.load ?? 0}
         personalRecords={completedSummary?.personalRecords ?? []}
-        onDone={() => router.push("/sportif")}
+        onDone={() => {
+          setCompletedSummary(null);
+          router.push("/sportif");
+        }}
       />
     </ScrollView>
 
@@ -473,6 +492,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginBottom: 12,
+  },
+
+  lastPerfRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginTop: -6,
+    marginBottom: 12,
+  },
+
+  lastPerf: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.primary,
   },
 
   actualRow: {

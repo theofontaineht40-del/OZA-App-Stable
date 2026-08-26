@@ -1,0 +1,20 @@
+OZA App
+=======
+
+This product includes third-party material as noted below.
+
+--------------------------------------------------------------------------------
+
+body-muscles
+  Source: https://github.com/vulovix/body-muscles
+  Copyright (c) vulovix
+  License: Apache License 2.0
+
+  The anatomical SVG path data in constants/muscle-paths.ts
+  (FRONT_MUSCLE_PATHS / BACK_MUSCLE_PATHS) is derived from this project.
+  Only the path data is used; it is re-rendered with react-native-svg in
+  components/muscle-map-detailed.tsx. No source code from body-muscles is
+  included or distributed.
+
+  A copy of the Apache License 2.0 is available at
+  https://www.apache.org/licenses/LICENSE-2.0

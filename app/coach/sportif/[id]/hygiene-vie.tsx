@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../../components/access-denied";
+import BackButton from "../../../../components/back-button";
 import { Colors } from "../../../../constants/colors";
 import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import {
@@ -105,10 +106,7 @@ export default function HygieneVieScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
-        <Text style={styles.backText}>Retour</Text>
-      </TouchableOpacity>
+      <BackButton />
 
       <Text style={styles.title}>Hygiène de vie & Nutrition</Text>
 

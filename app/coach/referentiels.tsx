@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import BackButton from "../../components/back-button";
 import { AGE_BRACKETS, AgeBracket, SEXES, Sexe } from "../../constants/athlete-segments";
 import { Colors } from "../../constants/colors";
 import { MOBILITY_TESTS } from "../../constants/mobility-tests";
@@ -92,10 +93,7 @@ export default function ReferentielsScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.text} />
-        <Text style={styles.backText}>Retour</Text>
-      </TouchableOpacity>
+      <BackButton />
 
       <Text style={styles.title}>Mes référentiels</Text>
       <Text style={styles.subtitle}>
@@ -239,18 +237,6 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
     paddingBottom: 60,
-  },
-
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-
-  backText: {
-    fontSize: 14,
-    color: Colors.text,
-    fontWeight: "600",
   },
 
   title: {

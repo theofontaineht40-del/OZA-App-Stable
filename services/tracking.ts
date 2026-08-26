@@ -238,6 +238,20 @@ export function detectPersonalRecords(
   return records;
 }
 
+// `pastSessions` est trié du plus récent au plus ancien (voir
+// getSessionsForSportif/getSessionsForCoach), donc le premier log trouvé
+// pour cet exercice est la dernière performance réelle.
+export function findLastPerformance(
+  pastSessions: SessionRecord[],
+  exerciceNom: string
+): ExerciseLog | null {
+  for (const session of pastSessions) {
+    const log = (session.exerciseLogs ?? []).find((l) => l.exerciceNom === exerciceNom);
+    if (log) return log;
+  }
+  return null;
+}
+
 // La localisation des courbatures/gênes est purement informative : elle
 // n'entre ni dans le hooper_index ni dans l'ACWR (voir app/sportif/checkin.tsx).
 // Stockée telle quelle (pas de note d'intensité par zone) pour permettre côté

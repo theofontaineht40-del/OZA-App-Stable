@@ -160,7 +160,7 @@ export default function CoachHome() {
                   <Text style={styles.heroCaption}>sportifs suivis</Text>
                 </View>
                 <View style={styles.heroChart}>
-                  <MiniSparkline values={last7.map((d) => d.load)} width={100} height={44} color={Colors.primaryLight} />
+                  <MiniSparkline values={last7.map((d) => d.load)} width={72} height={44} color={Colors.primaryLight} />
                 </View>
               </View>
             </View>
@@ -420,6 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 22,
     marginBottom: 24,
+    overflow: "hidden",
   },
 
   heroLabel: {
@@ -464,6 +465,7 @@ const styles = StyleSheet.create({
 
   heroChart: {
     marginLeft: "auto",
+    flexShrink: 1,
   },
 
   statsRow: {

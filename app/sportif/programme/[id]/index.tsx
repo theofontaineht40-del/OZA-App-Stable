@@ -1,7 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
@@ -16,13 +24,15 @@ const CHARGE_LABELS: Record<ChargeType, string> = {
 export default function SportifProgrammeViewScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [programme, setProgramme] = useState<Programme | null>(null);
-  const [activeSeanceId, setActiveSeanceId] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [pageWidth, setPageWidth] = useState(0);
+  const pagerRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     if (!id) return;
     getProgramme(id).then((p) => {
       setProgramme(p);
-      if (p) setActiveSeanceId(p.seances[0]?.id ?? null);
+      setActiveIndex(0);
     });
   }, [id]);
 
@@ -30,7 +40,19 @@ export default function SportifProgrammeViewScreen() {
     return <View style={styles.container} />;
   }
 
-  const activeSeance = programme.seances.find((s) => s.id === activeSeanceId) ?? programme.seances[0];
+  const activeSeance = programme.seances[activeIndex] ?? programme.seances[0];
+
+  function goToIndex(i: number) {
+    setActiveIndex(i);
+    pagerRef.current?.scrollTo({ x: i * pageWidth, animated: true });
+  }
+
+  // Le swipe fait foi : si l'utilisateur glisse au lieu de taper un onglet,
+  // c'est cette page qui détermine l'onglet actif, pas l'inverse.
+  function onMomentumScrollEnd(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    if (pageWidth <= 0) return;
+    setActiveIndex(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
+  }
 
   return (
     <View style={styles.container}>
@@ -45,84 +67,108 @@ export default function SportifProgrammeViewScreen() {
       {activeSeance && (
         <>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.seanceTabs}>
-            {programme.seances.map((s) => (
+            {programme.seances.map((s, i) => (
               <TouchableOpacity
                 key={s.id}
-                style={[styles.seanceTab, activeSeance.id === s.id && styles.seanceTabActive]}
-                onPress={() => setActiveSeanceId(s.id)}
+                style={[styles.seanceTab, activeIndex === i && styles.seanceTabActive]}
+                onPress={() => goToIndex(i)}
               >
-                <Text
-                  style={[styles.seanceTabText, activeSeance.id === s.id && styles.seanceTabTextActive]}
-                >
+                <Text style={[styles.seanceTabText, activeIndex === i && styles.seanceTabTextActive]}>
                   {s.nom}
                 </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
 
-          <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-            <TouchableOpacity
-              style={styles.startButton}
-              onPress={() => router.push(`/sportif/programme/${programme.id}/seance/${activeSeance.id}`)}
-            >
-              <Ionicons name="play-circle" size={20} color={Colors.white} />
-              <Text style={styles.startButtonText}>Démarrer cette séance</Text>
-            </TouchableOpacity>
+          {/* Le swipe fonctionne sur toute la largeur de l'écran (pas
+              seulement sur la petite barre d'onglets) : chaque séance est une
+              page d'un pager horizontal, avec son propre scroll vertical à
+              l'intérieur pour la liste des blocs. */}
+          <View style={styles.pagerWrap} onLayout={(e) => setPageWidth(e.nativeEvent.layout.width)}>
+            {pageWidth > 0 && (
+              <ScrollView
+                ref={pagerRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScroll={onMomentumScrollEnd}
+                scrollEventThrottle={32}
+                contentOffset={{ x: activeIndex * pageWidth, y: 0 }}
+              >
+                {programme.seances.map((seance) => (
+                  <ScrollView
+                    key={seance.id}
+                    style={{ width: pageWidth }}
+                    contentContainerStyle={styles.content}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    <TouchableOpacity
+                      style={styles.startButton}
+                      onPress={() => router.push(`/sportif/programme/${programme.id}/seance/${seance.id}`)}
+                    >
+                      <Ionicons name="play-circle" size={20} color={Colors.white} />
+                      <Text style={styles.startButtonText}>Démarrer cette séance</Text>
+                    </TouchableOpacity>
 
-            {activeSeance.blocs.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun bloc dans cette séance.</Text>
-            ) : (
-              activeSeance.blocs.map((bloc) => (
-                <View key={bloc.id} style={[styles.blocCard, { borderLeftColor: bloc.couleur }]}>
-                  <Text style={styles.blocNom}>{bloc.nom}</Text>
-                  {!!bloc.objectif && <Text style={styles.blocObjectif}>{bloc.objectif}</Text>}
+                    {seance.blocs.length === 0 ? (
+                      <Text style={styles.emptyText}>Aucun bloc dans cette séance.</Text>
+                    ) : (
+                      seance.blocs.map((bloc) => (
+                        <View key={bloc.id} style={[styles.blocCard, { borderLeftColor: bloc.couleur }]}>
+                          <Text style={styles.blocNom}>{bloc.nom}</Text>
+                          {!!bloc.objectif && <Text style={styles.blocObjectif}>{bloc.objectif}</Text>}
 
-                  {bloc.exercices.map((ex) => (
-                    <View key={ex.id} style={styles.exerciceCard}>
-                      <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
+                          {bloc.exercices.map((ex) => (
+                            <View key={ex.id} style={styles.exerciceCard}>
+                              <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
 
-                      <View style={styles.setsRepsRow}>
-                        <Text style={styles.setsRepsValue}>
-                          {ex.series} × {ex.repetitions}
-                        </Text>
-                      </View>
+                              <View style={styles.setsRepsRow}>
+                                <Text style={styles.setsRepsValue}>
+                                  {ex.series} × {ex.repetitions}
+                                </Text>
+                              </View>
 
-                      <View style={styles.detailGrid}>
-                        <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>Tempo</Text>
-                          <Text style={styles.detailValue}>{ex.tempo || "—"}</Text>
-                        </View>
-                        <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>Charge</Text>
-                          <Text style={styles.detailValue}>
-                            {ex.chargeValeur ? `${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : "—"}
-                          </Text>
-                        </View>
-                        <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>Poids indicatif</Text>
-                          <Text style={styles.detailValue}>
-                            {ex.poidsIndicatif ? `${ex.poidsIndicatif} kg` : "—"}
-                          </Text>
-                        </View>
-                        <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>Repos séries</Text>
-                          <Text style={styles.detailValue}>{ex.reposSeries || "—"}</Text>
-                        </View>
-                        <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>Repos répétitions</Text>
-                          <Text style={styles.detailValue}>{ex.reposRepetitions || "—"}</Text>
-                        </View>
-                      </View>
+                              <View style={styles.detailGrid}>
+                                <View style={styles.detailItem}>
+                                  <Text style={styles.detailLabel}>Tempo</Text>
+                                  <Text style={styles.detailValue}>{ex.tempo || "—"}</Text>
+                                </View>
+                                <View style={styles.detailItem}>
+                                  <Text style={styles.detailLabel}>Charge</Text>
+                                  <Text style={styles.detailValue}>
+                                    {ex.chargeValeur ? `${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : "—"}
+                                  </Text>
+                                </View>
+                                <View style={styles.detailItem}>
+                                  <Text style={styles.detailLabel}>Poids indicatif</Text>
+                                  <Text style={styles.detailValue}>
+                                    {ex.poidsIndicatif ? `${ex.poidsIndicatif} kg` : "—"}
+                                  </Text>
+                                </View>
+                                <View style={styles.detailItem}>
+                                  <Text style={styles.detailLabel}>Repos séries</Text>
+                                  <Text style={styles.detailValue}>{ex.reposSeries || "—"}</Text>
+                                </View>
+                                <View style={styles.detailItem}>
+                                  <Text style={styles.detailLabel}>Repos répétitions</Text>
+                                  <Text style={styles.detailValue}>{ex.reposRepetitions || "—"}</Text>
+                                </View>
+                              </View>
 
-                      {!!ex.commentaires && (
-                        <Text style={styles.commentaires}>{ex.commentaires}</Text>
-                      )}
-                    </View>
-                  ))}
-                </View>
-              ))
+                              {!!ex.commentaires && (
+                                <Text style={styles.commentaires}>{ex.commentaires}</Text>
+                              )}
+                            </View>
+                          ))}
+                        </View>
+                      ))
+                    )}
+                  </ScrollView>
+                ))}
+              </ScrollView>
             )}
-          </ScrollView>
+          </View>
         </>
       )}
     </View>
@@ -154,6 +200,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 8,
     flexGrow: 0,
+  },
+
+  pagerWrap: {
+    flex: 1,
   },
 
   seanceTab: {

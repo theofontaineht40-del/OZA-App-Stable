@@ -110,6 +110,14 @@ export type SportifRow = {
   loadDeltaPercent: number | null;
   status: SportifStatus;
   lastSessionDate: string | null;
+  // Signaux bruts derrière `status`, exposés pour l'écran de recommandations
+  // (app/coach/analyse.tsx) — permet d'expliquer le statut avec de vrais
+  // chiffres plutôt qu'un simple badge de couleur.
+  acwr: number;
+  acwrLevel: AcwrLevel;
+  hasEnoughHistory: boolean;
+  wellnessStatusValue: WellnessStatus | null;
+  personalAvgWellness: number | null;
 };
 
 // Une ligne par sportif pour le tableau "Mes sportifs" — construite à partir
@@ -143,6 +151,8 @@ export function buildSportifRow(
       ? sportifSessions.reduce((max, s) => (s.date > max ? s.date : max), sportifSessions[0].date)
       : null;
 
+  const wellnessStatusValue = latest ? wellnessStatus(latest.score, personalAvg) : null;
+
   return {
     uid: sportif.uid,
     firstName: sportif.firstName,
@@ -150,8 +160,13 @@ export function buildSportifRow(
     wellnessScore: latest?.score ?? null,
     load7d,
     loadDeltaPercent: weekOverWeekDelta(load7d, loadPrev7d),
-    status: combineStatus(effectiveAcwrLevel, latest ? wellnessStatus(latest.score, personalAvg) : null),
+    status: combineStatus(effectiveAcwrLevel, wellnessStatusValue),
     lastSessionDate,
+    acwr,
+    acwrLevel: effectiveAcwrLevel,
+    hasEnoughHistory,
+    wellnessStatusValue,
+    personalAvgWellness: personalAvg,
   };
 }
 
@@ -178,6 +193,61 @@ export function computeCoachAnalysis(rows: SportifRow[]): CoachAnalysis {
     attentionSportifs: attention.map((r) => `${r.firstName} ${r.lastName}`),
     vigilanceSportifs: vigilance.map((r) => `${r.firstName} ${r.lastName}`),
   };
+}
+
+export type Recommendation = {
+  reasons: string[];
+  action: string;
+};
+
+// Détail texte du statut d'un sportif pour l'écran "Recommandations"
+// (app/coach/analyse.tsx). Chaque phrase cite une valeur réellement calculée
+// (ACWR, écart à la moyenne de bien-être personnelle) — aucun conseil
+// générique inventé, seulement la traduction en mots des mêmes seuils que
+// combineStatus/acwrRiskLevel/wellnessStatus (services/load.ts).
+export function buildRecommendation(row: SportifRow): Recommendation {
+  const reasons: string[] = [];
+  const actions: string[] = [];
+
+  if (row.hasEnoughHistory) {
+    if (row.acwrLevel === "danger") {
+      reasons.push(
+        `ACWR à ${row.acwr.toFixed(2)} (zone danger, >1.5) : charge très en hausse par rapport aux dernières semaines.`
+      );
+      actions.push("réduire le volume ou l'intensité de la prochaine séance");
+    } else if (row.acwrLevel === "risque") {
+      reasons.push(`ACWR à ${row.acwr.toFixed(2)} (zone risque, 1.3–1.5) : hausse de charge à surveiller.`);
+      actions.push("éviter une nouvelle augmentation de charge cette semaine");
+    } else if (row.acwrLevel === "sous-charge") {
+      reasons.push(
+        `ACWR à ${row.acwr.toFixed(2)} (sous-charge, <0.8) : volume nettement inférieur à ses dernières semaines.`
+      );
+    }
+  }
+
+  if (row.wellnessStatusValue === "red" && row.wellnessScore !== null) {
+    reasons.push(
+      row.personalAvgWellness !== null
+        ? `Bien-être à ${row.wellnessScore.toFixed(1)}/10, nettement sous sa moyenne habituelle (${row.personalAvgWellness.toFixed(1)}/10).`
+        : `Bien-être à ${row.wellnessScore.toFixed(1)}/10, sous le seuil d'alerte.`
+    );
+    actions.push("vérifier sommeil / fatigue / stress avant de valider la séance prévue");
+  } else if (row.wellnessStatusValue === "orange" && row.wellnessScore !== null) {
+    reasons.push(
+      row.personalAvgWellness !== null
+        ? `Bien-être à ${row.wellnessScore.toFixed(1)}/10, en léger retrait par rapport à sa moyenne (${row.personalAvgWellness.toFixed(1)}/10).`
+        : `Bien-être à ${row.wellnessScore.toFixed(1)}/10, à surveiller.`
+    );
+    actions.push("garder un œil sur son ressenti aux prochains check-ins");
+  }
+
+  if (reasons.length === 0) {
+    reasons.push("Charge et bien-être dans les zones habituelles.");
+  }
+
+  const action = actions.length > 0 ? `Suggestion : ${actions.join(" et ")}.` : "Aucune adaptation nécessaire pour l'instant.";
+
+  return { reasons, action };
 }
 
 export type TrainingLoadStats = {

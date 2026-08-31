@@ -297,15 +297,7 @@ export default function CoachHome() {
                 </Text>
               </View>
 
-              <TouchableOpacity
-                style={styles.analysisButton}
-                onPress={() =>
-                  showAlert(
-                    "Recommandations",
-                    "Le détail des recommandations par sportif arrive prochainement. Pour l'instant, consulte le tableau « Mes sportifs » ci-dessous : le statut de chacun reflète exactement ce calcul."
-                  )
-                }
-              >
+              <TouchableOpacity style={styles.analysisButton} onPress={() => router.push("/coach/analyse")}>
                 <Text style={styles.analysisButtonText}>Voir les recommandations</Text>
                 <Ionicons name="arrow-forward" size={14} color={Colors.primaryDark} />
               </TouchableOpacity>

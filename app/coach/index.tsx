@@ -541,7 +541,7 @@ export default function CoachHome() {
                     showAlert("Aucun sportif", "Associez d'abord un sportif pour lui enregistrer une séance.");
                     return;
                   }
-                  router.push(`/coach/sportif/${sportifs[0].uid}/nouvelle-seance`);
+                  router.push("/coach/nouvelle-seance");
                 }}
               >
                 <Ionicons name="add-circle" size={18} color={Colors.white} />

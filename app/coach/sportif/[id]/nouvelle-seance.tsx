@@ -17,17 +17,41 @@ import PhotoBackground from "../../../../components/photo-background";
 import PulseDot from "../../../../components/pulse-dot";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
+import { ChargeType, getProgrammesForCoachAndSportif, Programme } from "../../../../services/programmes";
 import { getRelation } from "../../../../services/relations";
-import { addSession } from "../../../../services/tracking";
+import { addSession, ExerciseLog } from "../../../../services/tracking";
 import { showAlert } from "../../../../utils/alert";
 
 const RPE_SCALE = Array.from({ length: 11 }, (_, i) => i); // 0 à 10
+
+const CHARGE_LABELS: Record<ChargeType, string> = {
+  "1rm": "% 1RM",
+  rpe: "RPE",
+  libre: "kg",
+};
+
+type ExerciseState = {
+  exerciceId: string;
+  exerciceNom: string;
+  seriesPrescrites: string;
+  repetitionsPrescrites: string;
+  chargeValeur: string;
+  chargeType: ChargeType;
+  poidsIndicatif: string;
+  seriesReelles: string;
+  repetitionsReelles: string;
+  chargeReelle: string;
+};
 
 export default function CoachNouvelleSeanceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [coachUid, setCoachUid] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [selectedProgrammeId, setSelectedProgrammeId] = useState<string | null>(null);
+  const [selectedSeanceId, setSelectedSeanceId] = useState<string | null>(null);
+  const [exerciseStates, setExerciseStates] = useState<Record<string, ExerciseState>>({});
   const [rpe, setRpe] = useState<number | null>(null);
   const [duration, setDuration] = useState("");
   const [commentaire, setCommentaire] = useState("");
@@ -51,7 +75,13 @@ export default function CoachNouvelleSeanceScreen() {
         }
 
         const rel = await getRelation(id, user.uid);
-        setAuthorized(rel?.type === "principal");
+        const isPrincipal = rel?.type === "principal";
+        setAuthorized(isPrincipal);
+
+        if (isPrincipal) {
+          const programmeData = await getProgrammesForCoachAndSportif(user.uid, id);
+          setProgrammes(programmeData);
+        }
       } catch {
         setAuthorized(false);
       }
@@ -59,6 +89,44 @@ export default function CoachNouvelleSeanceScreen() {
 
     return unsubscribe;
   }, [id]);
+
+  const selectedProgramme = programmes.find((p) => p.id === selectedProgrammeId) ?? null;
+  const selectedSeance = selectedProgramme?.seances.find((s) => s.id === selectedSeanceId) ?? null;
+
+  function selectSeance(programme: Programme, seanceId: string) {
+    const seance = programme.seances.find((s) => s.id === seanceId);
+    if (!seance) return;
+    const states: Record<string, ExerciseState> = {};
+    for (const bloc of seance.blocs) {
+      for (const ex of bloc.exercices) {
+        states[ex.id] = {
+          exerciceId: ex.id,
+          exerciceNom: ex.exerciceNom,
+          seriesPrescrites: ex.series,
+          repetitionsPrescrites: ex.repetitions,
+          chargeValeur: ex.chargeValeur,
+          chargeType: ex.chargeType,
+          poidsIndicatif: ex.poidsIndicatif,
+          seriesReelles: ex.series,
+          repetitionsReelles: ex.repetitions,
+          chargeReelle: ex.poidsIndicatif ?? "",
+        };
+      }
+    }
+    setExerciseStates(states);
+    setSelectedProgrammeId(programme.id);
+    setSelectedSeanceId(seanceId);
+  }
+
+  function clearSeance() {
+    setSelectedProgrammeId(null);
+    setSelectedSeanceId(null);
+    setExerciseStates({});
+  }
+
+  function updateExercise(exerciceId: string, patch: Partial<ExerciseState>) {
+    setExerciseStates((prev) => ({ ...prev, [exerciceId]: { ...prev[exerciceId], ...patch } }));
+  }
 
   async function handleSubmit() {
     if (!coachUid || !id) return;
@@ -73,6 +141,16 @@ export default function CoachNouvelleSeanceScreen() {
       return;
     }
 
+    const exerciseLogs: ExerciseLog[] = Object.values(exerciseStates).map((ex) => ({
+      exerciceNom: ex.exerciceNom,
+      seriesPrescrites: ex.seriesPrescrites,
+      repetitionsPrescrites: ex.repetitionsPrescrites,
+      seriesReelles: ex.seriesReelles,
+      repetitionsReelles: ex.repetitionsReelles,
+      chargeReelle: ex.chargeReelle,
+      complete: true,
+    }));
+
     setSubmitting(true);
     try {
       await addSession({
@@ -82,6 +160,15 @@ export default function CoachNouvelleSeanceScreen() {
         duration: durationNumber,
         commentaire,
         loggedBy: "coach",
+        programmeInfo:
+          selectedProgramme && selectedSeance
+            ? {
+                programmeId: selectedProgramme.id,
+                programmeNom: selectedProgramme.nom,
+                seanceNom: selectedSeance.nom,
+                exerciseLogs,
+              }
+            : undefined,
       });
       showAlert("Séance enregistrée", "La charge d'entraînement a été calculée.");
       router.back();
@@ -126,6 +213,108 @@ export default function CoachNouvelleSeanceScreen() {
 
       <Text style={styles.title}>Nouvelle séance</Text>
       <Text style={styles.subtitle}>Séance encadrée avec {name}</Text>
+
+      {programmes.length > 0 && (
+        <>
+          <Text style={styles.fieldLabel}>Séance liée à un programme (optionnel)</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow}>
+            <TouchableOpacity
+              style={[styles.chip, !selectedProgrammeId && styles.chipActive]}
+              onPress={clearSeance}
+            >
+              <Text style={[styles.chipText, !selectedProgrammeId && styles.chipTextActive]}>
+                Séance libre
+              </Text>
+            </TouchableOpacity>
+            {programmes.map((p) => (
+              <TouchableOpacity
+                key={p.id}
+                style={[styles.chip, selectedProgrammeId === p.id && styles.chipActive]}
+                onPress={() => {
+                  setSelectedProgrammeId(p.id);
+                  setSelectedSeanceId(null);
+                  setExerciseStates({});
+                }}
+              >
+                <Text style={[styles.chipText, selectedProgrammeId === p.id && styles.chipTextActive]}>
+                  {p.nom}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {selectedProgramme && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow}>
+              {selectedProgramme.seances.map((s) => (
+                <TouchableOpacity
+                  key={s.id}
+                  style={[styles.chip, selectedSeanceId === s.id && styles.chipActive]}
+                  onPress={() => selectSeance(selectedProgramme, s.id)}
+                >
+                  <Text style={[styles.chipText, selectedSeanceId === s.id && styles.chipTextActive]}>
+                    {s.nom}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
+        </>
+      )}
+
+      {selectedSeance && (
+        <View style={{ marginBottom: 8 }}>
+          {selectedSeance.blocs.map((bloc) => (
+            <View key={bloc.id} style={[styles.blocCard, { borderLeftColor: bloc.couleur }]}>
+              <Text style={styles.blocNom}>{bloc.nom}</Text>
+              {bloc.exercices.map((ex) => {
+                const state = exerciseStates[ex.id];
+                if (!state) return null;
+                return (
+                  <View key={ex.id} style={styles.exerciceCard}>
+                    <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
+                    <Text style={styles.prescrit}>
+                      Prescrit : {ex.series} × {ex.repetitions}
+                      {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
+                      {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif}kg` : ""}
+                    </Text>
+                    <View style={styles.actualRow}>
+                      <View style={styles.actualField}>
+                        <Text style={styles.actualLabel}>Séries</Text>
+                        <TextInput
+                          placeholderTextColor={Colors.textSecondary}
+                          style={styles.actualInput}
+                          value={state.seriesReelles}
+                          onChangeText={(t) => updateExercise(ex.id, { seriesReelles: t })}
+                          keyboardType="numeric"
+                        />
+                      </View>
+                      <View style={styles.actualField}>
+                        <Text style={styles.actualLabel}>Répétitions</Text>
+                        <TextInput
+                          placeholderTextColor={Colors.textSecondary}
+                          style={styles.actualInput}
+                          value={state.repetitionsReelles}
+                          onChangeText={(t) => updateExercise(ex.id, { repetitionsReelles: t })}
+                        />
+                      </View>
+                      <View style={styles.actualField}>
+                        <Text style={styles.actualLabel}>Poids (kg)</Text>
+                        <TextInput
+                          placeholderTextColor={Colors.textSecondary}
+                          style={styles.actualInput}
+                          keyboardType="numeric"
+                          value={state.chargeReelle}
+                          onChangeText={(t) => updateExercise(ex.id, { chargeReelle: t })}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          ))}
+        </View>
+      )}
 
       <Text style={styles.fieldLabel}>
         RPE de séance — échelle de Borg (0 = repos, 10 = effort maximal)
@@ -249,6 +438,100 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.textOnDark,
     marginBottom: 12,
+  },
+
+  chipRow: {
+    marginBottom: 12,
+  },
+
+  chip: {
+    paddingHorizontal: 14,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    justifyContent: "center",
+    marginRight: 8,
+  },
+
+  chipActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+
+  chipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.textOnDark,
+  },
+
+  chipTextActive: {
+    color: Colors.white,
+  },
+
+  blocCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 18,
+    borderLeftWidth: 4,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+
+  blocNom: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 10,
+  },
+
+  exerciceCard: {
+    backgroundColor: Colors.grayLight,
+    borderRadius: 14,
+    padding: 14,
+    marginTop: 10,
+  },
+
+  exerciceName: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 6,
+  },
+
+  prescrit: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginBottom: 12,
+  },
+
+  actualRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  actualField: {
+    flex: 1,
+  },
+
+  actualLabel: {
+    fontSize: 11,
+    color: Colors.textSecondary,
+    marginBottom: 4,
+  },
+
+  actualInput: {
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: Colors.surface,
+    textAlign: "center",
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.text,
   },
 
   rpeRow: {

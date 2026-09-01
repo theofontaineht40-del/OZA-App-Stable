@@ -3,15 +3,39 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../constants/colors";
 import { getUniqueMuscles, NamedExercise } from "../constants/exercise-muscles";
-import { MUSCLE_LABELS } from "../constants/muscle-groups";
 import { zonesForGroups, zonesForMuscleIds } from "../constants/muscle-paths";
-import { MUSCLE_ID_LABELS, MuscleId } from "../constants/muscle-selection";
+import { MuscleId } from "../constants/muscle-selection";
 import MuscleMap from "./muscle-map-detailed";
+
+// Phrases courtes affichées sous la silhouette à la place de la liste des
+// muscles (jugée trop technique pour cet emplacement) — une par séance,
+// stable pour une même séance/un même jour (pas de scintillement au
+// re-render), pas juste aléatoire à chaque affichage.
+const MOTIVATIONAL_QUOTES = [
+  "Chaque série vous rapproche de l'objectif.",
+  "La régularité bat le talent qui ne s'entraîne pas.",
+  "Aujourd'hui, un peu plus fort qu'hier.",
+  "La progression se construit séance après séance.",
+  "Donnez tout, le reste suivra.",
+  "Votre futur vous remerciera pour cette séance.",
+  "La discipline crée les résultats.",
+  "Un pas de plus vers la meilleure version de vous-même.",
+  "L'effort d'aujourd'hui est la force de demain.",
+  "Restez concentré, la progression suit toujours l'effort.",
+];
+
+function motivationalQuoteFor(workoutName: string): string {
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `${workoutName}|${today}`;
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  return MOTIVATIONAL_QUOTES[hash % MOTIVATIONAL_QUOTES.length];
+}
 
 // Widget riche pour la ligne "Prochaine séance" de l'accueil sportif —
 // remplace le ListRow générique par la silhouette anatomique SVG face/dos
-// (components/muscle-map-detailed.tsx). Source des muscles affichés, par
-// ordre de priorité :
+// (components/muscle-map-detailed.tsx). Source des zones mises en évidence,
+// par ordre de priorité :
 //  1. la sélection manuelle du coach sur la séance (`muscles`, tableau même
 //     vide) — jamais complétée automatiquement ;
 //  2. à défaut (`muscles === undefined`, séance créée avant cette
@@ -35,13 +59,6 @@ export default function NextSessionWidget({
   const activeZones = hasManualSelection
     ? zonesForMuscleIds(muscles)
     : zonesForGroups(getUniqueMuscles(exercises));
-  const targetedLabels = Array.from(
-    new Set(
-      hasManualSelection
-        ? muscles.map((id) => MUSCLE_ID_LABELS[id])
-        : getUniqueMuscles(exercises).map((group) => MUSCLE_LABELS[group])
-    )
-  );
 
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.85} onPress={onPress}>
@@ -53,14 +70,9 @@ export default function NextSessionWidget({
         <MuscleMap activeZones={activeZones} width={100} cropBottom={6} />
       </View>
 
-      {targetedLabels.length > 0 && (
-        <>
-          <Text style={styles.muscleListLabel}>Muscles sollicités</Text>
-          <Text style={styles.muscleList} numberOfLines={2}>
-            {targetedLabels.join(" · ")}
-          </Text>
-        </>
-      )}
+      <Text style={styles.quote} numberOfLines={2}>
+        {motivationalQuoteFor(workoutName)}
+      </Text>
 
       <View style={styles.footer}>
         {duration ? <Text style={styles.duration}>{duration}</Text> : <View />}
@@ -105,21 +117,13 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  muscleListLabel: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: Colors.textSecondary,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    textAlign: "center",
-  },
-
-  muscleList: {
+  quote: {
     fontSize: 13,
     fontWeight: "600",
+    fontStyle: "italic",
     color: Colors.primary,
     textAlign: "center",
-    marginTop: 2,
+    paddingHorizontal: 8,
   },
 
   footer: {

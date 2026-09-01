@@ -28,6 +28,15 @@ export default function CoachTabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="sportifs"
+        options={{
+          title: "Sportifs",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="reservations"
         options={{
           title: "Réservations",

@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import ExerciseSetEditor, { SetEntry } from "../../../../../components/exercise-set-editor";
 import PhotoBackground from "../../../../../components/photo-background";
 import ProgressionChart, { ProgressionPoint } from "../../../../../components/progression-chart";
 import PulseDot from "../../../../../components/pulse-dot";
@@ -48,11 +49,17 @@ type ExerciseState = {
   exerciceNom: string;
   seriesPrescrites: string;
   repetitionsPrescrites: string;
-  seriesReelles: string;
-  repetitionsReelles: string;
-  chargeReelle: string;
+  sets: SetEntry[];
   complete: boolean;
 };
+
+// Charge la plus élevée parmi les séries réellement saisies — c'est ce qui
+// alimente la détection de record et la progression par exercice (ce sont
+// eux qui font foi, pas le détail série par série).
+function maxCharge(sets: SetEntry[]): string {
+  const values = sets.map((s) => parseFloat(s.charge)).filter((n) => !isNaN(n));
+  return values.length > 0 ? String(Math.max(...values)) : "";
+}
 
 function ExerciceCheck({
   complete,
@@ -156,14 +163,17 @@ export default function SeanceExecutionScreen() {
       const states: Record<string, ExerciseState> = {};
       for (const bloc of seance.blocs) {
         for (const ex of bloc.exercices) {
+          const setCount = parseInt(ex.series, 10);
+          const initialSets: SetEntry[] = Array.from(
+            { length: !isNaN(setCount) && setCount > 0 ? setCount : 1 },
+            () => ({ repetitions: ex.repetitions, charge: ex.poidsIndicatif ?? "" })
+          );
           states[ex.id] = {
             exerciceId: ex.id,
             exerciceNom: ex.exerciceNom,
             seriesPrescrites: ex.series,
             repetitionsPrescrites: ex.repetitions,
-            seriesReelles: ex.series,
-            repetitionsReelles: ex.repetitions,
-            chargeReelle: ex.poidsIndicatif ?? "",
+            sets: initialSets,
             complete: false,
           };
         }
@@ -199,9 +209,10 @@ export default function SeanceExecutionScreen() {
       exerciceNom: ex.exerciceNom,
       seriesPrescrites: ex.seriesPrescrites,
       repetitionsPrescrites: ex.repetitionsPrescrites,
-      seriesReelles: ex.seriesReelles,
-      repetitionsReelles: ex.repetitionsReelles,
-      chargeReelle: ex.chargeReelle,
+      seriesReelles: String(ex.sets.length),
+      repetitionsReelles: ex.sets.map((s) => s.repetitions).join("/"),
+      chargeReelle: maxCharge(ex.sets),
+      sets: ex.sets,
       complete: ex.complete,
     }));
 
@@ -316,37 +327,10 @@ export default function SeanceExecutionScreen() {
                   </View>
                 )}
 
-                <View style={styles.actualRow}>
-                  <View style={styles.actualField}>
-                    <Text style={styles.actualLabel}>Séries</Text>
-                    <TextInput
-  placeholderTextColor={Colors.textSecondary}
-                      style={styles.actualInput}
-                      value={state.seriesReelles}
-                      onChangeText={(t) => updateExercise(ex.id, { seriesReelles: t })}
-                      keyboardType="numeric"
-                    />
-                  </View>
-                  <View style={styles.actualField}>
-                    <Text style={styles.actualLabel}>Répétitions</Text>
-                    <TextInput
-  placeholderTextColor={Colors.textSecondary}
-                      style={styles.actualInput}
-                      value={state.repetitionsReelles}
-                      onChangeText={(t) => updateExercise(ex.id, { repetitionsReelles: t })}
-                    />
-                  </View>
-                  <View style={styles.actualField}>
-                    <Text style={styles.actualLabel}>Poids (kg)</Text>
-                    <TextInput
-  placeholderTextColor={Colors.textSecondary}
-                      style={styles.actualInput}
-                      keyboardType="numeric"
-                      value={state.chargeReelle}
-                      onChangeText={(t) => updateExercise(ex.id, { chargeReelle: t })}
-                    />
-                  </View>
-                </View>
+                <ExerciseSetEditor
+                  sets={state.sets}
+                  onChange={(sets) => updateExercise(ex.id, { sets })}
+                />
 
                 <TouchableOpacity
                   style={styles.restButton}
@@ -565,31 +549,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 8,
     marginBottom: 12,
-  },
-
-  actualRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  actualField: {
-    flex: 1,
-  },
-
-  actualLabel: {
-    fontSize: 11,
-    color: Colors.textSecondary,
-    marginBottom: 4,
-  },
-
-  actualInput: {
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: Colors.surface,
-    textAlign: "center",
-    fontSize: 13,
-    fontWeight: "600",
-    color: Colors.text,
   },
 
   restButton: {

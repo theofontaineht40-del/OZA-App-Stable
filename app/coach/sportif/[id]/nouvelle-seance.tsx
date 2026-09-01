@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import ExerciseSetEditor, { SetEntry } from "../../../../components/exercise-set-editor";
 import PhotoBackground from "../../../../components/photo-background";
 import PulseDot from "../../../../components/pulse-dot";
 import { Colors } from "../../../../constants/colors";
@@ -35,13 +36,17 @@ type ExerciseState = {
   exerciceNom: string;
   seriesPrescrites: string;
   repetitionsPrescrites: string;
-  chargeValeur: string;
-  chargeType: ChargeType;
-  poidsIndicatif: string;
-  seriesReelles: string;
-  repetitionsReelles: string;
-  chargeReelle: string;
+  sets: SetEntry[];
 };
+
+// Charge la plus élevée parmi les séries saisies — même convention que côté
+// sportif (app/sportif/programme/[id]/seance/[seanceId].tsx), pour que la
+// détection de record et la progression par exercice lisent la même chose
+// peu importe qui a loggé la séance.
+function maxCharge(sets: SetEntry[]): string {
+  const values = sets.map((s) => parseFloat(s.charge)).filter((n) => !isNaN(n));
+  return values.length > 0 ? String(Math.max(...values)) : "";
+}
 
 export default function CoachNouvelleSeanceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -99,17 +104,17 @@ export default function CoachNouvelleSeanceScreen() {
     const states: Record<string, ExerciseState> = {};
     for (const bloc of seance.blocs) {
       for (const ex of bloc.exercices) {
+        const setCount = parseInt(ex.series, 10);
+        const initialSets: SetEntry[] = Array.from(
+          { length: !isNaN(setCount) && setCount > 0 ? setCount : 1 },
+          () => ({ repetitions: ex.repetitions, charge: ex.poidsIndicatif ?? "" })
+        );
         states[ex.id] = {
           exerciceId: ex.id,
           exerciceNom: ex.exerciceNom,
           seriesPrescrites: ex.series,
           repetitionsPrescrites: ex.repetitions,
-          chargeValeur: ex.chargeValeur,
-          chargeType: ex.chargeType,
-          poidsIndicatif: ex.poidsIndicatif,
-          seriesReelles: ex.series,
-          repetitionsReelles: ex.repetitions,
-          chargeReelle: ex.poidsIndicatif ?? "",
+          sets: initialSets,
         };
       }
     }
@@ -145,9 +150,10 @@ export default function CoachNouvelleSeanceScreen() {
       exerciceNom: ex.exerciceNom,
       seriesPrescrites: ex.seriesPrescrites,
       repetitionsPrescrites: ex.repetitionsPrescrites,
-      seriesReelles: ex.seriesReelles,
-      repetitionsReelles: ex.repetitionsReelles,
-      chargeReelle: ex.chargeReelle,
+      seriesReelles: String(ex.sets.length),
+      repetitionsReelles: ex.sets.map((s) => s.repetitions).join("/"),
+      chargeReelle: maxCharge(ex.sets),
+      sets: ex.sets,
       complete: true,
     }));
 
@@ -277,37 +283,10 @@ export default function CoachNouvelleSeanceScreen() {
                       {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
                       {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif}kg` : ""}
                     </Text>
-                    <View style={styles.actualRow}>
-                      <View style={styles.actualField}>
-                        <Text style={styles.actualLabel}>Séries</Text>
-                        <TextInput
-                          placeholderTextColor={Colors.textSecondary}
-                          style={styles.actualInput}
-                          value={state.seriesReelles}
-                          onChangeText={(t) => updateExercise(ex.id, { seriesReelles: t })}
-                          keyboardType="numeric"
-                        />
-                      </View>
-                      <View style={styles.actualField}>
-                        <Text style={styles.actualLabel}>Répétitions</Text>
-                        <TextInput
-                          placeholderTextColor={Colors.textSecondary}
-                          style={styles.actualInput}
-                          value={state.repetitionsReelles}
-                          onChangeText={(t) => updateExercise(ex.id, { repetitionsReelles: t })}
-                        />
-                      </View>
-                      <View style={styles.actualField}>
-                        <Text style={styles.actualLabel}>Poids (kg)</Text>
-                        <TextInput
-                          placeholderTextColor={Colors.textSecondary}
-                          style={styles.actualInput}
-                          keyboardType="numeric"
-                          value={state.chargeReelle}
-                          onChangeText={(t) => updateExercise(ex.id, { chargeReelle: t })}
-                        />
-                      </View>
-                    </View>
+                    <ExerciseSetEditor
+                      sets={state.sets}
+                      onChange={(sets) => updateExercise(ex.id, { sets })}
+                    />
                   </View>
                 );
               })}
@@ -507,31 +486,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textSecondary,
     marginBottom: 12,
-  },
-
-  actualRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  actualField: {
-    flex: 1,
-  },
-
-  actualLabel: {
-    fontSize: 11,
-    color: Colors.textSecondary,
-    marginBottom: 4,
-  },
-
-  actualInput: {
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: Colors.surface,
-    textAlign: "center",
-    fontSize: 13,
-    fontWeight: "600",
-    color: Colors.text,
   },
 
   rpeRow: {

@@ -12,6 +12,7 @@ import WellnessReport from "../../../../components/wellness-report";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
+import { getProgrammesForCoachAndSportif, Programme } from "../../../../services/programmes";
 import { getRelation, Relation } from "../../../../services/relations";
 import {
   getSessionsForCoach,
@@ -26,6 +27,7 @@ export default function SportifDetailScreen() {
   const [relation, setRelation] = useState<Relation | null | undefined>(undefined);
   const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
+  const [programmes, setProgrammes] = useState<Programme[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -75,6 +77,13 @@ export default function SportifDetailScreen() {
           setWellness(wellnessData);
         } catch {
           setWellness([]);
+        }
+
+        try {
+          const programmeData = await getProgrammesForCoachAndSportif(coachId, id);
+          setProgrammes(programmeData);
+        } catch {
+          setProgrammes([]);
         }
       } else {
         setSessions([]);
@@ -236,6 +245,19 @@ export default function SportifDetailScreen() {
       >
         <Ionicons name="analytics-outline" size={20} color={Colors.primary} />
         <Text style={styles.evaluationLinkText}>Task Analysis</Text>
+        <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.evaluationLink}
+        onPress={() =>
+          programmes.length > 0
+            ? router.push(`/coach/programme/${programmes[0].id}`)
+            : router.push("/coach/programmes")
+        }
+      >
+        <Ionicons name="barbell-outline" size={20} color={Colors.primary} />
+        <Text style={styles.evaluationLinkText}>Programme</Text>
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
 

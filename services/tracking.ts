@@ -89,13 +89,27 @@ export async function getMySportifs(coachUid: string): Promise<SportifSummary[]>
   }));
 }
 
+export type SetLog = {
+  repetitions: string;
+  charge: string;
+};
+
 export type ExerciseLog = {
   exerciceNom: string;
   seriesPrescrites: string;
   repetitionsPrescrites: string;
+  // seriesReelles/repetitionsReelles/chargeReelle restent le résumé agrégé
+  // (nombre de séries réellement faites, charge max de la séance...) —
+  // c'est ce que lisent detectPersonalRecords et tous les graphiques de
+  // progression existants, donc on continue de les remplir même quand
+  // `sets` est renseigné, pour ne rien casser sur les séances déjà
+  // enregistrées avant l'ajout de la saisie série par série.
   seriesReelles: string;
   repetitionsReelles: string;
   chargeReelle: string;
+  // Détail série par série (Hevy-like) — absent sur les séances enregistrées
+  // avant cet ajout, donc toujours optionnel.
+  sets?: SetLog[];
   complete: boolean;
 };
 

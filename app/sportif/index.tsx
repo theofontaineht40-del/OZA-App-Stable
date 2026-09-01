@@ -166,6 +166,7 @@ export default function SportifHome() {
               workoutName={nextSeance.nom}
               subtitle={programmes[0]?.nom}
               exercises={getSeanceExerciseNames(nextSeance)}
+              muscles={nextSeance.muscles}
               onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
             />
           ) : (

@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { MuscleGroup } from "./muscle-groups";
+import { MuscleId } from "./muscle-selection";
 
 export type MusclePath = { id: string; name: string; path: string };
 
@@ -152,6 +153,55 @@ export function zonesForGroups(groups: MuscleGroup[]): Set<string> {
   const zones = new Set<string>();
   for (const group of groups) {
     for (const zone of MUSCLE_GROUP_ZONES[group] ?? []) zones.add(zone);
+  }
+  return zones;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pont entre la sélection manuelle de muscles (constants/muscle-selection.ts,
+// 20 muscles) et les mêmes zones fines — système séparé de MUSCLE_GROUP_ZONES
+// ci-dessus (celui-ci reste utilisé tel quel pour la déduction automatique à
+// partir des exercices, voir constants/exercise-muscles.ts). Plus fin que les
+// 12 groupes grossiers (ex : 3 zones de deltoïde distinctes).
+//
+// "Rhomboïdes", "Petit pectoral" et "Transverse" n'ont pas de tracé dédié
+// dans les données sources (muscles profonds/non visibles à cette échelle) :
+// on réutilise la zone visible anatomiquement la plus proche plutôt que de
+// n'allumer rien du tout quand le coach les sélectionne.
+export const MUSCLE_ID_ZONES: Record<MuscleId, string[]> = {
+  quadriceps: ["quads"],
+  ischio_jambiers: ["hamstrings-medial", "hamstrings-lateral"],
+  fessiers: ["gluteus-maximus", "gluteus-medius"],
+  mollets: ["calves-gastroc-medial", "calves-gastroc-lateral", "calves-soleus"],
+  adducteurs: ["adductors"],
+
+  grand_dorsal: ["lats-upper", "lats-mid", "lats-lower"],
+  trapezes: ["traps-upper", "traps-mid", "traps-lower"],
+  rhomboides: ["traps-mid", "lats-upper"], // approximation, voir note ci-dessus
+  erecteurs_rachis: ["lower-back-erectors", "lower-back-ql", "spine"],
+
+  grand_pectoral: ["chest-upper", "chest-lower"],
+  petit_pectoral: ["chest-upper"], // approximation, voir note ci-dessus
+
+  deltoide_anterieur: ["shoulder-front"],
+  deltoide_moyen: ["shoulder-side"],
+  deltoide_posterieur: ["deltoid-rear"],
+
+  biceps: ["biceps"],
+  triceps: ["triceps-long", "triceps-lateral"],
+  avant_bras: ["forearm", "forearm-flexors", "forearm-extensors"],
+
+  grand_droit: ["abs-upper", "abs-lower"],
+  obliques: ["obliques"],
+  transverse: ["abs-lower", "obliques"], // approximation, voir note ci-dessus
+};
+
+// Ensemble des zones de base à mettre en évidence pour une sélection de
+// muscles (nouveau système manuel).
+export function zonesForMuscleIds(ids: MuscleId[]): Set<string> {
+  const zones = new Set<string>();
+  for (const id of ids) {
+    for (const zone of MUSCLE_ID_ZONES[id] ?? []) zones.add(zone);
   }
   return zones;
 }

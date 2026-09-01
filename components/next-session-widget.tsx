@@ -4,28 +4,44 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "../constants/colors";
 import { getUniqueMuscles, NamedExercise } from "../constants/exercise-muscles";
 import { MUSCLE_LABELS } from "../constants/muscle-groups";
+import { zonesForGroups, zonesForMuscleIds } from "../constants/muscle-paths";
+import { MUSCLE_ID_LABELS, MuscleId } from "../constants/muscle-selection";
 import MuscleMap from "./muscle-map-detailed";
 
 // Widget riche pour la ligne "Prochaine séance" de l'accueil sportif —
 // remplace le ListRow générique par la silhouette anatomique SVG face/dos
-// (components/muscle-map-detailed.tsx) mettant en évidence les groupes
-// musculaires réellement travaillés par les exercices de la séance à venir
-// (exercises → muscles, voir constants/exercise-muscles.ts). Le MuscleMap
-// est l'élément visuel principal de la carte, pas un simple accent.
+// (components/muscle-map-detailed.tsx). Source des muscles affichés, par
+// ordre de priorité :
+//  1. la sélection manuelle du coach sur la séance (`muscles`, tableau même
+//     vide) — jamais complétée automatiquement ;
+//  2. à défaut (`muscles === undefined`, séance créée avant cette
+//     fonctionnalité) : l'ancienne déduction depuis les exercices.
 export default function NextSessionWidget({
   workoutName,
   subtitle,
   duration,
   exercises,
+  muscles,
   onPress,
 }: {
   workoutName: string;
   subtitle?: string;
   duration?: string;
   exercises: NamedExercise[];
+  muscles?: MuscleId[];
   onPress: () => void;
 }) {
-  const targetedLabels = getUniqueMuscles(exercises).map((group) => MUSCLE_LABELS[group]);
+  const hasManualSelection = muscles !== undefined;
+  const activeZones = hasManualSelection
+    ? zonesForMuscleIds(muscles)
+    : zonesForGroups(getUniqueMuscles(exercises));
+  const targetedLabels = Array.from(
+    new Set(
+      hasManualSelection
+        ? muscles.map((id) => MUSCLE_ID_LABELS[id])
+        : getUniqueMuscles(exercises).map((group) => MUSCLE_LABELS[group])
+    )
+  );
 
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.85} onPress={onPress}>
@@ -34,7 +50,7 @@ export default function NextSessionWidget({
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
 
       <View style={styles.mapWrap}>
-        <MuscleMap exercises={exercises} width={100} cropBottom={6} />
+        <MuscleMap activeZones={activeZones} width={100} cropBottom={6} />
       </View>
 
       {targetedLabels.length > 0 && (

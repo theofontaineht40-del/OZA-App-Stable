@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import { MuscleId } from "../constants/muscle-selection";
 
 export type ChargeType = "1rm" | "rpe" | "libre";
 
@@ -41,6 +42,13 @@ export type Seance = {
   id: string;
   nom: string;
   blocs: Bloc[];
+  // Sélection manuelle des muscles sollicités (constants/muscle-selection.ts)
+  // — indépendante du nom de la séance et des exercices. `undefined` sur les
+  // séances créées avant cette fonctionnalité : le rendu retombe alors sur
+  // l'ancienne déduction automatique à partir des exercices (voir
+  // components/next-session-widget.tsx). Un tableau vide, lui, veut dire
+  // "le coach n'a rien sélectionné" et n'affiche donc rien.
+  muscles?: MuscleId[];
 };
 
 export type Programme = {
@@ -62,7 +70,10 @@ export function newBloc(): Bloc {
 }
 
 export function newSeance(index: number): Seance {
-  return { id: newId(), nom: `Séance ${index}`, blocs: [] };
+  // `muscles: []` (et non `undefined`) dès la création : une séance neuve
+  // utilise le système de sélection manuelle dès le départ, jamais la
+  // déduction automatique historique — voir le commentaire sur Seance.muscles.
+  return { id: newId(), nom: `Séance ${index}`, blocs: [], muscles: [] };
 }
 
 export function newBlocExercice(exercice: {

@@ -3,21 +3,18 @@ import { Animated, StyleSheet, View } from "react-native";
 import Svg, { G, Path } from "react-native-svg";
 
 import { Colors } from "../constants/colors";
-import { getUniqueMuscles, NamedExercise } from "../constants/exercise-muscles";
-import {
-  BACK_MUSCLE_PATHS,
-  FRONT_MUSCLE_PATHS,
-  baseZoneId,
-  zonesForGroups,
-} from "../constants/muscle-paths";
+import { BACK_MUSCLE_PATHS, FRONT_MUSCLE_PATHS, baseZoneId } from "../constants/muscle-paths";
 
 // Silhouette anatomique face + dos rendue en SVG natif (react-native-svg),
 // ~90 zones (pecs haut/bas, deltoïde avant/latéral/arrière, lats haut/milieu/
-// bas, triceps long/latéral, ischios médial/latéral…). Remplace l'empilement
-// de PNG de components/muscle-map.tsx : mêmes props (`exercises`), donc
-// interchangeable, mais couverture complète des 12 groupes et tracé vectoriel
-// qui reste net à toute taille. Tracés extraits de `body-muscles` (Apache-2.0,
-// voir constants/muscle-paths.ts).
+// bas, triceps long/latéral, ischios médial/latéral…). Tracés extraits de
+// `body-muscles` (Apache-2.0, voir constants/muscle-paths.ts).
+//
+// Volontairement indifférent à la SOURCE des muscles actifs : ce composant
+// ne fait qu'allumer les zones qu'on lui donne (`activeZones`, des id de
+// base comme "quads" ou "shoulder-front"). L'appelant décide s'il vient de
+// la sélection manuelle du coach ou, à défaut, de la déduction automatique
+// à partir des exercices — voir components/next-session-widget.tsx.
 const AnimatedG = Animated.createAnimatedComponent(G);
 
 // Les tracés bruts laissent ~5 unités de vide entre la vue de face
@@ -32,30 +29,29 @@ const NEUTRAL_FILL = "rgba(11, 31, 30, 0.12)";
 const OUTLINE = "rgba(255, 255, 255, 0.9)";
 
 export default function MuscleMapDetailed({
-  exercises,
+  activeZones,
   width = 78,
   // Rogne le bas du cadre (unités SVG, tête→pieds = 92.8) : à taille de
   // widget égale, cacher chevilles/pieds laisse le reste du personnage
   // occuper plus de place.
   cropBottom = 0,
 }: {
-  exercises: NamedExercise[];
+  activeZones: Set<string>;
   width?: number;
   cropBottom?: number;
 }) {
   const contentH = CONTENT_H - cropBottom;
   const viewBox = `0 0 ${CONTENT_W} ${contentH}`;
   const viewBoxRatio = contentH / CONTENT_W;
-  const exercisesKey = exercises.map((e) => e.id ?? e.name).join("|");
+  const zonesKey = Array.from(activeZones).sort().join("|");
 
   const { activeFront, activeBack } = useMemo(() => {
-    const zones = zonesForGroups(getUniqueMuscles(exercises));
     return {
-      activeFront: FRONT_MUSCLE_PATHS.filter((p) => zones.has(baseZoneId(p.id))),
-      activeBack: BACK_MUSCLE_PATHS.filter((p) => zones.has(baseZoneId(p.id))),
+      activeFront: FRONT_MUSCLE_PATHS.filter((p) => activeZones.has(baseZoneId(p.id))),
+      activeBack: BACK_MUSCLE_PATHS.filter((p) => activeZones.has(baseZoneId(p.id))),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exercisesKey]);
+  }, [zonesKey]);
 
   const reveal = useRef(new Animated.Value(0)).current;
 
@@ -68,7 +64,7 @@ export default function MuscleMapDetailed({
       // react-native-svg n'anime pas via le driver natif.
       useNativeDriver: false,
     }).start();
-  }, [exercisesKey, reveal]);
+  }, [zonesKey, reveal]);
 
   return (
     <View style={[styles.wrap, { width, height: width * viewBoxRatio }]}>

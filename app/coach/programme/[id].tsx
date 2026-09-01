@@ -18,10 +18,12 @@ import ExercisePickerModal from "../../../components/exercise-picker-modal";
 import { MovementIllustration } from "../../../components/exercise-illustrations";
 import ImagePreviewModal from "../../../components/image-preview-modal";
 import InlineLoopingVideo from "../../../components/inline-looping-video";
+import MuscleSelector from "../../../components/muscle-selector";
 import PhotoBackground from "../../../components/photo-background";
 import VideoPreviewModal from "../../../components/video-preview-modal";
 import { Colors } from "../../../constants/colors";
 import { BLOC_COLORS, EXERCISE_LIBRARY, ExerciseTemplate } from "../../../constants/exercise-library";
+import { MuscleId } from "../../../constants/muscle-selection";
 import { auth } from "../../../firebase";
 import { usePrincipalAccess } from "../../../hooks/use-principal-access";
 import {
@@ -128,6 +130,19 @@ export default function ProgrammeEditorScreen() {
       [copy[index], copy[target]] = [copy[target], copy[index]];
       return copy;
     });
+  }
+
+  function handleToggleMuscle(muscleId: MuscleId) {
+    updateSeances((seances) =>
+      seances.map((s) => {
+        if (s.id !== activeSeance.id) return s;
+        const current = s.muscles ?? [];
+        const next = current.includes(muscleId)
+          ? current.filter((m) => m !== muscleId)
+          : [...current, muscleId];
+        return { ...s, muscles: next };
+      })
+    );
   }
 
   function handleDeleteSeance() {
@@ -311,6 +326,8 @@ export default function ProgrammeEditorScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <MuscleSelector selected={activeSeance.muscles ?? []} onToggle={handleToggleMuscle} />
+
         {activeSeance.blocs.map((bloc, index) => (
           <BlocCard
             key={bloc.id}

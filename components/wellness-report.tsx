@@ -93,7 +93,7 @@ export default function WellnessReport({
 
   const avg7 = average(entriesDesc.slice(0, 7).map((e) => e.score));
   const avg28 = average(entriesDesc.slice(0, 28).map((e) => e.score));
-  const personalBaseline = history.length >= 4 ? average(history.slice(0, 28).map((e) => e.score)) : null;
+  const personalBaseline = history.length >= 3 ? average(history.slice(0, 28).map((e) => e.score)) : null;
   const deltaVs28 = latest && avg28 > 0 ? latest.score - avg28 : 0;
 
   const globalStatus: WellnessStatus | null = latest
@@ -120,7 +120,7 @@ export default function WellnessReport({
       latest
         ? VARIABLES.map((v) => {
             const varHistory = history.map((e) => e[v.key]);
-            const baseline = varHistory.length >= 4 ? average(varHistory.slice(0, 28)) : null;
+            const baseline = varHistory.length >= 3 ? average(varHistory.slice(0, 28)) : null;
             const value = latest[v.key];
             const status = wellnessStatus(value, baseline);
             const trend = detectConsecutiveTrend(
@@ -168,7 +168,7 @@ export default function WellnessReport({
   };
 
   const ozaCase: OzaCase | null = useMemo(() => {
-    if (!latest || !hasLoadHistory || history.length < 4) return null;
+    if (!latest || !hasLoadHistory || history.length < 3) return null;
 
     if (wellnessDown && loadDanger) {
       return { icon: "🔴", headline: "Vigilance renforcée sur la récupération", showSuggestion: true };

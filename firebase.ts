@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, initializeAuth } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  indexedDBLocalPersistence,
+  initializeAuth,
+} from "firebase/auth";
 // `getReactNativePersistence` existe bien à l'exécution (résolu par Metro via
 // la condition d'export "react-native" du package firebase/auth) mais tsc,
 // qui ne suit que la résolution Node par défaut, ne voit que les types web —
@@ -22,15 +27,24 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// getAuth() seul persiste bien la session sur le web (localStorage par
-// défaut) mais PAS sur iOS/Android : sans persistance explicite, le SDK
-// Firebase Auth reste en mémoire sur React Native et l'utilisateur se
-// retrouve déconnecté à chaque redémarrage de l'app — d'où "je dois
-// retaper mon mot de passe à chaque fois". initializeAuth + AsyncStorage
-// règle ça sur natif ; le web garde son comportement par défaut inchangé.
+// getAuth() par défaut choisit IndexedDB en silence, sans repli si ce stockage
+// est indisponible ou bloqué — exactement le cas d'une PWA ajoutée à l'écran
+// d'accueil iOS, où WebKit peut refuser ou vider IndexedDB pour ce contexte
+// "standalone" sans lever d'erreur visible : la session Firebase se
+// retrouvait alors simplement en mémoire, perdue à chaque fermeture. On donne
+// donc explicitement une liste de secours (IndexedDB → localStorage →
+// sessionStorage) : le SDK teste chacune et retient la première qui marche
+// vraiment, au lieu de supposer que la première choisie fonctionne.
+//
+// Limite à connaître : si iOS applique son nettoyage de stockage après 7
+// jours sans ouverture de l'app (ITP), AUCUNE stratégie côté code ne peut
+// l'empêcher — c'est une politique de confidentialité de Safari, pas un bug.
+// Seule une vraie app native (hors PWA) y échappe.
 export const auth =
   Platform.OS === "web"
-    ? getAuth(app)
+    ? initializeAuth(app, {
+        persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
+      })
     : initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 
 export const db = getFirestore(app);

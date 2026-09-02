@@ -218,6 +218,21 @@ function sanitizeFileName(name: string): string {
   return name.replace(/[^\p{L}\p{N}\- _]/gu, "").trim() || "programme";
 }
 
+// Safari iOS (et surtout la PWA "standalone" ajoutée à l'écran d'accueil)
+// ignore ou bloque en silence le téléchargement direct qu'utilise
+// canvasToPdfDownload ailleurs (clic simulé sur un <a download> pointant
+// vers un blob) : le bouton ne fait rien, sans erreur — voir
+// downloadProgrammePdf ci-dessous pour le contournement.
+function isIOSWeb(): boolean {
+  if (Platform.OS !== "web" || typeof navigator === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    // iPadOS 13+ s'annonce comme "MacIntel" en desktop mode ; le tactile le
+    // trahit (un vrai Mac n'a pas de maxTouchPoints > 1).
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
 type Range = { top: number; bottom: number };
 
 type RenderedProgramme = {
@@ -313,7 +328,8 @@ function findPageBreak(naiveEnd: number, cursor: number, canvasHeight: number, r
 // du download via pdf.save().
 async function canvasToPdfDownload(
   { canvas, noSplitRanges }: RenderedProgramme,
-  fileName: string
+  fileName: string,
+  preOpenedWindow: Window | null = null
 ): Promise<void> {
   // Import direct du build ESM navigateur : le "main" du package pointe vers
   // le build Node (require() dynamique que Metro ne sait pas transformer),
@@ -350,6 +366,16 @@ async function canvasToPdfDownload(
     firstPage = false;
   }
 
+  // Sur iOS, le clic simulé sur <a download> (ce que fait pdf.save() en
+  // interne) est ignoré par Safari — on pointe à la place l'onglet ouvert
+  // en amont (encore dans le geste utilisateur, voir isIOSWeb) vers le
+  // blob : Safari l'affiche dans son lecteur PDF natif, avec un bouton
+  // "Partager" qui propose "Enregistrer dans Fichiers".
+  if (preOpenedWindow && !preOpenedWindow.closed) {
+    preOpenedWindow.location.href = String(pdf.output("bloburl"));
+    return;
+  }
+
   pdf.save(`${fileName}.pdf`);
 }
 
@@ -360,28 +386,41 @@ async function canvasToPdfDownload(
 // html2canvas, puis jsPDF assemble les pages et déclenche un vrai
 // téléchargement de fichier .pdf, sans boîte de dialogue d'impression.
 export async function downloadProgrammePdf(programme: Programme): Promise<void> {
-  const [photosByExerciceId, coachProfile] = await Promise.all([
-    buildPhotoMap(programme.coachId),
-    getCoachProfile(programme.coachId),
-  ]);
-  const coachInfo: PdfCoachInfo | null = coachProfile
-    ? { nom: `${coachProfile.firstName} ${coachProfile.lastName}`.trim(), entreprise: coachProfile.entreprise }
-    : null;
-  const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
+  // Doit s'exécuter avant le premier `await` : c'est ce qui garde cet appel
+  // dans le geste utilisateur synchrone du clic. Une fois qu'on a `await`é
+  // quoi que ce soit, Safari ne considère plus un `window.open()` ultérieur
+  // comme fiable et le bloque en pop-up.
+  const preOpenedWindow = isIOSWeb() ? window.open("", "_blank") : null;
 
-  if (Platform.OS === "web") {
-    const rendered = await renderHtmlToCanvas(html);
-    await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom));
-    return;
-  }
+  try {
+    const [photosByExerciceId, coachProfile] = await Promise.all([
+      buildPhotoMap(programme.coachId),
+      getCoachProfile(programme.coachId),
+    ]);
+    const coachInfo: PdfCoachInfo | null = coachProfile
+      ? { nom: `${coachProfile.firstName} ${coachProfile.lastName}`.trim(), entreprise: coachProfile.entreprise }
+      : null;
+    const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
 
-  const { uri } = await Print.printToFileAsync({ html });
-  const Sharing = await import("expo-sharing");
-  if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(uri, {
-      mimeType: "application/pdf",
-      dialogTitle: programme.nom,
-      UTI: "com.adobe.pdf",
-    });
+    if (Platform.OS === "web") {
+      const rendered = await renderHtmlToCanvas(html);
+      await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom), preOpenedWindow);
+      return;
+    }
+
+    const { uri } = await Print.printToFileAsync({ html });
+    const Sharing = await import("expo-sharing");
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(uri, {
+        mimeType: "application/pdf",
+        dialogTitle: programme.nom,
+        UTI: "com.adobe.pdf",
+      });
+    }
+  } catch (error) {
+    // Referme l'onglet vide plutôt que de le laisser planté si la
+    // génération échoue avant d'avoir pu le pointer vers le PDF.
+    preOpenedWindow?.close();
+    throw error;
   }
 }

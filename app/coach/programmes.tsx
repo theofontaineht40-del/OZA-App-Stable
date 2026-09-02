@@ -122,8 +122,13 @@ export default function ProgrammesScreen() {
     setDownloadingId(programme.id);
     try {
       await downloadProgrammePdf(programme);
-    } catch {
-      showAlert("Téléchargement impossible", "Réessayez dans quelques instants.");
+    } catch (error) {
+      // Le message précis est temporairement inclus dans l'alerte (pas
+      // seulement en console) le temps de diagnostiquer les échecs signalés
+      // en prod — à remettre en message générique une fois la cause connue.
+      console.error("Échec du téléchargement PDF :", error);
+      const detail = error instanceof Error ? error.message : String(error);
+      showAlert("Téléchargement impossible", detail);
     } finally {
       setDownloadingId(null);
     }

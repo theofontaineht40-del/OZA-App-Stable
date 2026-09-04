@@ -51,7 +51,20 @@ service cloud.firestore {
     // connectés ; seul le propriétaire peut modifier sa propre fiche.
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      // Un coach peut aussi créer/modifier un profil "sportif géré" pour un
+      // client sans compte (ex. public senior) : celui-ci n'a alors aucun
+      // accès à l'app, tout passe par son coach — voir
+      // services/relations.ts::createManagedSportif.
+      allow create: if isSignedIn() && (
+        request.auth.uid == userId ||
+        (request.resource.data.role == "sportif" &&
+          request.resource.data.managed == true &&
+          request.resource.data.coachId == request.auth.uid)
+      );
+      allow update: if isSignedIn() && (
+        request.auth.uid == userId ||
+        (resource.data.managed == true && resource.data.coachId == request.auth.uid)
+      );
       allow delete: if false;
     }
 
@@ -62,8 +75,23 @@ service cloud.firestore {
         resource.data.sportifId == request.auth.uid ||
         resource.data.coachId == request.auth.uid
       );
-      allow create: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.sportifId == request.auth.uid;
+      // Un coach peut aussi créer directement la relation "principal" pour un
+      // sportif géré qu'il vient de créer (voir /users ci-dessus) : le profil
+      // référencé doit déjà exister, être marqué managed=true et lui
+      // appartenir — impossible de s'auto-attribuer un sportif existant.
+      allow create: if isSignedIn() && (
+        request.resource.data.sportifId == request.auth.uid ||
+        (request.resource.data.type == "principal" &&
+          request.resource.data.coachId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(request.resource.data.sportifId)).data.managed == true &&
+          get(/databases/$(database)/documents/users/$(request.resource.data.sportifId)).data.coachId == request.auth.uid)
+      );
+      allow update, delete: if isSignedIn() && (
+        resource.data.sportifId == request.auth.uid ||
+        (resource.data.type == "principal" &&
+          resource.data.coachId == request.auth.uid &&
+          get(/databases/$(database)/documents/users/$(resource.data.sportifId)).data.managed == true)
+      );
     }
 
     // ── Programmes d'entraînement ──

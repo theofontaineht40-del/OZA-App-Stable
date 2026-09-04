@@ -124,6 +124,47 @@ export async function setPrincipalCoach(
   );
 }
 
+// Crée un profil sportif directement depuis l'espace coach, sans compte ni
+// mot de passe — pour un client qui n'utilisera jamais l'app lui-même (ex.
+// public senior peu à l'aise avec le smartphone). Le coach saisit tout à sa
+// place (séances via app/coach/sportif/[id]/nouvelle-seance.tsx, bilans...).
+// `users/{id}` est créé en premier, la relation "principal" ensuite : les
+// règles Firestore de la relation vérifient que le sportif référencé est
+// déjà marqué `managed: true` avec ce coach comme propriétaire.
+export async function createManagedSportif(
+  coachId: string,
+  coachFirstName: string,
+  coachLastName: string,
+  firstName: string,
+  lastName: string
+): Promise<string> {
+  const userRef = doc(collection(db, "users"));
+  await setDoc(userRef, {
+    firstName,
+    lastName,
+    role: "sportif",
+    coachId,
+    coachFirstName,
+    coachLastName,
+    managed: true,
+    createdAt: new Date(),
+  });
+
+  await setDoc(doc(db, "relations", relationId(userRef.id, coachId)), {
+    sportifId: userRef.id,
+    sportifFirstName: firstName,
+    sportifLastName: lastName,
+    coachId,
+    coachFirstName,
+    coachLastName,
+    type: "principal",
+    specialite: null,
+    createdAt: new Date(),
+  });
+
+  return userRef.id;
+}
+
 export async function addSpecialiste(
   sportifId: string,
   sportifFirstName: string,

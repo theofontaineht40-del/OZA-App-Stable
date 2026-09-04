@@ -72,6 +72,10 @@ export type SportifSummary = {
   uid: string;
   firstName: string;
   lastName: string;
+  // Profil créé par le coach lui-même (services/relations.ts::createManagedSportif),
+  // sans compte ni accès à l'app — pour les clients qui ne l'utiliseront jamais
+  // eux-mêmes (ex. public senior). Le coach saisit tout à sa place.
+  managed?: boolean;
 };
 
 export async function getMySportifs(coachUid: string): Promise<SportifSummary[]> {
@@ -86,6 +90,7 @@ export async function getMySportifs(coachUid: string): Promise<SportifSummary[]>
     uid: d.id,
     firstName: d.data().firstName,
     lastName: d.data().lastName,
+    managed: d.data().managed ?? false,
   }));
 }
 

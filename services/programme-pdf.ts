@@ -118,55 +118,71 @@ export function buildProgrammePdfHtml(
           * { box-sizing: border-box; }
           body {
             font-family: -apple-system, Helvetica, Arial, sans-serif;
-            color: #111111;
+            color: #101C1B;
             padding: 32px;
             margin: 0;
           }
           .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 3px solid #FF2D7A;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background:
+              radial-gradient(circle at 0% 0%, #0B2E2D 0%, #14B8A6 32%, rgba(20,184,166,0.18) 55%, #F6F4EE 78%);
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            min-height: 92px;
           }
-          .logo { font-size: 22px; font-weight: 800; color: #FF2D7A; letter-spacing: 1px; }
-          .meta { text-align: right; font-size: 12px; color: #666666; line-height: 1.5; }
-          .meta strong { color: #111111; }
-          h1 { font-size: 20px; margin: 0 0 4px; }
-          .subtitle { font-size: 13px; color: #666666; margin: 0 0 24px; }
+          .header-dots {
+            position: absolute;
+            top: 18px;
+            left: 22px;
+            width: 64px;
+            height: 64px;
+            background-image: radial-gradient(rgba(255,255,255,0.6) 1.4px, transparent 1.4px);
+            background-size: 11px 11px;
+          }
+          .header-lines { position: absolute; top: -10px; right: -10px; }
+          .meta { position: relative; text-align: right; font-size: 12px; color: #0B2E2D; line-height: 1.6; }
+          .meta strong { color: #0B2E2D; font-size: 14px; }
+          h1 { font-size: 22px; margin: 0 0 4px; color: #101C1B; }
+          .subtitle { font-size: 13px; color: #667771; margin: 0 0 24px; }
           h2 {
             font-size: 15px;
-            background: #FF2D7A;
+            background: #14B8A6;
             color: #FFFFFF;
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin: 24px 0 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 24px 0 14px;
             break-after: avoid;
           }
           .seance { break-inside: avoid-page; }
           .seance:first-of-type h2 { margin-top: 0; }
           .bloc {
-            border-left: 4px solid #FF2D7A;
-            padding-left: 12px;
-            margin-bottom: 18px;
+            background: #FFFFFF;
+            border: 1px solid #E4EFEC;
+            border-left: 4px solid #14B8A6;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
             break-inside: avoid-page;
           }
           .bloc h3 { font-size: 13px; margin: 0 0 8px; }
-          .objectif { font-weight: 400; color: #666666; }
+          .objectif { font-weight: 400; color: #667771; }
 
           table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 10.5px; }
           col.col-exercice { width: 34%; }
           col.col-stat { width: 11%; }
-          th, td { padding: 6px 6px; border-bottom: 1px solid #F0F0F0; text-align: center; }
+          th, td { padding: 6px 4px; border-bottom: 1px solid #F0F0F0; text-align: center; }
           th.col-exercice, td.col-exercice { text-align: left; }
           th {
-            font-size: 9px;
+            font-size: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.2px;
             color: #888888;
             border-bottom: 1px solid #E0E0E0;
             font-weight: 600;
+            overflow: hidden;
+            white-space: nowrap;
           }
           td.col-stat { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
@@ -194,7 +210,13 @@ export function buildProgrammePdfHtml(
       </head>
       <body>
         <div class="header">
-          <div class="logo">OZA</div>
+          <div class="header-dots"></div>
+          <svg class="header-lines" width="220" height="150" viewBox="0 0 220 150">
+            <line x1="120" y1="-10" x2="240" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
+            <line x1="150" y1="-10" x2="270" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
+            <line x1="180" y1="-10" x2="300" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
+            <circle cx="170" cy="55" r="55" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="1" fill="none" />
+          </svg>
           <div class="meta">
             ${coachInfo?.nom ? `<div><strong>${escapeHtml(coachInfo.nom)}</strong></div>` : ""}
             ${coachInfo?.entreprise ? `<div>${escapeHtml(coachInfo.entreprise)}</div>` : ""}

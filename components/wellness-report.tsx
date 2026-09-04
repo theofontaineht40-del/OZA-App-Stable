@@ -53,7 +53,7 @@ const STATUS_COLOR: Record<WellnessStatus, string> = {
   red: Colors.riskHigh,
 };
 
-const WINDOWS = [7, 28, 90] as const;
+const WINDOWS = [7, 28, 90, "all"] as const;
 type WindowDays = (typeof WINDOWS)[number];
 
 function pct(n: number): string {
@@ -102,8 +102,7 @@ export default function WellnessReport({
 
   const windowEntries = useMemo(
     () =>
-      entriesDesc
-        .filter((e) => daysAgo(e.date, windowDays))
+      (windowDays === "all" ? entriesDesc : entriesDesc.filter((e) => daysAgo(e.date, windowDays)))
         .slice()
         .reverse(), // chronologique pour le graphique
     [entriesDesc, windowDays]
@@ -251,7 +250,7 @@ export default function WellnessReport({
             onPress={() => setWindowDays(w)}
           >
             <Text style={[styles.windowTabText, windowDays === w && styles.windowTabTextActive]}>
-              {w}j
+              {w === "all" ? "Tout" : `${w}j`}
             </Text>
           </TouchableOpacity>
         ))}

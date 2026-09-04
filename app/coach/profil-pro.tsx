@@ -23,8 +23,10 @@ import { auth } from "../../firebase";
 import {
   CoachProfile,
   getCoachProfile,
+  removeCoachStructureLogo,
   updateCoachPublicProfile,
   uploadCoachPhoto,
+  uploadCoachStructureLogo,
 } from "../../services/discovery";
 
 function toggle<T>(list: T[], value: T): T[] {
@@ -36,9 +38,12 @@ export default function ProfilProScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [cropUri, setCropUri] = useState<string | null>(null);
+  const [cropTarget, setCropTarget] = useState<"photo" | "logo">("photo");
 
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [structureLogoUrl, setStructureLogoUrl] = useState<string | null>(null);
   const [bio, setBio] = useState("");
   const [specialites, setSpecialites] = useState<Specialite[]>([]);
   const [tarifHoraire, setTarifHoraire] = useState("");
@@ -57,6 +62,7 @@ export default function ProfilProScreen() {
         const profile = await getCoachProfile(user.uid);
         if (profile) {
           setPhotoUrl(profile.photoUrl);
+          setStructureLogoUrl(profile.structureLogoUrl);
           setBio(profile.bio);
           setSpecialites(profile.specialites);
           setTarifHoraire(profile.tarifHoraire ? String(profile.tarifHoraire) : "");
@@ -86,12 +92,42 @@ export default function ProfilProScreen() {
       aspect: [1, 1],
     });
     if (result.canceled) return;
+    setCropTarget("photo");
     setCropUri(result.assets[0].uri);
+  }
+
+  async function handlePickLogo() {
+    if (!uid) return;
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
+    if (result.canceled) return;
+    setCropTarget("logo");
+    setCropUri(result.assets[0].uri);
+  }
+
+  async function handleRemoveLogo() {
+    if (!uid) return;
+    setStructureLogoUrl(null);
+    await removeCoachStructureLogo(uid);
   }
 
   async function handleCropConfirm(croppedUri: string) {
     setCropUri(null);
     if (!uid) return;
+    if (cropTarget === "logo") {
+      setUploadingLogo(true);
+      try {
+        const url = await uploadCoachStructureLogo(uid, croppedUri);
+        setStructureLogoUrl(url);
+      } finally {
+        setUploadingLogo(false);
+      }
+      return;
+    }
     setUploadingPhoto(true);
     try {
       const url = await uploadCoachPhoto(uid, croppedUri);
@@ -178,6 +214,34 @@ export default function ProfilProScreen() {
       <Text style={styles.fieldLabel}>Entreprise / studio (optionnel)</Text>
       <TextInput
   placeholderTextColor={Colors.textSecondary} style={styles.input} placeholder="Ex: OZA Coaching" value={entreprise} onChangeText={setEntreprise} />
+
+      <Text style={styles.fieldLabel}>Logo de votre salle (optionnel)</Text>
+      <Text style={styles.fieldHint}>
+        Remplace la décoration par défaut sur les programmes que vous téléchargez en PDF.
+      </Text>
+      <View style={styles.logoRow}>
+        <TouchableOpacity style={styles.logoPicker} onPress={handlePickLogo} disabled={uploadingLogo}>
+          {uploadingLogo ? (
+            <ActivityIndicator color={Colors.primary} />
+          ) : structureLogoUrl ? (
+            <Image source={{ uri: structureLogoUrl }} style={styles.logoPreview} resizeMode="contain" />
+          ) : (
+            <Ionicons name="image-outline" size={22} color={Colors.textSecondary} />
+          )}
+        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={handlePickLogo} disabled={uploadingLogo}>
+            <Text style={styles.photoPickerText}>
+              {structureLogoUrl ? "Changer le logo" : "Ajouter un logo"}
+            </Text>
+          </TouchableOpacity>
+          {structureLogoUrl && (
+            <TouchableOpacity onPress={handleRemoveLogo} disabled={uploadingLogo}>
+              <Text style={styles.removeLogoText}>Retirer</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
 
       <Text style={styles.fieldLabel}>Tarif indicatif (€ / heure)</Text>
       <TextInput
@@ -314,6 +378,47 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.textOnDark,
     marginBottom: 8,
+  },
+
+  fieldHint: {
+    fontSize: 12,
+    color: Colors.textOnDarkSecondary,
+    marginTop: -4,
+    marginBottom: 12,
+    lineHeight: 16,
+  },
+
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginBottom: 20,
+  },
+
+  logoPicker: {
+    width: 72,
+    height: 72,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    backgroundColor: Colors.surface,
+    padding: 8,
+  },
+
+  logoPreview: {
+    width: "100%",
+    height: "100%",
+  },
+
+  removeLogoText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.riskHigh,
+    marginTop: 6,
   },
 
   input: {

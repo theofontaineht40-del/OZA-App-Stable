@@ -96,6 +96,10 @@ function seanceHtml(seance: Seance, photosByExerciceId: Map<string, string | nul
 export type PdfCoachInfo = {
   nom: string;
   entreprise: string;
+  // Logo de salle optionnel (services/discovery.ts, réglé depuis Profil
+  // professionnel) — remplace la décoration par défaut du header quand il
+  // est renseigné.
+  logoUrl: string | null;
 };
 
 export function buildProgrammePdfHtml(
@@ -142,6 +146,17 @@ export function buildProgrammePdfHtml(
             background-size: 11px 11px;
           }
           .header-lines { position: absolute; top: -10px; right: -10px; }
+          .header-logo {
+            position: absolute;
+            top: 18px;
+            left: 22px;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: #FFFFFF;
+            padding: 6px;
+          }
+          .header-logo img { width: 100%; height: 100%; object-fit: contain; }
           .meta { position: relative; text-align: right; font-size: 12px; color: #0B2E2D; line-height: 1.6; }
           .meta strong { color: #0B2E2D; font-size: 14px; }
           h1 { font-size: 22px; margin: 0 0 4px; color: #101C1B; }
@@ -210,13 +225,17 @@ export function buildProgrammePdfHtml(
       </head>
       <body>
         <div class="header">
-          <div class="header-dots"></div>
+          ${
+            coachInfo?.logoUrl
+              ? `<div class="header-logo"><img src="${escapeHtml(coachInfo.logoUrl)}" /></div>`
+              : `<div class="header-dots"></div>
           <svg class="header-lines" width="220" height="150" viewBox="0 0 220 150">
             <line x1="120" y1="-10" x2="240" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
             <line x1="150" y1="-10" x2="270" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
             <line x1="180" y1="-10" x2="300" y2="110" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1" />
             <circle cx="170" cy="55" r="55" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="1" fill="none" />
-          </svg>
+          </svg>`
+          }
           <div class="meta">
             ${coachInfo?.nom ? `<div><strong>${escapeHtml(coachInfo.nom)}</strong></div>` : ""}
             ${coachInfo?.entreprise ? `<div>${escapeHtml(coachInfo.entreprise)}</div>` : ""}
@@ -420,7 +439,11 @@ export async function downloadProgrammePdf(programme: Programme): Promise<void> 
       getCoachProfile(programme.coachId),
     ]);
     const coachInfo: PdfCoachInfo | null = coachProfile
-      ? { nom: `${coachProfile.firstName} ${coachProfile.lastName}`.trim(), entreprise: coachProfile.entreprise }
+      ? {
+          nom: `${coachProfile.firstName} ${coachProfile.lastName}`.trim(),
+          entreprise: coachProfile.entreprise,
+          logoUrl: coachProfile.structureLogoUrl,
+        }
       : null;
     const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
 

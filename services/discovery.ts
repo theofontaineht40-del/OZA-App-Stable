@@ -16,6 +16,11 @@ export type CoachProfile = {
   ville: string;
   entreprise: string;
   discoverable: boolean;
+  // Logo de la salle/structure du coach — optionnel, distinct de la photo de
+  // profil personnelle. Utilisé sur les PDF de programme générés (voir
+  // services/programme-pdf.ts) quand il est renseigné, sinon le PDF garde
+  // sa décoration par défaut.
+  structureLogoUrl: string | null;
 };
 
 function normalize(uid: string, data: any): CoachProfile {
@@ -31,6 +36,7 @@ function normalize(uid: string, data: any): CoachProfile {
     ville: data.ville ?? "",
     entreprise: data.entreprise ?? "",
     discoverable: data.discoverable ?? false,
+    structureLogoUrl: data.structureLogoUrl ?? null,
   };
 }
 
@@ -63,6 +69,21 @@ export async function uploadCoachPhoto(coachId: string, localUri: string): Promi
   const url = await getDownloadURL(fileRef);
   await setDoc(doc(db, "users", coachId), { photoUrl: url }, { merge: true });
   return url;
+}
+
+export async function uploadCoachStructureLogo(coachId: string, localUri: string): Promise<string> {
+  const response = await fetch(localUri);
+  const blob = await response.blob();
+
+  const fileRef = storageRef(storage, `coach-structure-logos/${coachId}.jpg`);
+  await uploadBytes(fileRef, blob);
+  const url = await getDownloadURL(fileRef);
+  await setDoc(doc(db, "users", coachId), { structureLogoUrl: url }, { merge: true });
+  return url;
+}
+
+export async function removeCoachStructureLogo(coachId: string): Promise<void> {
+  await setDoc(doc(db, "users", coachId), { structureLogoUrl: null }, { merge: true });
 }
 
 export async function getDiscoverableCoaches(): Promise<CoachProfile[]> {

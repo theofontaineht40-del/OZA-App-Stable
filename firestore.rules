@@ -223,7 +223,14 @@ service cloud.firestore {
         wellnessId.split("_")[0] == request.auth.uid ||
         resource.data.coachId == request.auth.uid
       );
-      allow create, update: if isSignedIn() && request.resource.data.sportifId == request.auth.uid;
+      // Le sportif peut toujours écrire son propre check-in ; son coach
+      // principal peut aussi le faire pour lui — nécessaire pour un profil
+      // géré (createManagedSportif), qui n'a lui-même aucun accès à l'app.
+      allow create, update: if isSignedIn() && (
+        request.resource.data.sportifId == request.auth.uid ||
+        (request.resource.data.coachId == request.auth.uid &&
+          isPrincipalOf(request.resource.data.sportifId))
+      );
       allow delete: if false;
     }
 

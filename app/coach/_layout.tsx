@@ -77,6 +77,7 @@ export default function CoachTabsLayout() {
       <Tabs.Screen name="sportif/[id]" options={{ href: null }} />
       <Tabs.Screen name="analyse" options={{ href: null }} />
       <Tabs.Screen name="nouvelle-seance" options={{ href: null }} />
+      <Tabs.Screen name="import-julie" options={{ href: null }} />
       <Tabs.Screen name="referentiels" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]" options={{ href: null }} />
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />

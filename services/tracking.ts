@@ -275,11 +275,15 @@ export async function addWellnessEntry(
   sportifUid: string,
   input: WellnessInput,
   coachId: string | null = null,
-  soreness: SorenessInput = EMPTY_SORENESS
+  soreness: SorenessInput = EMPTY_SORENESS,
+  // Toujours aujourd'hui pour le check-in normal (app/sportif/checkin.tsx) —
+  // un coach qui importe un historique réel (ex. depuis un tableur déjà
+  // rempli) peut passer une date passée explicite pour la reconstituer telle
+  // quelle, plutôt que tout dater du jour de l'import.
+  date: string = todayKey()
 ): Promise<number> {
   const score = computeWellnessScore(input);
   const hooper = computeHooperValues(input);
-  const date = todayKey();
 
   // Un seul enregistrement de bien-être par jour et par sportif (upsert).
   // Les champs sommeil/stress/fatigue/courbatures restent au format affiché

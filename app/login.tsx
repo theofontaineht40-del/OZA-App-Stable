@@ -16,6 +16,7 @@ import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
+import { friendlyAuthError } from "../utils/firebase-errors";
 
 const TEAL = Colors.primary;
 
@@ -57,8 +58,8 @@ export default function LoginScreen() {
       } else {
         router.push("/sportif");
       }
-    } catch (error: any) {
-      showAlert("Erreur", error.message);
+    } catch (error) {
+      showAlert("Erreur", friendlyAuthError(error));
     }
   }
 

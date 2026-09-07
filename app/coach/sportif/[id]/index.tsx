@@ -20,10 +20,15 @@ import {
   SessionRecord,
   WellnessEntry,
 } from "../../../../services/tracking";
+import { resetPassword } from "../../../../services/auth";
+import { showAlert } from "../../../../utils/alert";
+import { friendlyAuthError } from "../../../../utils/firebase-errors";
 
 export default function SportifDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [name, setName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [managed, setManaged] = useState(false);
   const [relation, setRelation] = useState<Relation | null | undefined>(undefined);
   const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
@@ -44,6 +49,8 @@ export default function SportifDetailScreen() {
         if (userSnap.exists()) {
           const data = userSnap.data();
           setName(`${data.firstName} ${data.lastName}`);
+          setEmail(data.email ?? null);
+          setManaged(data.managed ?? false);
         }
       } catch {
         // Ignoré : le nom n'est pas bloquant pour la suite.
@@ -110,6 +117,19 @@ export default function SportifDetailScreen() {
   }, [sessions]);
 
   const exerciceNames = Object.keys(progressionByExercice).sort();
+
+  async function handleResetPassword() {
+    if (!email) return;
+    try {
+      await resetPassword(email);
+      showAlert(
+        "Email envoyé",
+        `Un lien de réinitialisation vient d'être envoyé à ${email}. ${name ?? "Le sportif"} devra l'ouvrir pour choisir un nouveau mot de passe.`
+      );
+    } catch (error) {
+      showAlert("Erreur", friendlyAuthError(error));
+    }
+  }
 
   if (relation === undefined || !name) {
     return <View style={styles.container} />;
@@ -278,6 +298,16 @@ export default function SportifDetailScreen() {
         <Text style={styles.evaluationLinkText}>Messagerie</Text>
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
+
+      {/* Un profil géré (créé sans compte, voir createManagedSportif) n'a ni
+          email ni mot de passe — rien à réinitialiser. */}
+      {!managed && email && (
+        <TouchableOpacity style={styles.evaluationLink} onPress={handleResetPassword}>
+          <Ionicons name="key-outline" size={20} color={Colors.primary} />
+          <Text style={styles.evaluationLinkText}>Réinitialiser le mot de passe</Text>
+          <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+        </TouchableOpacity>
+      )}
 
       <WellnessReport entriesDesc={wellness} dailyLoads28={dailyLoads28} />
 

@@ -14,7 +14,7 @@ import { doc, getDoc } from "firebase/firestore";
 import AnimatedPressable from "../components/animated-pressable";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
-import { loginUser } from "../services/auth";
+import { loginUser, resetPassword } from "../services/auth";
 import { showAlert } from "../utils/alert";
 import { friendlyAuthError } from "../utils/firebase-errors";
 
@@ -63,6 +63,25 @@ export default function LoginScreen() {
     }
   }
 
+  async function handleForgotPassword() {
+    if (!email.trim()) {
+      showAlert(
+        "Email requis",
+        "Renseignez d'abord votre adresse email ci-dessus, puis appuyez à nouveau sur \"Mot de passe oublié ?\"."
+      );
+      return;
+    }
+    try {
+      await resetPassword(email.trim());
+      showAlert(
+        "Email envoyé",
+        `Si un compte existe pour ${email.trim()}, un lien de réinitialisation vient de lui être envoyé.`
+      );
+    } catch (error) {
+      showAlert("Erreur", friendlyAuthError(error));
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
@@ -99,6 +118,10 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
         />
+
+        <TouchableOpacity style={styles.forgotPasswordLink} onPress={handleForgotPassword}>
+          <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
 
         <AnimatedPressable style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Se connecter</Text>
@@ -159,6 +182,18 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     color: Colors.text,
     backgroundColor: Colors.surface,
+  },
+
+  forgotPasswordLink: {
+    alignSelf: "flex-end",
+    marginTop: -8,
+    marginBottom: 8,
+  },
+
+  forgotPasswordText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.primaryLight,
   },
 
   button: {

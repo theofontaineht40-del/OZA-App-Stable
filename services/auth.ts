@@ -1,5 +1,6 @@
 import {
     createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signOut,
 } from "firebase/auth";
@@ -51,4 +52,11 @@ import {
 
   export async function logoutUser() {
     await signOut(auth);
+  }
+
+  // Envoie l'email standard Firebase de réinitialisation de mot de passe —
+  // ne dit jamais si l'email existe ou non (comportement Firebase), pour ne
+  // pas révéler quels emails sont déjà des comptes.
+  export async function resetPassword(email: string): Promise<void> {
+    await sendPasswordResetEmail(auth, email);
   }

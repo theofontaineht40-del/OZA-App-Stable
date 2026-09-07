@@ -255,6 +255,39 @@ async function buildPhotoMap(coachId: string): Promise<Map<string, string | null
   return new Map(library.map((e) => [e.id, e.photoUrl ?? null]));
 }
 
+// html2canvas rasterise en lisant les pixels des <img> du DOM : une image
+// chargée depuis un domaine différent (Firebase Storage) « tache » le canvas
+// résultant quand la réponse CORS n'est pas exploitable, et
+// canvas.toDataURL() produit alors une image invalide — jsPDF échoue avec
+// "wrong PNG signature", une erreur qui ne dit rien de la vraie cause. On
+// contourne le problème en amont : chaque photo/logo est retéléchargée puis
+// convertie en data URI (aucune origine, donc jamais de canvas taché) avant
+// de construire le HTML — web uniquement, expo-print sur natif n'a pas ce
+// problème.
+async function toDataUri(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("FileReader failed"));
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    // Une photo/logo qui échoue à charger ne doit pas bloquer tout le PDF —
+    // exerciceRowHtml/le header affichent déjà un état neutre pour null.
+    return null;
+  }
+}
+
+async function toDataUriMap(map: Map<string, string | null>): Promise<Map<string, string | null>> {
+  const entries = await Promise.all(
+    Array.from(map.entries()).map(async ([id, url]) => [id, url ? await toDataUri(url) : null] as const)
+  );
+  return new Map(entries);
+}
+
 function sanitizeFileName(name: string): string {
   return name.replace(/[^\p{L}\p{N}\- _]/gu, "").trim() || "programme";
 }
@@ -445,14 +478,20 @@ export async function downloadProgrammePdf(programme: Programme): Promise<void> 
           logoUrl: coachProfile.structureLogoUrl,
         }
       : null;
-    const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
 
     if (Platform.OS === "web") {
+      const [webPhotos, webLogoUrl] = await Promise.all([
+        toDataUriMap(photosByExerciceId),
+        coachInfo?.logoUrl ? toDataUri(coachInfo.logoUrl) : Promise.resolve<string | null>(null),
+      ]);
+      const webCoachInfo = coachInfo ? { ...coachInfo, logoUrl: webLogoUrl } : null;
+      const html = buildProgrammePdfHtml(programme, webPhotos, webCoachInfo);
       const rendered = await renderHtmlToCanvas(html);
       await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom), preOpenedWindow);
       return;
     }
 
+    const html = buildProgrammePdfHtml(programme, photosByExerciceId, coachInfo);
     const { uri } = await Print.printToFileAsync({ html });
     const Sharing = await import("expo-sharing");
     if (await Sharing.isAvailableAsync()) {

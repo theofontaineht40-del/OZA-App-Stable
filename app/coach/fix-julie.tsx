@@ -39,6 +39,7 @@ type Candidate = SportifSummary & {
 export default function FixJulieScreen() {
   const [coachUid, setCoachUid] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<Candidate[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
@@ -48,25 +49,29 @@ export default function FixJulieScreen() {
         return;
       }
       setCoachUid(user.uid);
-      const [sportifs, wellness] = await Promise.all([
-        getMySportifs(user.uid),
-        getWellnessForCoach(user.uid),
-      ]);
-      const matches = sportifs.filter((s) =>
-        `${s.firstName} ${s.lastName}`.toLowerCase().includes("anaclet")
-      );
-      const withCounts = await Promise.all(
-        matches.map(async (s) => {
-          const planification = await getPlanification(s.uid);
-          return {
-            ...s,
-            wellnessCount: wellness.filter((w) => w.sportifId === s.uid).length,
-            hasPlanification: planification.blocks.length > 0 || !!planification.startDate,
-            role: "none" as Role,
-          };
-        })
-      );
-      setCandidates(withCounts);
+      try {
+        const [sportifs, wellness] = await Promise.all([
+          getMySportifs(user.uid),
+          getWellnessForCoach(user.uid),
+        ]);
+        const matches = sportifs.filter((s) =>
+          `${s.firstName} ${s.lastName}`.toLowerCase().includes("anaclet")
+        );
+        const withCounts = await Promise.all(
+          matches.map(async (s) => {
+            const planification = await getPlanification(s.uid);
+            return {
+              ...s,
+              wellnessCount: wellness.filter((w) => w.sportifId === s.uid).length,
+              hasPlanification: planification.blocks.length > 0 || !!planification.startDate,
+              role: "none" as Role,
+            };
+          })
+        );
+        setCandidates(withCounts);
+      } catch (error) {
+        setLoadError(error instanceof Error ? error.message : String(error));
+      }
     });
     return unsubscribe;
   }, []);
@@ -146,7 +151,9 @@ export default function FixJulieScreen() {
       <Text style={styles.title}>Nettoyage Julie Anaclet</Text>
       <Text style={styles.subtitle}>Écran à usage unique — à supprimer du code une fois fait.</Text>
 
-      {!candidates ? (
+      {loadError ? (
+        <Text style={styles.errorText}>Erreur : {loadError}</Text>
+      ) : !candidates ? (
         <ActivityIndicator color={Colors.primary} />
       ) : candidates.length === 0 ? (
         <Text style={styles.line}>Aucun profil "Anaclet" trouvé.</Text>
@@ -212,6 +219,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "700", color: Colors.text },
   subtitle: { fontSize: 13, color: Colors.textSecondary, marginTop: 4, marginBottom: 20 },
   line: { fontSize: 14, color: Colors.text },
+  errorText: { fontSize: 13, color: Colors.riskHigh },
   card: {
     backgroundColor: Colors.surface,
     borderRadius: 16,

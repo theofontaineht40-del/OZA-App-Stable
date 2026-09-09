@@ -8,7 +8,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { getPlanification, Planification, savePlanification } from "../../services/planification";
-import { deleteManagedSportif } from "../../services/relations";
+import { deleteManagedSportif, getRelation } from "../../services/relations";
 import {
   addWellnessEntry,
   getMySportifs,
@@ -59,11 +59,23 @@ export default function FixJulieScreen() {
         );
         const withCounts = await Promise.all(
           matches.map(async (s) => {
-            const planification = await getPlanification(s.uid);
+            // La lecture de /planifications exige un lien "coach principal"
+            // formellement enregistré (relations/{sportifId}_{coachId}) — un
+            // vrai compte lié via l'ancien système (users.coachId seul,
+            // jamais migré faute d'avoir ouvert son suivi) n'en a pas encore
+            // et fait échouer cette lecture. On dégrade proprement plutôt
+            // que de bloquer tout l'écran : ce champ n'est qu'indicatif.
+            let hasPlanification = false;
+            try {
+              const planification = await getPlanification(s.uid);
+              hasPlanification = planification.blocks.length > 0 || !!planification.startDate;
+            } catch {
+              // ignoré, voir commentaire ci-dessus
+            }
             return {
               ...s,
               wellnessCount: wellness.filter((w) => w.sportifId === s.uid).length,
-              hasPlanification: planification.blocks.length > 0 || !!planification.startDate,
+              hasPlanification,
               role: "none" as Role,
             };
           })
@@ -100,6 +112,13 @@ export default function FixJulieScreen() {
     setRunning(true);
     try {
       if (source && target) {
+        // La cible peut être un vrai compte lié via l'ancien système
+        // (users.coachId seul, jamais formalisé en relations/{id} faute
+        // d'avoir ouvert son suivi) : on matérialise le lien "principal"
+        // maintenant, sinon savePlanification ci-dessous échoue faute de
+        // isPrincipalOf(target) — voir firestore.rules /relations.
+        await getRelation(target.uid, coachUid);
+
         const planification: Planification = await getPlanification(source.uid);
         if (planification.blocks.length > 0 || planification.startDate) {
           await savePlanification(target.uid, planification);

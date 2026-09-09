@@ -82,14 +82,18 @@ service cloud.firestore {
         resource.data.coachId == request.auth.uid
       );
       // Un coach peut aussi créer directement la relation "principal" pour un
-      // sportif géré qu'il vient de créer (voir /users ci-dessus) : le profil
-      // référencé doit déjà exister, être marqué managed=true et lui
-      // appartenir — impossible de s'auto-attribuer un sportif existant.
+      // sportif dont le profil le désigne déjà comme coachId — que ce soit un
+      // profil géré qu'il vient de créer (voir /users ci-dessus), ou un vrai
+      // compte lié via l'ancien système (users.coachId seul, avant
+      // l'introduction de /relations, jamais formalisé faute que le sportif
+      // ait ouvert son suivi lui-même). Dans les deux cas il ne fait que
+      // matérialiser un lien déjà réel : users.coachId n'est modifiable que
+      // par le sportif lui-même (ou par le coach pour un profil géré), donc
+      // impossible de s'auto-attribuer un sportif qui ne l'a pas déjà désigné.
       allow create: if isSignedIn() && (
         request.resource.data.sportifId == request.auth.uid ||
         (request.resource.data.type == "principal" &&
           request.resource.data.coachId == request.auth.uid &&
-          get(/databases/$(database)/documents/users/$(request.resource.data.sportifId)).data.managed == true &&
           get(/databases/$(database)/documents/users/$(request.resource.data.sportifId)).data.coachId == request.auth.uid)
       );
       allow update, delete: if isSignedIn() && (

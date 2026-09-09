@@ -126,7 +126,20 @@ export default function FixJulieScreen() {
 
         const allWellness = await getWellnessForCoach(coachUid);
         const sourceEntries = allWellness.filter((w) => w.sportifId === source.uid);
+        // La cible peut déjà avoir ses propres check-ins réels (saisis par
+        // elle-même) : addWellnessEntry écrase le document du jour
+        // (setDoc sans merge), donc on ne recopie jamais par-dessus une date
+        // où elle a déjà une entrée à elle — on garde la sienne, quitte à
+        // perdre la valeur importée pour ce jour précis.
+        const targetDates = new Set(
+          allWellness.filter((w) => w.sportifId === target.uid).map((w) => w.date)
+        );
+        let skipped = 0;
         for (const entry of sourceEntries) {
+          if (targetDates.has(entry.date)) {
+            skipped++;
+            continue;
+          }
           await addWellnessEntry(
             target.uid,
             {
@@ -138,6 +151,12 @@ export default function FixJulieScreen() {
             coachUid,
             undefined,
             entry.date
+          );
+        }
+        if (skipped > 0) {
+          showAlert(
+            "Attention",
+            `${skipped} check-in(s) importé(s) ignoré(s) car la cible avait déjà une entrée réelle à ces dates (conservée telle quelle).`
           );
         }
 

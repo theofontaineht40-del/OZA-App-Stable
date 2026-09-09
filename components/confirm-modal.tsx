@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { ActivityIndicator, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../constants/colors";
@@ -12,6 +12,9 @@ type Props = {
   destructive?: boolean;
   onConfirm: () => void | Promise<void>;
   onCancel: () => void;
+  // Contenu additionnel entre le message et les boutons — ex. un champ de
+  // saisie "tapez le prénom pour confirmer" sur une suppression sensible.
+  children?: ReactNode;
 };
 
 // Remplace Alert.alert à boutons multiples : sur web, react-native-web mappe
@@ -27,6 +30,7 @@ export default function ConfirmModal({
   destructive = false,
   onConfirm,
   onCancel,
+  children,
 }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
@@ -45,6 +49,7 @@ export default function ConfirmModal({
         <View style={styles.card}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
+          {children}
 
           <View style={styles.actions}>
             <TouchableOpacity style={styles.cancelButton} onPress={onCancel} disabled={submitting}>

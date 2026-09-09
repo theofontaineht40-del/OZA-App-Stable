@@ -165,6 +165,21 @@ export async function createManagedSportif(
   return userRef.id;
 }
 
+// Supprime un profil géré (voir createManagedSportif) — réservé aux profils
+// que le coach a lui-même créés, un vrai compte auto-inscrit n'est jamais
+// supprimable depuis l'app (voir firestore.rules). Ne supprime que le
+// profil et la relation ; les séances/bien-être/bilans déjà enregistrés
+// restent en base (orphelins, jamais réaffichés puisque plus aucune requête
+// ne les référence) plutôt que de risquer une suppression en cascade non
+// atomique du côté client.
+export async function deleteManagedSportif(sportifId: string, coachId: string): Promise<void> {
+  // Ordre important : la règle de suppression de /relations lit encore
+  // /users/{sportifId} pour vérifier managed==true — la supprimer avant
+  // ferait échouer cette lecture (document déjà introuvable).
+  await deleteDoc(doc(db, "relations", relationId(sportifId, coachId)));
+  await deleteDoc(doc(db, "users", sportifId));
+}
+
 export async function addSpecialiste(
   sportifId: string,
   sportifFirstName: string,

@@ -65,7 +65,13 @@ service cloud.firestore {
         request.auth.uid == userId ||
         (resource.data.managed == true && resource.data.coachId == request.auth.uid)
       );
-      allow delete: if false;
+      // Un profil géré n'existe que parce que son coach l'a créé — lui seul
+      // peut donc aussi le supprimer. Un compte "réel" (auto-inscrit) reste
+      // indélébile, y compris par son propre titulaire : la suppression de
+      // compte n'est pas un flux pris en charge par l'app.
+      allow delete: if isSignedIn() &&
+        resource.data.managed == true &&
+        resource.data.coachId == request.auth.uid;
     }
 
     // ── Relations coach ↔ sportif ──

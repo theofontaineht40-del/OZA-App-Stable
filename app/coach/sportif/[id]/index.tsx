@@ -3,8 +3,9 @@ import { router, useLocalSearchParams } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import ConfirmModal from "../../../../components/confirm-modal";
 import { GraphGridTexture } from "../../../../components/decor";
 import { LoadSummary } from "../../../../components/load-summary";
 import ProgressionChart, { ProgressionPoint } from "../../../../components/progression-chart";
@@ -13,7 +14,7 @@ import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
 import { getProgrammesForCoachAndSportif, Programme } from "../../../../services/programmes";
-import { getRelation, Relation } from "../../../../services/relations";
+import { deleteManagedSportif, getRelation, Relation } from "../../../../services/relations";
 import {
   getSessionsForCoach,
   getWellnessForCoach,
@@ -26,13 +27,18 @@ import { friendlyAuthError } from "../../../../utils/firebase-errors";
 
 export default function SportifDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [coachUid, setCoachUid] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [managed, setManaged] = useState(false);
   const [relation, setRelation] = useState<Relation | null | undefined>(undefined);
   const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [deleteStep, setDeleteStep] = useState<"none" | "confirm" | "typeName">("none");
+  const [deleteNameInput, setDeleteNameInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -43,12 +49,14 @@ export default function SportifDetailScreen() {
         return;
       }
       const coachId = user.uid;
+      setCoachUid(coachId);
 
       try {
         const userSnap = await getDoc(doc(db, "users", id));
         if (userSnap.exists()) {
           const data = userSnap.data();
           setName(`${data.firstName} ${data.lastName}`);
+          setFirstName(data.firstName ?? null);
           setEmail(data.email ?? null);
           setManaged(data.managed ?? false);
         }
@@ -131,6 +139,37 @@ export default function SportifDetailScreen() {
     }
   }
 
+  // Suppression en deux étapes (voulu explicitement, après une frayeur sur un
+  // programme qu'on croyait perdu) : une confirmation classique, puis taper
+  // le prénom exact avant que la suppression réelle ne parte — pas un simple
+  // "OK" qu'on peut valider par réflexe.
+  function handleDeleteProfile() {
+    setDeleteNameInput("");
+    setDeleteStep("confirm");
+  }
+
+  function handleConfirmStep1() {
+    setDeleteStep("typeName");
+  }
+
+  async function handleFinalDelete() {
+    if (!id || !coachUid || !firstName) return;
+    if (deleteNameInput.trim().toLowerCase() !== firstName.trim().toLowerCase()) {
+      showAlert("Prénom incorrect", `Tapez exactement "${firstName}" pour confirmer.`);
+      return;
+    }
+    setDeleting(true);
+    try {
+      await deleteManagedSportif(id, coachUid);
+      setDeleteStep("none");
+      router.replace("/coach/sportifs");
+    } catch {
+      showAlert("Erreur", "Impossible de supprimer ce profil pour le moment.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   if (relation === undefined || !name) {
     return <View style={styles.container} />;
   }
@@ -189,6 +228,7 @@ export default function SportifDetailScreen() {
   const dailyLoads28 = buildDailyLoadSeries(sessions, 28);
 
   return (
+    <>
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -309,6 +349,15 @@ export default function SportifDetailScreen() {
         </TouchableOpacity>
       )}
 
+      {/* Seul un profil géré peut être supprimé — un vrai compte auto-inscrit
+          ne l'est jamais depuis l'app, voir firestore.rules. */}
+      {managed && (
+        <TouchableOpacity style={styles.deleteLink} onPress={handleDeleteProfile}>
+          <Ionicons name="trash-outline" size={20} color={Colors.riskHigh} />
+          <Text style={styles.deleteLinkText}>Supprimer ce profil</Text>
+        </TouchableOpacity>
+      )}
+
       <WellnessReport entriesDesc={wellness} dailyLoads28={dailyLoads28} />
 
       <LoadSummary dailyLoads28={dailyLoads28} />
@@ -375,6 +424,36 @@ export default function SportifDetailScreen() {
         ))
       )}
     </ScrollView>
+
+    <ConfirmModal
+      visible={deleteStep === "confirm"}
+      title="Voulez-vous vraiment supprimer ce profil ?"
+      message={`Toutes les données de ${name ?? "ce profil"} (séances, bien-être, planification, bilans) ne seront plus accessibles. Cette action est irréversible.`}
+      confirmLabel="Continuer"
+      destructive
+      onCancel={() => setDeleteStep("none")}
+      onConfirm={handleConfirmStep1}
+    />
+
+    <ConfirmModal
+      visible={deleteStep === "typeName"}
+      title="Dernière confirmation"
+      message={`Pour confirmer la suppression définitive, tapez le prénom "${firstName ?? ""}" ci-dessous.`}
+      confirmLabel={deleting ? "Suppression…" : "Supprimer définitivement"}
+      destructive
+      onCancel={() => setDeleteStep("none")}
+      onConfirm={handleFinalDelete}
+    >
+      <TextInput
+        style={styles.deleteInput}
+        placeholderTextColor={Colors.textSecondary}
+        placeholder={firstName ?? ""}
+        value={deleteNameInput}
+        onChangeText={setDeleteNameInput}
+        autoCapitalize="none"
+      />
+    </ConfirmModal>
+    </>
   );
 }
 
@@ -479,6 +558,31 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: Colors.text,
+  },
+
+  deleteLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 14,
+    marginBottom: 20,
+  },
+
+  deleteLinkText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.riskHigh,
+  },
+
+  deleteInput: {
+    height: 46,
+    borderRadius: 12,
+    backgroundColor: Colors.grayLight,
+    paddingHorizontal: 14,
+    fontSize: 15,
+    color: Colors.text,
+    marginBottom: 16,
   },
 
   sessionsHeaderRow: {

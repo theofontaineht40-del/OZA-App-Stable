@@ -539,11 +539,6 @@ function ExerciceCard({
       <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
         <View style={{ flex: 1 }}>
           <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
-          {!!libraryExercise?.groupesMusculaires?.length && (
-            <Text style={styles.exerciceMuscleSubtitle}>
-              {libraryExercise.groupesMusculaires.join(" · ")}
-            </Text>
-          )}
         </View>
         <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
       </TouchableOpacity>
@@ -738,36 +733,6 @@ function ExerciceCard({
     </View>
   );
 
-  const hasExecution = !!libraryExercise?.execution?.length;
-  const hasMuscles = !!libraryExercise?.groupesMusculaires?.length;
-  const detailsBlock = hasExecution || hasMuscles ? (
-    <View style={isDesktop ? styles.detailsRow : styles.detailsStack}>
-      {hasExecution && (
-        <View style={styles.detailCard}>
-          <Text style={styles.detailTitle}>Exécution</Text>
-          {libraryExercise!.execution!.map((step, i) => (
-            <View key={i} style={styles.executionStepRow}>
-              <View style={styles.executionDot} />
-              <Text style={styles.executionStepText}>{step}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-      {hasMuscles && (
-        <View style={styles.detailCard}>
-          <Text style={styles.detailTitle}>Muscles sollicités</Text>
-          <View style={styles.muscleChipsRow}>
-            {libraryExercise!.groupesMusculaires.map((g) => (
-              <View key={g} style={styles.muscleChip}>
-                <Text style={styles.muscleChipText}>{g}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      )}
-    </View>
-  ) : null;
-
   return (
     <View style={styles.exerciceCard}>
       {isDesktop ? (
@@ -776,7 +741,6 @@ function ExerciceCard({
           <View style={styles.desktopVisualCol}>
             {nameHeader}
             {imageBlock}
-            {detailsBlock}
           </View>
         </View>
       ) : (
@@ -784,7 +748,6 @@ function ExerciceCard({
           {nameHeader}
           {imageBlock}
           {paramsCard}
-          {detailsBlock}
         </>
       )}
 
@@ -1062,12 +1025,6 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
 
-  exerciceMuscleSubtitle: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginTop: 2,
-  },
-
   labelRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -1181,75 +1138,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 
-  detailsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 14,
-  },
-
-  detailsStack: {
-    gap: 12,
-    marginTop: 14,
-  },
-
-  detailCard: {
-    flex: 1,
-    backgroundColor: Colors.surfaceAlt,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    padding: 14,
-  },
-
-  detailTitle: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: Colors.textSecondary,
-    letterSpacing: 0.4,
-    textTransform: "uppercase",
-    marginBottom: 10,
-  },
-
-  executionStepRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    marginBottom: 8,
-  },
-
-  executionDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: Colors.primary,
-    marginTop: 7,
-  },
-
-  executionStepText: {
-    flex: 1,
-    fontSize: 13,
-    color: Colors.text,
-    lineHeight: 19,
-  },
-
-  muscleChipsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-
-  muscleChip: {
-    backgroundColor: Colors.accentTint,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-
-  muscleChipText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: Colors.primary,
-  },
 
   addExerciceButton: {
     flexDirection: "row",

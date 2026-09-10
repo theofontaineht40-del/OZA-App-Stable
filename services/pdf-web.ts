@@ -124,18 +124,30 @@ export async function renderHtmlToCanvas(
     const contentHeight = frameDoc.documentElement.scrollHeight;
     iframe.style.height = `${contentHeight}px`;
 
+    // Safari plafonne l'aire d'un canvas (~16 Mpx) : au-delà, toDataURL()
+    // renvoie "data:," et jsPDF échoue en "wrong PNG signature". Un rapport
+    // long (grand historique, longue liste de séances) atteint vite ce seuil
+    // à l'échelle x2 — on réduit alors l'échelle juste ce qu'il faut pour
+    // repasser sous une marge sûre, quitte à un rendu un peu moins net.
+    const MAX_CANVAS_AREA = 12_000_000;
+    const naturalArea = 794 * contentHeight * CANVAS_SCALE * CANVAS_SCALE;
+    const scale =
+      naturalArea > MAX_CANVAS_AREA
+        ? Math.max(1, CANVAS_SCALE * Math.sqrt(MAX_CANVAS_AREA / naturalArea))
+        : CANVAS_SCALE;
+
     // Mesuré avant rasterisation, pendant que les éléments sont encore
     // adressables dans le DOM — après html2canvas on n'a plus qu'une image.
     const noSplitRanges: Range[] = Array.from(
       frameDoc.querySelectorAll<HTMLElement>(noSplitSelector)
     ).map((el) => ({
-      top: el.getBoundingClientRect().top * CANVAS_SCALE,
-      bottom: el.getBoundingClientRect().bottom * CANVAS_SCALE,
+      top: el.getBoundingClientRect().top * scale,
+      bottom: el.getBoundingClientRect().bottom * scale,
     }));
 
     const canvas = await html2canvas(frameDoc.body, {
       useCORS: true,
-      scale: CANVAS_SCALE,
+      scale,
       width: 794,
       windowWidth: 794,
       height: contentHeight,
@@ -197,7 +209,13 @@ export async function canvasToPdfDownload(
 
     if (!firstPage) pdf.addPage();
     const imgHeight = (sliceHeight * pageWidth) / canvas.width;
-    pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, imgHeight);
+    const sliceData = sliceCanvas.toDataURL("image/png");
+    // Un canvas trop grand (limite Safari) fait renvoyer "data:," ici :
+    // jsPDF échouerait ensuite en "wrong PNG signature", message opaque.
+    if (!sliceData.startsWith("data:image/png")) {
+      throw new Error("Le document est trop volumineux pour être généré (essayez une période plus courte).");
+    }
+    pdf.addImage(sliceData, "PNG", 0, 0, pageWidth, imgHeight);
 
     cursor = end;
     firstPage = false;

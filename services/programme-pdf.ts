@@ -3,6 +3,15 @@ import { Platform } from "react-native";
 
 import { getCoachProfile } from "./discovery";
 import { getExerciseLibrary } from "./exercises";
+import {
+  canvasToPdfDownload,
+  escapeHtml,
+  isIOSWeb,
+  renderHtmlToCanvas,
+  sanitizeFileName,
+  toDataUri,
+  toDataUriMap,
+} from "./pdf-web";
 import { Bloc, BlocExercice, ChargeType, Programme, Seance } from "./programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -10,13 +19,6 @@ const CHARGE_LABELS: Record<ChargeType, string> = {
   rpe: "RPE",
   libre: "kg",
 };
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
 
 function exerciceRowHtml(exercice: BlocExercice, photoUrl: string | null | undefined): string {
   const charge = exercice.chargeValeur
@@ -255,204 +257,6 @@ async function buildPhotoMap(coachId: string): Promise<Map<string, string | null
   return new Map(library.map((e) => [e.id, e.photoUrl ?? null]));
 }
 
-// html2canvas rasterise en lisant les pixels des <img> du DOM : une image
-// chargée depuis un domaine différent (Firebase Storage) « tache » le canvas
-// résultant quand la réponse CORS n'est pas exploitable, et
-// canvas.toDataURL() produit alors une image invalide — jsPDF échoue avec
-// "wrong PNG signature", une erreur qui ne dit rien de la vraie cause. On
-// contourne le problème en amont : chaque photo/logo est retéléchargée puis
-// convertie en data URI (aucune origine, donc jamais de canvas taché) avant
-// de construire le HTML — web uniquement, expo-print sur natif n'a pas ce
-// problème.
-async function toDataUri(url: string): Promise<string | null> {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = () => reject(new Error("FileReader failed"));
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    // Une photo/logo qui échoue à charger ne doit pas bloquer tout le PDF —
-    // exerciceRowHtml/le header affichent déjà un état neutre pour null.
-    return null;
-  }
-}
-
-async function toDataUriMap(map: Map<string, string | null>): Promise<Map<string, string | null>> {
-  const entries = await Promise.all(
-    Array.from(map.entries()).map(async ([id, url]) => [id, url ? await toDataUri(url) : null] as const)
-  );
-  return new Map(entries);
-}
-
-function sanitizeFileName(name: string): string {
-  return name.replace(/[^\p{L}\p{N}\- _]/gu, "").trim() || "programme";
-}
-
-// Safari iOS (et surtout la PWA "standalone" ajoutée à l'écran d'accueil)
-// ignore ou bloque en silence le téléchargement direct qu'utilise
-// canvasToPdfDownload ailleurs (clic simulé sur un <a download> pointant
-// vers un blob) : le bouton ne fait rien, sans erreur — voir
-// downloadProgrammePdf ci-dessous pour le contournement.
-function isIOSWeb(): boolean {
-  if (Platform.OS !== "web" || typeof navigator === "undefined") return false;
-  return (
-    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    // iPadOS 13+ s'annonce comme "MacIntel" en desktop mode ; le tactile le
-    // trahit (un vrai Mac n'a pas de maxTouchPoints > 1).
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-  );
-}
-
-type Range = { top: number; bottom: number };
-
-type RenderedProgramme = {
-  canvas: HTMLCanvasElement;
-  // Rectangles (en px canvas) des blocs — ne jamais couper une page à
-  // l'intérieur d'un de ces intervalles, pour ne pas trancher un bloc
-  // d'exercices en deux entre la fin d'une page et le début de la suivante.
-  noSplitRanges: Range[];
-};
-
-const CANVAS_SCALE = 2;
-
-// Rend le HTML dans un iframe hors-écran (même document, donc html2canvas
-// peut lire les styles calculés), le temps de le rasteriser en image.
-async function renderHtmlToCanvas(html: string): Promise<RenderedProgramme> {
-  const html2canvas = (await import("html2canvas")).default;
-
-  const iframe = document.createElement("iframe");
-  iframe.style.position = "fixed";
-  iframe.style.left = "-99999px";
-  iframe.style.top = "0";
-  iframe.style.width = "794px"; // ~A4 à 96dpi
-  iframe.style.height = "1123px";
-  document.body.appendChild(iframe);
-
-  try {
-    await new Promise<void>((resolve, reject) => {
-      iframe.onload = () => resolve();
-      iframe.onerror = () => reject(new Error("iframe load failed"));
-      iframe.srcdoc = html;
-    });
-
-    const frameDoc = iframe.contentDocument;
-    if (!frameDoc) throw new Error("no iframe document");
-
-    // iframe.onload ne garantit pas que les <img> (chargées depuis jsDelivr)
-    // ont fini de charger — mesurer scrollHeight trop tôt tronque tout ce
-    // qui suit dans le document (ex: la séance 2 coupée dans le PDF).
-    const images = Array.from(frameDoc.images);
-    await Promise.all(
-      images.map((img) =>
-        img.complete
-          ? Promise.resolve()
-          : new Promise<void>((resolve) => {
-              img.addEventListener("load", () => resolve());
-              img.addEventListener("error", () => resolve());
-            })
-      )
-    );
-
-    const contentHeight = frameDoc.documentElement.scrollHeight;
-    iframe.style.height = `${contentHeight}px`;
-
-    // Mesurée avant rasterisation, pendant que .bloc est encore un élément
-    // DOM adressable — après html2canvas on n'a plus qu'une image plate.
-    const noSplitRanges: Range[] = Array.from(frameDoc.querySelectorAll<HTMLElement>(".bloc")).map(
-      (el) => ({
-        top: el.getBoundingClientRect().top * CANVAS_SCALE,
-        bottom: el.getBoundingClientRect().bottom * CANVAS_SCALE,
-      })
-    );
-
-    const canvas = await html2canvas(frameDoc.body, {
-      useCORS: true,
-      scale: CANVAS_SCALE,
-      width: 794,
-      windowWidth: 794,
-      height: contentHeight,
-      windowHeight: contentHeight,
-    });
-
-    return { canvas, noSplitRanges };
-  } finally {
-    document.body.removeChild(iframe);
-  }
-}
-
-// Un bloc d'exercices ne doit jamais être coupé entre deux pages : si la
-// limite naturelle de page tombe au milieu d'un bloc, on recule la coupure
-// au début de ce bloc (quitte à laisser un peu de blanc en bas de page).
-// Si le bloc lui-même dépasse une pleine page, on ne peut rien faire de
-// mieux qu'une coupure brute — le cas ne se présente pas en pratique ici.
-function findPageBreak(naiveEnd: number, cursor: number, canvasHeight: number, ranges: Range[]): number {
-  if (naiveEnd >= canvasHeight) return canvasHeight;
-  const straddling = ranges.find((r) => r.top < naiveEnd && r.bottom > naiveEnd);
-  if (straddling && straddling.top > cursor) return straddling.top;
-  return naiveEnd;
-}
-
-// Découpe la longue image rendue en pages A4 successives, en évitant de
-// couper un bloc en deux, pour produire un vrai PDF téléchargeable en un
-// clic (pas de boîte d'impression) — jsPDF gère lui-même le déclenchement
-// du download via pdf.save().
-async function canvasToPdfDownload(
-  { canvas, noSplitRanges }: RenderedProgramme,
-  fileName: string,
-  preOpenedWindow: Window | null = null
-): Promise<void> {
-  // Import direct du build ESM navigateur : le "main" du package pointe vers
-  // le build Node (require() dynamique que Metro ne sait pas transformer),
-  // Metro n'applique pas le champ "browser" comme le ferait Webpack.
-  const { jsPDF } = await import("jspdf/dist/jspdf.es.min.js");
-  const pdf = new jsPDF({ unit: "pt", format: "a4" });
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  // Hauteur d'une page A4, convertie en px canvas à la même échelle que
-  // l'image (largeur de page = largeur du canvas).
-  const pageHeightPx = (pageHeight * canvas.width) / pageWidth;
-
-  const sliceCanvas = document.createElement("canvas");
-  sliceCanvas.width = canvas.width;
-  const sliceCtx = sliceCanvas.getContext("2d");
-  if (!sliceCtx) throw new Error("no 2d context");
-
-  let cursor = 0;
-  let firstPage = true;
-  while (cursor < canvas.height) {
-    const naiveEnd = Math.min(cursor + pageHeightPx, canvas.height);
-    const end = findPageBreak(naiveEnd, cursor, canvas.height, noSplitRanges);
-    const sliceHeight = end - cursor;
-
-    sliceCanvas.height = sliceHeight;
-    sliceCtx.clearRect(0, 0, sliceCanvas.width, sliceHeight);
-    sliceCtx.drawImage(canvas, 0, cursor, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-
-    if (!firstPage) pdf.addPage();
-    const imgHeight = (sliceHeight * pageWidth) / canvas.width;
-    pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, imgHeight);
-
-    cursor = end;
-    firstPage = false;
-  }
-
-  // Sur iOS, le clic simulé sur <a download> (ce que fait pdf.save() en
-  // interne) est ignoré par Safari — on pointe à la place l'onglet ouvert
-  // en amont (encore dans le geste utilisateur, voir isIOSWeb) vers le
-  // blob : Safari l'affiche dans son lecteur PDF natif, avec un bouton
-  // "Partager" qui propose "Enregistrer dans Fichiers".
-  if (preOpenedWindow && !preOpenedWindow.closed) {
-    preOpenedWindow.location.href = String(pdf.output("bloburl"));
-    return;
-  }
-
-  pdf.save(`${fileName}.pdf`);
-}
-
 // Sur natif (iOS/Android), printToFileAsync génère un vrai fichier PDF que
 // l'on partage/enregistre via le sélecteur système. Sur web, expo-print ne
 // permet pas de générer un fichier (il délègue à l'impression navigateur) —
@@ -487,7 +291,7 @@ export async function downloadProgrammePdf(programme: Programme): Promise<void> 
       const webCoachInfo = coachInfo ? { ...coachInfo, logoUrl: webLogoUrl } : null;
       const html = buildProgrammePdfHtml(programme, webPhotos, webCoachInfo);
       const rendered = await renderHtmlToCanvas(html);
-      await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom), preOpenedWindow);
+      await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom, "programme"), preOpenedWindow);
       return;
     }
 

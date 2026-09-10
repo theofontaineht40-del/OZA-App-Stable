@@ -22,6 +22,7 @@ import {
   WellnessEntry,
 } from "../../../../services/tracking";
 import { resetPassword } from "../../../../services/auth";
+import { downloadLoadReportPdf, downloadWellnessReportPdf } from "../../../../services/report-pdf";
 import { showAlert } from "../../../../utils/alert";
 import { friendlyAuthError } from "../../../../utils/firebase-errors";
 
@@ -39,6 +40,7 @@ export default function SportifDetailScreen() {
   const [deleteStep, setDeleteStep] = useState<"none" | "confirm" | "typeName">("none");
   const [deleteNameInput, setDeleteNameInput] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [reportBusy, setReportBusy] = useState<"wellness" | "load" | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -136,6 +138,30 @@ export default function SportifDetailScreen() {
       );
     } catch (error) {
       showAlert("Erreur", friendlyAuthError(error));
+    }
+  }
+
+  async function handleWellnessReport() {
+    if (!coachUid || !name || reportBusy) return;
+    setReportBusy("wellness");
+    try {
+      await downloadWellnessReportPdf({ sportifName: name, coachId: coachUid, entriesDesc: wellness });
+    } catch (error) {
+      showAlert("Téléchargement impossible", error instanceof Error ? error.message : String(error));
+    } finally {
+      setReportBusy(null);
+    }
+  }
+
+  async function handleLoadReport() {
+    if (!coachUid || !name || reportBusy) return;
+    setReportBusy("load");
+    try {
+      await downloadLoadReportPdf({ sportifName: name, coachId: coachUid, sessions: sessions ?? [] });
+    } catch (error) {
+      showAlert("Téléchargement impossible", error instanceof Error ? error.message : String(error));
+    } finally {
+      setReportBusy(null);
     }
   }
 
@@ -356,6 +382,43 @@ export default function SportifDetailScreen() {
           <Ionicons name="trash-outline" size={20} color={Colors.riskHigh} />
           <Text style={styles.deleteLinkText}>Supprimer ce profil</Text>
         </TouchableOpacity>
+      )}
+
+      {(wellness.length > 0 || (sessions?.length ?? 0) > 0) && (
+        <View style={styles.reportRow}>
+          {wellness.length > 0 && (
+            <TouchableOpacity
+              style={styles.reportButton}
+              onPress={handleWellnessReport}
+              disabled={reportBusy !== null}
+            >
+              <Ionicons
+                name={reportBusy === "wellness" ? "hourglass-outline" : "download-outline"}
+                size={16}
+                color={Colors.primary}
+              />
+              <Text style={styles.reportButtonText}>
+                {reportBusy === "wellness" ? "Génération…" : "Rapport bien-être"}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {(sessions?.length ?? 0) > 0 && (
+            <TouchableOpacity
+              style={styles.reportButton}
+              onPress={handleLoadReport}
+              disabled={reportBusy !== null}
+            >
+              <Ionicons
+                name={reportBusy === "load" ? "hourglass-outline" : "download-outline"}
+                size={16}
+                color={Colors.primary}
+              />
+              <Text style={styles.reportButtonText}>
+                {reportBusy === "load" ? "Génération…" : "Rapport charge"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       )}
 
       <WellnessReport entriesDesc={wellness} dailyLoads28={dailyLoads28} />
@@ -583,6 +646,30 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.text,
     marginBottom: 16,
+  },
+
+  reportRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 20,
+  },
+
+  reportButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+    borderRadius: 999,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+  },
+
+  reportButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.primary,
   },
 
   sessionsHeaderRow: {

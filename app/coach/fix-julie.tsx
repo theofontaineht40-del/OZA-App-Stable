@@ -3,11 +3,20 @@ import { router } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { getPlanification, Planification, savePlanification } from "../../services/planification";
+import { assignProgrammeToSportif, getProgrammesForCoach, Programme } from "../../services/programmes";
 import { deleteManagedSportif, getRelation } from "../../services/relations";
 import {
   addWellnessEntry,
@@ -23,22 +32,30 @@ type Role = "none" | "source" | "target" | "delete";
 type Candidate = SportifSummary & {
   wellnessCount: number;
   hasPlanification: boolean;
+  programmeCount: number;
   role: Role;
 };
 
-// Écran d'admin UNIQUE (à supprimer après usage) : plusieurs profils "Julie
-// Anaclet" existent en doublon dans le roster du coach (deux profils gérés,
-// un vrai compte auto-inscrit). Ceci liste tout profil dont le nom contient
-// "anaclet", laisse le coach désigner qui est quoi, puis :
-//  - "source" (profil géré avec l'historique importé) → ses check-ins de
-//    bien-être et sa planification sont recopiés sur "target", puis le
-//    profil source est supprimé ;
-//  - "target" (vrai compte, ex. Julie ANACLET) → destination, non touché
-//    autrement que par la copie ;
-//  - "delete" (profil géré vide) → supprimé directement, sans copie.
-export default function FixJulieScreen() {
+// Écran d'admin permanent (accès masqué de la navigation, voir
+// app/coach/_layout.tsx) pour nettoyer les doublons de profil — cas
+// récurrent : un coach crée un profil "géré" (senior sans compte, ou avant
+// que la personne s'inscrive elle-même), puis un vrai compte auto-inscrit
+// finit par exister pour la même personne. On tape un bout de nom, on
+// désigne qui est quoi, puis :
+//  - "source" (profil avec les données/programmes à conserver) → sa
+//    planification, son historique de bien-être et TOUS ses programmes sont
+//    transférés vers "target", puis le profil source est supprimé ;
+//  - "target" (généralement le vrai compte) → destination, jamais écrasé :
+//    un check-in déjà présent à une date donnée n'est jamais remplacé ;
+//  - "delete" (profil géré vide, sans rapport avec le transfert) → supprimé
+//    directement, sans copie.
+export default function FixDuplicatesScreen() {
   const [coachUid, setCoachUid] = useState<string | null>(null);
-  const [candidates, setCandidates] = useState<Candidate[] | null>(null);
+  const [search, setSearch] = useState("");
+  const [allSportifs, setAllSportifs] = useState<SportifSummary[] | null>(null);
+  const [wellness, setWellness] = useState<WellnessEntry[]>([]);
+  const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
 
@@ -50,37 +67,14 @@ export default function FixJulieScreen() {
       }
       setCoachUid(user.uid);
       try {
-        const [sportifs, wellness] = await Promise.all([
+        const [sportifs, wellnessData, programmeData] = await Promise.all([
           getMySportifs(user.uid),
           getWellnessForCoach(user.uid),
+          getProgrammesForCoach(user.uid),
         ]);
-        const matches = sportifs.filter((s) =>
-          `${s.firstName} ${s.lastName}`.toLowerCase().includes("anaclet")
-        );
-        const withCounts = await Promise.all(
-          matches.map(async (s) => {
-            // La lecture de /planifications exige un lien "coach principal"
-            // formellement enregistré (relations/{sportifId}_{coachId}) — un
-            // vrai compte lié via l'ancien système (users.coachId seul,
-            // jamais migré faute d'avoir ouvert son suivi) n'en a pas encore
-            // et fait échouer cette lecture. On dégrade proprement plutôt
-            // que de bloquer tout l'écran : ce champ n'est qu'indicatif.
-            let hasPlanification = false;
-            try {
-              const planification = await getPlanification(s.uid);
-              hasPlanification = planification.blocks.length > 0 || !!planification.startDate;
-            } catch {
-              // ignoré, voir commentaire ci-dessus
-            }
-            return {
-              ...s,
-              wellnessCount: wellness.filter((w) => w.sportifId === s.uid).length,
-              hasPlanification,
-              role: "none" as Role,
-            };
-          })
-        );
-        setCandidates(withCounts);
+        setAllSportifs(sportifs);
+        setWellness(wellnessData);
+        setProgrammes(programmeData);
       } catch (error) {
         setLoadError(error instanceof Error ? error.message : String(error));
       }
@@ -88,14 +82,59 @@ export default function FixJulieScreen() {
     return unsubscribe;
   }, []);
 
+  // Reconstruit les candidats (avec leurs compteurs) à chaque changement de
+  // recherche ou de données, plutôt qu'une requête réseau par frappe.
+  useEffect(() => {
+    if (!allSportifs) return;
+    const term = search.trim().toLowerCase();
+    if (term.length < 2) {
+      setCandidates([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const matches = allSportifs.filter((s) =>
+        `${s.firstName} ${s.lastName}`.toLowerCase().includes(term)
+      );
+      const withCounts = await Promise.all(
+        matches.map(async (s) => {
+          // La lecture de /planifications exige un lien "coach principal"
+          // formellement enregistré (relations/{sportifId}_{coachId}) — un
+          // vrai compte lié via l'ancien système (users.coachId seul,
+          // jamais migré faute d'avoir ouvert son suivi) n'en a pas encore
+          // et fait échouer cette lecture. On dégrade proprement plutôt
+          // que de bloquer tout l'écran : ce champ n'est qu'indicatif.
+          let hasPlanification = false;
+          try {
+            const planification = await getPlanification(s.uid);
+            hasPlanification = planification.blocks.length > 0 || !!planification.startDate;
+          } catch {
+            // ignoré, voir commentaire ci-dessus
+          }
+          return {
+            ...s,
+            wellnessCount: wellness.filter((w) => w.sportifId === s.uid).length,
+            hasPlanification,
+            programmeCount: programmes.filter((p) => p.sportifId === s.uid).length,
+            role: "none" as Role,
+          };
+        })
+      );
+      if (!cancelled) setCandidates(withCounts);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [search, allSportifs, wellness, programmes]);
+
   function setRole(uid: string, role: Role) {
     setCandidates((prev) =>
-      (prev ?? []).map((c) => (c.uid === uid ? { ...c, role } : c.role === role ? { ...c, role: "none" } : c))
+      prev.map((c) => (c.uid === uid ? { ...c, role } : c.role === role ? { ...c, role: "none" } : c))
     );
   }
 
   async function handleRun() {
-    if (!coachUid || !candidates) return;
+    if (!coachUid) return;
     const source = candidates.find((c) => c.role === "source");
     const target = candidates.find((c) => c.role === "target");
     const toDelete = candidates.filter((c) => c.role === "delete");
@@ -115,9 +154,17 @@ export default function FixJulieScreen() {
         // La cible peut être un vrai compte lié via l'ancien système
         // (users.coachId seul, jamais formalisé en relations/{id} faute
         // d'avoir ouvert son suivi) : on matérialise le lien "principal"
-        // maintenant, sinon savePlanification ci-dessous échoue faute de
+        // maintenant, sinon les écritures ci-dessous échouent faute de
         // isPrincipalOf(target) — voir firestore.rules /relations.
         await getRelation(target.uid, coachUid);
+        const targetName = `${target.firstName} ${target.lastName}`.trim();
+
+        // Programmes : réassignation directe (pas de copie), c'est un
+        // changement de propriétaire, pas une donnée à dupliquer.
+        const sourceProgrammes = programmes.filter((p) => p.sportifId === source.uid);
+        for (const p of sourceProgrammes) {
+          await assignProgrammeToSportif(p.id, target.uid, targetName);
+        }
 
         const planification: Planification = await getPlanification(source.uid);
         if (planification.blocks.length > 0 || planification.startDate) {
@@ -156,7 +203,7 @@ export default function FixJulieScreen() {
         if (skipped > 0) {
           showAlert(
             "Attention",
-            `${skipped} check-in(s) importé(s) ignoré(s) car la cible avait déjà une entrée réelle à ces dates (conservée telle quelle).`
+            `${skipped} check-in(s) ignoré(s) car la cible avait déjà une entrée réelle à ces dates (conservée telle quelle).`
           );
         }
 
@@ -186,15 +233,28 @@ export default function FixJulieScreen() {
         <Text style={styles.backText}>Retour</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Nettoyage Julie Anaclet</Text>
-      <Text style={styles.subtitle}>Écran à usage unique — à supprimer du code une fois fait.</Text>
+      <Text style={styles.title}>Fusionner des profils en doublon</Text>
+      <Text style={styles.subtitle}>
+        Tape un nom pour retrouver les profils concernés, puis désigne qui est quoi.
+      </Text>
+
+      <TextInput
+        style={styles.searchInput}
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Nom ou prénom (ex. Lagarde)"
+        placeholderTextColor={Colors.textSecondary}
+        autoCapitalize="none"
+      />
 
       {loadError ? (
         <Text style={styles.errorText}>Erreur : {loadError}</Text>
-      ) : !candidates ? (
+      ) : !allSportifs ? (
         <ActivityIndicator color={Colors.primary} />
+      ) : search.trim().length < 2 ? (
+        <Text style={styles.line}>Tape au moins 2 lettres.</Text>
       ) : candidates.length === 0 ? (
-        <Text style={styles.line}>Aucun profil "Anaclet" trouvé.</Text>
+        <Text style={styles.line}>Aucun profil trouvé pour "{search.trim()}".</Text>
       ) : (
         candidates.map((c) => (
           <View key={c.uid} style={styles.card}>
@@ -202,7 +262,9 @@ export default function FixJulieScreen() {
               {c.firstName} {c.lastName} {c.managed ? "· Profil géré" : "· Vrai compte"}
             </Text>
             <Text style={styles.cardMeta}>
-              {c.wellnessCount} check-ins de bien-être · {c.hasPlanification ? "planification présente" : "pas de planification"}
+              {c.programmeCount} programme{c.programmeCount > 1 ? "s" : ""} · {c.wellnessCount} check-in
+              {c.wellnessCount > 1 ? "s" : ""} de bien-être ·{" "}
+              {c.hasPlanification ? "planification présente" : "pas de planification"}
             </Text>
             <View style={styles.roleRow}>
               <TouchableOpacity
@@ -218,7 +280,7 @@ export default function FixJulieScreen() {
                 onPress={() => setRole(c.uid, c.role === "target" ? "none" : "target")}
               >
                 <Text style={[styles.roleChipText, c.role === "target" && styles.roleChipTextActive]}>
-                  Cible (compte réel)
+                  Cible (à garder)
                 </Text>
               </TouchableOpacity>
               {c.managed && (
@@ -236,7 +298,7 @@ export default function FixJulieScreen() {
         ))
       )}
 
-      {candidates && candidates.length > 0 && (
+      {candidates.length > 0 && (
         <TouchableOpacity style={styles.runButton} onPress={handleRun} disabled={running}>
           {running ? (
             <ActivityIndicator color={Colors.white} />
@@ -255,7 +317,16 @@ const styles = StyleSheet.create({
   backButton: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
   backText: { fontSize: 14, color: Colors.text, fontWeight: "600" },
   title: { fontSize: 22, fontWeight: "700", color: Colors.text },
-  subtitle: { fontSize: 13, color: Colors.textSecondary, marginTop: 4, marginBottom: 20 },
+  subtitle: { fontSize: 13, color: Colors.textSecondary, marginTop: 4, marginBottom: 16 },
+  searchInput: {
+    height: 46,
+    borderRadius: 12,
+    backgroundColor: Colors.grayLight,
+    paddingHorizontal: 14,
+    fontSize: 15,
+    color: Colors.text,
+    marginBottom: 20,
+  },
   line: { fontSize: 14, color: Colors.text },
   errorText: { fontSize: 13, color: Colors.riskHigh },
   card: {

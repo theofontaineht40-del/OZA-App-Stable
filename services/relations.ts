@@ -176,7 +176,19 @@ export async function deleteManagedSportif(sportifId: string, coachId: string): 
   // Ordre important : la règle de suppression de /relations lit encore
   // /users/{sportifId} pour vérifier managed==true — la supprimer avant
   // ferait échouer cette lecture (document déjà introuvable).
-  await deleteDoc(doc(db, "relations", relationId(sportifId, coachId)));
+  //
+  // Un profil géré issu d'une création interrompue (ex. échec entre les
+  // deux écritures de createManagedSportif) peut n'avoir jamais eu de
+  // relations doc : la règle de suppression lit resource.data sur un
+  // document absent, ce qui refuse la requête ("Missing or insufficient
+  // permissions") au lieu de simplement constater qu'il n'y a rien à
+  // supprimer. On l'ignore plutôt que de bloquer toute la suppression du
+  // profil sur un document déjà inexistant.
+  try {
+    await deleteDoc(doc(db, "relations", relationId(sportifId, coachId)));
+  } catch {
+    // ignoré, voir commentaire ci-dessus
+  }
   await deleteDoc(doc(db, "users", sportifId));
 }
 

@@ -22,10 +22,10 @@ import {
   wellnessStatus,
 } from "./load";
 import {
-  canvasToPdfDownload,
   escapeHtml,
   isIOSWeb,
-  renderHtmlToCanvas,
+  pagesToPdfDownload,
+  renderHtmlToPages,
   sanitizeFileName,
   toDataUri,
 } from "./pdf-web";
@@ -580,8 +580,8 @@ async function runDownload(
       const webLogo = coachInfo?.logoUrl ? await toDataUri(coachInfo.logoUrl) : null;
       const webCoachInfo = coachInfo ? { ...coachInfo, logoUrl: webLogo } : null;
       const html = buildHtml(webCoachInfo);
-      const rendered = await renderHtmlToCanvas(html, ".no-split");
-      await canvasToPdfDownload(rendered, sanitizeFileName(fileBaseName, "rapport"), preOpenedWindow);
+      const pages = await renderHtmlToPages(html, ".no-split");
+      await pagesToPdfDownload(pages, sanitizeFileName(fileBaseName, "rapport"), preOpenedWindow);
       return;
     }
 

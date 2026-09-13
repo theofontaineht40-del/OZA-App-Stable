@@ -1,6 +1,6 @@
 // Plomberie commune de génération PDF côté web, partagée par programme-pdf.ts
-// et report-pdf.ts : rendu d'un HTML hors-écran → rasterisation html2canvas →
-// découpe en pages A4 → assemblage jsPDF → téléchargement (ou ouverture dans
+// et report-pdf.ts : rendu d'un HTML hors-écran → rasterisation html2canvas
+// PAGE PAR PAGE → assemblage jsPDF → téléchargement (ou ouverture dans
 // l'onglet pré-ouvert sur iOS). Sur natif, chaque appelant utilise
 // directement expo-print, qui n'a besoin d'aucune de ces fonctions.
 
@@ -69,24 +69,39 @@ export function isIOSWeb(): boolean {
   );
 }
 
-export type Range = { top: number; bottom: number };
-
-export type RenderedDoc = {
-  canvas: HTMLCanvasElement;
-  // Rectangles (en px canvas) des éléments à ne jamais couper entre deux
-  // pages (blocs d'exercices, cartes de synthèse, graphiques...).
-  noSplitRanges: Range[];
-};
+type Range = { top: number; bottom: number };
 
 const CANVAS_SCALE = 2;
+// Hauteur d'une page A4 à 96dpi, en px de CONTENU (avant mise à l'échelle
+// canvas) — c'est la même unité que scrollHeight/getBoundingClientRect.
+const PAGE_HEIGHT_PX = 1123;
+
+// Si la limite naturelle de page tombe au milieu d'un élément "insécable",
+// on recule la coupure à son début (quitte à laisser du blanc en bas de
+// page). Un élément plus grand qu'une pleine page est coupé brut.
+function findPageBreak(
+  naiveEnd: number,
+  cursor: number,
+  contentHeight: number,
+  ranges: Range[]
+): number {
+  if (naiveEnd >= contentHeight) return contentHeight;
+  const straddling = ranges.find((r) => r.top < naiveEnd && r.bottom > naiveEnd);
+  if (straddling && straddling.top > cursor) return straddling.top;
+  return naiveEnd;
+}
 
 // Rend le HTML dans un iframe hors-écran (même document, donc html2canvas
-// peut lire les styles calculés), le temps de le rasteriser en image.
+// peut lire les styles calculés) et rasterise CHAQUE page séparément — un
+// canvas par page plutôt qu'un unique immense canvas redécoupé après coup.
+// Un document long (grand historique, nombreuses séances/photos) ne crée
+// donc jamais un canvas dépassant la limite de taille de Safari (~16 Mpx),
+// quelle que soit sa longueur totale : chaque page reste bornée à ~A4.
 // `noSplitSelector` : sélecteur CSS des éléments à garder d'un seul tenant.
-export async function renderHtmlToCanvas(
+export async function renderHtmlToPages(
   html: string,
   noSplitSelector = ".bloc"
-): Promise<RenderedDoc> {
+): Promise<HTMLCanvasElement[]> {
   const html2canvas = (await import("html2canvas")).default;
 
   const iframe = document.createElement("iframe");
@@ -124,62 +139,50 @@ export async function renderHtmlToCanvas(
     const contentHeight = frameDoc.documentElement.scrollHeight;
     iframe.style.height = `${contentHeight}px`;
 
-    // Safari plafonne l'aire d'un canvas (~16 Mpx) : au-delà, toDataURL()
-    // renvoie "data:," et jsPDF échoue en "wrong PNG signature". Un rapport
-    // long (grand historique, longue liste de séances) atteint vite ce seuil
-    // à l'échelle x2 — on réduit alors l'échelle juste ce qu'il faut pour
-    // repasser sous une marge sûre, quitte à un rendu un peu moins net.
-    const MAX_CANVAS_AREA = 12_000_000;
-    const naturalArea = 794 * contentHeight * CANVAS_SCALE * CANVAS_SCALE;
-    const scale =
-      naturalArea > MAX_CANVAS_AREA
-        ? Math.max(1, CANVAS_SCALE * Math.sqrt(MAX_CANVAS_AREA / naturalArea))
-        : CANVAS_SCALE;
-
     // Mesuré avant rasterisation, pendant que les éléments sont encore
-    // adressables dans le DOM — après html2canvas on n'a plus qu'une image.
+    // adressables dans le DOM — en px de contenu, mêmes unités que le
+    // découpage en pages ci-dessous (pas de mise à l'échelle canvas ici).
     const noSplitRanges: Range[] = Array.from(
       frameDoc.querySelectorAll<HTMLElement>(noSplitSelector)
     ).map((el) => ({
-      top: el.getBoundingClientRect().top * scale,
-      bottom: el.getBoundingClientRect().bottom * scale,
+      top: el.getBoundingClientRect().top,
+      bottom: el.getBoundingClientRect().bottom,
     }));
 
-    const canvas = await html2canvas(frameDoc.body, {
-      useCORS: true,
-      scale,
-      width: 794,
-      windowWidth: 794,
-      height: contentHeight,
-      windowHeight: contentHeight,
-    });
+    const pages: HTMLCanvasElement[] = [];
+    let cursor = 0;
+    while (cursor < contentHeight) {
+      const naiveEnd = Math.min(cursor + PAGE_HEIGHT_PX, contentHeight);
+      const end = findPageBreak(naiveEnd, cursor, contentHeight, noSplitRanges);
 
-    return { canvas, noSplitRanges };
+      // x/y/width/height cadrent la zone rasterisée dans le canvas de
+      // sortie ; windowWidth/windowHeight fixent le viewport virtuel utilisé
+      // pour la mise en page (le document entier, pour un layout identique
+      // quelle que soit la page en cours de rendu).
+      const canvas = await html2canvas(frameDoc.body, {
+        useCORS: true,
+        scale: CANVAS_SCALE,
+        x: 0,
+        y: cursor,
+        width: 794,
+        height: end - cursor,
+        windowWidth: 794,
+        windowHeight: contentHeight,
+      });
+      pages.push(canvas);
+      cursor = end;
+    }
+
+    return pages;
   } finally {
     document.body.removeChild(iframe);
   }
 }
 
-// Si la limite naturelle de page tombe au milieu d'un élément "insécable",
-// on recule la coupure à son début (quitte à laisser du blanc en bas de
-// page). Un élément plus grand qu'une pleine page est coupé brut.
-function findPageBreak(
-  naiveEnd: number,
-  cursor: number,
-  canvasHeight: number,
-  ranges: Range[]
-): number {
-  if (naiveEnd >= canvasHeight) return canvasHeight;
-  const straddling = ranges.find((r) => r.top < naiveEnd && r.bottom > naiveEnd);
-  if (straddling && straddling.top > cursor) return straddling.top;
-  return naiveEnd;
-}
-
-// Découpe la longue image rendue en pages A4 successives, en évitant de
-// couper un élément insécable en deux, pour produire un vrai PDF
-// téléchargeable en un clic (pas de boîte d'impression).
-export async function canvasToPdfDownload(
-  { canvas, noSplitRanges }: RenderedDoc,
+// Assemble les pages déjà rasterisées (voir renderHtmlToPages) en un PDF et
+// déclenche le téléchargement — pas de boîte de dialogue d'impression.
+export async function pagesToPdfDownload(
+  pages: HTMLCanvasElement[],
   fileName: string,
   preOpenedWindow: Window | null = null
 ): Promise<void> {
@@ -189,37 +192,22 @@ export async function canvasToPdfDownload(
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const pageHeightPx = (pageHeight * canvas.width) / pageWidth;
 
-  const sliceCanvas = document.createElement("canvas");
-  sliceCanvas.width = canvas.width;
-  const sliceCtx = sliceCanvas.getContext("2d");
-  if (!sliceCtx) throw new Error("no 2d context");
-
-  let cursor = 0;
-  let firstPage = true;
-  while (cursor < canvas.height) {
-    const naiveEnd = Math.min(cursor + pageHeightPx, canvas.height);
-    const end = findPageBreak(naiveEnd, cursor, canvas.height, noSplitRanges);
-    const sliceHeight = end - cursor;
-
-    sliceCanvas.height = sliceHeight;
-    sliceCtx.clearRect(0, 0, sliceCanvas.width, sliceHeight);
-    sliceCtx.drawImage(canvas, 0, cursor, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-
-    if (!firstPage) pdf.addPage();
-    const imgHeight = (sliceHeight * pageWidth) / canvas.width;
-    const sliceData = sliceCanvas.toDataURL("image/png");
-    // Un canvas trop grand (limite Safari) fait renvoyer "data:," ici :
-    // jsPDF échouerait ensuite en "wrong PNG signature", message opaque.
-    if (!sliceData.startsWith("data:image/png")) {
-      throw new Error("Le document est trop volumineux pour être généré (essayez une période plus courte).");
+  pages.forEach((canvas, i) => {
+    if (i > 0) pdf.addPage();
+    const dataUrl = canvas.toDataURL("image/png");
+    // Ne devrait plus arriver (chaque page est bornée à ~A4), mais un canvas
+    // qui échoue quand même à s'encoder ferait sinon échouer jsPDF plus loin
+    // avec un message opaque ("wrong PNG signature").
+    if (!dataUrl.startsWith("data:image/png")) {
+      throw new Error(`La page ${i + 1} n'a pas pu être générée.`);
     }
-    pdf.addImage(sliceData, "PNG", 0, 0, pageWidth, imgHeight);
-
-    cursor = end;
-    firstPage = false;
-  }
+    // La dernière page (ou une page raccourcie pour ne pas couper un
+    // élément insécable) peut être moins haute qu'une page pleine : on
+    // conserve son ratio propre plutôt que de l'étirer à pageHeight.
+    const imgHeight = Math.min((canvas.height * pageWidth) / canvas.width, pageHeight);
+    pdf.addImage(dataUrl, "PNG", 0, 0, pageWidth, imgHeight);
+  });
 
   // Sur iOS, on pointe l'onglet ouvert en amont vers le blob : Safari
   // l'affiche dans son lecteur PDF natif, avec un bouton "Partager" qui

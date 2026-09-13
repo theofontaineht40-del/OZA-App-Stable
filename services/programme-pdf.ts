@@ -4,10 +4,10 @@ import { Platform } from "react-native";
 import { getCoachProfile } from "./discovery";
 import { getExerciseLibrary } from "./exercises";
 import {
-  canvasToPdfDownload,
   escapeHtml,
   isIOSWeb,
-  renderHtmlToCanvas,
+  pagesToPdfDownload,
+  renderHtmlToPages,
   sanitizeFileName,
   toDataUri,
   toDataUriMap,
@@ -290,8 +290,8 @@ export async function downloadProgrammePdf(programme: Programme): Promise<void> 
       ]);
       const webCoachInfo = coachInfo ? { ...coachInfo, logoUrl: webLogoUrl } : null;
       const html = buildProgrammePdfHtml(programme, webPhotos, webCoachInfo);
-      const rendered = await renderHtmlToCanvas(html);
-      await canvasToPdfDownload(rendered, sanitizeFileName(programme.nom, "programme"), preOpenedWindow);
+      const pages = await renderHtmlToPages(html);
+      await pagesToPdfDownload(pages, sanitizeFileName(programme.nom, "programme"), preOpenedWindow);
       return;
     }
 

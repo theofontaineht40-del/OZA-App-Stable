@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
+  Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -13,6 +14,7 @@ import {
 
 import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
+import { getExerciseLibrary } from "../../../../services/exercises";
 import { ChargeType, getProgramme, Programme } from "../../../../services/programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -26,6 +28,13 @@ export default function SportifProgrammeViewScreen() {
   const [programme, setProgramme] = useState<Programme | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [pageWidth, setPageWidth] = useState(0);
+  // Photos des exercices : la bibliothèque appartient au coach, pas au
+  // programme lui-même — il faut la charger séparément une fois qu'on
+  // connaît programme.coachId (voir aussi le constructeur côté coach, qui
+  // fait le même lookup par exerciceId).
+  const [photosByExerciceId, setPhotosByExerciceId] = useState<Map<string, string | null>>(
+    new Map()
+  );
   const pagerRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -33,6 +42,15 @@ export default function SportifProgrammeViewScreen() {
     getProgramme(id).then((p) => {
       setProgramme(p);
       setActiveIndex(0);
+      if (p?.coachId) {
+        getExerciseLibrary(p.coachId)
+          .then((library) => {
+            setPhotosByExerciceId(new Map(library.map((e) => [e.id, e.photoUrl ?? null])));
+          })
+          .catch(() => {
+            // Pas de photo plutôt que bloquer l'affichage du programme.
+          });
+      }
     });
   }, [id]);
 
@@ -119,9 +137,16 @@ export default function SportifProgrammeViewScreen() {
                           <Text style={styles.blocNom}>{bloc.nom}</Text>
                           {!!bloc.objectif && <Text style={styles.blocObjectif}>{bloc.objectif}</Text>}
 
-                          {bloc.exercices.map((ex) => (
+                          {bloc.exercices.map((ex) => {
+                            const photoUrl = photosByExerciceId.get(ex.exerciceId);
+                            return (
                             <View key={ex.id} style={styles.exerciceCard}>
-                              <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
+                              <View style={styles.exerciceHeaderRow}>
+                                {photoUrl && (
+                                  <Image source={{ uri: photoUrl }} style={styles.exerciceThumb} />
+                                )}
+                                <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
+                              </View>
 
                               <View style={styles.setsRepsRow}>
                                 <Text style={styles.setsRepsValue}>
@@ -160,7 +185,8 @@ export default function SportifProgrammeViewScreen() {
                                 <Text style={styles.commentaires}>{ex.commentaires}</Text>
                               )}
                             </View>
-                          ))}
+                            );
+                          })}
                         </View>
                       ))
                     )}
@@ -292,11 +318,25 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  exerciceHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 8,
+  },
+
+  exerciceThumb: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: Colors.surface,
+  },
+
   exerciceName: {
+    flex: 1,
     fontSize: 15,
     fontWeight: "700",
     color: Colors.text,
-    marginBottom: 8,
   },
 
   setsRepsRow: {

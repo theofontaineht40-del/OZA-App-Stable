@@ -141,12 +141,14 @@ export default function SportifProgrammeViewScreen() {
                             const photoUrl = photosByExerciceId.get(ex.exerciceId);
                             return (
                             <View key={ex.id} style={styles.exerciceCard}>
-                              <View style={styles.exerciceHeaderRow}>
-                                {photoUrl && (
-                                  <Image source={{ uri: photoUrl }} style={styles.exerciceThumb} />
-                                )}
-                                <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
-                              </View>
+                              {photoUrl && (
+                                <Image
+                                  source={{ uri: photoUrl }}
+                                  style={styles.exercicePhoto}
+                                  resizeMode="contain"
+                                />
+                              )}
+                              <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
 
                               <View style={styles.setsRepsRow}>
                                 <Text style={styles.setsRepsValue}>
@@ -318,25 +320,23 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  exerciceHeaderRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    marginBottom: 8,
-  },
-
-  exerciceThumb: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+  // Déborde jusqu'aux bords de la carte (marges négatives = padding de
+  // exerciceCard) pour une vraie photo bien visible, pas une icône minuscule.
+  exercicePhoto: {
+    height: 160,
+    marginTop: -14,
+    marginHorizontal: -14,
+    marginBottom: 10,
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
     backgroundColor: Colors.surface,
   },
 
   exerciceName: {
-    flex: 1,
     fontSize: 15,
     fontWeight: "700",
     color: Colors.text,
+    marginBottom: 8,
   },
 
   setsRepsRow: {

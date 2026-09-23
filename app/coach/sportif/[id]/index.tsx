@@ -41,6 +41,7 @@ export default function SportifDetailScreen() {
   const [deleteNameInput, setDeleteNameInput] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [reportBusy, setReportBusy] = useState<"wellness" | "load" | null>(null);
+  const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -464,27 +465,70 @@ export default function SportifDetailScreen() {
       {sessions.length === 0 ? (
         <Text style={styles.emptyText}>Aucune séance enregistrée pour le moment.</Text>
       ) : (
-        sessions.map((session) => (
-          <View key={session.id} style={styles.sessionRow}>
-            <View style={{ flex: 1 }}>
-              <View style={styles.sessionHeaderRow}>
-                <Text style={styles.sessionDate}>{session.date}</Text>
-                {session.loggedBy === "coach" ? (
-                  <View style={styles.coachBadge}>
-                    <Text style={styles.coachBadgeText}>Ajoutée par vous</Text>
+        sessions.map((session) => {
+          const expanded = expandedSessionId === session.id;
+          const hasDetail = !!session.exerciseLogs?.length;
+          return (
+            <TouchableOpacity
+              key={session.id}
+              style={styles.sessionRow}
+              activeOpacity={hasDetail ? 0.7 : 1}
+              onPress={() => hasDetail && setExpandedSessionId(expanded ? null : session.id)}
+            >
+              <View style={styles.sessionMainRow}>
+                <View style={{ flex: 1 }}>
+                  <View style={styles.sessionHeaderRow}>
+                    <Text style={styles.sessionDate}>{session.date}</Text>
+                    {session.loggedBy === "coach" ? (
+                      <View style={styles.coachBadge}>
+                        <Text style={styles.coachBadgeText}>Ajoutée par vous</Text>
+                      </View>
+                    ) : null}
                   </View>
-                ) : null}
+                  <Text style={styles.sessionDetail}>
+                    RPE {session.rpe} · {session.duration} min
+                    {session.seanceNom ? ` · ${session.seanceNom}` : ""}
+                  </Text>
+                  {session.commentaire ? (
+                    <Text style={styles.sessionComment}>{session.commentaire}</Text>
+                  ) : null}
+                </View>
+                <Text style={styles.sessionLoad}>{session.load} UA</Text>
+                {hasDetail && (
+                  <Ionicons
+                    name={expanded ? "chevron-up" : "chevron-down"}
+                    size={16}
+                    color={Colors.textSecondary}
+                    style={{ marginLeft: 8 }}
+                  />
+                )}
               </View>
-              <Text style={styles.sessionDetail}>
-                RPE {session.rpe} · {session.duration} min
-              </Text>
-              {session.commentaire ? (
-                <Text style={styles.sessionComment}>{session.commentaire}</Text>
-              ) : null}
-            </View>
-            <Text style={styles.sessionLoad}>{session.load} UA</Text>
-          </View>
-        ))
+
+              {expanded && (
+                <View style={styles.sessionExercisesBlock}>
+                  {session.exerciseLogs!.map((log, i) => (
+                    <View key={i} style={styles.sessionExerciseRow}>
+                      <Text style={styles.sessionExerciseName}>{log.exerciceNom}</Text>
+                      {log.sets && log.sets.length > 0 ? (
+                        log.sets.map((set, si) => (
+                          <Text key={si} style={styles.sessionSetLine}>
+                            Série {si + 1} — {set.repetitions || "—"} reps
+                            {set.charge ? ` × ${set.charge} kg` : ""}
+                          </Text>
+                        ))
+                      ) : (
+                        <Text style={styles.sessionSetLine}>
+                          {log.seriesReelles || "—"} séries × {log.repetitionsReelles || "—"} reps
+                          {log.chargeReelle ? ` · ${log.chargeReelle} kg` : ""}
+                        </Text>
+                      )}
+                    </View>
+                  ))}
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })
       )}
     </ScrollView>
 
@@ -742,9 +786,6 @@ const styles = StyleSheet.create({
   },
 
   sessionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
@@ -755,6 +796,35 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 1,
+  },
+
+  sessionMainRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  sessionExercisesBlock: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.grayLight,
+    gap: 10,
+  },
+
+  sessionExerciseRow: {
+    gap: 2,
+  },
+
+  sessionExerciseName: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  sessionSetLine: {
+    fontSize: 12,
+    color: Colors.textSecondary,
   },
 
   sessionHeaderRow: {

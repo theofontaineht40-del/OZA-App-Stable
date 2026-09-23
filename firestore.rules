@@ -197,9 +197,15 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && coachId == request.auth.uid;
     }
 
-    // ── Bibliothèque d'exercices personnalisés (privée au coach) ──
+    // ── Bibliothèque d'exercices personnalisés (créée par le coach) ──
+    // Lecture aussi ouverte à un sportif lié à ce coach : sans ça, la photo
+    // d'un exercice custom que le coach a mis dans un programme ne s'affiche
+    // jamais côté sportif (échec silencieux de la lecture de toute la
+    // bibliothèque, voir services/exercises.ts::getExerciseLibrary).
     match /exercises/{exerciseId} {
-      allow read: if isSignedIn() && resource.data.coachId == request.auth.uid;
+      allow read: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid || isLinkedToCoach(resource.data.coachId)
+      );
       allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid;
       allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }

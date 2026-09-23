@@ -44,7 +44,19 @@ export async function getCustomExercises(coachId: string): Promise<ExerciseTempl
 }
 
 export async function getExerciseLibrary(coachId: string): Promise<ExerciseTemplate[]> {
-  const custom = await getCustomExercises(coachId);
+  // La lecture de /exercises exige d'être le coach lui-même OU un sportif
+  // lié à lui (voir firestore.rules) — un appelant qui ne remplit aucune de
+  // ces conditions se prend un refus. Sans ce garde-fou, cet échec faisait
+  // rejeter TOUTE la bibliothèque, y compris les exercices standards
+  // (EXERCISE_LIBRARY, statique, sans lecture réseau) qui n'ont rien à voir
+  // avec les exercices custom du coach.
+  let custom: ExerciseTemplate[] = [];
+  try {
+    custom = await getCustomExercises(coachId);
+  } catch {
+    // Ignoré : mieux vaut la bibliothèque standard sans les customs que
+    // rien du tout.
+  }
   return [...EXERCISE_LIBRARY, ...custom];
 }
 

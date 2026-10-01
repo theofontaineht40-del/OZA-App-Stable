@@ -187,6 +187,25 @@ export async function saveProgramme(
   );
 }
 
+// Copie un programme existant (ex: construit pour un sportif) en un nouveau
+// programme non assigné, prêt à être attribué à quelqu'un d'autre via
+// assignProgrammeToSportif — contrairement à ça, duplicateProgramme ne
+// touche jamais l'original : les deux coexistent et évoluent ensuite
+// séparément (modifier la copie n'affecte pas le programme source).
+export async function duplicateProgramme(programme: Programme): Promise<string> {
+  const ref = doc(collection(db, "programmes"));
+  const copy: Omit<Programme, "id"> = {
+    coachId: programme.coachId,
+    sportifId: null,
+    sportifName: null,
+    nom: `${programme.nom} (copie)`,
+    seances: programme.seances,
+    updatedAt: new Date(),
+  };
+  await setDoc(ref, copy);
+  return ref.id;
+}
+
 export async function assignProgrammeToSportif(
   id: string,
   sportifId: string | null,

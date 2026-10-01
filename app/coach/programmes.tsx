@@ -32,6 +32,7 @@ import {
   assignProgrammeToSportif,
   createProgramme,
   deleteProgramme,
+  duplicateProgramme,
   getProgrammesForCoach,
   Programme,
 } from "../../services/programmes";
@@ -53,6 +54,7 @@ export default function ProgrammesScreen() {
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [expandedSportifId, setExpandedSportifId] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -131,6 +133,20 @@ export default function ProgrammesScreen() {
       showAlert("Téléchargement impossible", detail);
     } finally {
       setDownloadingId(null);
+    }
+  }
+
+  async function handleDuplicate(p: Programme) {
+    setDuplicatingId(p.id);
+    try {
+      const newId = await duplicateProgramme(p);
+      await refresh();
+      showAlert("Copié", "Le programme a été dupliqué, non assigné — attribuez-le à un sportif quand vous voulez.");
+      router.push(`/coach/programme/${newId}`);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    } finally {
+      setDuplicatingId(null);
     }
   }
 
@@ -333,6 +349,18 @@ export default function ProgrammesScreen() {
                 <Text style={styles.programmeMeta}>{programmeDateLabel(p)}</Text>
               </View>
               <TouchableOpacity
+                onPress={() => handleDuplicate(p)}
+                disabled={duplicatingId === p.id}
+                hitSlop={10}
+                style={styles.rowActionButton}
+              >
+                {duplicatingId === p.id ? (
+                  <ActivityIndicator size="small" color={Colors.textSecondary} />
+                ) : (
+                  <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => handleDownload(p)}
                 disabled={downloadingId === p.id}
                 hitSlop={10}
@@ -376,6 +404,18 @@ export default function ProgrammesScreen() {
                 style={styles.rowActionButton}
               >
                 <Ionicons name="person-add-outline" size={18} color={Colors.textSecondary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleDuplicate(p)}
+                disabled={duplicatingId === p.id}
+                hitSlop={10}
+                style={styles.rowActionButton}
+              >
+                {duplicatingId === p.id ? (
+                  <ActivityIndicator size="small" color={Colors.textSecondary} />
+                ) : (
+                  <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => handleDownload(p)}

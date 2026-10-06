@@ -9,9 +9,12 @@ export type GroupeMusculaire =
   | "Mollets"
   | "Pectoraux"
   | "Dos"
+  | "Trapèzes"
   | "Épaules"
+  | "Coiffe des rotateurs"
   | "Biceps"
   | "Triceps"
+  | "Avant-bras"
   | "Abdominaux"
   | "Full body";
 
@@ -51,9 +54,12 @@ export const GROUPES_MUSCULAIRES: GroupeMusculaire[] = [
   "Mollets",
   "Pectoraux",
   "Dos",
+  "Trapèzes",
   "Épaules",
+  "Coiffe des rotateurs",
   "Biceps",
   "Triceps",
+  "Avant-bras",
   "Abdominaux",
   "Full body",
 ];
@@ -164,7 +170,7 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
   { id: "sprint", nom: "Sprint", groupesMusculaires: ["Full body"], materiel: ["Poids du corps"], sports: ["Athlétisme", "Football", "Rugby"], qualitesPhysiques: ["Vitesse"], icon: "walk-outline", pattern: "locomotion" },
   { id: "box-jump", nom: "Box jump", groupesMusculaires: ["Quadriceps", "Fessiers"], materiel: ["Poids du corps"], sports: ["Athlétisme", "Basketball"], qualitesPhysiques: ["Puissance"], icon: "flash-outline", pattern: "jump" },
   { id: "kettlebell-swing", nom: "Kettlebell swing", groupesMusculaires: ["Fessiers", "Dos"], materiel: ["Kettlebell"], sports: ["Général"], qualitesPhysiques: ["Puissance", "Endurance"], icon: "fitness-outline", pattern: "hinge", photoUrl: `${IMAGE_BASE}/kettlebell-swing.png?v=${IMAGE_VERSION}` },
-  { id: "farmer-walk", nom: "Farmer's walk", groupesMusculaires: ["Full body"], materiel: ["Haltères", "Kettlebell"], sports: ["Général"], qualitesPhysiques: ["Force", "Gainage"], icon: "walk-outline", pattern: "locomotion" },
+  { id: "farmer-walk", nom: "Farmer's walk", groupesMusculaires: ["Full body", "Avant-bras"], materiel: ["Haltères", "Kettlebell"], sports: ["Général"], qualitesPhysiques: ["Force", "Gainage"], icon: "walk-outline", pattern: "locomotion" },
   { id: "battle-ropes", nom: "Battle ropes", groupesMusculaires: ["Épaules", "Full body"], materiel: ["Corde"], sports: ["Général"], qualitesPhysiques: ["Endurance", "Puissance"], icon: "pulse-outline", pattern: "isolation" },
   { id: "assault-bike", nom: "Assault bike", groupesMusculaires: ["Full body"], materiel: ["Machine"], sports: ["Général"], qualitesPhysiques: ["Endurance", "Puissance"], icon: "bicycle-outline", pattern: "locomotion", photoUrl: `${IMAGE_BASE}/assault-bike.png?v=${IMAGE_VERSION}` },
   { id: "rameur", nom: "Rameur", groupesMusculaires: ["Dos", "Full body"], materiel: ["Machine"], sports: ["Général"], qualitesPhysiques: ["Endurance"], icon: "pulse-outline", pattern: "locomotion", photoUrl: `${IMAGE_BASE}/rameur.png?v=${IMAGE_VERSION}` },
@@ -173,14 +179,14 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
   { id: "gainage-lateral", nom: "Gainage latéral", groupesMusculaires: ["Abdominaux"], materiel: ["Poids du corps"], sports: ["Général"], qualitesPhysiques: ["Gainage"], icon: "body-outline", pattern: "core" },
   { id: "mollets-debout", nom: "Mollets debout", groupesMusculaires: ["Mollets"], materiel: ["Machine", "Haltères"], sports: ["Musculation"], qualitesPhysiques: ["Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/mollets-debout.png?v=${IMAGE_VERSION}` },
   { id: "planche-copenhague", nom: "Planche latérale Copenhague", groupesMusculaires: ["Abdominaux", "Quadriceps"], materiel: ["Banc"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Gainage", "Force"], icon: "body-outline", pattern: "core", photoUrl: `${IMAGE_BASE}/planche-copenhague.png?v=${IMAGE_VERSION}` },
-  { id: "rotation-externe-r1", nom: "Rotation externe R1 (poulie)", groupesMusculaires: ["Épaules"], materiel: ["Machine"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Mobilité", "Force"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/rotation-externe-r1.png?v=${IMAGE_VERSION}` },
-  { id: "face-pull", nom: "Face pull", groupesMusculaires: ["Dos", "Épaules"], materiel: ["Machine", "Corde"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Hypertrophie", "Mobilité"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/face-pull.png?v=${IMAGE_VERSION}` },
+  { id: "rotation-externe-r1", nom: "Rotation externe R1 (poulie)", groupesMusculaires: ["Coiffe des rotateurs", "Épaules"], materiel: ["Machine"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Mobilité", "Force"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/rotation-externe-r1.png?v=${IMAGE_VERSION}` },
+  { id: "face-pull", nom: "Face pull", groupesMusculaires: ["Dos", "Épaules", "Coiffe des rotateurs"], materiel: ["Machine", "Corde"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Hypertrophie", "Mobilité"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/face-pull.png?v=${IMAGE_VERSION}` },
   // Contrôle et renforcement de la ceinture scapulaire — mouvements
   // gléno-huméraux volontairement limités (rachis/épaule sensibles).
-  { id: "abaissement-scapulaire", nom: "Abaissement scapulaire", groupesMusculaires: ["Dos", "Épaules"], materiel: ["Machine", "Élastique"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Mobilité"], icon: "fitness-outline", pattern: "pull_vertical", photoUrl: `${IMAGE_BASE}/abaissement-scapulaire.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus vers la barre ou la sangle", "Sans plier les coudes, tirer les épaules vers le bas", "Éloigner activement les oreilles des épaules", "Tenir 1 s puis remonter en contrôle"] },
-  { id: "tirage-scapulaire", nom: "Tirage scapulaire", groupesMusculaires: ["Dos"], materiel: ["Machine", "Élastique"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Mobilité"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/tirage-scapulaire.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus, coudes verrouillés", "Rapprocher les omoplates l'une de l'autre", "Le mouvement vient uniquement des épaules, pas des bras", "Relâcher en contrôle sans arrondir le haut du dos"] },
+  { id: "abaissement-scapulaire", nom: "Abaissement scapulaire", groupesMusculaires: ["Dos", "Trapèzes", "Épaules"], materiel: ["Machine", "Élastique"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Mobilité"], icon: "fitness-outline", pattern: "pull_vertical", photoUrl: `${IMAGE_BASE}/abaissement-scapulaire.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus vers la barre ou la sangle", "Sans plier les coudes, tirer les épaules vers le bas", "Éloigner activement les oreilles des épaules", "Tenir 1 s puis remonter en contrôle"] },
+  { id: "tirage-scapulaire", nom: "Tirage scapulaire", groupesMusculaires: ["Dos", "Trapèzes"], materiel: ["Machine", "Élastique"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Mobilité"], icon: "fitness-outline", pattern: "pull_horizontal", photoUrl: `${IMAGE_BASE}/tirage-scapulaire.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus, coudes verrouillés", "Rapprocher les omoplates l'une de l'autre", "Le mouvement vient uniquement des épaules, pas des bras", "Relâcher en contrôle sans arrondir le haut du dos"] },
   { id: "oiseau", nom: "Oiseau", groupesMusculaires: ["Épaules", "Dos"], materiel: ["Haltères"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/oiseau.png?v=${IMAGE_VERSION}`, execution: ["Buste penché en avant, dos plat", "Coudes légèrement fléchis, fixes", "Ouvrir les bras sur les côtés jusqu'à l'horizontale", "Serrer les omoplates en haut, redescendre lentement"] },
-  { id: "shrugs", nom: "Shrugs", groupesMusculaires: ["Épaules", "Dos"], materiel: ["Haltères", "Barre"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/shrugs.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus le long du corps", "Hausser les épaules droit vers les oreilles", "Pas de rotation des épaules", "Marquer un temps en haut, redescendre en contrôle"] },
+  { id: "shrugs", nom: "Shrugs", groupesMusculaires: ["Trapèzes", "Épaules"], materiel: ["Haltères", "Barre"], sports: ["Musculation"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "fitness-outline", pattern: "isolation", photoUrl: `${IMAGE_BASE}/shrugs.png?v=${IMAGE_VERSION}`, execution: ["Bras tendus le long du corps", "Hausser les épaules droit vers les oreilles", "Pas de rotation des épaules", "Marquer un temps en haut, redescendre en contrôle"] },
   { id: "safety-bar-squat", nom: "Safety Bar Squat", groupesMusculaires: ["Quadriceps", "Fessiers"], materiel: ["Barre"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Hypertrophie"], icon: "barbell-outline", pattern: "squat", photoUrl: `${IMAGE_BASE}/safety-bar-squat.png?v=${IMAGE_VERSION}`, execution: ["Barre calée sur les épaules, poignées en main", "Descendre en gardant le buste le plus vertical possible", "Genoux dans l'axe des pieds", "Pousser dans le sol pour remonter"] },
   { id: "jefferson-curl", nom: "Jefferson curl", groupesMusculaires: ["Dos", "Ischio-jambiers"], materiel: ["Barre", "Haltères"], sports: ["Musculation"], qualitesPhysiques: ["Mobilité", "Force"], icon: "fitness-outline", pattern: "hinge", photoUrl: `${IMAGE_BASE}/jefferson-curl.png?v=${IMAGE_VERSION}`, execution: ["Charge légère, jamais lourde", "Debout, dérouler la colonne vertèbre par vertèbre", "Descendre lentement, genoux quasi tendus", "Remonter en réenroulant le dos, sans à-coup"] },
   { id: "reverse-lunge", nom: "Reverse lunge", groupesMusculaires: ["Quadriceps", "Fessiers"], materiel: ["Haltères"], sports: ["Musculation", "Général"], qualitesPhysiques: ["Force", "Coordination"], icon: "walk-outline", pattern: "lunge", photoUrl: `${IMAGE_BASE}/reverse-lunge.png?v=${IMAGE_VERSION}` },
@@ -274,9 +280,12 @@ export const MUSCLE_GROUP_COLORS: Record<GroupeMusculaire, string> = {
   "Mollets": "#C9A227",
   "Pectoraux": "#34C759",
   "Dos": "#0A84FF",
+  "Trapèzes": "#0066CC",
   "Épaules": "#5E5CE6",
+  "Coiffe des rotateurs": "#7D7AFF",
   "Biceps": "#AF52DE",
   "Triceps": "#FF375F",
+  "Avant-bras": "#BF5AF2",
   "Abdominaux": "#30B0C7",
   "Full body": "#111111",
 };

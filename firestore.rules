@@ -210,6 +210,15 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }
 
+    // ── Carnet du coach (notes privées sur un sportif) ──
+    // Strictement réservé à son auteur : le sportif n'y a jamais accès, même
+    // s'il est le sujet de la note.
+    match /coachNotes/{noteId} {
+      allow read, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid;
+      allow update: if false;
+    }
+
     // ── Séances réalisées (journal du sportif) ──
     // Créée soit par le sportif lui-même (auto-déclaration après séance),
     // soit par son coach principal (séance encadrée en direct).

@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import CoachNotes from "../../../../components/coach-notes";
 import ConfirmModal from "../../../../components/confirm-modal";
 import { GraphGridTexture } from "../../../../components/decor";
 import { LoadSummary } from "../../../../components/load-summary";
@@ -452,6 +453,8 @@ export default function SportifDetailScreen() {
           )}
         </View>
       )}
+
+      {coachUid && id && <CoachNotes coachId={coachUid} sportifId={id} />}
 
       <View style={styles.sessionsHeaderRow}>
         <Text style={styles.sectionTitle}>Historique des séances</Text>

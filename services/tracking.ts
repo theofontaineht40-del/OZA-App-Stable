@@ -121,6 +121,10 @@ export type ExerciseLog = {
 export type ProgrammeInfo = {
   programmeId: string;
   programmeNom: string;
+  // Optionnel : les séances enregistrées avant son ajout n'en ont pas (le
+  // planning retombe alors sur seanceNom pour les rapprocher, voir
+  // services/schedule.ts).
+  seanceId?: string;
   seanceNom: string;
   exerciseLogs: ExerciseLog[];
 };
@@ -137,6 +141,7 @@ export type SessionRecord = {
   loggedBy: "sportif" | "coach";
   programmeId: string | null;
   programmeNom: string | null;
+  seanceId: string | null;
   seanceNom: string | null;
   exerciseLogs: ExerciseLog[] | null;
 };
@@ -154,6 +159,7 @@ function toSessionRecord(id: string, data: any): SessionRecord {
     loggedBy: data.loggedBy ?? "sportif",
     programmeId: data.programmeId ?? null,
     programmeNom: data.programmeNom ?? null,
+    seanceId: data.seanceId ?? null,
     seanceNom: data.seanceNom ?? null,
     exerciseLogs: data.exerciseLogs ?? null,
   };
@@ -185,6 +191,7 @@ export async function addSession(params: {
     loggedBy,
     programmeId: programmeInfo?.programmeId ?? null,
     programmeNom: programmeInfo?.programmeNom ?? null,
+    seanceId: programmeInfo?.seanceId ?? null,
     seanceNom: programmeInfo?.seanceNom ?? null,
     exerciseLogs: programmeInfo?.exerciseLogs ?? null,
     createdAt: new Date(),
@@ -202,6 +209,7 @@ export async function addSession(params: {
     loggedBy,
     programmeId: programmeInfo?.programmeId ?? null,
     programmeNom: programmeInfo?.programmeNom ?? null,
+    seanceId: programmeInfo?.seanceId ?? null,
     seanceNom: programmeInfo?.seanceNom ?? null,
     exerciseLogs: programmeInfo?.exerciseLogs ?? null,
   };

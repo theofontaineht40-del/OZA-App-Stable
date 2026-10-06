@@ -24,8 +24,10 @@ const STATUS_RANK: Record<SportifStatus, number> = { attention: 0, vigilance: 1,
 // Tableau central du dashboard coach : recherche + filtre par statut + tri,
 // entièrement client-side sur les lignes déjà calculées (voir
 // services/coach-analytics.ts buildSportifRow). La colonne "Adhérence"
-// demandée par le design n'existe pas ici : rien dans le modèle de données
-// actuel ne permet de calculer un taux de complétion des séances prévues.
+// demandée par le design n'existe pas en colonne dédiée ; le planning du
+// coach (services/schedule.ts) alimente à la place une ligne "Semaine : x/y
+// faites · z en retard" sous le nom, affichée seulement quand des séances
+// sont planifiées.
 export default function SportifsTable({
   rows,
   onPressRow,
@@ -132,6 +134,15 @@ export default function SportifsTable({
               <Text style={styles.lastSessionText}>
                 {row.lastSessionDate ? `Dernière séance ${row.lastSessionDate}` : "Aucune séance loggée"}
               </Text>
+              {(row.weekPlanned > 0 || row.lateCount > 0) && (
+                <Text
+                  style={[styles.lastSessionText, row.lateCount > 0 && { color: Colors.riskHigh }]}
+                >
+                  {row.weekPlanned > 0 ? `Semaine : ${row.weekDone}/${row.weekPlanned} faites` : ""}
+                  {row.weekPlanned > 0 && row.lateCount > 0 ? " · " : ""}
+                  {row.lateCount > 0 ? `${row.lateCount} en retard` : ""}
+                </Text>
+              )}
             </View>
             <Text style={[styles.cellText, styles.numCol]}>
               {row.wellnessScore !== null ? row.wellnessScore.toFixed(1) : "—"}

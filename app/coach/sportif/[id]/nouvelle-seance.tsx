@@ -171,6 +171,7 @@ export default function CoachNouvelleSeanceScreen() {
             ? {
                 programmeId: selectedProgramme.id,
                 programmeNom: selectedProgramme.nom,
+                seanceId: selectedSeance.id,
                 seanceNom: selectedSeance.nom,
                 exerciseLogs,
               }

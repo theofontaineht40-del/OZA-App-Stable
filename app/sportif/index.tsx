@@ -10,12 +10,20 @@ import { HeaderTexture } from "../../components/decor";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
 import PremiumStatWidget from "../../components/premium-stat-widget";
+import WeekScheduleCard from "../../components/week-schedule-card";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
-import { buildDailyLoadSeries } from "../../services/load";
+import { buildDailyLoadSeries, todayKey } from "../../services/load";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
+import {
+  computeScheduleStatuses,
+  getScheduledForSportif,
+  mondayOf,
+  ScheduledSession,
+  weekDates,
+} from "../../services/schedule";
 import { getNextSeance, getSeanceExerciseNames } from "../../services/session-muscles";
 import { getLatestWellnessScore, getSessionsForSportif, SessionRecord } from "../../services/tracking";
 
@@ -26,6 +34,7 @@ export default function SportifHome() {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
   const [goal, setGoalState] = useState<Goal | null>(null);
+  const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
   const [loading, setLoading] = useState(true);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
@@ -53,6 +62,14 @@ export default function SportifHome() {
         setProgrammes(programmeData);
         setCheckinDone(todayScore !== null);
         setGoalState(goalData);
+
+        // Planning posé par le coach : un échec (ex. règles pas encore
+        // publiées) ne doit jamais empêcher d'afficher l'accueil.
+        try {
+          setScheduled(await getScheduledForSportif(user.uid));
+        } catch {
+          setScheduled([]);
+        }
       } finally {
         setLoading(false);
       }
@@ -100,6 +117,13 @@ export default function SportifHome() {
 
   const nextSeance = getNextSeance(programmes[0] ?? null, sessions);
 
+  const today = todayKey();
+  const weekDays = weekDates(mondayOf(today));
+  const scheduleStatuses = computeScheduleStatuses(scheduled, sessions, today);
+  const weekScheduleItems = scheduled
+    .filter((s) => weekDays.includes(s.date))
+    .map((item) => ({ item, dayIndex: weekDays.indexOf(item.date) }));
+
   return (
     <View style={{ flex: 1 }}>
       <PhotoBackground variant="accueil" />
@@ -145,6 +169,13 @@ export default function SportifHome() {
           <Ionicons name="add-circle" size={20} color={Colors.white} />
           <Text style={styles.ctaButtonText}>Enregistrer une séance</Text>
         </AnimatedPressable>
+
+        {weekScheduleItems.length > 0 && (
+          <>
+            <Text style={styles.sectionLabel}>Ma semaine</Text>
+            <WeekScheduleCard items={weekScheduleItems} statuses={scheduleStatuses} />
+          </>
+        )}
 
         <View style={styles.todayList}>
           {programmes.length > 0 && (

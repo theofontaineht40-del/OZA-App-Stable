@@ -5,6 +5,7 @@
 // interne/externe séparés) n'a pas de source de données dans l'app, elle
 // n'est volontairement pas ici : l'UI l'affiche comme "à venir" plutôt que
 // d'inventer un chiffre.
+import { computeScheduleStatuses, mondayOf, ScheduledSession, weekDates } from "./schedule";
 import { SessionRecord, WellnessEntry } from "./tracking";
 import {
   AcwrLevel,
@@ -118,6 +119,12 @@ export type SportifRow = {
   hasEnoughHistory: boolean;
   wellnessStatusValue: WellnessStatus | null;
   personalAvgWellness: number | null;
+  // Planning posé par le coach (voir services/schedule.ts) : séances prévues
+  // cette semaine et combien sont faites, plus toutes les séances en retard.
+  // `weekPlanned` = 0 quand rien n'est planifié (l'UI n'affiche alors rien).
+  weekPlanned: number;
+  weekDone: number;
+  lateCount: number;
 };
 
 // Une ligne par sportif pour le tableau "Mes sportifs" — construite à partir
@@ -125,7 +132,8 @@ export type SportifRow = {
 export function buildSportifRow(
   sportif: { uid: string; firstName: string; lastName: string },
   sessions: SessionRecord[],
-  wellness: WellnessEntry[]
+  wellness: WellnessEntry[],
+  scheduled: ScheduledSession[] = []
 ): SportifRow {
   const sportifSessions = sessions.filter((s) => s.sportifId === sportif.uid);
   const dailyLoads = buildDailyLoadSeries(sportifSessions, 28);
@@ -153,6 +161,13 @@ export function buildSportifRow(
 
   const wellnessStatusValue = latest ? wellnessStatus(latest.score, personalAvg) : null;
 
+  const sportifScheduled = scheduled.filter((i) => i.sportifId === sportif.uid);
+  const scheduleStatuses = computeScheduleStatuses(sportifScheduled, sportifSessions, todayKey());
+  const currentWeekDates = new Set(weekDates(mondayOf(todayKey())));
+  const weekItems = sportifScheduled.filter((i) => currentWeekDates.has(i.date));
+  const weekDone = weekItems.filter((i) => scheduleStatuses.get(i.id) === "done").length;
+  const lateCount = sportifScheduled.filter((i) => scheduleStatuses.get(i.id) === "late").length;
+
   return {
     uid: sportif.uid,
     firstName: sportif.firstName,
@@ -167,6 +182,9 @@ export function buildSportifRow(
     hasEnoughHistory,
     wellnessStatusValue,
     personalAvgWellness: personalAvg,
+    weekPlanned: weekItems.length,
+    weekDone,
+    lateCount,
   };
 }
 

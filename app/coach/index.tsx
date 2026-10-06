@@ -30,6 +30,7 @@ import {
 } from "../../services/coach-analytics";
 import { getRelationsForCoach, Relation } from "../../services/relations";
 import { getSlotsForCoach, Slot } from "../../services/reservations";
+import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
 import {
   getMySportifs,
   getSessionsForCoach,
@@ -70,6 +71,7 @@ export default function CoachHome() {
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
+  const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
   const [specialisteRelations, setSpecialisteRelations] = useState<Relation[]>([]);
   const [loading, setLoading] = useState(true);
   const [sportifSearch, setSportifSearch] = useState("");
@@ -99,6 +101,14 @@ export default function CoachHome() {
         setSlots(slotData);
         setSpecialisteRelations(relationData.filter((r) => r.type === "specialiste"));
         setWellness(wellnessData);
+
+        // Le planning est un plus : s'il ne se charge pas (ex. règles pas
+        // encore publiées), le dashboard doit s'afficher sans lui.
+        try {
+          setScheduled(await getScheduledForCoach(user.uid));
+        } catch {
+          setScheduled([]);
+        }
       } finally {
         setLoading(false);
       }
@@ -124,8 +134,8 @@ export default function CoachHome() {
   );
 
   const sportifRows: SportifRow[] = useMemo(
-    () => sportifs.map((s) => buildSportifRow(s, sessions, wellness)),
-    [sportifs, sessions, wellness]
+    () => sportifs.map((s) => buildSportifRow(s, sessions, wellness, scheduled)),
+    [sportifs, sessions, wellness, scheduled]
   );
 
   const analysis = useMemo(() => computeCoachAnalysis(sportifRows), [sportifRows]);

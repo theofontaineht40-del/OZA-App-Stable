@@ -368,6 +368,15 @@ export default function SportifDetailScreen() {
 
       <TouchableOpacity
         style={styles.evaluationLink}
+        onPress={() => router.push(`/coach/sportif/${id}/planning`)}
+      >
+        <Ionicons name="today-outline" size={20} color={Colors.primary} />
+        <Text style={styles.evaluationLinkText}>Planning de la semaine</Text>
+        <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.evaluationLink}
         onPress={() => router.push(`/coach/sportif/${id}/planification`)}
       >
         <Ionicons name="calendar-number-outline" size={20} color={Colors.primary} />

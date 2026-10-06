@@ -229,6 +229,7 @@ export default function SeanceExecutionScreen() {
         programmeInfo: {
           programmeId: programme.id,
           programmeNom: programme.nom,
+          seanceId: seance.id,
           seanceNom: seance.nom,
           exerciseLogs,
         },

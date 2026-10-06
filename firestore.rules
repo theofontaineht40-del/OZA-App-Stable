@@ -210,6 +210,20 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }
 
+    // ── Planning : séances posées sur une date par le coach ──
+    // Écrites par le coach principal ; lisibles par le sportif concerné (il
+    // voit sa semaine). Le statut "faite / en retard" n'est jamais stocké.
+    match /scheduledSessions/{itemId} {
+      allow read: if isSignedIn() && (
+        resource.data.sportifId == request.auth.uid ||
+        resource.data.coachId == request.auth.uid
+      );
+      allow create: if isSignedIn() &&
+        request.resource.data.coachId == request.auth.uid &&
+        isPrincipalOf(request.resource.data.sportifId);
+      allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+    }
+
     // ── 1RM estimés / de référence ──
     // Écrits par le coach principal ; lisibles aussi par le sportif concerné
     // (ses charges en % de 1RM s'affichent alors en kg dans son programme).

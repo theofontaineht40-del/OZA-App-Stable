@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
 import {
   Image,
@@ -14,7 +15,13 @@ import {
 
 import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
+import { auth } from "../../../../firebase";
 import { getExerciseLibrary } from "../../../../services/exercises";
+import {
+  getOneRepMaxesForSportif,
+  referenceMap,
+  roundKg,
+} from "../../../../services/one-rep-max";
 import { ChargeType, getProgramme, Programme } from "../../../../services/programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -35,7 +42,21 @@ export default function SportifProgrammeViewScreen() {
   const [photosByExerciceId, setPhotosByExerciceId] = useState<Map<string, string | null>>(
     new Map()
   );
+  // 1RM de référence du sportif (exerciceId → kg) : convertit les charges
+  // en "% 1RM" du programme en kilos. Absent = on garde le simple pourcentage.
+  const [oneRms, setOneRms] = useState<Map<string, number>>(new Map());
   const pagerRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+      getOneRepMaxesForSportif(user.uid)
+        .then((records) => setOneRms(referenceMap(records)))
+        .catch(() => {
+          // Pas de 1RM lisible : on affiche juste le pourcentage.
+        });
+    });
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -165,6 +186,9 @@ export default function SportifProgrammeViewScreen() {
                                   <Text style={styles.detailLabel}>Charge</Text>
                                   <Text style={styles.detailValue}>
                                     {ex.chargeValeur ? `${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : "—"}
+                                    {ex.chargeType === "1rm" && ex.chargeValeur && oneRms.get(ex.exerciceId)
+                                      ? ` ≈ ${roundKg((parseFloat(ex.chargeValeur.replace(",", ".")) / 100) * oneRms.get(ex.exerciceId)!)} kg`
+                                      : ""}
                                   </Text>
                                 </View>
                                 <View style={styles.detailItem}>

@@ -14,6 +14,7 @@ import WellnessReport from "../../../../components/wellness-report";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
+import { getInjuries, Injury } from "../../../../services/medical";
 import { getProgrammesForCoachAndSportif, Programme } from "../../../../services/programmes";
 import { deleteManagedSportif, getRelation, Relation } from "../../../../services/relations";
 import {
@@ -38,6 +39,7 @@ export default function SportifDetailScreen() {
   const [sessions, setSessions] = useState<SessionRecord[] | null>(null);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [injuries, setInjuries] = useState<Injury[]>([]);
   const [deleteStep, setDeleteStep] = useState<"none" | "confirm" | "typeName">("none");
   const [deleteNameInput, setDeleteNameInput] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -103,6 +105,12 @@ export default function SportifDetailScreen() {
           setProgrammes(programmeData);
         } catch {
           setProgrammes([]);
+        }
+
+        try {
+          setInjuries(await getInjuries(id));
+        } catch {
+          setInjuries([]);
         }
       } else {
         setSessions([]);
@@ -394,6 +402,43 @@ export default function SportifDetailScreen() {
           <Text style={styles.deleteLinkText}>Supprimer ce profil</Text>
         </TouchableOpacity>
       )}
+
+      <View style={styles.injuriesCard}>
+        <View style={styles.injuriesHeader}>
+          <Text style={styles.sectionTitle}>
+            Gênes ouvertes ({injuries.filter((i) => i.statut === "active").length})
+          </Text>
+          <TouchableOpacity onPress={() => router.push(`/coach/sportif/${id}/profil-medical`)}>
+            <Text style={styles.injuriesLink}>Profil médical</Text>
+          </TouchableOpacity>
+        </View>
+        {injuries.filter((i) => i.statut === "active").length === 0 ? (
+          <Text style={styles.emptyText}>Aucune gêne ouverte.</Text>
+        ) : (
+          injuries
+            .filter((i) => i.statut === "active")
+            .map((i) => (
+              <View key={i.id} style={styles.injuryRow}>
+                <View
+                  style={[
+                    styles.injuryDot,
+                    { backgroundColor: i.gravite >= 7 ? Colors.riskHigh : Colors.riskMedium },
+                  ]}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.injuryTitle}>
+                    {i.zone}
+                    {i.type ? ` · ${i.type}` : ""}
+                  </Text>
+                  <Text style={styles.injuryMeta}>
+                    Gravité {i.gravite}/10 · depuis le {i.date}
+                    {i.notes ? ` · ${i.notes}` : ""}
+                  </Text>
+                </View>
+              </View>
+            ))
+        )}
+      </View>
 
       {(wellness.length > 0 || (sessions?.length ?? 0) > 0) && (
         <View style={styles.reportRow}>
@@ -702,6 +747,57 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.text,
     marginBottom: 16,
+  },
+
+  injuriesCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+
+  injuriesHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  injuriesLink: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.primary,
+  },
+
+  injuryRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    paddingVertical: 8,
+  },
+
+  injuryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginTop: 4,
+  },
+
+  injuryTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  injuryMeta: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
   },
 
   reportRow: {

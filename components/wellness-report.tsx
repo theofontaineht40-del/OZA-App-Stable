@@ -17,7 +17,7 @@ import {
   wellnessStatus,
 } from "../services/load";
 import { WellnessEntry } from "../services/tracking";
-import ProgressionChart, { ProgressionPoint } from "./progression-chart";
+import TrendChart, { TrendPoint } from "./trend-chart";
 
 type VariableKey = "sommeil" | "fatigue" | "courbatures" | "stress";
 
@@ -87,6 +87,8 @@ export default function WellnessReport({
   dailyLoads28: DailyLoad[];
 }) {
   const [windowDays, setWindowDays] = useState<WindowDays>(7);
+  // Courbe affichée : le score global ou l'une des 4 variables.
+  const [chartKey, setChartKey] = useState<"score" | VariableKey>("score");
 
   const latest = entriesDesc[0] ?? null;
   const history = entriesDesc.slice(1); // tout sauf aujourd'hui, pour la baseline personnelle
@@ -107,8 +109,17 @@ export default function WellnessReport({
         .reverse(), // chronologique pour le graphique
     [entriesDesc, windowDays]
   );
-  const windowPoints: ProgressionPoint[] = windowEntries.map((e) => ({ date: e.date, value: e.score }));
-  const windowStats = computeWellnessTrendStats(windowEntries.map((e) => e.score));
+  const valueOf = (e: WellnessEntry) => (chartKey === "score" ? e.score : e[chartKey]);
+  const windowPoints: TrendPoint[] = windowEntries.map((e) => ({
+    date: e.date,
+    value: Math.round(valueOf(e) * 10) / 10,
+  }));
+  const windowStats = computeWellnessTrendStats(windowEntries.map(valueOf));
+  // Seuil d'alerte = la même règle que le statut "rouge" (wellnessStatus) :
+  // 2 points sous la moyenne personnelle de la courbe affichée. Sans
+  // historique suffisant, pas de seuil plutôt qu'un seuil inventé.
+  const chartHistory = history.slice(0, 28).map(valueOf);
+  const chartThreshold = chartHistory.length >= 3 ? average(chartHistory) - 2.0 : null;
   const globalTrend = detectConsecutiveTrend(entriesDesc.slice(0, 14).map((e) => e.score).reverse());
 
   // Détail par variable, calculé une seule fois : sert à la fois à l'affichage
@@ -256,7 +267,21 @@ export default function WellnessReport({
         ))}
       </View>
 
-      <ProgressionChart points={windowPoints} />
+      <View style={styles.windowTabs}>
+        {[{ key: "score" as const, label: "Score" }, ...VARIABLES].map((v) => (
+          <TouchableOpacity
+            key={v.key}
+            style={[styles.windowTab, chartKey === v.key && styles.windowTabActive]}
+            onPress={() => setChartKey(v.key)}
+          >
+            <Text style={[styles.windowTabText, chartKey === v.key && styles.windowTabTextActive]}>
+              {v.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <TrendChart points={windowPoints} yMin={0} yMax={10} threshold={chartThreshold} />
 
       {windowPoints.length > 0 && (
         <View style={styles.statsRow}>
@@ -476,6 +501,7 @@ const styles = StyleSheet.create({
 
   windowTabs: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
     marginBottom: 12,
   },

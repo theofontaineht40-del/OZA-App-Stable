@@ -74,6 +74,7 @@ export function LoadSummary({
     <View>
       {showRiskIndicators && (
         hasEnoughHistory ? (
+          <>
           <View style={styles.indicatorsRow}>
             <IndicatorCard
               label="ACWR"
@@ -92,6 +93,8 @@ export function LoadSummary({
               hideRisk
             />
           </View>
+          <AcwrGauge acwr={acwr} />
+          </>
         ) : (
           <View style={styles.notEnoughHistory}>
             <Text style={styles.notEnoughHistoryText}>
@@ -133,6 +136,43 @@ export function LoadSummary({
   );
 }
 
+// Jauge ACWR : 0 → 2+ réparti sur les mêmes zones que acwrRiskLevel
+// (< 0,8 sous-charge · 0,8-1,3 optimale · 1,3-1,5 vigilance · > 1,5 danger),
+// avec un repère à la valeur courante.
+const GAUGE_MAX = 2;
+const GAUGE_ZONES: { to: number; color: string; label: string }[] = [
+  { to: 0.8, color: Colors.riskUnder, label: "sous-charge" },
+  { to: 1.3, color: Colors.riskLow, label: "idéal" },
+  { to: 1.5, color: Colors.riskMedium, label: "attention" },
+  { to: GAUGE_MAX, color: Colors.riskHigh, label: "risque" },
+];
+
+function AcwrGauge({ acwr }: { acwr: number }) {
+  const position = Math.min(Math.max(acwr, 0), GAUGE_MAX) / GAUGE_MAX;
+  let from = 0;
+  return (
+    <View style={styles.gauge}>
+      <View>
+        <View style={styles.gaugeBar}>
+          {GAUGE_ZONES.map((z) => {
+            const width = ((z.to - from) / GAUGE_MAX) * 100;
+            from = z.to;
+            return <View key={z.label} style={{ width: `${width}%`, backgroundColor: z.color }} />;
+          })}
+        </View>
+        <View style={[styles.gaugeMarker, { left: `${position * 100}%` }]} />
+      </View>
+      <View style={styles.gaugeLabels}>
+        {GAUGE_ZONES.map((z) => (
+          <Text key={z.label} style={[styles.gaugeLabel, { color: z.color }]}>
+            {z.label}
+          </Text>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 function IndicatorCard({
   label,
   value,
@@ -164,6 +204,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
     marginBottom: 20,
+  },
+
+  gauge: {
+    marginBottom: 20,
+  },
+
+  gaugeBar: {
+    flexDirection: "row",
+    height: 12,
+    borderRadius: 6,
+    overflow: "hidden",
+    opacity: 0.85,
+  },
+
+  gaugeMarker: {
+    position: "absolute",
+    top: -2,
+    bottom: -2,
+    width: 4,
+    marginLeft: -2,
+    borderRadius: 2,
+    backgroundColor: Colors.text,
+  },
+
+  gaugeLabels: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 6,
+  },
+
+  gaugeLabel: {
+    fontSize: 10,
+    fontWeight: "700",
   },
 
   notEnoughHistory: {

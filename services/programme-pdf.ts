@@ -12,7 +12,7 @@ import {
   toDataUri,
   toDataUriMap,
 } from "./pdf-web";
-import { Bloc, BlocExercice, ChargeType, Programme, Seance } from "./programmes";
+import { Bloc, blocModeLabel, BlocExercice, ChargeType, Programme, Seance } from "./programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
   "1rm": "% 1RM",
@@ -54,7 +54,7 @@ function blocHtml(bloc: Bloc, photosByExerciceId: Map<string, string | null>): s
   if (bloc.exercices.length === 0) return "";
   return `
     <div class="bloc" style="border-left-color: ${bloc.couleur}">
-      <h3>${escapeHtml(bloc.nom)}${bloc.objectif ? ` <span class="objectif">— ${escapeHtml(bloc.objectif)}</span>` : ""}</h3>
+      <h3>${escapeHtml(bloc.nom)}${blocModeLabel(bloc) ? ` <span class="objectif">· ${escapeHtml(blocModeLabel(bloc))}</span>` : ""}${bloc.objectif ? ` <span class="objectif">— ${escapeHtml(bloc.objectif)}</span>` : ""}</h3>
       <table>
         <colgroup>
           <col class="col-exercice" />

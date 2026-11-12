@@ -30,11 +30,46 @@ export type BlocExercice = {
   commentaires: string;
 };
 
+// Comment les exercices d'un bloc s'enchaînent : l'un après l'autre avec leurs
+// propres séries et repos (défaut), ou en bi-set / tri-set / circuit (on passe
+// d'un exercice au suivant sans s'arrêter, le repos vient en fin de tour).
+// `undefined` sur les blocs créés avant cette option = "serie".
+export type BlocMode = "serie" | "biset" | "triset" | "circuit";
+
+export const BLOC_MODES: { key: BlocMode; label: string; short: string }[] = [
+  { key: "serie", label: "L'un après l'autre", short: "" },
+  { key: "biset", label: "Bi-set", short: "Bi-set" },
+  { key: "triset", label: "Tri-set", short: "Tri-set" },
+  { key: "circuit", label: "Circuit", short: "Circuit" },
+];
+
+// Libellé court affiché à côté du nom du bloc ("" pour le mode classique).
+export function blocModeLabel(bloc: { mode?: BlocMode }): string {
+  return BLOC_MODES.find((m) => m.key === (bloc.mode ?? "serie"))?.short ?? "";
+}
+
+// Message si le nombre d'exercices ne colle pas au mode (bi-set = 2, tri-set
+// = 3, circuit = au moins 3). null = rien à signaler.
+export function blocModeWarning(bloc: { mode?: BlocMode; exercices: unknown[] }): string | null {
+  const n = bloc.exercices.length;
+  switch (bloc.mode) {
+    case "biset":
+      return n === 2 ? null : `Un bi-set enchaîne 2 exercices (ici ${n}).`;
+    case "triset":
+      return n === 3 ? null : `Un tri-set enchaîne 3 exercices (ici ${n}).`;
+    case "circuit":
+      return n >= 3 ? null : `Un circuit compte au moins 3 exercices (ici ${n}).`;
+    default:
+      return null;
+  }
+}
+
 export type Bloc = {
   id: string;
   nom: string;
   objectif: string;
   couleur: string;
+  mode?: BlocMode;
   exercices: BlocExercice[];
 };
 

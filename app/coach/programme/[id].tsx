@@ -28,6 +28,8 @@ import { auth } from "../../../firebase";
 import { usePrincipalAccess } from "../../../hooks/use-principal-access";
 import {
   Bloc,
+  BLOC_MODES,
+  blocModeWarning,
   BlocExercice,
   ChargeType,
   getProgramme,
@@ -476,6 +478,24 @@ function BlocCard({
         onBlur={() => onUpdate({ objectif: objectifDraft })}
       />
 
+      <View style={styles.modeRow}>
+        {BLOC_MODES.map((m) => {
+          const active = (bloc.mode ?? "serie") === m.key;
+          return (
+            <TouchableOpacity
+              key={m.key}
+              style={[styles.modeChip, active && styles.modeChipActive]}
+              onPress={() => onUpdate({ mode: m.key })}
+            >
+              <Text style={[styles.modeChipText, active && styles.modeChipTextActive]}>
+                {m.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+      {blocModeWarning(bloc) && <Text style={styles.modeWarning}>{blocModeWarning(bloc)}</Text>}
+
       {bloc.exercices.map((ex) => (
         <ExerciceCard
           key={ex.id}
@@ -901,6 +921,42 @@ const styles = StyleSheet.create({
   colorSwatchActive: {
     borderWidth: 2,
     borderColor: Colors.text,
+  },
+
+  modeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+    marginBottom: 10,
+  },
+
+  modeChip: {
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+
+  modeChipActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+
+  modeChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  modeChipTextActive: {
+    color: Colors.white,
+  },
+
+  modeWarning: {
+    fontSize: 12,
+    color: Colors.riskMedium,
+    marginBottom: 10,
   },
 
   blocNomInput: {

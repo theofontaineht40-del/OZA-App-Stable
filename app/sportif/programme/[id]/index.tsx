@@ -22,7 +22,7 @@ import {
   referenceMap,
   roundKg,
 } from "../../../../services/one-rep-max";
-import { ChargeType, getProgramme, Programme } from "../../../../services/programmes";
+import { blocModeLabel, ChargeType, getProgramme, Programme } from "../../../../services/programmes";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
   "1rm": "% 1RM",
@@ -155,7 +155,14 @@ export default function SportifProgrammeViewScreen() {
                     ) : (
                       seance.blocs.map((bloc) => (
                         <View key={bloc.id} style={[styles.blocCard, { borderLeftColor: bloc.couleur }]}>
-                          <Text style={styles.blocNom}>{bloc.nom}</Text>
+                          <View style={styles.blocNomRow}>
+                            <Text style={styles.blocNom}>{bloc.nom}</Text>
+                            {!!blocModeLabel(bloc) && (
+                              <View style={styles.modeBadge}>
+                                <Text style={styles.modeBadgeText}>{blocModeLabel(bloc)}</Text>
+                              </View>
+                            )}
+                          </View>
                           {!!bloc.objectif && <Text style={styles.blocObjectif}>{bloc.objectif}</Text>}
 
                           {bloc.exercices.map((ex) => {
@@ -322,6 +329,25 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
+  },
+
+  blocNomRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  modeBadge: {
+    backgroundColor: Colors.accentTint,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+
+  modeBadgeText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: Colors.primary,
   },
 
   blocNom: {

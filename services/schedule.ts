@@ -3,8 +3,10 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 
@@ -202,4 +204,92 @@ export async function copyWeekToNext(items: ScheduledSession[], monday: string):
     await addScheduledSession({ ...rest, date: addDays(i.date, 7) });
   }
   return toCopy.length;
+}
+
+// ── Semaine type ──
+// Un modèle de semaine par sportif (les séances référencent SES programmes) :
+// le coach enregistre la semaine affichée comme modèle, puis l'applique à
+// n'importe quelle semaine ou aux suivantes.
+export type WeekTemplateItem = Pick<
+  ScheduledSession,
+  "kind" | "titre" | "programmeId" | "programmeNom" | "seanceId" | "seanceNom"
+> & { dayIndex: number }; // 0 = lundi … 6 = dimanche
+
+export type WeekTemplate = {
+  coachId: string;
+  sportifId: string;
+  items: WeekTemplateItem[];
+};
+
+function templateId(sportifId: string, coachId: string): string {
+  return `${sportifId}_${coachId}`;
+}
+
+export async function getWeekTemplate(
+  coachId: string,
+  sportifId: string
+): Promise<WeekTemplate | null> {
+  const snap = await getDoc(doc(db, "weekTemplates", templateId(sportifId, coachId)));
+  if (!snap.exists()) return null;
+  const d = snap.data();
+  return { coachId: d.coachId, sportifId: d.sportifId, items: d.items ?? [] };
+}
+
+export async function saveWeekTemplate(
+  coachId: string,
+  sportifId: string,
+  weekItems: ScheduledSession[],
+  monday: string
+): Promise<number> {
+  const items: WeekTemplateItem[] = weekItems.map((i) => ({
+    dayIndex: daysBetween(monday, i.date),
+    kind: i.kind,
+    titre: i.titre,
+    programmeId: i.programmeId,
+    programmeNom: i.programmeNom,
+    seanceId: i.seanceId,
+    seanceNom: i.seanceNom,
+  }));
+  await setDoc(doc(db, "weekTemplates", templateId(sportifId, coachId)), {
+    coachId,
+    sportifId,
+    items,
+    updatedAt: new Date(),
+  });
+  return items.length;
+}
+
+// Applique le modèle à la semaine commençant à `monday`, en sautant ce qui y
+// est déjà (même jour, même séance) pour pouvoir réappliquer sans doublons.
+export async function applyWeekTemplate(
+  template: WeekTemplate,
+  monday: string,
+  existing: ScheduledSession[]
+): Promise<number> {
+  let added = 0;
+  for (const t of template.items) {
+    const date = addDays(monday, t.dayIndex);
+    const already = existing.some(
+      (e) =>
+        e.date === date &&
+        e.kind === t.kind &&
+        e.programmeId === t.programmeId &&
+        e.seanceId === t.seanceId &&
+        e.titre === t.titre
+    );
+    if (already) continue;
+    await addScheduledSession({
+      coachId: template.coachId,
+      sportifId: template.sportifId,
+      date,
+      kind: t.kind,
+      titre: t.titre,
+      programmeId: t.programmeId,
+      programmeNom: t.programmeNom,
+      seanceId: t.seanceId,
+      seanceNom: t.seanceNom,
+    });
+    added++;
+  }
+  return added;
 }

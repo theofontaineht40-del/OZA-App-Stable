@@ -224,6 +224,20 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }
 
+    // ── Semaine type (modèle de planning, un par sportif) ──
+    // Privée au coach principal : le sportif ne voit que les séances réelles
+    // posées sur ses dates (scheduledSessions).
+    match /weekTemplates/{templateId} {
+      // Lecture basée sur l'id (sportifId_coachId) et non sur resource.data :
+      // avant le tout premier enregistrement le document n'existe pas, et une
+      // règle sur resource.data refuserait la lecture au lieu de "introuvable".
+      allow read: if isSignedIn() && templateId.split("_")[1] == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+      allow create: if isSignedIn() &&
+        request.resource.data.coachId == request.auth.uid &&
+        isPrincipalOf(request.resource.data.sportifId);
+    }
+
     // ── Objectifs fixés par le coach ──
     // Écrits par le coach principal ; le sportif les lit (lecture seule).
     match /coachObjectives/{objectiveId} {

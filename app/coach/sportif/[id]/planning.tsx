@@ -24,15 +24,19 @@ import { getProgrammesForCoachAndSportif, Programme } from "../../../../services
 import {
   addDays,
   addScheduledSession,
+  applyWeekTemplate,
   computeScheduleStatuses,
   copyWeekToNext,
   deleteScheduledSession,
   getScheduledForCoach,
+  getWeekTemplate,
   isoWeekNumber,
   mondayOf,
+  saveWeekTemplate,
   ScheduledSession,
   ScheduleStatus,
   summarize,
+  WeekTemplate,
   weekDates,
 } from "../../../../services/schedule";
 import { getSessionsForCoach, SessionRecord } from "../../../../services/tracking";
@@ -74,6 +78,8 @@ export default function PlanningScreen() {
   const [libreTitle, setLibreTitle] = useState("");
   const [busy, setBusy] = useState(false);
   const [copyConfirm, setCopyConfirm] = useState(false);
+  const [template, setTemplate] = useState<WeekTemplate | null>(null);
+  const [saveTemplateConfirm, setSaveTemplateConfirm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
@@ -83,12 +89,15 @@ export default function PlanningScreen() {
   const load = useCallback(async () => {
     if (!coachUid || !id) return;
     try {
-      const [all, allSessions, progs, userSnap] = await Promise.all([
+      const [all, allSessions, progs, userSnap, tpl] = await Promise.all([
         getScheduledForCoach(coachUid),
         getSessionsForCoach(coachUid),
         getProgrammesForCoachAndSportif(coachUid, id),
         getDoc(doc(db, "users", id)),
+        // Le modèle est facultatif : un échec de lecture ne doit pas vider l'écran.
+        getWeekTemplate(coachUid, id).catch(() => null),
       ]);
+      setTemplate(tpl);
       setItems(all.filter((i) => i.sportifId === id));
       setSessions(allSessions.filter((s) => s.sportifId === id));
       setProgrammes(progs);
@@ -180,6 +189,46 @@ export default function PlanningScreen() {
     }
   }
 
+  async function confirmSaveTemplate() {
+    setSaveTemplateConfirm(false);
+    if (!coachUid || !id) return;
+    setBusy(true);
+    try {
+      const n = await saveWeekTemplate(coachUid, id, weekItems, monday);
+      await load();
+      showAlert("Semaine type enregistrée", `${n} séance${n > 1 ? "s" : ""} dans le modèle.`);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // weeks = 1 : la semaine affichée ; 4 : elle et les 3 suivantes.
+  async function applyTemplate(weeks: number) {
+    if (!template) return;
+    setBusy(true);
+    try {
+      // Chaque semaine cible n'est comparée qu'à ses propres séances déjà
+      // posées (dates distinctes d'une semaine à l'autre).
+      let added = 0;
+      for (let w = 0; w < weeks; w++) {
+        added += await applyWeekTemplate(template, addDays(monday, w * 7), items);
+      }
+      await load();
+      showAlert(
+        "Semaine type appliquée",
+        added === 0
+          ? "Tout y était déjà, rien à ajouter."
+          : `${added} séance${added > 1 ? "s" : ""} ajoutée${added > 1 ? "s" : ""}.`
+      );
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const weekLabel = `S${isoWeekNumber(monday)} · ${shortDate(monday)} – ${shortDate(addDays(monday, 6))}`;
 
   return (
@@ -218,6 +267,32 @@ export default function PlanningScreen() {
           >
             <Ionicons name="copy-outline" size={14} color={Colors.primary} />
             <Text style={styles.actionChipText}>Copier vers la semaine suivante</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.actionsRow}>
+          <TouchableOpacity
+            style={[styles.actionChip, weekItems.length === 0 && styles.actionChipDisabled]}
+            onPress={() => setSaveTemplateConfirm(true)}
+            disabled={weekItems.length === 0 || busy}
+          >
+            <Ionicons name="bookmark-outline" size={14} color={Colors.primary} />
+            <Text style={styles.actionChipText}>Enregistrer comme semaine type</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.actionChip, !template && styles.actionChipDisabled]}
+            onPress={() => applyTemplate(1)}
+            disabled={!template || busy}
+          >
+            <Ionicons name="calendar-outline" size={14} color={Colors.primary} />
+            <Text style={styles.actionChipText}>Appliquer la semaine type</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.actionChip, !template && styles.actionChipDisabled]}
+            onPress={() => applyTemplate(4)}
+            disabled={!template || busy}
+          >
+            <Text style={styles.actionChipText}>sur 4 semaines</Text>
           </TouchableOpacity>
         </View>
 
@@ -356,6 +431,14 @@ export default function PlanningScreen() {
         confirmLabel="Copier"
         onConfirm={confirmCopy}
         onCancel={() => setCopyConfirm(false)}
+      />
+      <ConfirmModal
+        visible={saveTemplateConfirm}
+        title="Enregistrer comme semaine type"
+        message={`Les ${weekItems.length} séance${weekItems.length > 1 ? "s" : ""} de ${weekLabel} deviennent le modèle de ce sportif (il remplace l'éventuel modèle précédent).`}
+        confirmLabel="Enregistrer"
+        onConfirm={confirmSaveTemplate}
+        onCancel={() => setSaveTemplateConfirm(false)}
       />
       <ConfirmModal
         visible={deleteTarget !== null}

@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import { CardioSpec } from "./cardio";
 
 // Planning par jour : le coach pose des séances (d'un programme du sportif,
 // ou "libres") sur des dates précises. Le statut (faite / en retard / ...)
@@ -22,12 +23,14 @@ export type ScheduledSession = {
   coachId: string;
   sportifId: string;
   date: string; // YYYY-MM-DD
-  kind: "programme" | "libre";
+  kind: "programme" | "libre" | "cardio";
   titre: string;
   programmeId: string | null;
   programmeNom: string | null;
   seanceId: string | null;
   seanceNom: string | null;
+  // Seulement pour kind === "cardio" : le détail des intervalles.
+  cardio: CardioSpec | null;
 };
 
 export type ScheduleStatus = "done" | "late" | "today" | "upcoming";
@@ -92,7 +95,9 @@ export type DoneSession = {
 const EARLY_TOLERANCE_DAYS = 3;
 
 function compatible(item: ScheduledSession, s: DoneSession): boolean {
-  if (item.kind === "libre") return s.date === item.date;
+  // Séance libre ou cardio : pas de programme à rapprocher, toute séance
+  // enregistrée le jour prévu la valide.
+  if (item.kind === "libre" || item.kind === "cardio") return s.date === item.date;
   if (!item.programmeId || s.programmeId !== item.programmeId) return false;
   if (s.seanceId) return s.seanceId === item.seanceId;
   // Séances enregistrées avant l'ajout de seanceId : repli sur le nom.
@@ -161,12 +166,13 @@ function toItem(id: string, d: Record<string, any>): ScheduledSession {
     coachId: d.coachId,
     sportifId: d.sportifId,
     date: d.date,
-    kind: d.kind === "libre" ? "libre" : "programme",
+    kind: d.kind === "libre" ? "libre" : d.kind === "cardio" ? "cardio" : "programme",
     titre: d.titre ?? "",
     programmeId: d.programmeId ?? null,
     programmeNom: d.programmeNom ?? null,
     seanceId: d.seanceId ?? null,
     seanceNom: d.seanceNom ?? null,
+    cardio: d.cardio ?? null,
   };
 }
 
@@ -212,7 +218,7 @@ export async function copyWeekToNext(items: ScheduledSession[], monday: string):
 // n'importe quelle semaine ou aux suivantes.
 export type WeekTemplateItem = Pick<
   ScheduledSession,
-  "kind" | "titre" | "programmeId" | "programmeNom" | "seanceId" | "seanceNom"
+  "kind" | "titre" | "programmeId" | "programmeNom" | "seanceId" | "seanceNom" | "cardio"
 > & { dayIndex: number }; // 0 = lundi … 6 = dimanche
 
 export type WeekTemplate = {
@@ -249,6 +255,7 @@ export async function saveWeekTemplate(
     programmeNom: i.programmeNom,
     seanceId: i.seanceId,
     seanceNom: i.seanceNom,
+    cardio: i.cardio,
   }));
   await setDoc(doc(db, "weekTemplates", templateId(sportifId, coachId)), {
     coachId,
@@ -288,6 +295,7 @@ export async function applyWeekTemplate(
       programmeNom: t.programmeNom,
       seanceId: t.seanceId,
       seanceNom: t.seanceNom,
+      cardio: t.cardio ?? null, // modèles enregistrés avant l'ajout du cardio
     });
     added++;
   }

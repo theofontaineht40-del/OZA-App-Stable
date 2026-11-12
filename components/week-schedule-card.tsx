@@ -36,7 +36,9 @@ export default function WeekScheduleCard({
     <View style={styles.card}>
       {items.map(({ item, dayIndex }, i) => {
         const status = statuses.get(item.id) ?? "upcoming";
-        const canOpen = item.kind === "programme" && !!item.programmeId && !!item.seanceId;
+        const canOpen =
+          item.kind === "cardio" ||
+          (item.kind === "programme" && !!item.programmeId && !!item.seanceId);
         return (
           <TouchableOpacity
             key={item.id}
@@ -44,7 +46,11 @@ export default function WeekScheduleCard({
             activeOpacity={canOpen ? 0.7 : 1}
             disabled={!canOpen || status === "done"}
             onPress={() =>
-              router.push(`/sportif/programme/${item.programmeId}/seance/${item.seanceId}`)
+              router.push(
+                item.kind === "cardio"
+                  ? `/sportif/cardio/${item.id}`
+                  : `/sportif/programme/${item.programmeId}/seance/${item.seanceId}`
+              )
             }
           >
             <Text style={styles.day}>{DAY_NAMES[dayIndex]}</Text>

@@ -71,6 +71,7 @@ export default function SportifTabsLayout() {
       <Tabs.Screen name="objectif" options={{ href: null }} />
       <Tabs.Screen name="historique" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]" options={{ href: null }} />
+      <Tabs.Screen name="cardio/[id]" options={{ href: null }} />
       <Tabs.Screen name="equipe" options={{ href: null }} />
       <Tabs.Screen name="messages/[coachId]" options={{ href: null }} />
     </Tabs>

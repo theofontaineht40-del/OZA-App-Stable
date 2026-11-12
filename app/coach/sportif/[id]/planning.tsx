@@ -15,8 +15,10 @@ import {
 } from "react-native";
 
 import { AccessDenied } from "../../../../components/access-denied";
+import CardioEditor from "../../../../components/cardio-editor";
 import ConfirmModal from "../../../../components/confirm-modal";
 import { Colors } from "../../../../constants/colors";
+import { CardioSpec, describeSpec } from "../../../../services/cardio";
 import { auth, db } from "../../../../firebase";
 import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
 import { todayKey } from "../../../../services/load";
@@ -80,6 +82,7 @@ export default function PlanningScreen() {
   const [copyConfirm, setCopyConfirm] = useState(false);
   const [template, setTemplate] = useState<WeekTemplate | null>(null);
   const [saveTemplateConfirm, setSaveTemplateConfirm] = useState(false);
+  const [cardioMode, setCardioMode] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
@@ -131,12 +134,13 @@ export default function PlanningScreen() {
   }
 
   async function add(data: {
-    kind: "programme" | "libre";
+    kind: "programme" | "libre" | "cardio";
     titre: string;
     programmeId?: string;
     programmeNom?: string;
     seanceId?: string;
     seanceNom?: string;
+    cardio?: CardioSpec;
   }) {
     if (!coachUid || !addDate || !id) return;
     setBusy(true);
@@ -151,8 +155,10 @@ export default function PlanningScreen() {
         programmeNom: data.programmeNom ?? null,
         seanceId: data.seanceId ?? null,
         seanceNom: data.seanceNom ?? null,
+        cardio: data.cardio ?? null,
       });
       setAddDate(null);
+      setCardioMode(false);
       setLibreTitle("");
       await load();
     } catch (error) {
@@ -322,6 +328,7 @@ export default function PlanningScreen() {
                         {it.programmeNom ? (
                           <Text style={styles.itemMeta}>{it.programmeNom}</Text>
                         ) : null}
+                        {it.cardio ? <Text style={styles.itemMeta}>{describeSpec(it.cardio)}</Text> : null}
                       </View>
                       <Text style={[styles.status, { color: STATUS_COLOR[st] }]}>
                         {STATUS_LABEL[st]}
@@ -349,6 +356,23 @@ export default function PlanningScreen() {
             <Text style={styles.modalTitle}>
               Séance du {addDate ? `${DAY_NAMES[days.indexOf(addDate)] ?? ""} ${shortDate(addDate)}` : ""}
             </Text>
+            {cardioMode ? (
+              <>
+                <TouchableOpacity style={styles.cardioBack} onPress={() => setCardioMode(false)}>
+                  <Ionicons name="chevron-back" size={16} color={Colors.primary} />
+                  <Text style={styles.addLink}>Retour</Text>
+                </TouchableOpacity>
+                <ScrollView style={{ maxHeight: 480 }}>
+                  <CardioEditor
+                    busy={busy}
+                    onSubmit={(titre, spec) =>
+                      add({ kind: "cardio", titre, cardio: spec })
+                    }
+                  />
+                </ScrollView>
+              </>
+            ) : (
+              <>
             <ScrollView style={{ maxHeight: 360 }}>
               {programmes.length === 0 ? (
                 <Text style={styles.itemMeta}>
@@ -417,7 +441,20 @@ export default function PlanningScreen() {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.closeButton} onPress={() => setAddDate(null)}>
+            <TouchableOpacity style={styles.cardioButton} onPress={() => setCardioMode(true)}>
+              <Ionicons name="pulse-outline" size={18} color={Colors.primary} />
+              <Text style={styles.addLink}>Séance cardio (intervalles en % de VMA / PMA / FC)</Text>
+            </TouchableOpacity>
+              </>
+            )}
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => {
+                setAddDate(null);
+                setCardioMode(false);
+              }}
+            >
               <Text style={styles.closeText}>Fermer</Text>
             </TouchableOpacity>
           </View>
@@ -537,6 +574,18 @@ const styles = StyleSheet.create({
   },
   seanceName: { fontSize: 14, color: Colors.text },
   addLink: { fontSize: 13, fontWeight: "700", color: Colors.primary },
+  cardioButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+  },
+  cardioBack: { flexDirection: "row", alignItems: "center", gap: 2, marginBottom: 8 },
   libreLabel: { fontSize: 13, fontWeight: "600", color: Colors.text, marginTop: 16, marginBottom: 8 },
   libreRow: { flexDirection: "row", gap: 8 },
   libreInput: {

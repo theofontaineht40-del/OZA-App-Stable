@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import CardioReferences from "../../../../components/cardio-references";
 import CoachNotes from "../../../../components/coach-notes";
 import CoachObjectives from "../../../../components/coach-objectives";
 import ConfirmModal from "../../../../components/confirm-modal";
@@ -517,6 +518,8 @@ export default function SportifDetailScreen() {
           )}
         </View>
       )}
+
+      {coachUid && id && <CardioReferences coachId={coachUid} sportifId={id} />}
 
       {coachUid && id && <CoachObjectives coachId={coachUid} sportifId={id} />}
 

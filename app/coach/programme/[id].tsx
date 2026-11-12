@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -33,6 +34,7 @@ import {
   BlocExercice,
   ChargeType,
   getProgramme,
+  cloneExercices,
   newBloc,
   newBlocExercice,
   newSeance,
@@ -41,6 +43,12 @@ import {
   Seance,
 } from "../../../services/programmes";
 import { getExerciseLibrary } from "../../../services/exercises";
+import {
+  deleteWarmupProtocol,
+  getWarmupProtocols,
+  saveWarmupProtocol,
+  WarmupProtocol,
+} from "../../../services/warmups";
 import { showAlert } from "../../../utils/alert";
 
 const CHARGE_LABELS: Record<ChargeType, string> = {
@@ -63,6 +71,11 @@ export default function ProgrammeEditorScreen() {
   const [deleteSeanceConfirm, setDeleteSeanceConfirm] = useState(false);
   const [deleteBlocId, setDeleteBlocId] = useState<string | null>(null);
   const [library, setLibrary] = useState<ExerciseTemplate[]>(EXERCISE_LIBRARY);
+  const [warmups, setWarmups] = useState<WarmupProtocol[]>([]);
+  const [showWarmupPicker, setShowWarmupPicker] = useState(false);
+  const [deleteWarmupId, setDeleteWarmupId] = useState<string | null>(null);
+  const [protocolBlocId, setProtocolBlocId] = useState<string | null>(null);
+  const [protocolName, setProtocolName] = useState("");
 
   useEffect(() => {
     if (!id) return;
@@ -76,6 +89,9 @@ export default function ProgrammeEditorScreen() {
     const uid = auth.currentUser?.uid;
     if (!uid) return;
     getExerciseLibrary(uid).then(setLibrary);
+    // Les protocoles sont un plus : sans eux (ex. règles pas publiées) le
+    // constructeur doit rester utilisable.
+    getWarmupProtocols(uid).then(setWarmups).catch(() => setWarmups([]));
   }, []);
 
   const isPrincipal = usePrincipalAccess(programme?.sportifId ?? undefined);
@@ -170,6 +186,42 @@ export default function ProgrammeEditorScreen() {
     b.nom = `Bloc ${activeSeance.blocs.length + 1}`;
     b.couleur = BLOC_COLORS[activeSeance.blocs.length % BLOC_COLORS.length];
     updateBlocs((blocs) => [...blocs, b]);
+  }
+
+  // Un protocole s'insère en TÊTE de séance (un échauffement vient d'abord).
+  function handleInsertWarmup(protocol: WarmupProtocol) {
+    const b = newBloc();
+    b.nom = "Échauffement";
+    b.objectif = protocol.nom;
+    b.couleur = "#FF9F0A";
+    b.exercices = cloneExercices(protocol.exercices);
+    updateBlocs((blocs) => [b, ...blocs]);
+    setShowWarmupPicker(false);
+  }
+
+  async function handleSaveProtocol() {
+    const bloc = activeSeance.blocs.find((b) => b.id === protocolBlocId);
+    if (!bloc || !protocolName.trim()) return;
+    try {
+      await saveWarmupProtocol(coachId, protocolName, bloc.exercices);
+      setWarmups(await getWarmupProtocols(coachId));
+      setProtocolBlocId(null);
+      setProtocolName("");
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function confirmDeleteWarmup() {
+    if (!deleteWarmupId) return;
+    try {
+      await deleteWarmupProtocol(deleteWarmupId);
+      setWarmups(await getWarmupProtocols(coachId));
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    } finally {
+      setDeleteWarmupId(null);
+    }
   }
 
   function handleUpdateBloc(blocId: string, patch: Partial<Bloc>) {
@@ -357,12 +409,21 @@ export default function ProgrammeEditorScreen() {
             }}
             onUpdateExercice={(exerciceId, patch) => handleUpdateExercice(bloc.id, exerciceId, patch)}
             onDeleteExercice={(exerciceId) => handleDeleteExercice(bloc.id, exerciceId)}
+            onSaveAsProtocol={() => {
+              setProtocolBlocId(bloc.id);
+              setProtocolName(bloc.objectif || bloc.nom);
+            }}
           />
         ))}
 
         <TouchableOpacity style={styles.addBlocButton} onPress={handleAddBloc}>
           <Ionicons name="add-circle-outline" size={20} color={Colors.primary} />
           <Text style={styles.addBlocButtonText}>Ajouter un bloc</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.addBlocButton} onPress={() => setShowWarmupPicker(true)}>
+          <Ionicons name="flame-outline" size={20} color={Colors.primary} />
+          <Text style={styles.addBlocButtonText}>Insérer un protocole d'échauffement</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -374,6 +435,86 @@ export default function ProgrammeEditorScreen() {
           setReplaceExerciceId(null);
         }}
         onSelect={handleAddExerciceToBloc}
+      />
+
+      <Modal
+        visible={showWarmupPicker}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setShowWarmupPicker(false)}
+      >
+        <View style={styles.protocolBackdrop}>
+          <View style={styles.protocolCard}>
+            <Text style={styles.protocolTitle}>Protocoles d'échauffement</Text>
+            {warmups.length === 0 ? (
+              <Text style={styles.protocolHint}>
+                Aucun protocole pour l'instant. Construis un bloc d'échauffement, puis touche
+                « Enregistrer comme protocole » en bas du bloc pour le réutiliser ici.
+              </Text>
+            ) : (
+              <ScrollView style={{ maxHeight: 320 }}>
+                {warmups.map((w) => (
+                  <View key={w.id} style={styles.protocolRow}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => handleInsertWarmup(w)}>
+                      <Text style={styles.protocolName}>{w.nom}</Text>
+                      <Text style={styles.protocolMeta}>
+                        {w.exercices.length} exercice{w.exercices.length > 1 ? "s" : ""} · Insérer
+                        en tête de séance
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setDeleteWarmupId(w.id)} hitSlop={8}>
+                      <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+            <TouchableOpacity style={styles.protocolClose} onPress={() => setShowWarmupPicker(false)}>
+              <Text style={styles.protocolCloseText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={protocolBlocId !== null}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setProtocolBlocId(null)}
+      >
+        <View style={styles.protocolBackdrop}>
+          <View style={styles.protocolCard}>
+            <Text style={styles.protocolTitle}>Enregistrer comme protocole</Text>
+            <TextInput
+              style={styles.protocolInput}
+              value={protocolName}
+              onChangeText={setProtocolName}
+              placeholder="Nom du protocole (ex. Échauffement bas du corps)"
+              placeholderTextColor={Colors.textSecondary}
+              autoFocus
+            />
+            <TouchableOpacity
+              style={[styles.protocolSave, !protocolName.trim() && styles.protocolSaveDisabled]}
+              onPress={handleSaveProtocol}
+              disabled={!protocolName.trim()}
+            >
+              <Text style={styles.protocolSaveText}>Enregistrer</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.protocolClose} onPress={() => setProtocolBlocId(null)}>
+              <Text style={styles.protocolCloseText}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <ConfirmModal
+        visible={deleteWarmupId !== null}
+        title="Supprimer ce protocole"
+        message="Les blocs déjà insérés dans des séances ne sont pas modifiés."
+        confirmLabel="Supprimer"
+        destructive
+        onConfirm={confirmDeleteWarmup}
+        onCancel={() => setDeleteWarmupId(null)}
       />
 
       <ConfirmModal
@@ -415,6 +556,7 @@ function BlocCard({
   onReplaceExercice,
   onUpdateExercice,
   onDeleteExercice,
+  onSaveAsProtocol,
 }: {
   bloc: Bloc;
   library: ExerciseTemplate[];
@@ -431,6 +573,7 @@ function BlocCard({
   onReplaceExercice: (exerciceId: string) => void;
   onUpdateExercice: (exerciceId: string, patch: Partial<BlocExercice>) => void;
   onDeleteExercice: (exerciceId: string) => void;
+  onSaveAsProtocol: () => void;
 }) {
   const [nomDraft, setNomDraft] = useState(bloc.nom);
   const [objectifDraft, setObjectifDraft] = useState(bloc.objectif);
@@ -511,6 +654,13 @@ function BlocCard({
         <Ionicons name="add" size={16} color={Colors.primary} />
         <Text style={styles.addExerciceButtonText}>Ajouter un exercice</Text>
       </TouchableOpacity>
+
+      {bloc.exercices.length > 0 && (
+        <TouchableOpacity style={styles.saveProtocolButton} onPress={onSaveAsProtocol}>
+          <Ionicons name="bookmark-outline" size={14} color={Colors.textSecondary} />
+          <Text style={styles.saveProtocolText}>Enregistrer comme protocole d'échauffement</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -921,6 +1071,116 @@ const styles = StyleSheet.create({
   colorSwatchActive: {
     borderWidth: 2,
     borderColor: Colors.text,
+  },
+
+  saveProtocolButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 10,
+  },
+
+  saveProtocolText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.textSecondary,
+  },
+
+  protocolBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+
+  protocolCard: {
+    width: "100%",
+    maxWidth: 420,
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 20,
+  },
+
+  protocolTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 12,
+  },
+
+  protocolHint: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: Colors.textSecondary,
+    marginBottom: 8,
+  },
+
+  protocolRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.grayLight,
+  },
+
+  protocolName: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  protocolMeta: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+
+  protocolInput: {
+    height: 46,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    fontSize: 14,
+    color: Colors.text,
+    marginBottom: 12,
+  },
+
+  protocolSave: {
+    height: 46,
+    borderRadius: 12,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  protocolSaveDisabled: {
+    backgroundColor: Colors.grayMedium,
+  },
+
+  protocolSaveText: {
+    color: Colors.white,
+    fontWeight: "700",
+    fontSize: 14,
+  },
+
+  protocolClose: {
+    height: 44,
+    marginTop: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.grayMedium,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  protocolCloseText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text,
   },
 
   modeRow: {

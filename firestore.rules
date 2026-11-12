@@ -224,6 +224,12 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }
 
+    // ── Protocoles d'échauffement (bibliothèque privée du coach) ──
+    match /warmupProtocols/{protocolId} {
+      allow read, update, delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.coachId == request.auth.uid;
+    }
+
     // ── Semaine type (modèle de planning, un par sportif) ──
     // Privée au coach principal : le sportif ne voit que les séances réelles
     // posées sur ses dates (scheduledSessions).

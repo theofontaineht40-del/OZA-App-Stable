@@ -104,6 +104,13 @@ export function newBloc(): Bloc {
   return { id: newId(), nom: "Bloc 1", objectif: "", couleur: "#14B8A6", exercices: [] };
 }
 
+// Copie d'exercices avec de NOUVEAUX identifiants : indispensable quand on
+// réutilise une liste d'exercices (protocole d'échauffement, ...) dans un
+// autre bloc, sinon deux blocs partageraient les mêmes ids.
+export function cloneExercices(list: BlocExercice[]): BlocExercice[] {
+  return list.map((e) => ({ ...e, id: newId() }));
+}
+
 export function newSeance(index: number): Seance {
   // `muscles: []` (et non `undefined`) dès la création : une séance neuve
   // utilise le système de sélection manuelle dès le départ, jamais la

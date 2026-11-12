@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import CoachNotes from "../../../../components/coach-notes";
+import CoachObjectives from "../../../../components/coach-objectives";
 import ConfirmModal from "../../../../components/confirm-modal";
 import { GraphGridTexture } from "../../../../components/decor";
 import { LoadSummary } from "../../../../components/load-summary";
@@ -516,6 +517,8 @@ export default function SportifDetailScreen() {
           )}
         </View>
       )}
+
+      {coachUid && id && <CoachObjectives coachId={coachUid} sportifId={id} />}
 
       {coachUid && id && <CoachNotes coachId={coachUid} sportifId={id} />}
 

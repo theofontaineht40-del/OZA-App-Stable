@@ -16,6 +16,7 @@ import DateField from "../../components/date-field";
 import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
 import { auth } from "../../firebase";
+import { CoachObjective, getObjectivesForSportif } from "../../services/coach-objectives";
 import { deleteGoal, getGoal, Goal, setGoal } from "../../services/goals";
 import { showAlert } from "../../utils/alert";
 
@@ -28,6 +29,7 @@ export default function ObjectifScreen() {
   const [currentValue, setCurrentValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
   const [targetDate, setTargetDate] = useState("");
+  const [coachObjectives, setCoachObjectives] = useState<CoachObjective[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -47,6 +49,11 @@ export default function ObjectifScreen() {
         setCurrentValue(String(goal.currentValue));
         setTargetValue(String(goal.targetValue));
         setTargetDate(goal.targetDate ?? "");
+      }
+      try {
+        setCoachObjectives(await getObjectivesForSportif(user.uid));
+      } catch {
+        // Objectifs du coach illisibles : on garde le reste de l'écran.
       }
       setLoading(false);
     });
@@ -111,6 +118,32 @@ export default function ObjectifScreen() {
           <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
+
+        {coachObjectives.length > 0 && (
+          <View style={styles.coachObjectivesCard}>
+            <Text style={styles.coachObjectivesTitle}>Objectifs fixés par mon coach</Text>
+            {coachObjectives.map((o) => (
+              <View key={o.id} style={styles.coachObjectiveRow}>
+                <Ionicons
+                  name={o.atteint ? "checkmark-circle" : "ellipse-outline"}
+                  size={20}
+                  color={o.atteint ? Colors.riskLow : Colors.textSecondary}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.coachObjectiveText, o.atteint && styles.coachObjectiveDone]}>
+                    {o.titre}
+                  </Text>
+                  {o.atteint && o.atteintLe ? (
+                    <Text style={styles.coachObjectiveMeta}>Atteint le {o.atteintLe}</Text>
+                  ) : null}
+                  {o.commentaire ? (
+                    <Text style={styles.coachObjectiveComment}>« {o.commentaire} »</Text>
+                  ) : null}
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
 
         <Text style={styles.title}>Mon objectif</Text>
         <Text style={styles.subtitle}>Un but concret à suivre dans le temps.</Text>
@@ -215,6 +248,51 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "700",
     color: Colors.textOnDark,
+  },
+
+  coachObjectivesCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 24,
+  },
+
+  coachObjectivesTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 10,
+  },
+
+  coachObjectiveRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    paddingVertical: 6,
+  },
+
+  coachObjectiveText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
+  coachObjectiveDone: {
+    color: Colors.textSecondary,
+    textDecorationLine: "line-through",
+  },
+
+  coachObjectiveMeta: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+
+  coachObjectiveComment: {
+    fontSize: 13,
+    fontStyle: "italic",
+    color: Colors.text,
+    marginTop: 4,
   },
 
   subtitle: {

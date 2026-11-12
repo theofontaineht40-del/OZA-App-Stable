@@ -125,6 +125,9 @@ export type SportifRow = {
   weekPlanned: number;
   weekDone: number;
   lateCount: number;
+  // Date du dernier check-in de bien-être (null = jamais) : sert au signal
+  // "HOOPER non rempli" (services/coach-signals.ts).
+  lastWellnessDate: string | null;
 };
 
 // Une ligne par sportif pour le tableau "Mes sportifs" — construite à partir
@@ -185,6 +188,7 @@ export function buildSportifRow(
     weekPlanned: weekItems.length,
     weekDone,
     lateCount,
+    lastWellnessDate: latest?.date ?? null,
   };
 }
 

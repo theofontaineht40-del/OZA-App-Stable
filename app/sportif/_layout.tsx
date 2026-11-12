@@ -1,19 +1,21 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, Tabs } from "expo-router";
 
-import CustomBottomTabBar from "../../components/bottom-tab-bar";
+import ResponsiveTabBar, { useUseSidebar } from "../../components/responsive-tab-bar";
 import MessageToast from "../../components/message-toast";
 import { Colors } from "../../constants/colors";
 import { useUnreadConversations } from "../../hooks/use-unread-conversations";
 
 export default function SportifTabsLayout() {
   const { unreadCount, newMessageEvent } = useUnreadConversations("sportif");
+  const sidebar = useUseSidebar();
 
   return (
     <>
     <Tabs
-      tabBar={(props) => <CustomBottomTabBar {...props} />}
+      tabBar={(props) => <ResponsiveTabBar {...props} roleLabel="Sportif" />}
       screenOptions={{
+        tabBarPosition: sidebar ? "left" : "bottom",
         headerShown: false,
         sceneStyle: { backgroundColor: Colors.background },
       }}

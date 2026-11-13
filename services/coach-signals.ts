@@ -65,3 +65,61 @@ const ACWR_LABEL: Record<string, string> = {
 export function acwrLabel(row: SportifRow): string {
   return ACWR_LABEL[row.acwrLevel] ?? "";
 }
+
+// ── Boîte « À traiter » de l'accueil coach ──
+
+export type TriageItem = {
+  uid: string;
+  name: string;
+  chips: Signal[];
+  unreadMessage: boolean;
+  // "alert" si au moins un signal fort, sinon "warn" : sert au tri et au liseré.
+  severity: "alert" | "warn";
+};
+
+export type TriageInput = {
+  rows: { uid: string; firstName: string; lastName: string; row: SportifRow }[];
+  // uid des sportifs dont la conversation a un message non lu par le coach
+  unreadSportifIds: Set<string>;
+  // uid → gênes encore ouvertes (zone), possiblement vide
+  openInjuries: Record<string, { zone: string; gravite: number }[]>;
+  today: string;
+};
+
+// Un sportif apparaît s'il a au moins un signal autre que "RAS", un message à
+// lire ou une gêne ouverte. Triés : signaux forts d'abord, puis par nombre de
+// motifs, puis par nom — pour que le haut de la liste soit ce qui presse.
+export function buildTriage(input: TriageInput): TriageItem[] {
+  const items: TriageItem[] = [];
+  for (const { uid, firstName, lastName, row } of input.rows) {
+    const chips = computeSignals(row, input.today).filter((s) => s.tone !== "ok");
+
+    const injuries = input.openInjuries[uid] ?? [];
+    if (injuries.length > 0) {
+      const strong = injuries.some((i) => i.gravite >= 7);
+      chips.unshift({
+        label: `gêne ouverte : ${injuries[0].zone}${injuries.length > 1 ? ` +${injuries.length - 1}` : ""}`,
+        tone: strong ? "alert" : "warn",
+      });
+    }
+
+    const unreadMessage = input.unreadSportifIds.has(uid);
+    if (unreadMessage) chips.push({ label: "message non lu", tone: "warn" });
+
+    if (chips.length === 0) continue;
+    items.push({
+      uid,
+      name: `${firstName} ${lastName}`.trim(),
+      chips,
+      unreadMessage,
+      severity: chips.some((c) => c.tone === "alert") ? "alert" : "warn",
+    });
+  }
+
+  return items.sort(
+    (a, b) =>
+      Number(b.severity === "alert") - Number(a.severity === "alert") ||
+      b.chips.length - a.chips.length ||
+      a.name.localeCompare(b.name)
+  );
+}

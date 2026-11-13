@@ -6,9 +6,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
+import AgendaCard from "../../components/coach/agenda-card";
 import AreaChart from "../../components/coach/area-chart";
 import SportifsTable from "../../components/coach/sportifs-table";
 import StatusDonut from "../../components/coach/status-donut";
+import TriageCard from "../../components/coach/triage-card";
 import { HeaderTexture } from "../../components/decor";
 import MiniSparkline from "../../components/mini-sparkline";
 import { TeamIllustration } from "../../components/empty-illustrations";
@@ -28,6 +30,9 @@ import {
   SportifRow,
   TrainingLoadStats,
 } from "../../services/coach-analytics";
+import { buildTriage } from "../../services/coach-signals";
+import { getInjuries } from "../../services/medical";
+import { Conversation, subscribeToConversationsForCoach } from "../../services/messages";
 import { getRelationsForCoach, Relation } from "../../services/relations";
 import { getSlotsForCoach, Slot } from "../../services/reservations";
 import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
@@ -72,6 +77,10 @@ export default function CoachHome() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [openInjuries, setOpenInjuries] = useState<Record<string, { zone: string; gravite: number }[]>>({});
+  // Les graphiques et l'analyse détaillée sont repliés : l'accueil répond d'abord à "qui a besoin de moi".
+  const [showDetails, setShowDetails] = useState(false);
   const [specialisteRelations, setSpecialisteRelations] = useState<Relation[]>([]);
   const [loading, setLoading] = useState(true);
   const [sportifSearch, setSportifSearch] = useState("");
@@ -117,6 +126,42 @@ export default function CoachHome() {
     return unsubscribe;
   }, []);
 
+  // Messages non lus : abonnement en direct (la boîte "À traiter" se met à jour seule).
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+    const stopAuth = onAuthStateChanged(auth, (user) => {
+      unsubscribe?.();
+      if (user) unsubscribe = subscribeToConversationsForCoach(user.uid, setConversations);
+    });
+    return () => {
+      unsubscribe?.();
+      stopAuth();
+    };
+  }, []);
+
+  // Gênes encore ouvertes par sportif. Une lecture par sportif : plafonnée pour
+  // ne pas multiplier les requêtes sur un gros effectif, et tolérante aux refus
+  // (profil médical réservé au coach principal).
+  useEffect(() => {
+    if (sportifs.length === 0) return;
+    let cancelled = false;
+    Promise.all(
+      sportifs.slice(0, 60).map(async (s) => {
+        try {
+          const list = await getInjuries(s.uid);
+          return [s.uid, list.filter((i) => i.statut === "active").map((i) => ({ zone: i.zone, gravite: i.gravite }))] as const;
+        } catch {
+          return [s.uid, []] as const;
+        }
+      })
+    ).then((entries) => {
+      if (!cancelled) setOpenInjuries(Object.fromEntries(entries.filter(([, l]) => l.length > 0)));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [sportifs]);
+
   useEffect(() => {
     if (loading) return;
     Animated.parallel([
@@ -139,6 +184,17 @@ export default function CoachHome() {
   );
 
   const analysis = useMemo(() => computeCoachAnalysis(sportifRows), [sportifRows]);
+
+  const triage = useMemo(
+    () =>
+      buildTriage({
+        rows: sportifRows.map((r) => ({ uid: r.uid, firstName: r.firstName, lastName: r.lastName, row: r })),
+        unreadSportifIds: new Set(conversations.filter((c) => c.unreadByCoach).map((c) => c.sportifId)),
+        openInjuries,
+        today: todayKey(),
+      }),
+    [sportifRows, conversations, openInjuries]
+  );
   const wellnessBreakdown = useMemo(() => computeWellnessBreakdown(wellness), [wellness]);
 
   // ACWR/monotonie/strain n'ont de sens que par individu (mélanger la charge
@@ -240,6 +296,52 @@ export default function CoachHome() {
           </View>
 
           <View style={styles.body}>
+            {/* ── À TRAITER AUJOURD'HUI ── */}
+            <View style={styles.todayActions}>
+              <TouchableOpacity
+                style={styles.todayPill}
+                onPress={() => {
+                  if (sportifs.length === 0) {
+                    showAlert("Aucun sportif", "Associez d'abord un sportif pour lui enregistrer une séance.");
+                    return;
+                  }
+                  router.push("/coach/nouvelle-seance");
+                }}
+              >
+                <Ionicons name="add" size={16} color={Colors.primaryDark} />
+                <Text style={styles.todayPillText}>Enregistrer une séance</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.todayPill} onPress={() => router.push("/coach/sportifs")}>
+                <Ionicons name="person-add-outline" size={15} color={Colors.primaryDark} />
+                <Text style={styles.todayPillText}>Créer un sportif</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TriageCard
+              items={triage}
+              onOpen={(uid) => router.push(`/coach/sportif/${uid}`)}
+              onReply={(uid) => router.push(`/coach/messages/${uid}`)}
+              onSeeAll={() => router.push("/coach/sportifs")}
+            />
+
+            <AgendaCard slots={todaySlots} onPress={() => router.push("/coach/reservations")} />
+
+            <View style={styles.statusTiles}>
+              <StatusTile label="Prêts" value={analysis.okCount} color={Colors.riskLow} />
+              <StatusTile label="À surveiller" value={analysis.vigilanceCount} color={Colors.riskMedium} />
+              <StatusTile label="Signal fort" value={analysis.attentionCount} color={Colors.riskHigh} />
+              <StatusTile label="Séances 7 j" value={kpis.sessionsThisWeek} color={Colors.text} />
+            </View>
+
+            <TouchableOpacity style={styles.detailsToggle} onPress={() => setShowDetails((v) => !v)}>
+              <Text style={styles.detailsToggleText}>
+                {showDetails ? "Masquer les analyses détaillées" : "Analyses détaillées"}
+              </Text>
+              <Ionicons name={showDetails ? "chevron-up" : "chevron-down"} size={16} color={Colors.textOnDark} />
+            </TouchableOpacity>
+
+            {showDetails && (
+            <>
             {/* ── 2. 4 KPI PRINCIPAUX ── */}
             <View style={styles.kpiGrid}>
               <KpiCard
@@ -538,6 +640,9 @@ export default function CoachHome() {
               />
             </View>
 
+            </>
+            )}
+
             {/* ── 11. ACTION RAPIDE ── */}
             <View style={styles.actionBanner}>
               <Text style={styles.actionBannerTitle}>L'objectif, c'est la progression.</Text>
@@ -569,6 +674,15 @@ export default function CoachHome() {
           </View>
         </Animated.View>
       </ScrollView>
+    </View>
+  );
+}
+
+function StatusTile({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <View style={styles.statusTile}>
+      <Text style={styles.statusTileLabel}>{label.toUpperCase()}</Text>
+      <Text style={[styles.statusTileValue, { color }]}>{value}</Text>
     </View>
   );
 }
@@ -944,6 +1058,73 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 24,
     paddingTop: 8,
+  },
+
+  todayActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 14,
+  },
+
+  todayPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: Colors.primaryLight,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+  },
+
+  todayPillText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.primaryDark,
+  },
+
+  statusTiles: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 14,
+  },
+
+  statusTile: {
+    flexGrow: 1,
+    flexBasis: 120,
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+  },
+
+  statusTileLabel: {
+    fontSize: 10.5,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    color: Colors.textSecondary,
+  },
+
+  statusTileValue: {
+    fontSize: 26,
+    fontWeight: "700",
+    marginTop: 4,
+  },
+
+  detailsToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 12,
+    marginBottom: 8,
+  },
+
+  detailsToggleText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.textOnDark,
   },
 
   kpiGrid: {

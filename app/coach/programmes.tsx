@@ -274,6 +274,14 @@ export default function ProgrammesScreen() {
         </View>
         <Ionicons name="chevron-forward" size={18} color={Colors.white} />
       </TouchableOpacity>
+      <TouchableOpacity style={styles.generateButton} onPress={() => router.push("/coach/plan-course")}>
+        <Ionicons name="walk" size={18} color={Colors.white} />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.generateTitle}>Plan de course sur mesure</Text>
+          <Text style={styles.generateSub}>5 km, 10 km, semi ou marathon : calculé depuis la date de course.</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color={Colors.white} />
+      </TouchableOpacity>
 
       {showForm && (
         <View style={styles.card}>

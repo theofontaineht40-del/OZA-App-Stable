@@ -77,6 +77,7 @@ export default function CoachTabsLayout() {
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />
       <Tabs.Screen name="profil-pro" options={{ href: null }} />
       <Tabs.Screen name="generateur" options={{ href: null }} />
+      <Tabs.Screen name="plan-course" options={{ href: null }} />
     </Tabs>
     <MessageToast
       event={newMessageEvent}

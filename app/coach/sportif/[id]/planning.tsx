@@ -274,6 +274,10 @@ export default function PlanningScreen() {
             <Ionicons name="copy-outline" size={14} color={Colors.primary} />
             <Text style={styles.actionChipText}>Copier vers la semaine suivante</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.actionChip} onPress={() => router.push(`/coach/plan-course?sportif=${id}`)}>
+            <Ionicons name="walk-outline" size={14} color={Colors.primary} />
+            <Text style={styles.actionChipText}>Plan de course</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.actionsRow}>

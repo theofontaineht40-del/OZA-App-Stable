@@ -67,6 +67,7 @@ function showInfo(title: string, message: string) {
 export default function ProgrammeEditorScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [programme, setProgramme] = useState<Programme | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [activeSeanceId, setActiveSeanceId] = useState<string | null>(null);
   const [pickerBlocId, setPickerBlocId] = useState<string | null>(null);
   const [replaceExerciceId, setReplaceExerciceId] = useState<string | null>(null);
@@ -82,10 +83,15 @@ export default function ProgrammeEditorScreen() {
 
   useEffect(() => {
     if (!id) return;
-    getProgramme(id).then((p) => {
-      setProgramme(p);
-      if (p) setActiveSeanceId(p.seances[0]?.id ?? null);
-    });
+    getProgramme(id)
+      .then((p) => {
+        setProgramme(p);
+        setNotFound(p === null);
+        if (p) setActiveSeanceId(p.seances[0]?.id ?? null);
+      })
+      // Un programme supprimé (ou d'un autre coach) est refusé par les règles
+      // Firestore au lieu d'être "introuvable" : même message dans les deux cas.
+      .catch(() => setNotFound(true));
   }, [id]);
 
   useEffect(() => {
@@ -100,7 +106,22 @@ export default function ProgrammeEditorScreen() {
   const isPrincipal = usePrincipalAccess(programme?.sportifId ?? undefined);
 
   if (!programme) {
-    return <View style={styles.container} />;
+    if (!notFound) return <View style={styles.container} />;
+    return (
+      <View style={[styles.container, { alignItems: "center", justifyContent: "center", padding: 32, gap: 12 }]}>
+        <Ionicons name="alert-circle-outline" size={36} color={Colors.textOnDark} />
+        <Text style={{ fontSize: 17, fontWeight: "700", color: Colors.textOnDark, textAlign: "center" }}>
+          Ce programme n'existe plus
+        </Text>
+        <Text style={{ fontSize: 13, color: Colors.textOnDarkSecondary, textAlign: "center", maxWidth: 320 }}>
+          Il a été supprimé, ou il appartient à un autre coach. Le bloc du planning qui y renvoie peut être
+          détaché depuis la planification du sportif.
+        </Text>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={{ fontSize: 14, fontWeight: "700", color: Colors.textOnDark }}>Retour</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   if (programme.sportifId) {

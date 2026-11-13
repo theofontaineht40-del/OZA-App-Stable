@@ -306,6 +306,30 @@ export async function createProgramme(
   return ref.id;
 }
 
+// Programme déjà rempli (ex: généré automatiquement par services/block-generator.ts).
+export async function createProgrammeWithSeances(
+  coachId: string,
+  nom: string,
+  seances: Seance[],
+  sportifId: string | null,
+  sportifName: string | null,
+  objectif: Objectif | null
+): Promise<string> {
+  const ref = doc(collection(db, "programmes"));
+  const programme: Omit<Programme, "id"> = {
+    kind: "programme",
+    objectif,
+    coachId,
+    sportifId,
+    sportifName,
+    nom,
+    seances,
+    updatedAt: new Date(),
+  };
+  await setDoc(ref, programme);
+  return ref.id;
+}
+
 export async function saveProgramme(
   id: string,
   data: Pick<Programme, "nom" | "seances">

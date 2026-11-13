@@ -266,6 +266,14 @@ export default function ProgrammesScreen() {
           <Text style={styles.createButtonText}>Nouvelle séance</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={styles.generateButton} onPress={() => router.push("/coach/generateur")}>
+        <Ionicons name="sparkles" size={18} color={Colors.white} />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.generateTitle}>Générer un bloc sur mesure</Text>
+          <Text style={styles.generateSub}>Objectif, niveau, jours, matériel : les séances se construisent seules.</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color={Colors.white} />
+      </TouchableOpacity>
 
       {showForm && (
         <View style={styles.card}>
@@ -674,6 +682,29 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 10,
     marginBottom: 16,
+  },
+
+  generateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: Colors.primaryDark,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+
+  generateTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.white,
+  },
+
+  generateSub: {
+    fontSize: 12,
+    color: "rgba(255, 255, 255, 0.75)",
+    marginTop: 2,
   },
 
   createButton: {

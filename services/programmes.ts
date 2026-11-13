@@ -96,8 +96,13 @@ export type Programme = {
   updatedAt: Date;
 };
 
+let idCounter = 0;
+
 function newId(): string {
-  return `${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+  // Le compteur évite deux ids identiques quand on en crée plusieurs dans la
+  // même milliseconde (ajout de 5 exercices d'un coup, copie d'une séance...).
+  idCounter = (idCounter + 1) % 100000;
+  return `${Date.now()}_${Math.floor(Math.random() * 10000)}_${idCounter}`;
 }
 
 export function newBloc(): Bloc {
@@ -137,6 +142,62 @@ export function newBlocExercice(exercice: {
     reposSeries: "2'",
     reposRepetitions: "0\"",
     commentaires: "",
+  };
+}
+
+// "2'" → 120, "90\"" → 90, "1'30" → 90, "45" → 45 (sans unité : secondes).
+export function parseRestSeconds(raw: string): number {
+  const text = (raw ?? "").trim().replace(",", ".");
+  if (!text) return 0;
+  const minSec = text.match(/^(\d+(?:\.\d+)?)\s*'\s*(\d+)?/);
+  if (minSec) return Math.round(parseFloat(minSec[1]) * 60 + (minSec[2] ? parseInt(minSec[2], 10) : 0));
+  const n = parseFloat(text);
+  return Number.isFinite(n) ? Math.round(n) : 0;
+}
+
+// Nombre de séries lu dans un champ libre ("3", "3-4" → 3).
+export function parseCount(raw: string): number {
+  const n = parseInt((raw ?? "").trim(), 10);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+// Durée approximative d'une séance (en minutes) : ~40 s d'effort par série
+// + le repos entre séries, plus 1 minute de transition par exercice. Les blocs
+// en bi-set / tri-set / circuit enchaînent les exercices : le repos n'est
+// compté qu'une fois par tour.
+export function estimateSeanceMinutes(seance: Seance): number {
+  let seconds = 0;
+  for (const bloc of seance.blocs) {
+    const mode = bloc.mode ?? "serie";
+    if (mode === "serie") {
+      for (const ex of bloc.exercices) {
+        const sets = parseCount(ex.series);
+        seconds += sets * 40 + Math.max(0, sets - 1) * parseRestSeconds(ex.reposSeries) + 60;
+      }
+    } else if (bloc.exercices.length > 0) {
+      const rounds = Math.max(...bloc.exercices.map((e) => parseCount(e.series)), 0);
+      const rest = Math.max(...bloc.exercices.map((e) => parseRestSeconds(e.reposSeries)), 0);
+      seconds += rounds * (bloc.exercices.length * 40 + rest) + 60;
+    }
+  }
+  return Math.round(seconds / 60);
+}
+
+export function countSeanceSets(seance: Seance): number {
+  return seance.blocs.reduce(
+    (total, b) => total + b.exercices.reduce((t, e) => t + parseCount(e.series), 0),
+    0
+  );
+}
+
+// Copie d'une séance (nouveaux identifiants partout) ajoutée à la suite.
+export function cloneSeance(seance: Seance, nom: string): Seance {
+  return {
+    ...seance,
+    id: newId(),
+    nom,
+    muscles: seance.muscles ? [...seance.muscles] : seance.muscles,
+    blocs: seance.blocs.map((b) => ({ ...b, id: newId(), exercices: cloneExercices(b.exercices) })),
   };
 }
 

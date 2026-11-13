@@ -35,6 +35,9 @@ import {
   ChargeType,
   getProgramme,
   cloneExercices,
+  cloneSeance,
+  countSeanceSets,
+  estimateSeanceMinutes,
   newBloc,
   newBlocExercice,
   newSeance,
@@ -150,6 +153,17 @@ export default function ProgrammeEditorScreen() {
     });
   }
 
+  function handleDuplicateSeance() {
+    const copy = cloneSeance(activeSeance, `${activeSeance.nom} (copie)`);
+    updateSeances((seances) => {
+      const index = seances.findIndex((s) => s.id === activeSeance.id);
+      const next = [...seances];
+      next.splice(index + 1, 0, copy);
+      return next;
+    });
+    setActiveSeanceId(copy.id);
+  }
+
   function handleToggleMuscle(muscleId: MuscleId) {
     updateSeances((seances) =>
       seances.map((s) => {
@@ -249,26 +263,80 @@ export default function ProgrammeEditorScreen() {
     });
   }
 
-  function handleAddExerciceToBloc(exercise: ExerciseTemplate) {
-    if (!pickerBlocId) return;
+  // Remplacement d'un exercice (garde ses séries / reps / charge).
+  function handleReplaceExercice(exercise: ExerciseTemplate) {
+    if (!pickerBlocId || !replaceExerciceId) return;
     updateBlocs((blocs) =>
-      blocs.map((b) => {
-        if (b.id !== pickerBlocId) return b;
-        if (replaceExerciceId) {
-          return {
-            ...b,
-            exercices: b.exercices.map((ex) =>
-              ex.id === replaceExerciceId
-                ? { ...ex, exerciceId: exercise.id, exerciceNom: exercise.nom, exerciceIcon: exercise.icon }
-                : ex
-            ),
-          };
-        }
-        return { ...b, exercices: [...b.exercices, newBlocExercice(exercise)] };
-      })
+      blocs.map((b) =>
+        b.id !== pickerBlocId
+          ? b
+          : {
+              ...b,
+              exercices: b.exercices.map((ex) =>
+                ex.id === replaceExerciceId
+                  ? { ...ex, exerciceId: exercise.id, exerciceNom: exercise.nom, exerciceIcon: exercise.icon }
+                  : ex
+              ),
+            }
+      )
     );
     setPickerBlocId(null);
     setReplaceExerciceId(null);
+  }
+
+  // Ajout de plusieurs exercices d'un coup, dans l'ordre de sélection.
+  function handleAddExercicesToBloc(exercises: ExerciseTemplate[]) {
+    if (!pickerBlocId) return;
+    updateBlocs((blocs) =>
+      blocs.map((b) =>
+        b.id !== pickerBlocId ? b : { ...b, exercices: [...b.exercices, ...exercises.map(newBlocExercice)] }
+      )
+    );
+    setPickerBlocId(null);
+    setReplaceExerciceId(null);
+  }
+
+  // Bouton principal : on ouvre la banque tout de suite, sans avoir à créer un
+  // bloc à la main (il est créé s'il n'y en a pas encore).
+  function handleQuickAdd() {
+    setReplaceExerciceId(null);
+    if (activeSeance.blocs.length === 0) {
+      const b = newBloc();
+      b.nom = "Bloc 1";
+      b.couleur = BLOC_COLORS[0];
+      updateBlocs(() => [b]);
+      setPickerBlocId(b.id);
+    } else {
+      setPickerBlocId(activeSeance.blocs[activeSeance.blocs.length - 1].id);
+    }
+  }
+
+  function handleDuplicateExercice(blocId: string, exerciceId: string) {
+    updateBlocs((blocs) =>
+      blocs.map((b) => {
+        if (b.id !== blocId) return b;
+        const index = b.exercices.findIndex((ex) => ex.id === exerciceId);
+        if (index < 0) return b;
+        const [copy] = cloneExercices([b.exercices[index]]);
+        const exercices = [...b.exercices];
+        exercices.splice(index + 1, 0, copy);
+        return { ...b, exercices };
+      })
+    );
+  }
+
+  function handleMoveExercice(blocId: string, exerciceId: string, direction: -1 | 1) {
+    updateBlocs((blocs) =>
+      blocs.map((b) => {
+        if (b.id !== blocId) return b;
+        const index = b.exercices.findIndex((ex) => ex.id === exerciceId);
+        const target = index + direction;
+        if (index < 0 || target < 0 || target >= b.exercices.length) return b;
+        const exercices = [...b.exercices];
+        [exercices[index], exercices[target]] = [exercices[target], exercices[index]];
+        return { ...b, exercices };
+      })
+    );
   }
 
   function handleUpdateExercice(blocId: string, exerciceId: string, patch: Partial<BlocExercice>) {
@@ -374,12 +442,38 @@ export default function ProgrammeEditorScreen() {
           onChangeText={handleRenameSeance}
           placeholder="Nom de la séance"
         />
-        <TouchableOpacity onPress={handleDeleteSeance}>
+        <TouchableOpacity onPress={handleDuplicateSeance} hitSlop={8}>
+          <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDeleteSeance} hitSlop={8}>
           <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
         </TouchableOpacity>
       </View>
+      <View style={styles.statsRow}>
+        <Text style={styles.statsText}>
+          {activeSeance.blocs.reduce((n, b) => n + b.exercices.length, 0)} exercice
+          {activeSeance.blocs.reduce((n, b) => n + b.exercices.length, 0) > 1 ? "s" : ""} ·{" "}
+          {countSeanceSets(activeSeance)} séries
+          {estimateSeanceMinutes(activeSeance) > 0 ? ` · ≈ ${estimateSeanceMinutes(activeSeance)} min` : ""}
+        </Text>
+      </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {activeSeance.blocs.length === 0 && (
+          <View style={styles.emptySeance}>
+            <Ionicons name="barbell-outline" size={34} color={Colors.primary} />
+            <Text style={styles.emptySeanceTitle}>Compose ta séance</Text>
+            <Text style={styles.emptySeanceText}>
+              Ouvre la banque d'exercices, filtre par muscle et coche tout ce que tu veux ajouter
+              en une fois.
+            </Text>
+            <TouchableOpacity style={styles.emptySeanceButton} onPress={handleQuickAdd}>
+              <Ionicons name="add" size={20} color={Colors.white} />
+              <Text style={styles.emptySeanceButtonText}>Ajouter des exercices</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <MuscleSelector selected={activeSeance.muscles ?? []} onToggle={handleToggleMuscle} />
 
         {activeSeance.blocs.map((bloc, index) => (
@@ -409,6 +503,8 @@ export default function ProgrammeEditorScreen() {
             }}
             onUpdateExercice={(exerciceId, patch) => handleUpdateExercice(bloc.id, exerciceId, patch)}
             onDeleteExercice={(exerciceId) => handleDeleteExercice(bloc.id, exerciceId)}
+            onDuplicateExercice={(exerciceId) => handleDuplicateExercice(bloc.id, exerciceId)}
+            onMoveExercice={(exerciceId, direction) => handleMoveExercice(bloc.id, exerciceId, direction)}
             onSaveAsProtocol={() => {
               setProtocolBlocId(bloc.id);
               setProtocolName(bloc.objectif || bloc.nom);
@@ -434,7 +530,9 @@ export default function ProgrammeEditorScreen() {
           setPickerBlocId(null);
           setReplaceExerciceId(null);
         }}
-        onSelect={handleAddExerciceToBloc}
+        multiple={replaceExerciceId === null}
+        onSelect={handleReplaceExercice}
+        onSelectMany={handleAddExercicesToBloc}
       />
 
       <Modal
@@ -556,6 +654,8 @@ function BlocCard({
   onReplaceExercice,
   onUpdateExercice,
   onDeleteExercice,
+  onDuplicateExercice,
+  onMoveExercice,
   onSaveAsProtocol,
 }: {
   bloc: Bloc;
@@ -573,6 +673,8 @@ function BlocCard({
   onReplaceExercice: (exerciceId: string) => void;
   onUpdateExercice: (exerciceId: string, patch: Partial<BlocExercice>) => void;
   onDeleteExercice: (exerciceId: string) => void;
+  onDuplicateExercice: (exerciceId: string) => void;
+  onMoveExercice: (exerciceId: string, direction: -1 | 1) => void;
   onSaveAsProtocol: () => void;
 }) {
   const [nomDraft, setNomDraft] = useState(bloc.nom);
@@ -639,20 +741,24 @@ function BlocCard({
       </View>
       {blocModeWarning(bloc) && <Text style={styles.modeWarning}>{blocModeWarning(bloc)}</Text>}
 
-      {bloc.exercices.map((ex) => (
+      {bloc.exercices.map((ex, i) => (
         <ExerciceCard
           key={ex.id}
           exercice={ex}
           library={library}
+          isFirst={i === 0}
+          isLast={i === bloc.exercices.length - 1}
           onChangeExercise={() => onReplaceExercice(ex.id)}
           onUpdate={(patch) => onUpdateExercice(ex.id, patch)}
           onDelete={() => onDeleteExercice(ex.id)}
+          onDuplicate={() => onDuplicateExercice(ex.id)}
+          onMove={(direction) => onMoveExercice(ex.id, direction)}
         />
       ))}
 
       <TouchableOpacity style={styles.addExerciceButton} onPress={onAddExercice}>
         <Ionicons name="add" size={16} color={Colors.primary} />
-        <Text style={styles.addExerciceButtonText}>Ajouter un exercice</Text>
+        <Text style={styles.addExerciceButtonText}>Ajouter des exercices</Text>
       </TouchableOpacity>
 
       {bloc.exercices.length > 0 && (
@@ -665,18 +771,83 @@ function BlocCard({
   );
 }
 
+// Champ numérique avec − / + : un tap pour ajuster, ou on tape la valeur.
+// Les valeurs non numériques ("8-10", "30m") restent saisissables à la main ;
+// − / + repartent alors du pas.
+function QuickStepper({
+  label,
+  value,
+  step = 1,
+  min = 0,
+  max = 999,
+  suffix,
+  onChange,
+  onCommit,
+}: {
+  label: string;
+  value: string;
+  step?: number;
+  min?: number;
+  max?: number;
+  suffix?: string;
+  // onChange : valeur locale (à chaque frappe) ; onCommit : enregistrement
+  // (à la fin de la saisie ou au tap sur − / +), pour ne pas écrire dans
+  // Firestore à chaque touche.
+  onChange: (value: string) => void;
+  onCommit: (value: string) => void;
+}) {
+  const current = parseFloat(value.replace(",", "."));
+  const base = Number.isFinite(current) ? current : 0;
+  function bump(direction: -1 | 1) {
+    const next = Math.min(max, Math.max(min, base + direction * step));
+    const text = String(Math.round(next * 100) / 100);
+    onChange(text);
+    onCommit(text);
+  }
+  return (
+    <View style={styles.stepper}>
+      <Text style={styles.stepperLabel}>{label}</Text>
+      <View style={styles.stepperRow}>
+        <TouchableOpacity style={styles.stepperButton} onPress={() => bump(-1)} hitSlop={4}>
+          <Ionicons name="remove" size={16} color={Colors.text} />
+        </TouchableOpacity>
+        <TextInput
+          style={styles.stepperInput}
+          value={value}
+          onChangeText={onChange}
+          onBlur={() => onCommit(value)}
+          keyboardType="numbers-and-punctuation"
+          selectTextOnFocus
+        />
+        <TouchableOpacity style={styles.stepperButton} onPress={() => bump(1)} hitSlop={4}>
+          <Ionicons name="add" size={16} color={Colors.text} />
+        </TouchableOpacity>
+      </View>
+      {suffix ? <Text style={styles.stepperSuffix}>{suffix}</Text> : null}
+    </View>
+  );
+}
+
 function ExerciceCard({
   exercice,
   library,
+  isFirst,
+  isLast,
   onChangeExercise,
   onUpdate,
   onDelete,
+  onDuplicate,
+  onMove,
 }: {
   exercice: BlocExercice;
   library: ExerciseTemplate[];
+  isFirst: boolean;
+  isLast: boolean;
   onChangeExercise: () => void;
   onUpdate: (patch: Partial<BlocExercice>) => void;
   onDelete: () => void;
+  onDuplicate: () => void;
+  onMove: (direction: -1 | 1) => void;
 }) {
   const [series, setSeries] = useState(exercice.series);
   const [repetitions, setRepetitions] = useState(exercice.repetitions);
@@ -688,6 +859,8 @@ function ExerciceCard({
   const [commentaires, setCommentaires] = useState(exercice.commentaires);
   const [showVideo, setShowVideo] = useState(false);
   const [showImage, setShowImage] = useState(false);
+  // Replié par défaut : la ligne de réglages rapides suffit dans 90 % des cas.
+  const [expanded, setExpanded] = useState(false);
 
   const libraryExercise = library.find((e) => e.id === exercice.exerciceId);
   const hasMedia = !!(libraryExercise?.videoUrl || libraryExercise?.photoUrl);
@@ -703,20 +876,6 @@ function ExerciceCard({
     if (libraryExercise?.videoUrl) setShowVideo(true);
     else if (libraryExercise?.photoUrl) setShowImage(true);
   }
-
-  const nameHeader = (
-    <View style={styles.exerciceHeaderRow}>
-      <TouchableOpacity style={styles.exerciceNameButton} onPress={onChangeExercise}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.exerciceName}>{exercice.exerciceNom}</Text>
-        </View>
-        <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onDelete} hitSlop={8}>
-        <Ionicons name="close" size={18} color={Colors.textSecondary} />
-      </TouchableOpacity>
-    </View>
-  );
 
   const imageBlock = (
     <TouchableOpacity
@@ -903,23 +1062,141 @@ function ExerciceCard({
     </View>
   );
 
+  const chargeIsRpe = exercice.chargeType === "rpe";
+  const thumb = libraryExercise?.photoUrl ? (
+    <Image source={{ uri: libraryExercise.photoUrl }} style={styles.exThumb} />
+  ) : (
+    <MovementIllustration pattern={libraryExercise?.pattern ?? "isolation"} size={52} />
+  );
+
   return (
     <View style={styles.exerciceCard}>
-      {isDesktop ? (
-        <View style={styles.desktopRow}>
-          <View style={styles.desktopParamsCol}>{paramsCard}</View>
-          <View style={styles.desktopVisualCol}>
-            {nameHeader}
-            {imageBlock}
+      <View style={styles.exHeader}>
+        <TouchableOpacity onPress={hasMedia ? openMedia : () => setExpanded((v) => !v)}>{thumb}</TouchableOpacity>
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => setExpanded((v) => !v)}>
+          <Text style={styles.exerciceName} numberOfLines={2}>
+            {exercice.exerciceNom}
+          </Text>
+          <Text style={styles.exSummary} numberOfLines={1}>
+            {[
+              libraryExercise?.groupesMusculaires.join(" · "),
+              exercice.poidsIndicatif ? `${exercice.poidsIndicatif} kg` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onMove(-1)} disabled={isFirst} hitSlop={6}>
+          <Ionicons name="chevron-up" size={18} color={isFirst ? Colors.grayMedium : Colors.textSecondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onMove(1)} disabled={isLast} hitSlop={6}>
+          <Ionicons name="chevron-down" size={18} color={isLast ? Colors.grayMedium : Colors.textSecondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onChangeExercise} hitSlop={6}>
+          <Ionicons name="swap-horizontal" size={18} color={Colors.textSecondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onDuplicate} hitSlop={6}>
+          <Ionicons name="copy-outline" size={17} color={Colors.textSecondary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onDelete} hitSlop={6}>
+          <Ionicons name="close" size={19} color={Colors.textSecondary} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.quickRow}>
+        <QuickStepper
+          label="SÉRIES"
+          value={series}
+          min={1}
+          max={20}
+          onChange={setSeries}
+          onCommit={(v) => onUpdate({ series: v })}
+        />
+        <QuickStepper
+          label="RÉPÉTITIONS"
+          value={repetitions}
+          min={1}
+          max={100}
+          onChange={setRepetitions}
+          onCommit={(v) => onUpdate({ repetitions: v })}
+        />
+        <View style={styles.stepper}>
+          <View style={styles.chargeSwitch}>
+            {(["rpe", "1rm"] as ChargeType[]).map((type) => (
+              <TouchableOpacity key={type} onPress={() => onUpdate({ chargeType: type })} hitSlop={4}>
+                <Text style={[styles.chargeSwitchText, exercice.chargeType === type && styles.chargeSwitchTextOn]}>
+                  {CHARGE_LABELS[type]}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.stepperRow}>
+            <TouchableOpacity
+              style={styles.stepperButton}
+              hitSlop={4}
+              onPress={() => {
+                const cur = parseFloat(chargeValeur.replace(",", ".")) || 0;
+                const next = String(Math.max(0, cur - (chargeIsRpe ? 0.5 : 5)));
+                setChargeValeur(next);
+                onUpdate({ chargeValeur: next });
+              }}
+            >
+              <Ionicons name="remove" size={16} color={Colors.text} />
+            </TouchableOpacity>
+            <TextInput
+              style={[styles.stepperInput, chargeIsRpe && styles.stepperInputRpe]}
+              value={chargeValeur}
+              onChangeText={setChargeValeur}
+              onBlur={() => onUpdate({ chargeValeur })}
+              keyboardType="numbers-and-punctuation"
+              selectTextOnFocus
+            />
+            <TouchableOpacity
+              style={styles.stepperButton}
+              hitSlop={4}
+              onPress={() => {
+                const cur = parseFloat(chargeValeur.replace(",", ".")) || 0;
+                const next = String(Math.min(chargeIsRpe ? 10 : 150, cur + (chargeIsRpe ? 0.5 : 5)));
+                setChargeValeur(next);
+                onUpdate({ chargeValeur: next });
+              }}
+            >
+              <Ionicons name="add" size={16} color={Colors.text} />
+            </TouchableOpacity>
           </View>
         </View>
-      ) : (
-        <>
-          {nameHeader}
-          {imageBlock}
-          {paramsCard}
-        </>
-      )}
+        <View style={styles.stepper}>
+          <Text style={styles.stepperLabel}>REPOS</Text>
+          <TextInput
+            style={[styles.stepperInput, styles.restInput]}
+            value={reposSeries}
+            onChangeText={setReposSeries}
+            onBlur={() => onUpdate({ reposSeries })}
+            placeholder="2'"
+            placeholderTextColor={Colors.textSecondary}
+          />
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.detailsToggle} onPress={() => setExpanded((v) => !v)}>
+        <Text style={styles.detailsToggleText}>
+          {expanded ? "Masquer les réglages" : "Tempo, poids indicatif, notes, visuel…"}
+        </Text>
+        <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={14} color={Colors.textSecondary} />
+      </TouchableOpacity>
+
+      {expanded &&
+        (isDesktop ? (
+          <View style={styles.desktopRow}>
+            <View style={styles.desktopParamsCol}>{paramsCard}</View>
+            <View style={styles.desktopVisualCol}>{imageBlock}</View>
+          </View>
+        ) : (
+          <>
+            {imageBlock}
+            {paramsCard}
+          </>
+        ))}
 
       <VideoPreviewModal
         visible={showVideo}
@@ -1232,6 +1509,147 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
 
+  statsRow: {
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  statsText: {
+    fontSize: 12.5,
+    fontWeight: "600",
+    color: Colors.textSecondary,
+  },
+  emptySeance: {
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    marginBottom: 16,
+    borderRadius: 18,
+    backgroundColor: Colors.surface,
+  },
+  emptySeanceTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+  emptySeanceText: {
+    fontSize: 13,
+    textAlign: "center",
+    color: Colors.textSecondary,
+    maxWidth: 360,
+  },
+  emptySeanceButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 8,
+    height: 48,
+    paddingHorizontal: 22,
+    borderRadius: 14,
+    backgroundColor: Colors.primary,
+  },
+  emptySeanceButtonText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.white,
+  },
+  exHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 10,
+  },
+  exThumb: {
+    width: 52,
+    height: 52,
+    borderRadius: 12,
+  },
+  exSummary: {
+    fontSize: 11.5,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  quickRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  stepper: {
+    flexGrow: 1,
+    flexBasis: 120,
+    gap: 4,
+  },
+  stepperLabel: {
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    color: Colors.textSecondary,
+  },
+  stepperRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  stepperButton: {
+    width: 32,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepperInput: {
+    flex: 1,
+    minWidth: 40,
+    height: 38,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+  stepperInputRpe: {
+    color: Colors.primary,
+  },
+  restInput: {
+    flex: 0,
+    width: "100%",
+  },
+  stepperSuffix: {
+    fontSize: 10.5,
+    color: Colors.textSecondary,
+  },
+  chargeSwitch: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  chargeSwitchText: {
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    color: Colors.textSecondary,
+  },
+  chargeSwitchTextOn: {
+    color: Colors.primary,
+    textDecorationLine: "underline",
+  },
+  detailsToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginTop: 10,
+    marginBottom: 2,
+  },
+  detailsToggleText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.textSecondary,
+  },
   exerciceCard: {
     borderRadius: 16,
     padding: 14,

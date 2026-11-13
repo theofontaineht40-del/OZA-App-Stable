@@ -5,20 +5,30 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import AnimatedPressable from "../../components/animated-pressable";
 import { HeaderTexture } from "../../components/decor";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
-import PremiumStatWidget from "../../components/premium-stat-widget";
+import {
+  CoachWordCard,
+  ProgressCard,
+  TodayHero,
+  TodoCard,
+  TodoItem,
+} from "../../components/sportif-home-cards";
 import WeekScheduleCard from "../../components/week-schedule-card";
+import WeekStrip from "../../components/week-strip";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
-import { buildDailyLoadSeries, todayKey } from "../../services/load";
+import { describeSpec } from "../../services/cardio";
+import { todayKey } from "../../services/load";
+import { subscribeToConversationsForSportif } from "../../services/messages";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
 import {
+  computeDayState,
   computeScheduleStatuses,
+  daysBetween,
   getScheduledForSportif,
   mondayOf,
   ScheduledSession,
@@ -35,6 +45,8 @@ export default function SportifHome() {
   const [checkinDone, setCheckinDone] = useState(true);
   const [goal, setGoalState] = useState<Goal | null>(null);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
+  // Dernier message du coach (s'il a écrit en dernier) pour la carte "Mot de ton coach".
+  const [coachWord, setCoachWord] = useState<{ coachId: string; coachName: string; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
@@ -79,6 +91,24 @@ export default function SportifHome() {
   }, []);
 
   useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+    const stopAuth = onAuthStateChanged(auth, (user) => {
+      unsubscribe?.();
+      if (!user) return;
+      unsubscribe = subscribeToConversationsForSportif(user.uid, (list) => {
+        const c = list.find((x) => x.lastMessageText && x.lastMessageSenderId === x.coachId);
+        setCoachWord(
+          c ? { coachId: c.coachId, coachName: c.coachName, text: c.lastMessageText } : null
+        );
+      });
+    });
+    return () => {
+      unsubscribe?.();
+      stopAuth();
+    };
+  }, []);
+
+  useEffect(() => {
     if (loading) return;
     Animated.parallel([
       Animated.timing(fade, {
@@ -98,31 +128,89 @@ export default function SportifHome() {
     return <View style={styles.container} />;
   }
 
-  const dailyLoads28 = buildDailyLoadSeries(sessions, 28);
-  const last7 = dailyLoads28.slice(-7);
-  const weeklySessionCount = sessions.filter((s) =>
-    last7.some((d) => d.date === s.date)
-  ).length;
-  const weeklyMinutes = sessions
-    .filter((s) => last7.some((d) => d.date === s.date))
-    .reduce((sum, s) => sum + s.duration, 0);
-
-  let streak = 0;
-  for (let i = dailyLoads28.length - 1; i >= 0; i--) {
-    if (dailyLoads28[i].load > 0) streak++;
-    else break;
-  }
-
   const goalProgress = goal ? computeGoalProgress(goal) : null;
 
   const nextSeance = getNextSeance(programmes[0] ?? null, sessions);
 
   const today = todayKey();
-  const weekDays = weekDates(mondayOf(today));
+  const monday = mondayOf(today);
+  const weekDays = weekDates(monday);
   const scheduleStatuses = computeScheduleStatuses(scheduled, sessions, today);
-  const weekScheduleItems = scheduled
-    .filter((s) => weekDays.includes(s.date))
+  const sessionDates = new Set(sessions.map((s) => s.date));
+  const dayStates = weekDays.map((d) =>
+    computeDayState(d, scheduled, scheduleStatuses, sessionDates, today)
+  );
+
+  // Séances prévues aujourd'hui : la première non faite passe en grand.
+  const todayItems = scheduled.filter((i) => i.date === today);
+  const focusPending = todayItems.find((i) => scheduleStatuses.get(i.id) !== "done") ?? null;
+  // Séances des jours passés restées en retard (7 derniers jours).
+  const lateItems = scheduled
+    .filter(
+      (i) =>
+        scheduleStatuses.get(i.id) === "late" &&
+        daysBetween(i.date, today) > 0 &&
+        daysBetween(i.date, today) <= 7
+    )
+    .slice(-3);
+
+  function describeScheduled(item: ScheduledSession): string | undefined {
+    if (item.kind === "cardio" && item.cardio) return describeSpec(item.cardio);
+    if (item.kind === "programme") {
+      const programme = programmes.find((p) => p.id === item.programmeId);
+      const seance = programme?.seances.find((x) => x.id === item.seanceId);
+      const count = seance ? getSeanceExerciseNames(seance).length : 0;
+      return [item.programmeNom, count > 0 ? `${count} exercice${count > 1 ? "s" : ""}` : null]
+        .filter(Boolean)
+        .join(" · ");
+    }
+    return undefined;
+  }
+  const focusMeta = focusPending ? describeScheduled(focusPending) : undefined;
+
+  function startScheduled(item: ScheduledSession) {
+    if (item.kind === "cardio") router.push(`/sportif/cardio/${item.id}`);
+    else if (item.kind === "programme" && item.programmeId && item.seanceId) {
+      router.push(`/sportif/programme/${item.programmeId}/seance/${item.seanceId}`);
+    } else router.push("/sportif/nouvelle-seance");
+  }
+
+  const todoItems: TodoItem[] = [
+    {
+      key: "checkin",
+      label: "Check-in du jour",
+      done: checkinDone,
+      onPress: () => router.push("/sportif/checkin"),
+    },
+    ...todayItems.map((i) => ({
+      key: i.id,
+      label: i.titre,
+      done: scheduleStatuses.get(i.id) === "done",
+      onPress: () => startScheduled(i),
+    })),
+    ...lateItems.map((i) => ({
+      key: i.id,
+      label: `${i.titre} (en retard)`,
+      done: false,
+      late: true,
+      onPress: () => startScheduled(i),
+    })),
+  ];
+
+  const weekItemsAll = scheduled.filter((i) => weekDays.includes(i.date));
+  const upcomingItems = weekItemsAll
+    .filter((i) => i.date > today)
     .map((item) => ({ item, dayIndex: weekDays.indexOf(item.date) }));
+  const weekDoneCount =
+    weekItemsAll.length > 0
+      ? weekItemsAll.filter((i) => scheduleStatuses.get(i.id) === "done").length
+      : sessions.filter((s) => weekDays.includes(s.date)).length;
+
+  const todayLabel = new Date().toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -138,61 +226,28 @@ export default function SportifHome() {
         <View style={styles.header}>
           <HeaderTexture />
           <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
-          <Text style={styles.subtitle}>Prêt à vous dépasser aujourd'hui ?</Text>
+          <Text style={styles.subtitle}>{todayLabel}</Text>
         </View>
 
-        <Text style={styles.sectionLabel}>Aujourd'hui</Text>
+        <WeekStrip states={dayStates} />
 
-        <TouchableOpacity
-          style={styles.checkinCard}
-          activeOpacity={0.75}
-          onPress={() => router.push("/sportif/checkin")}
-        >
-          <Ionicons
-            name={checkinDone ? "checkmark-circle" : "pulse-outline"}
-            size={18}
-            color={checkinDone ? Colors.riskLow : "#5BFCE0"}
+        {focusPending ? (
+          <TodayHero
+            eyebrow="Séance du jour"
+            title={focusPending.titre}
+            meta={focusMeta}
+            buttonLabel="Démarrer la séance"
+            onPress={() => startScheduled(focusPending)}
           />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.checkinCardTitle}>Check-in du jour</Text>
-            <Text style={styles.checkinCardSubtitle}>
-              {checkinDone ? "Complété — vous pouvez le modifier" : "Pas encore fait"}
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={16} color={Colors.textOnDarkSecondary} />
-        </TouchableOpacity>
-
-        <AnimatedPressable
-          style={styles.ctaButton}
-          onPress={() => router.push("/sportif/nouvelle-seance")}
-        >
-          <Ionicons name="add-circle" size={20} color={Colors.white} />
-          <Text style={styles.ctaButtonText}>Enregistrer une séance</Text>
-        </AnimatedPressable>
-
-        {weekScheduleItems.length > 0 && (
-          <>
-            <Text style={styles.sectionLabel}>Ma semaine</Text>
-            <WeekScheduleCard items={weekScheduleItems} statuses={scheduleStatuses} />
-          </>
-        )}
-
-        <View style={styles.todayList}>
-          {programmes.length > 0 && (
-            <>
-              <ListRow
-                icon="barbell"
-                title={programmes[0].nom}
-                subtitle={`${programmes[0].seances.length} séance${
-                  programmes[0].seances.length > 1 ? "s" : ""
-                }`}
-                onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
-              />
-              <Divider />
-            </>
-          )}
-
-          {nextSeance ? (
+        ) : todayItems.length > 0 ? (
+          <TodayHero
+            eyebrow="Séance du jour"
+            title="Séance terminée"
+            meta="Bien joué, à demain pour la suite."
+            done
+          />
+        ) : nextSeance ? (
+          <View style={styles.todayList}>
             <NextSessionWidget
               workoutName={nextSeance.nom}
               subtitle={programmes[0]?.nom}
@@ -200,186 +255,56 @@ export default function SportifHome() {
               muscles={nextSeance.muscles}
               onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
             />
-          ) : (
-            <ListRow
-              icon="time-outline"
-              title="Prochaine séance"
-              subtitle={
-                upcomingSlots.length === 0
-                  ? "Aucune séance prévue"
-                  : `${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut} — ${upcomingSlots[0].heureFin}`
-              }
-              onPress={() => router.push("/sportif/reservations")}
-            />
-          )}
-        </View>
+          </View>
+        ) : (
+          <TodayHero
+            eyebrow="Séance du jour"
+            title="Rien de prévu aujourd'hui"
+            meta={
+              upcomingSlots.length > 0
+                ? `Prochain créneau : ${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut}`
+                : "Ton coach n'a pas encore planifié de séance."
+            }
+          />
+        )}
 
-        <PremiumStatWidget
-          weeklySessionCount={weeklySessionCount}
-          weeklyMinutes={weeklyMinutes}
+        <TodoCard items={todoItems} />
+
+        {upcomingItems.length > 0 && (
+          <>
+            <Text style={styles.upcomingLabel}>À venir cette semaine</Text>
+            <WeekScheduleCard items={upcomingItems} statuses={scheduleStatuses} />
+          </>
+        )}
+
+        {coachWord && (
+          <CoachWordCard
+            coachName={coachWord.coachName}
+            text={coachWord.text}
+            onPress={() => router.push(`/sportif/messages/${coachWord.coachId}`)}
+          />
+        )}
+
+        <ProgressCard
+          weekDone={weekDoneCount}
+          weekTotal={weekItemsAll.length > 0 ? weekItemsAll.length : null}
+          goalLabel={goal?.description ?? null}
           goalProgress={goalProgress}
-          streak={streak}
-          onAddSeance={() => router.push("/sportif/nouvelle-seance")}
-          onViewActivity={() => router.push("/sportif/historique")}
-          onViewGoal={() => router.push("/sportif/objectif")}
-          onContinueStreak={() => router.push("/sportif/nouvelle-seance")}
+          onPressGoal={() => router.push("/sportif/objectif")}
+          onPressHistory={() => router.push("/sportif/historique")}
         />
 
-        <Text style={styles.sectionTitle}>Accès rapides</Text>
-        <View style={styles.quickGrid}>
-          <QuickAction
-            icon="calendar-outline"
-            label="Réserver"
-            delay={0}
-            onPress={() => router.push("/sportif/reservations")}
-          />
-          <QuickAction
-            icon="barbell-outline"
-            label="Mes programmes"
-            delay={250}
-            onPress={() => router.push("/sportif/programmes")}
-          />
-          <QuickAction
-            icon="stats-chart-outline"
-            label="Historique"
-            delay={500}
-            onPress={() => router.push("/sportif/historique")}
-          />
-          <QuickAction
-            icon="chatbubble-outline"
-            label="Messagerie"
-            delay={750}
-            onPress={() => router.push("/sportif/messages")}
-          />
-        </View>
+        <TouchableOpacity
+          style={styles.freeSessionLink}
+          onPress={() => router.push("/sportif/nouvelle-seance")}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="add-circle-outline" size={18} color={Colors.textOnDark} />
+          <Text style={styles.freeSessionText}>Enregistrer une séance libre</Text>
+        </TouchableOpacity>
       </Animated.View>
       </ScrollView>
     </View>
-  );
-}
-
-function Divider() {
-  return <View style={styles.divider} />;
-}
-
-function ListRow({
-  icon,
-  iconColor,
-  title,
-  subtitle,
-  accent,
-  progress,
-  onPress,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  iconColor?: string;
-  title: string;
-  subtitle: string;
-  accent?: boolean;
-  progress?: number;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      style={[styles.listRow, accent && styles.listRowAccent]}
-      activeOpacity={0.7}
-      onPress={onPress}
-    >
-      <Ionicons name={icon} size={18} color={iconColor ?? Colors.primary} />
-      <View style={{ flex: 1 }}>
-        <Text style={styles.listRowTitle} numberOfLines={1}>
-          {title}
-        </Text>
-        <Text style={styles.listRowSubtitle} numberOfLines={1}>
-          {subtitle}
-        </Text>
-        {progress !== undefined && (
-          <View style={styles.goalProgressTrack}>
-            <View
-              style={[
-                styles.goalProgressFill,
-                { width: `${Math.round(progress * 100)}%` },
-                progress >= 1 && styles.goalProgressFillDone,
-              ]}
-            />
-          </View>
-        )}
-      </View>
-      <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
-    </TouchableOpacity>
-  );
-}
-
-function QuickAction({
-  icon,
-  label,
-  onPress,
-  delay = 0,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-  onPress: () => void;
-  delay?: number;
-}) {
-  const scale = useRef(new Animated.Value(1)).current;
-  const glow = useRef(new Animated.Value(0.35)).current;
-  const float = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const glowLoop = Animated.loop(
-      Animated.sequence([
-        Animated.delay(delay),
-        Animated.timing(glow, { toValue: 1, duration: 1500, useNativeDriver: false }),
-        Animated.timing(glow, { toValue: 0.35, duration: 1500, useNativeDriver: false }),
-      ])
-    );
-    const floatLoop = Animated.loop(
-      Animated.sequence([
-        Animated.delay(delay),
-        Animated.timing(float, {
-          toValue: -7,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(float, {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    glowLoop.start();
-    floatLoop.start();
-    return () => {
-      glowLoop.stop();
-      floatLoop.stop();
-    };
-  }, []);
-
-  function pressIn() {
-    Animated.spring(scale, { toValue: 0.96, useNativeDriver: true }).start();
-  }
-
-  function pressOut() {
-    Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
-  }
-
-  return (
-    <Animated.View style={[styles.quickAction, { transform: [{ scale }, { translateY: float }] }]}>
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={onPress}
-        onPressIn={pressIn}
-        onPressOut={pressOut}
-      >
-        <Animated.View style={[styles.quickActionInner, { shadowOpacity: glow }]}>
-          <View style={styles.quickActionIcon}>
-            <Ionicons name={icon} size={22} color="#5BFCE0" />
-          </View>
-          <Text style={styles.quickActionText}>{label}</Text>
-        </Animated.View>
-      </TouchableOpacity>
-    </Animated.View>
   );
 }
 
@@ -413,44 +338,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  sectionLabel: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: Colors.textOnDarkSecondary,
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
-    marginBottom: 10,
-  },
 
-  checkinCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#5BFCE0",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 14,
-    shadowColor: "#5BFCE0",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 14,
-  },
-
-  checkinCardTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.textOnDark,
-  },
-
-  checkinCardSubtitle: {
-    fontSize: 12,
-    color: Colors.textOnDarkSecondary,
-    marginTop: 2,
-  },
 
   todayList: {
     backgroundColor: Colors.surface,
@@ -459,121 +347,35 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  listRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderLeftWidth: 3,
-    borderLeftColor: "transparent",
-  },
 
-  listRowAccent: {
-    borderLeftColor: Colors.primary,
-  },
 
-  listRowTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.text,
-  },
 
-  listRowSubtitle: {
+
+
+
+
+
+
+
+
+  upcomingLabel: {
     fontSize: 12,
-    color: Colors.textSecondary,
-    marginTop: 2,
+    fontWeight: "700",
+    color: Colors.textOnDarkSecondary,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+    marginBottom: 10,
   },
 
-  goalProgressTrack: {
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: Colors.grayLight,
-    overflow: "hidden",
-    marginTop: 8,
-  },
-
-  goalProgressFill: {
-    height: 5,
-    backgroundColor: Colors.primary,
-    borderRadius: 3,
-  },
-
-  goalProgressFillDone: {
-    backgroundColor: Colors.riskLow,
-  },
-
-  divider: {
-    height: 1,
-    backgroundColor: Colors.border,
-    marginLeft: 46,
-  },
-
-  ctaButton: {
+  freeSessionLink: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     gap: 8,
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
-    borderRadius: 16,
-    height: 54,
-    marginBottom: 32,
-    borderWidth: 2,
-    borderColor: "#5BFCE0",
-    shadowColor: "#5BFCE0",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 14,
+    paddingVertical: 14,
   },
 
-  ctaButtonText: {
-    color: Colors.white,
-    fontWeight: "700",
-    fontSize: 15,
-  },
-
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: Colors.textOnDark,
-    marginBottom: 14,
-  },
-
-  quickGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-  },
-
-  quickAction: {
-    width: "47%",
-  },
-
-  quickActionInner: {
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
-    borderRadius: 18,
-    borderWidth: 1.5,
-    borderColor: "#5BFCE0",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    shadowColor: "#5BFCE0",
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  quickActionIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "rgba(91, 252, 224, 0.14)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-
-  quickActionText: {
+  freeSessionText: {
     fontSize: 14,
     fontWeight: "600",
     color: Colors.textOnDark,

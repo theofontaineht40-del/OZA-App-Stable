@@ -301,3 +301,28 @@ export async function applyWeekTemplate(
   }
   return added;
 }
+
+// ── Bande de la semaine (accueil sportif) ──
+
+export type DayState = "done" | "late" | "today" | "plan" | "rest";
+
+// État d'un jour pour la bande de la semaine : séance(s) prévue(s) (faite,
+// en retard, à venir) ou, sans planning, une séance enregistrée par le
+// sportif lui-même ce jour-là.
+export function computeDayState(
+  date: string,
+  items: ScheduledSession[],
+  statuses: Map<string, ScheduleStatus>,
+  sessionDates: Set<string>,
+  today: string
+): DayState {
+  const dayItems = items.filter((i) => i.date === date);
+  if (dayItems.length > 0) {
+    const st = dayItems.map((i) => statuses.get(i.id) ?? "upcoming");
+    if (st.every((s) => s === "done")) return "done";
+    if (st.some((s) => s === "late")) return "late";
+    return date === today ? "today" : "plan";
+  }
+  if (sessionDates.has(date)) return "done";
+  return date === today ? "today" : "rest";
+}

@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
@@ -32,7 +32,7 @@ import {
   SignalTone,
 } from "../../services/coach-signals";
 import { todayKey } from "../../services/load";
-import { createManagedSportif } from "../../services/relations";
+import { createManagedSportif, getRelationsForCoach, Relation } from "../../services/relations";
 import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
 import {
   getMySportifs,
@@ -75,7 +75,10 @@ export default function SportifsTabScreen() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<SportifStatus | null>(null);
   const [width, setWidth] = useState(0);
-  const [showCreate, setShowCreate] = useState(false);
+  // ?create=1 (raccourci de l'accueil) ouvre directement la création.
+  const { create } = useLocalSearchParams<{ create?: string }>();
+  const [showCreate, setShowCreate] = useState(create === "1");
+  const [specialisteRelations, setSpecialisteRelations] = useState<Relation[]>([]);
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
   const [creating, setCreating] = useState(false);
@@ -111,6 +114,12 @@ export default function SportifsTabScreen() {
         setWellness(wellnessData);
       } catch {
         // ignoré, voir ci-dessus
+      }
+      try {
+        const relations = await getRelationsForCoach(user.uid);
+        setSpecialisteRelations(relations.filter((r) => r.type === "specialiste"));
+      } catch {
+        // ignoré : section facultative
       }
       try {
         setScheduled(await getScheduledForCoach(user.uid));
@@ -352,6 +361,30 @@ export default function SportifsTabScreen() {
             )}
           </>
         )}
+
+        {specialisteRelations.length > 0 && (
+          <>
+            <Text style={styles.specialisteTitle}>Suivi en tant qu'intervenant</Text>
+            {specialisteRelations.map((relation) => (
+              <TouchableOpacity
+                key={relation.id}
+                style={styles.card}
+                onPress={() => router.push(`/coach/sportif/${relation.sportifId}`)}
+              >
+                <View style={styles.nameCell}>
+                  <Avatar name={relation.sportifFirstName} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.rowName} numberOfLines={1}>
+                      {relation.sportifFirstName} {relation.sportifLastName}
+                    </Text>
+                    <Text style={styles.cardStatLabel}>{relation.specialite}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
       </View>
 
       <Modal visible={showCreate} transparent animationType="fade" onRequestClose={() => setShowCreate(false)}>
@@ -501,6 +534,14 @@ function SeancesCell({ row }: { row: SportifRow }) {
 }
 
 const styles = StyleSheet.create({
+  specialisteTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text,
+    marginTop: 24,
+    marginBottom: 10,
+  },
+
   container: {
     flex: 1,
     backgroundColor: Colors.background,

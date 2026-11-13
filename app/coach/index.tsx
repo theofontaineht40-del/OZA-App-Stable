@@ -7,8 +7,6 @@ import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 
 import AnimatedPressable from "../../components/animated-pressable";
 import AreaChart from "../../components/coach/area-chart";
-import SportifsTable from "../../components/coach/sportifs-table";
-import StatusDonut from "../../components/coach/status-donut";
 import TriageCard from "../../components/coach/triage-card";
 import { HeaderTexture } from "../../components/decor";
 import MiniSparkline from "../../components/mini-sparkline";
@@ -32,7 +30,6 @@ import {
 import { buildTriage } from "../../services/coach-signals";
 import { getInjuries } from "../../services/medical";
 import { Conversation, subscribeToConversationsForCoach } from "../../services/messages";
-import { getRelationsForCoach, Relation } from "../../services/relations";
 import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
 import {
   getMySportifs,
@@ -72,7 +69,6 @@ export default function CoachHome() {
   const [openInjuries, setOpenInjuries] = useState<Record<string, { zone: string; gravite: number }[]>>({});
   // Les graphiques et l'analyse détaillée sont repliés : l'accueil répond d'abord à "qui a besoin de moi".
   const [showDetails, setShowDetails] = useState(false);
-  const [specialisteRelations, setSpecialisteRelations] = useState<Relation[]>([]);
   const [loading, setLoading] = useState(true);
   const [sportifSearch, setSportifSearch] = useState("");
   const fade = useRef(new Animated.Value(0)).current;
@@ -89,15 +85,13 @@ export default function CoachHome() {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-        const [sportifData, sessionData, relationData, wellnessData] = await Promise.all([
+        const [sportifData, sessionData, wellnessData] = await Promise.all([
           getMySportifs(user.uid),
           getSessionsForCoach(user.uid),
-          getRelationsForCoach(user.uid),
           getWellnessForCoach(user.uid),
         ]);
         setSportifs(sportifData);
         setSessions(sessionData);
-        setSpecialisteRelations(relationData.filter((r) => r.type === "specialiste"));
         setWellness(wellnessData);
 
         // Le planning est un plus : s'il ne se charge pas (ex. règles pas
@@ -293,7 +287,7 @@ export default function CoachHome() {
                 <Ionicons name="add" size={16} color={Colors.primaryDark} />
                 <Text style={styles.todayPillText}>Enregistrer une séance</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.todayPill} onPress={() => router.push("/coach/sportifs")}>
+              <TouchableOpacity style={styles.todayPill} onPress={() => router.push("/coach/sportifs?create=1")}>
                 <Ionicons name="person-add-outline" size={15} color={Colors.primaryDark} />
                 <Text style={styles.todayPillText}>Créer un sportif</Text>
               </TouchableOpacity>
@@ -306,12 +300,35 @@ export default function CoachHome() {
               onSeeAll={() => router.push("/coach/sportifs")}
             />
 
-            <View style={styles.statusTiles}>
-              <StatusTile label="Prêts" value={analysis.okCount} color={Colors.riskLow} />
-              <StatusTile label="À surveiller" value={analysis.vigilanceCount} color={Colors.riskMedium} />
-              <StatusTile label="Signal fort" value={analysis.attentionCount} color={Colors.riskHigh} />
-              <StatusTile label="Séances 7 j" value={kpis.sessionsThisWeek} color={Colors.text} />
-            </View>
+            {sportifs.length > 0 && (
+              <TouchableOpacity style={styles.teamRow} onPress={() => router.push("/coach/sportifs")}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.teamRowTitle}>
+                    {sportifs.length} sportif{sportifs.length > 1 ? "s" : ""} · {analysis.okCount} prêt
+                    {analysis.okCount > 1 ? "s" : ""} · {analysis.vigilanceCount} à surveiller ·{" "}
+                    {analysis.attentionCount} signal fort
+                  </Text>
+                  <Text style={styles.teamRowSub}>
+                    {kpis.sessionsThisWeek} séance{kpis.sessionsThisWeek > 1 ? "s" : ""} sur 7 jours
+                  </Text>
+                </View>
+                <Text style={styles.teamRowLink}>Mes sportifs</Text>
+                <Ionicons name="chevron-forward" size={16} color={Colors.primaryDark} />
+              </TouchableOpacity>
+            )}
+
+            {sportifs.length === 0 && (
+              <View style={styles.emptyCard}>
+                <TeamIllustration size={72} />
+                <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
+                <Text style={styles.emptyText}>
+                  Partagez votre code coach depuis votre profil pour associer vos sportifs.
+                </Text>
+                <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
+                  <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <TouchableOpacity style={styles.detailsToggle} onPress={() => setShowDetails((v) => !v)}>
               <Text style={styles.detailsToggleText}>
@@ -517,55 +534,6 @@ export default function CoachHome() {
               </View>
             </View>
 
-            {/* ── 8. RÉPARTITION DES STATUTS ── */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Répartition des statuts</Text>
-              <StatusDonut ok={analysis.okCount} vigilance={analysis.vigilanceCount} attention={analysis.attentionCount} />
-            </View>
-
-            {/* ── 9. MES SPORTIFS ── */}
-            <Text style={styles.sectionTitle}>Mes sportifs</Text>
-            {sportifs.length === 0 ? (
-              <View style={styles.emptyCard}>
-                <TeamIllustration size={72} />
-                <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
-                <Text style={styles.emptyText}>
-                  Partagez votre code coach depuis votre profil pour associer vos sportifs.
-                </Text>
-                <TouchableOpacity style={styles.emptyButton} onPress={() => router.push("/coach/profil")}>
-                  <Text style={styles.emptyButtonText}>Voir mon code coach</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={styles.card}>
-                <SportifsTable rows={sportifRows} onPressRow={(uid) => router.push(`/coach/sportif/${uid}`)} />
-              </View>
-            )}
-
-            {specialisteRelations.length > 0 && (
-              <>
-                <Text style={styles.sectionTitle}>Suivi en tant qu'intervenant</Text>
-                {specialisteRelations.map((relation) => (
-                  <TouchableOpacity
-                    key={relation.id}
-                    style={styles.sportifRow}
-                    onPress={() => router.push(`/coach/sportif/${relation.sportifId}`)}
-                  >
-                    <View style={[styles.sportifAvatar, styles.specialisteAvatar]}>
-                      <Ionicons name="star-outline" size={18} color={DARK.text} />
-                    </View>
-                    <View style={styles.sportifInfo}>
-                      <Text style={styles.sportifName}>
-                        {relation.sportifFirstName} {relation.sportifLastName}
-                      </Text>
-                      <Text style={styles.sportifLoadText}>{relation.specialite}</Text>
-                    </View>
-                    <Ionicons name="chevron-forward" size={18} color={DARK.textSecondary} />
-                  </TouchableOpacity>
-                ))}
-              </>
-            )}
-
             {/* ── 10. TENDANCES GLOBALES ── */}
             <Text style={styles.sectionTitle}>Tendances globales</Text>
             <View style={styles.trendsGrid}>
@@ -622,15 +590,6 @@ export default function CoachHome() {
           </View>
         </Animated.View>
       </ScrollView>
-    </View>
-  );
-}
-
-function StatusTile({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <View style={styles.statusTile}>
-      <Text style={styles.statusTileLabel}>{label.toUpperCase()}</Text>
-      <Text style={[styles.statusTileValue, { color }]}>{value}</Text>
     </View>
   );
 }
@@ -1017,33 +976,33 @@ const styles = StyleSheet.create({
     color: Colors.primaryDark,
   },
 
-  statusTiles: {
+  teamRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-    marginBottom: 14,
-  },
-
-  statusTile: {
-    flexGrow: 1,
-    flexBasis: 120,
+    alignItems: "center",
+    gap: 8,
     backgroundColor: Colors.surface,
     borderRadius: 16,
     paddingVertical: 12,
     paddingHorizontal: 14,
+    marginBottom: 14,
   },
 
-  statusTileLabel: {
-    fontSize: 10.5,
+  teamRowTitle: {
+    fontSize: 13,
     fontWeight: "700",
-    letterSpacing: 0.5,
+    color: Colors.text,
+  },
+
+  teamRowSub: {
+    fontSize: 12,
     color: Colors.textSecondary,
+    marginTop: 2,
   },
 
-  statusTileValue: {
-    fontSize: 26,
+  teamRowLink: {
+    fontSize: 12.5,
     fontWeight: "700",
-    marginTop: 4,
+    color: Colors.primaryDark,
   },
 
   detailsToggle: {

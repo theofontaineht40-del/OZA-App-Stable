@@ -45,6 +45,7 @@ export default function DecouvrirScreen() {
   const [linkedCoachIds, setLinkedCoachIds] = useState<string[]>([]);
   const [booking, setBooking] = useState(false);
   const [bookedCoachName, setBookedCoachName] = useState<string | null>(null);
+  const [bookedCoachUid, setBookedCoachUid] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -131,7 +132,7 @@ export default function DecouvrirScreen() {
     if (!uid) return;
 
     if (linkedCoachIds.includes(coach.uid)) {
-      router.push(`/sportif/reservations`);
+      router.push(`/sportif/messages/${coach.uid}`);
       return;
     }
 
@@ -157,6 +158,7 @@ export default function DecouvrirScreen() {
       );
       setLinkedCoachIds((prev) => [...prev, coach.uid]);
       setBookedCoachName(coach.firstName);
+      setBookedCoachUid(coach.uid);
     } finally {
       setBooking(false);
     }
@@ -300,8 +302,8 @@ export default function DecouvrirScreen() {
               ) : (
                 <Text style={styles.previewReserveText}>
                   {linkedCoachIds.includes(selectedCoach.uid)
-                    ? "Voir les disponibilités"
-                    : "Réserver une séance"}
+                    ? "Envoyer un message"
+                    : "Ajouter à mon équipe"}
                 </Text>
               )}
             </TouchableOpacity>
@@ -313,12 +315,13 @@ export default function DecouvrirScreen() {
       <ConfirmModal
         visible={bookedCoachName !== null}
         title={`${bookedCoachName ?? ""} ajouté(e) à votre équipe`}
-        message="Vous pouvez maintenant consulter ses disponibilités depuis Réservations."
-        confirmLabel="Voir les disponibilités"
+        message="Vous pouvez maintenant échanger avec lui depuis Messages."
+        confirmLabel="Écrire un message"
         cancelLabel="Plus tard"
         onConfirm={() => {
+          const uid = bookedCoachUid;
           setBookedCoachName(null);
-          router.push("/sportif/reservations");
+          if (uid) router.push(`/sportif/messages/${uid}`);
         }}
         onCancel={() => setBookedCoachName(null)}
       />

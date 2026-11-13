@@ -30,7 +30,6 @@ export default function SportifTabsLayout() {
         }}
       />
       <Tabs.Screen name="decouvrir" options={{ href: null }} />
-      <Tabs.Screen name="reservations" options={{ href: null }} />
       <Tabs.Screen
         name="programmes"
         options={{

@@ -38,7 +38,6 @@ export default function CoachTabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="reservations" options={{ href: null }} />
       <Tabs.Screen
         name="programmes"
         options={{

@@ -130,6 +130,7 @@ export default function PlanificationScreen() {
       setSportifProgrammes((prev) => [
         {
           id: programmeId,
+          kind: "programme" as const,
           coachId,
           sportifId: id,
           sportifName,

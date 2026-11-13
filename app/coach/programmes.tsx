@@ -29,12 +29,14 @@ import {
 } from "../../services/planification";
 import { downloadProgrammePdf } from "../../services/programme-pdf";
 import {
-  assignProgrammeToSportif,
+  assignCopyToSportif,
   createProgramme,
   deleteProgramme,
   duplicateProgramme,
+  estimateSeanceMinutes,
   getProgrammesForCoach,
   Programme,
+  ProgrammeKind,
 } from "../../services/programmes";
 import { getMySportifs, SportifSummary } from "../../services/tracking";
 import { showAlert } from "../../utils/alert";
@@ -46,6 +48,10 @@ export default function ProgrammesScreen() {
   const [planifications, setPlanifications] = useState<Record<string, Planification>>({});
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  // Deux espaces : les sportifs (planification + programmes coachés) et la
+  // bibliothèque (séances et programmes modèles, sans sportif).
+  const [view, setView] = useState<"sportifs" | "bibliotheque">("bibliotheque");
+  const [formKind, setFormKind] = useState<ProgrammeKind>("programme");
   const [nom, setNom] = useState("");
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -77,6 +83,7 @@ export default function ProgrammesScreen() {
           sportifData.map(async (s) => [s.uid, await getPlanification(s.uid)] as const)
         );
         setPlanifications(Object.fromEntries(planifEntries));
+        if (sportifData.length > 0) setView("sportifs");
       } finally {
         setLoading(false);
       }
@@ -105,7 +112,7 @@ export default function ProgrammesScreen() {
     try {
       const sportif = sportifs.find((s) => s.uid === selectedSportifId);
       const sportifName = sportif ? `${sportif.firstName} ${sportif.lastName}`.trim() : null;
-      const id = await createProgramme(uid, nom.trim(), selectedSportifId, sportifName);
+      const id = await createProgramme(uid, nom.trim(), selectedSportifId, sportifName, formKind);
       setShowForm(false);
       setNom("");
       setSelectedSportifId(null);
@@ -141,7 +148,7 @@ export default function ProgrammesScreen() {
     try {
       const newId = await duplicateProgramme(p);
       await refresh();
-      showAlert("Copié", "Le programme a été dupliqué, non assigné — attribuez-le à un sportif quand vous voulez.");
+      showAlert("Copié", "La copie n'est pas assignée — attribuez-la à un sportif quand vous voulez.");
       router.push(`/coach/programme/${newId}`);
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));
@@ -162,9 +169,11 @@ export default function ProgrammesScreen() {
     setAssigningId(sportif.uid);
     try {
       const sportifName = `${sportif.firstName} ${sportif.lastName}`.trim();
-      await assignProgrammeToSportif(assignTargetId, sportif.uid, sportifName);
+      const template = programmes.find((p) => p.id === assignTargetId);
+      if (template) await assignCopyToSportif(template, sportif.uid, sportifName);
       setAssignTargetId(null);
       await refresh();
+      showAlert("Assigné", `Une copie a été donnée à ${sportifName} — le modèle reste dans ta bibliothèque.`);
     } finally {
       setAssigningId(null);
     }
@@ -184,7 +193,8 @@ export default function ProgrammesScreen() {
 
   const programmeNames = Object.fromEntries(programmes.map((p) => [p.id, p.nom]));
   const assignedProgrammes = programmes.filter((p) => p.sportifId);
-  const orphanProgrammes = programmes.filter((p) => !p.sportifId);
+  const orphanSeances = programmes.filter((p) => !p.sportifId && p.kind === "seance");
+  const orphanPrograms = programmes.filter((p) => !p.sportifId && p.kind !== "seance");
 
   function programmeDateLabel(p: Programme): string {
     const planification = p.sportifId ? planifications[p.sportifId] : undefined;
@@ -205,27 +215,79 @@ export default function ProgrammesScreen() {
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>Programmes</Text>
-        <TouchableOpacity onPress={() => setShowForm((v) => !v)}>
-          <Ionicons
-            name={showForm ? "close-circle" : "add-circle"}
-            size={28}
-            color={Colors.primary}
-          />
+      </View>
+
+      <View style={styles.segment}>
+        {(
+          [
+            ["sportifs", "Mes sportifs"],
+            ["bibliotheque", "Bibliothèque"],
+          ] as const
+        ).map(([key, label]) => (
+          <TouchableOpacity
+            key={key}
+            style={[styles.segmentItem, view === key && styles.segmentItemActive]}
+            onPress={() => setView(key)}
+          >
+            <Text style={[styles.segmentText, view === key && styles.segmentTextActive]}>{label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <View style={styles.createRow}>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => {
+            setFormKind("programme");
+            setShowForm(true);
+          }}
+        >
+          <Ionicons name="add" size={18} color={Colors.primaryDark} />
+          <Text style={styles.createButtonText}>Nouveau programme</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => {
+            setFormKind("seance");
+            setShowForm(true);
+          }}
+        >
+          <Ionicons name="add" size={18} color={Colors.primaryDark} />
+          <Text style={styles.createButtonText}>Nouvelle séance</Text>
         </TouchableOpacity>
       </View>
 
       {showForm && (
         <View style={styles.card}>
-          <Text style={styles.fieldLabel}>Nom du programme</Text>
+          <View style={styles.sportifChipRow}>
+            {(
+              [
+                ["programme", "Programme"],
+                ["seance", "Séance seule"],
+              ] as const
+            ).map(([key, label]) => (
+              <TouchableOpacity
+                key={key}
+                style={[styles.sportifChip, formKind === key && styles.sportifChipActive]}
+                onPress={() => setFormKind(key)}
+              >
+                <Text style={[styles.sportifChipText, formKind === key && styles.sportifChipTextActive]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <Text style={styles.fieldLabel}>{formKind === "seance" ? "Nom de la séance" : "Nom du programme"}</Text>
           <TextInput
   placeholderTextColor={Colors.textSecondary}
             style={styles.input}
-            placeholder="Ex: Prise de masse débutant"
+            placeholder={formKind === "seance" ? "Ex: Haut du corps — force" : "Ex: Prise de masse débutant"}
             value={nom}
             onChangeText={setNom}
           />
 
-          <Text style={styles.fieldLabel}>Sportif (optionnel)</Text>
+          <Text style={styles.fieldLabel}>Sportif (optionnel — tu pourras l'assigner plus tard)</Text>
           <View style={styles.sportifChipRow}>
             <TouchableOpacity
               style={[styles.sportifChip, selectedSportifId === null && styles.sportifChipActive]}
@@ -266,13 +328,15 @@ export default function ProgrammesScreen() {
             {saving ? (
               <ActivityIndicator color={Colors.white} />
             ) : (
-              <Text style={styles.primaryButtonText}>Créer le programme</Text>
+              <Text style={styles.primaryButtonText}>
+                {formKind === "seance" ? "Créer la séance" : "Créer le programme"}
+              </Text>
             )}
           </TouchableOpacity>
         </View>
       )}
 
-      {sportifs.length === 0 ? (
+      {view === "sportifs" && (sportifs.length === 0 ? (
         <View style={styles.emptyCard}>
           <TeamIllustration size={80} />
           <Text style={styles.emptyTitle}>Aucun sportif suivi</Text>
@@ -328,9 +392,9 @@ export default function ProgrammesScreen() {
             </View>
           );
         })
-      )}
+      ))}
 
-      {assignedProgrammes.length > 0 && (
+      {view === "sportifs" && assignedProgrammes.length > 0 && (
         <>
           <Text style={styles.sectionTitle}>Programmes coachés</Text>
           {assignedProgrammes.map((p) => (
@@ -380,59 +444,79 @@ export default function ProgrammesScreen() {
         </>
       )}
 
-      {orphanProgrammes.length > 0 && (
+      {view === "bibliotheque" && (
         <>
-          <Text style={styles.sectionTitle}>Programmes non assignés</Text>
-          {orphanProgrammes.map((p) => (
-            <AnimatedPressable
-              key={p.id}
-              style={styles.programmeRow}
-              onPress={() => router.push(`/coach/programme/${p.id}`)}
-            >
-              <View style={styles.programmeIconWrap}>
-                <Ionicons name="barbell" size={20} color={Colors.primary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.programmeName}>{p.nom}</Text>
-                <Text style={styles.programmeMeta}>
-                  {p.seances.length} séance{p.seances.length > 1 ? "s" : ""}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => setAssignTargetId(p.id)}
-                hitSlop={10}
-                style={styles.rowActionButton}
-              >
-                <Ionicons name="person-add-outline" size={18} color={Colors.textSecondary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDuplicate(p)}
-                disabled={duplicatingId === p.id}
-                hitSlop={10}
-                style={styles.rowActionButton}
-              >
-                {duplicatingId === p.id ? (
-                  <ActivityIndicator size="small" color={Colors.textSecondary} />
-                ) : (
-                  <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDownload(p)}
-                disabled={downloadingId === p.id}
-                hitSlop={10}
-                style={styles.rowActionButton}
-              >
-                {downloadingId === p.id ? (
-                  <ActivityIndicator size="small" color={Colors.textSecondary} />
-                ) : (
-                  <Ionicons name="download-outline" size={18} color={Colors.textSecondary} />
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
-                <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
-              </TouchableOpacity>
-            </AnimatedPressable>
+          <Text style={styles.libraryIntro}>
+            Des séances et des programmes sans sportif : tu les prépares une fois, puis tu les assignes
+            ou tu les glisses dans un programme.
+          </Text>
+          {(
+            [
+              ["Séances modèles", orphanSeances, "Aucune séance modèle. Touche « Nouvelle séance »."],
+              ["Programmes modèles", orphanPrograms, "Aucun programme modèle. Touche « Nouveau programme »."],
+            ] as const
+          ).map(([title, list, empty]) => (
+            <View key={title}>
+              <Text style={styles.sectionTitle}>
+                {title} · {list.length}
+              </Text>
+              {list.length === 0 && <Text style={styles.libraryEmpty}>{empty}</Text>}
+              {list.map((p) => (
+                <AnimatedPressable
+                  key={p.id}
+                  style={styles.programmeRow}
+                  onPress={() => router.push(`/coach/programme/${p.id}`)}
+                >
+                  <View style={styles.programmeIconWrap}>
+                    <Ionicons name={p.kind === "seance" ? "flash" : "barbell"} size={20} color={Colors.primary} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.programmeName}>{p.nom}</Text>
+                    <Text style={styles.programmeMeta}>
+                      {p.kind === "seance"
+                        ? `${p.seances[0]?.blocs.reduce((n, b) => n + b.exercices.length, 0) ?? 0} exercices · ≈ ${
+                            p.seances[0] ? estimateSeanceMinutes(p.seances[0]) : 0
+                          } min`
+                        : `${p.seances.length} séance${p.seances.length > 1 ? "s" : ""}`}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => setAssignTargetId(p.id)}
+                    hitSlop={10}
+                    style={styles.rowActionButton}
+                  >
+                    <Ionicons name="person-add-outline" size={18} color={Colors.textSecondary} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleDuplicate(p)}
+                    disabled={duplicatingId === p.id}
+                    hitSlop={10}
+                    style={styles.rowActionButton}
+                  >
+                    {duplicatingId === p.id ? (
+                      <ActivityIndicator size="small" color={Colors.textSecondary} />
+                    ) : (
+                      <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleDownload(p)}
+                    disabled={downloadingId === p.id}
+                    hitSlop={10}
+                    style={styles.rowActionButton}
+                  >
+                    {downloadingId === p.id ? (
+                      <ActivityIndicator size="small" color={Colors.textSecondary} />
+                    ) : (
+                      <Ionicons name="download-outline" size={18} color={Colors.textSecondary} />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDelete(p.id)} hitSlop={10}>
+                    <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
+                  </TouchableOpacity>
+                </AnimatedPressable>
+              ))}
+            </View>
           ))}
         </>
       )}
@@ -486,7 +570,7 @@ export default function ProgrammesScreen() {
 
       <ConfirmModal
         visible={deleteTargetId !== null}
-        title="Supprimer ce programme"
+        title="Supprimer"
         message="Cette action est définitive."
         confirmLabel="Supprimer"
         destructive
@@ -508,6 +592,70 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 70,
     paddingBottom: 60,
+  },
+
+  segment: {
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0.18)",
+    borderRadius: 14,
+    padding: 4,
+    marginBottom: 14,
+  },
+
+  segmentItem: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 9,
+    borderRadius: 11,
+  },
+
+  segmentItemActive: {
+    backgroundColor: Colors.surface,
+  },
+
+  segmentText: {
+    fontSize: 13.5,
+    fontWeight: "700",
+    color: Colors.textOnDark,
+  },
+
+  segmentTextActive: {
+    color: Colors.primaryDark,
+  },
+
+  createRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 16,
+  },
+
+  createButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: Colors.primaryLight,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+  },
+
+  createButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.primaryDark,
+  },
+
+  libraryIntro: {
+    fontSize: 13,
+    color: Colors.textOnDarkSecondary,
+    marginBottom: 14,
+  },
+
+  libraryEmpty: {
+    fontSize: 13,
+    color: Colors.textOnDarkSecondary,
+    marginBottom: 14,
   },
 
   headerRow: {

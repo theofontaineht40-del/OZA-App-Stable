@@ -34,6 +34,8 @@ import {
   BlocExercice,
   ChargeType,
   getProgramme,
+  getProgrammesForCoach,
+  saveSeanceAsTemplate,
   cloneExercices,
   cloneSeance,
   countSeanceSets,
@@ -68,6 +70,9 @@ export default function ProgrammeEditorScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [programme, setProgramme] = useState<Programme | null>(null);
   const [notFound, setNotFound] = useState(false);
+  // Bibliothèque de séances modèles (importer dans ce programme).
+  const [templates, setTemplates] = useState<Programme[]>([]);
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [activeSeanceId, setActiveSeanceId] = useState<string | null>(null);
   const [pickerBlocId, setPickerBlocId] = useState<string | null>(null);
   const [replaceExerciceId, setReplaceExerciceId] = useState<string | null>(null);
@@ -101,6 +106,9 @@ export default function ProgrammeEditorScreen() {
     // Les protocoles sont un plus : sans eux (ex. règles pas publiées) le
     // constructeur doit rester utilisable.
     getWarmupProtocols(uid).then(setWarmups).catch(() => setWarmups([]));
+    getProgrammesForCoach(uid)
+      .then((list) => setTemplates(list.filter((p) => p.kind === "seance" && !p.sportifId)))
+      .catch(() => setTemplates([]));
   }, []);
 
   const isPrincipal = usePrincipalAccess(programme?.sportifId ?? undefined);
@@ -139,7 +147,14 @@ export default function ProgrammeEditorScreen() {
 
   const coachId = auth.currentUser?.uid ?? programme.coachId;
 
+  // Séance modèle : le "programme" n'est qu'une enveloppe, son nom est celui
+  // de l'unique séance.
+  const isSeanceModel = programme.kind === "seance";
+
   function persist(seances: Seance[], nom?: string) {
+    if (isSeanceModel && nom !== undefined && seances[0]) {
+      seances = seances.map((s, i) => (i === 0 ? { ...s, nom } : s));
+    }
     const updated = { ...programme!, seances, nom: nom ?? programme!.nom };
     setProgramme(updated);
     saveProgramme(updated.id, { nom: updated.nom, seances: updated.seances });
@@ -172,6 +187,38 @@ export default function ProgrammeEditorScreen() {
       [copy[index], copy[target]] = [copy[target], copy[index]];
       return copy;
     });
+  }
+
+  // Copie une séance modèle de la bibliothèque à la suite du programme.
+  function handleImportTemplate(template: Programme) {
+    const source = template.seances[0];
+    if (!source) return;
+    const copy = cloneSeance(source, source.nom);
+    updateSeances((seances) => [...seances, copy]);
+    setActiveSeanceId(copy.id);
+    setShowTemplatePicker(false);
+  }
+
+  async function handleSaveToLibrary() {
+    try {
+      const id = await saveSeanceAsTemplate(coachId, activeSeance);
+      setTemplates((prev) => [
+        {
+          id,
+          kind: "seance",
+          coachId,
+          sportifId: null,
+          sportifName: null,
+          nom: activeSeance.nom,
+          seances: [cloneSeance(activeSeance, activeSeance.nom)],
+          updatedAt: new Date(),
+        },
+        ...prev,
+      ]);
+      showAlert("Enregistrée", `« ${activeSeance.nom} » est dans ta bibliothèque de séances.`);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
   }
 
   function handleDuplicateSeance() {
@@ -392,11 +439,16 @@ export default function ProgrammeEditorScreen() {
             onBlur={() => persist(programme.seances, programme.nom)}
           />
           <Text style={styles.programmeSportifLabel}>
-            {programme.sportifName ? `Pour ${programme.sportifName}` : "Non assigné à un sportif"}
+            {programme.sportifName
+              ? `Pour ${programme.sportifName}`
+              : isSeanceModel
+              ? "Séance modèle · sans sportif"
+              : "Non assigné à un sportif"}
           </Text>
         </View>
       </View>
 
+      {!isSeanceModel && (
       <View style={styles.seanceTabsWrapper}>
       <ScrollView
         horizontal
@@ -454,7 +506,9 @@ export default function ProgrammeEditorScreen() {
         </TouchableOpacity>
       </ScrollView>
       </View>
+      )}
 
+      {!isSeanceModel && (
       <View style={styles.seanceHeaderRow}>
         <TextInput
   placeholderTextColor={Colors.textSecondary}
@@ -463,6 +517,9 @@ export default function ProgrammeEditorScreen() {
           onChangeText={handleRenameSeance}
           placeholder="Nom de la séance"
         />
+        <TouchableOpacity onPress={handleSaveToLibrary} hitSlop={8}>
+          <Ionicons name="bookmark-outline" size={18} color={Colors.textSecondary} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleDuplicateSeance} hitSlop={8}>
           <Ionicons name="copy-outline" size={18} color={Colors.textSecondary} />
         </TouchableOpacity>
@@ -470,6 +527,7 @@ export default function ProgrammeEditorScreen() {
           <Ionicons name="trash-outline" size={18} color={Colors.textSecondary} />
         </TouchableOpacity>
       </View>
+      )}
       <View style={styles.statsRow}>
         <Text style={styles.statsText}>
           {activeSeance.blocs.reduce((n, b) => n + b.exercices.length, 0)} exercice
@@ -538,6 +596,13 @@ export default function ProgrammeEditorScreen() {
           <Text style={styles.addBlocButtonText}>Ajouter un bloc</Text>
         </TouchableOpacity>
 
+        {!isSeanceModel && (
+          <TouchableOpacity style={styles.addBlocButton} onPress={() => setShowTemplatePicker(true)}>
+            <Ionicons name="albums-outline" size={20} color={Colors.primary} />
+            <Text style={styles.addBlocButtonText}>Importer une séance modèle</Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={styles.addBlocButton} onPress={() => setShowWarmupPicker(true)}>
           <Ionicons name="flame-outline" size={20} color={Colors.primary} />
           <Text style={styles.addBlocButtonText}>Insérer un protocole d'échauffement</Text>
@@ -555,6 +620,42 @@ export default function ProgrammeEditorScreen() {
         onSelect={handleReplaceExercice}
         onSelectMany={handleAddExercicesToBloc}
       />
+
+      <Modal
+        visible={showTemplatePicker}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setShowTemplatePicker(false)}
+      >
+        <View style={styles.protocolBackdrop}>
+          <View style={styles.protocolCard}>
+            <Text style={styles.protocolTitle}>Séances modèles</Text>
+            {templates.length === 0 ? (
+              <Text style={styles.protocolHint}>
+                Ta bibliothèque est vide. Crée une séance depuis Programmes → Bibliothèque, ou touche le
+                marque-page d'une séance pour la ranger ici.
+              </Text>
+            ) : (
+              <ScrollView style={{ maxHeight: 320 }}>
+                {templates.map((t) => (
+                  <View key={t.id} style={styles.protocolRow}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => handleImportTemplate(t)}>
+                      <Text style={styles.protocolName}>{t.nom}</Text>
+                      <Text style={styles.protocolMeta}>
+                        {t.seances[0]?.blocs.reduce((n, b) => n + b.exercices.length, 0) ?? 0} exercices · Ajouter
+                        à ce programme
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+            <TouchableOpacity style={styles.protocolClose} onPress={() => setShowTemplatePicker(false)}>
+              <Text style={styles.protocolCloseText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         visible={showWarmupPicker}

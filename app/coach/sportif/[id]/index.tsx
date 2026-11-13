@@ -12,6 +12,7 @@ import ConfirmModal from "../../../../components/confirm-modal";
 import { GraphGridTexture } from "../../../../components/decor";
 import { LoadSummary } from "../../../../components/load-summary";
 import ProgressionChart, { ProgressionPoint } from "../../../../components/progression-chart";
+import RoutineCard from "../../../../components/routine-card";
 import WellnessReport from "../../../../components/wellness-report";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
@@ -518,6 +519,8 @@ export default function SportifDetailScreen() {
           )}
         </View>
       )}
+
+      {coachUid && id && <RoutineCard coachId={coachUid} sportifId={id} />}
 
       {coachUid && id && <CardioReferences coachId={coachUid} sportifId={id} />}
 

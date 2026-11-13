@@ -182,6 +182,13 @@ service cloud.firestore {
       allow write: if isPrincipalOf(sportifId);
     }
 
+    // Routine attitrée (copie d'un protocole du coach) : lue par le sportif,
+    // écrite par son coach principal.
+    match /routines/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isPrincipalOf(sportifId);
+    }
+
     match /taskAnalysis/{sportifId} {
       allow read: if canAccessSportifData(sportifId);
       allow write: if isPrincipalOf(sportifId);

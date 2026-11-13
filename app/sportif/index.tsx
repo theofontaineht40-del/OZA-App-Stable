@@ -8,6 +8,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 import { HeaderTexture } from "../../components/decor";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
+import SportifRoutine from "../../components/sportif-routine";
 import {
   CoachWordCard,
   ProgressCard,
@@ -46,6 +47,7 @@ export default function SportifHome() {
   // Dernier message du coach (s'il a écrit en dernier) pour la carte "Mot de ton coach".
   const [coachWord, setCoachWord] = useState<{ coachId: string; coachName: string; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [uid, setUid] = useState<string | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -55,6 +57,7 @@ export default function SportifHome() {
         router.replace("/login");
         return;
       }
+      setUid(user.uid);
 
       try {
         const userSnap = await getDoc(doc(db, "users", user.uid));
@@ -261,6 +264,8 @@ export default function SportifHome() {
         )}
 
         <TodoCard items={todoItems} />
+
+        {uid && <SportifRoutine sportifId={uid} mode="home" />}
 
         {upcomingItems.length > 0 && (
           <>

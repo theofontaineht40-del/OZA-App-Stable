@@ -17,6 +17,7 @@ import {
 import ExerciseSetEditor, { SetEntry } from "../../../../../components/exercise-set-editor";
 import PhotoBackground from "../../../../../components/photo-background";
 import ProgressionChart, { ProgressionPoint } from "../../../../../components/progression-chart";
+import SportifRoutine from "../../../../../components/sportif-routine";
 import PulseDot from "../../../../../components/pulse-dot";
 import RestTimerBar from "../../../../../components/rest-timer-bar";
 import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
@@ -269,6 +270,8 @@ export default function SeanceExecutionScreen() {
       <Text style={styles.subtitle}>
         {programme.nom} · {doneCount}/{totalCount} exercices faits
       </Text>
+
+      {uid && <SportifRoutine sportifId={uid} mode="seance" />}
 
       <Text style={styles.sectionTitle}>Exercices</Text>
       {seance.blocs.map((bloc) => (

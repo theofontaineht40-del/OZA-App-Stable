@@ -35,7 +35,10 @@ import {
   ChargeType,
   getProgramme,
   getProgrammesForCoach,
+  Objectif,
+  OBJECTIFS,
   saveSeanceAsTemplate,
+  setProgrammeObjectif,
   cloneExercices,
   cloneSeance,
   countSeanceSets,
@@ -201,11 +204,12 @@ export default function ProgrammeEditorScreen() {
 
   async function handleSaveToLibrary() {
     try {
-      const id = await saveSeanceAsTemplate(coachId, activeSeance);
+      const id = await saveSeanceAsTemplate(coachId, activeSeance, programme!.objectif);
       setTemplates((prev) => [
         {
           id,
           kind: "seance",
+          objectif: programme!.objectif,
           coachId,
           sportifId: null,
           sportifName: null,
@@ -219,6 +223,11 @@ export default function ProgrammeEditorScreen() {
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));
     }
+  }
+
+  function handleSetObjectif(objectif: Objectif | null) {
+    setProgramme((prev) => (prev ? { ...prev, objectif } : prev));
+    setProgrammeObjectif(programme!.id, objectif);
   }
 
   function handleDuplicateSeance() {
@@ -448,6 +457,23 @@ export default function ProgrammeEditorScreen() {
         </View>
       </View>
 
+      <View style={styles.objectifRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+          {OBJECTIFS.map((o) => {
+            const active = programme.objectif === o;
+            return (
+              <TouchableOpacity
+                key={o}
+                style={[styles.objectifChip, active && styles.objectifChipActive]}
+                onPress={() => handleSetObjectif(active ? null : o)}
+              >
+                <Text style={[styles.objectifChipText, active && styles.objectifChipTextActive]}>{o}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
       {!isSeanceModel && (
       <View style={styles.seanceTabsWrapper}>
       <ScrollView
@@ -642,6 +668,7 @@ export default function ProgrammeEditorScreen() {
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => handleImportTemplate(t)}>
                       <Text style={styles.protocolName}>{t.nom}</Text>
                       <Text style={styles.protocolMeta}>
+                        {t.objectif ? `${t.objectif} · ` : ""}
                         {t.seances[0]?.blocs.reduce((n, b) => n + b.exercices.length, 0) ?? 0} exercices · Ajouter
                         à ce programme
                       </Text>
@@ -1631,6 +1658,27 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
 
+  objectifRow: {
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+  objectifChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: "rgba(0,0,0,0.18)",
+  },
+  objectifChipActive: {
+    backgroundColor: Colors.surface,
+  },
+  objectifChipText: {
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: Colors.textOnDark,
+  },
+  objectifChipTextActive: {
+    color: Colors.primaryDark,
+  },
   statsRow: {
     paddingHorizontal: 20,
     marginBottom: 10,

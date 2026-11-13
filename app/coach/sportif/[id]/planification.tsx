@@ -131,6 +131,7 @@ export default function PlanificationScreen() {
         {
           id: programmeId,
           kind: "programme" as const,
+          objectif: null,
           coachId,
           sportifId: id,
           sportifName,

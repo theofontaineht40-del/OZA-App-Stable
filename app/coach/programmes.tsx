@@ -35,6 +35,8 @@ import {
   duplicateProgramme,
   estimateSeanceMinutes,
   getProgrammesForCoach,
+  Objectif,
+  OBJECTIFS,
   Programme,
   ProgrammeKind,
 } from "../../services/programmes";
@@ -52,6 +54,9 @@ export default function ProgrammesScreen() {
   // bibliothèque (séances et programmes modèles, sans sportif).
   const [view, setView] = useState<"sportifs" | "bibliotheque">("bibliotheque");
   const [formKind, setFormKind] = useState<ProgrammeKind>("programme");
+  const [formObjectif, setFormObjectif] = useState<Objectif | null>(null);
+  // Onglet d'objectif de la bibliothèque (null = tous).
+  const [objectifTab, setObjectifTab] = useState<Objectif | null>(null);
   const [nom, setNom] = useState("");
   const [selectedSportifId, setSelectedSportifId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -112,10 +117,11 @@ export default function ProgrammesScreen() {
     try {
       const sportif = sportifs.find((s) => s.uid === selectedSportifId);
       const sportifName = sportif ? `${sportif.firstName} ${sportif.lastName}`.trim() : null;
-      const id = await createProgramme(uid, nom.trim(), selectedSportifId, sportifName, formKind);
+      const id = await createProgramme(uid, nom.trim(), selectedSportifId, sportifName, formKind, formObjectif);
       setShowForm(false);
       setNom("");
       setSelectedSportifId(null);
+      setFormObjectif(null);
       await refresh();
       router.push(`/coach/programme/${id}`);
     } finally {
@@ -193,8 +199,10 @@ export default function ProgrammesScreen() {
 
   const programmeNames = Object.fromEntries(programmes.map((p) => [p.id, p.nom]));
   const assignedProgrammes = programmes.filter((p) => p.sportifId);
-  const orphanSeances = programmes.filter((p) => !p.sportifId && p.kind === "seance");
-  const orphanPrograms = programmes.filter((p) => !p.sportifId && p.kind !== "seance");
+  const orphans = programmes.filter((p) => !p.sportifId);
+  const inTab = (p: Programme) => objectifTab === null || p.objectif === objectifTab;
+  const orphanSeances = orphans.filter((p) => p.kind === "seance" && inTab(p));
+  const orphanPrograms = orphans.filter((p) => p.kind !== "seance" && inTab(p));
 
   function programmeDateLabel(p: Programme): string {
     const planification = p.sportifId ? planifications[p.sportifId] : undefined;
@@ -239,6 +247,7 @@ export default function ProgrammesScreen() {
           style={styles.createButton}
           onPress={() => {
             setFormKind("programme");
+            setFormObjectif(objectifTab);
             setShowForm(true);
           }}
         >
@@ -249,6 +258,7 @@ export default function ProgrammesScreen() {
           style={styles.createButton}
           onPress={() => {
             setFormKind("seance");
+            setFormObjectif(objectifTab);
             setShowForm(true);
           }}
         >
@@ -286,6 +296,19 @@ export default function ProgrammesScreen() {
             value={nom}
             onChangeText={setNom}
           />
+
+          <Text style={styles.fieldLabel}>Objectif (optionnel)</Text>
+          <View style={[styles.sportifChipRow, { marginBottom: 14 }]}>
+            {OBJECTIFS.map((o) => (
+              <TouchableOpacity
+                key={o}
+                style={[styles.sportifChip, formObjectif === o && styles.sportifChipActive]}
+                onPress={() => setFormObjectif(formObjectif === o ? null : o)}
+              >
+                <Text style={[styles.sportifChipText, formObjectif === o && styles.sportifChipTextActive]}>{o}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
           <Text style={styles.fieldLabel}>Sportif (optionnel — tu pourras l'assigner plus tard)</Text>
           <View style={styles.sportifChipRow}>
@@ -446,6 +469,28 @@ export default function ProgrammesScreen() {
 
       {view === "bibliotheque" && (
         <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.objectifTabs}
+            contentContainerStyle={{ gap: 8 }}
+          >
+            {([null, ...OBJECTIFS] as (Objectif | null)[]).map((o) => {
+              const count = orphans.filter((p) => o === null || p.objectif === o).length;
+              const active = objectifTab === o;
+              return (
+                <TouchableOpacity
+                  key={o ?? "tous"}
+                  style={[styles.objectifTab, active && styles.objectifTabActive]}
+                  onPress={() => setObjectifTab(o)}
+                >
+                  <Text style={[styles.objectifTabText, active && styles.objectifTabTextActive]}>
+                    {o ?? "Tous"} · {count}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
           <Text style={styles.libraryIntro}>
             Des séances et des programmes sans sportif : tu les prépares une fois, puis tu les assignes
             ou tu les glisses dans un programme.
@@ -473,6 +518,7 @@ export default function ProgrammesScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.programmeName}>{p.nom}</Text>
                     <Text style={styles.programmeMeta}>
+                      {p.objectif ? `${p.objectif} · ` : ""}
                       {p.kind === "seance"
                         ? `${p.seances[0]?.blocs.reduce((n, b) => n + b.exercices.length, 0) ?? 0} exercices · ≈ ${
                             p.seances[0] ? estimateSeanceMinutes(p.seances[0]) : 0
@@ -643,6 +689,32 @@ const styles = StyleSheet.create({
   createButtonText: {
     fontSize: 13,
     fontWeight: "700",
+    color: Colors.primaryDark,
+  },
+
+  objectifTabs: {
+    flexGrow: 0,
+    marginBottom: 14,
+  },
+
+  objectifTab: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: "rgba(0,0,0,0.18)",
+  },
+
+  objectifTabActive: {
+    backgroundColor: Colors.surface,
+  },
+
+  objectifTabText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.textOnDark,
+  },
+
+  objectifTabTextActive: {
     color: Colors.primaryDark,
   },
 

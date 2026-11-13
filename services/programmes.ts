@@ -91,9 +91,21 @@ export type Seance = {
 // tous les programmes créés avant cette option) = un programme complet.
 export type ProgrammeKind = "programme" | "seance";
 
+// Objectif de la bibliothèque : sert d'onglet pour retrouver ses modèles.
+export const OBJECTIFS = [
+  "Hypertrophie",
+  "Perte de poids",
+  "Force",
+  "Haltérophilie",
+  "Renforcement musculaire",
+] as const;
+export type Objectif = (typeof OBJECTIFS)[number];
+
 export type Programme = {
   id: string;
   kind: ProgrammeKind;
+  // null = pas de catégorie (programmes créés avant cette option).
+  objectif: Objectif | null;
   coachId: string;
   sportifId: string | null;
   sportifName: string | null;
@@ -218,6 +230,7 @@ function normalize(id: string, data: Omit<Programme, "id">): Programme {
   return {
     id,
     kind: data.kind === "seance" ? "seance" : "programme",
+    objectif: OBJECTIFS.includes(data.objectif as Objectif) ? (data.objectif as Objectif) : null,
     coachId: data.coachId,
     sportifId: data.sportifId ?? null,
     sportifName: data.sportifName ?? null,
@@ -272,7 +285,8 @@ export async function createProgramme(
   nom: string,
   sportifId: string | null = null,
   sportifName: string | null = null,
-  kind: ProgrammeKind = "programme"
+  kind: ProgrammeKind = "programme",
+  objectif: Objectif | null = null
 ): Promise<string> {
   const ref = doc(collection(db, "programmes"));
   const first = newSeance(1);
@@ -280,6 +294,7 @@ export async function createProgramme(
   if (kind === "seance") first.nom = nom;
   const programme: Omit<Programme, "id"> = {
     kind,
+    objectif,
     coachId,
     sportifId,
     sportifName,
@@ -311,6 +326,7 @@ export async function duplicateProgramme(programme: Programme): Promise<string> 
   const ref = doc(collection(db, "programmes"));
   const copy: Omit<Programme, "id"> = {
     kind: programme.kind,
+    objectif: programme.objectif,
     coachId: programme.coachId,
     sportifId: null,
     sportifName: null,
@@ -340,11 +356,16 @@ export async function deleteProgramme(id: string): Promise<void> {
 
 // Range une séance d'un programme dans la bibliothèque (séance modèle sans
 // sportif) : une copie indépendante, réutilisable dans n'importe quel programme.
-export async function saveSeanceAsTemplate(coachId: string, seance: Seance): Promise<string> {
+export async function saveSeanceAsTemplate(
+  coachId: string,
+  seance: Seance,
+  objectif: Objectif | null = null
+): Promise<string> {
   const ref = doc(collection(db, "programmes"));
   const copy = cloneSeance(seance, seance.nom);
   const template: Omit<Programme, "id"> = {
     kind: "seance",
+    objectif,
     coachId,
     sportifId: null,
     sportifName: null,
@@ -367,6 +388,7 @@ export async function assignCopyToSportif(
   const ref = doc(collection(db, "programmes"));
   const copy: Omit<Programme, "id"> = {
     kind: template.kind,
+    objectif: template.objectif,
     coachId: template.coachId,
     sportifId,
     sportifName,
@@ -376,4 +398,8 @@ export async function assignCopyToSportif(
   };
   await setDoc(ref, copy);
   return ref.id;
+}
+
+export async function setProgrammeObjectif(id: string, objectif: Objectif | null): Promise<void> {
+  await setDoc(doc(db, "programmes", id), { objectif, updatedAt: new Date() }, { merge: true });
 }

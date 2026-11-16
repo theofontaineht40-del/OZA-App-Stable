@@ -183,12 +183,16 @@ function quality(q: Quality, t: number, distance: RaceDistance, niveau: RaceNive
 
 // ── Génération ──
 
+// Nombre de semaines calendaires entre aujourd'hui et la course (semaine de course incluse).
+export function weeksUntilRace(raceDate: string, today: string): number {
+  return Math.floor((parse(mondayOf(raceDate)).getTime() - parse(mondayOf(today)).getTime()) / (7 * 86_400_000)) + 1;
+}
+
 export function generateRacePlan(p: RacePlanParams): RacePlan {
   const notes: string[] = [];
   const dist = RACE_DISTANCES.find((d) => d.key === p.distance)!;
   const raceMonday = mondayOf(p.raceDate);
-  const thisMonday = mondayOf(p.today);
-  const weeksAvailable = Math.floor((parse(raceMonday).getTime() - parse(thisMonday).getTime()) / (7 * 86_400_000)) + 1;
+  const weeksAvailable = weeksUntilRace(p.raceDate, p.today);
   const wanted = Math.min(24, Math.max(6, p.semaines));
   const W = Math.max(1, Math.min(wanted, weeksAvailable));
   const raccourci = W < wanted;

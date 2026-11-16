@@ -10,6 +10,7 @@ import { auth } from "../../firebase";
 import { describeSegment, getCardioReferences, targetFor } from "../../services/cardio";
 import {
   generateRacePlan,
+  weeksUntilRace,
   PHASE_LABEL,
   RACE_DISTANCES,
   RACE_NIVEAUX,
@@ -123,7 +124,18 @@ export default function CoachPlanCourseScreen() {
 
   function pickDistance(d: RaceDistance) {
     setDistance(d);
-    setSemaines(RACE_DISTANCES.find((x) => x.key === d)!.defaultWeeks);
+    const def = RACE_DISTANCES.find((x) => x.key === d)!.defaultWeeks;
+    // Ne propose pas plus de semaines qu'il n'en reste avant la course.
+    const left = raceInPast ? def : weeksUntilRace(raceDate, today);
+    setSemaines(Math.max(6, Math.min(def, left)));
+  }
+
+  function pickRaceDate(date: string) {
+    setRaceDate(date);
+    if (date && date > today) {
+      const left = weeksUntilRace(date, today);
+      setSemaines((n) => (n > left ? Math.max(6, left) : n));
+    }
   }
 
   async function handleCreate() {
@@ -190,7 +202,7 @@ export default function CoachPlanCourseScreen() {
         </View>
 
         <Text style={styles.label}>Date de la course</Text>
-        <DateField value={raceDate} onChange={setRaceDate} />
+        <DateField value={raceDate} onChange={pickRaceDate} />
         {raceInPast && <Text style={styles.warning}>Choisis une date de course à venir.</Text>}
 
         <Text style={styles.label}>Durée du plan</Text>

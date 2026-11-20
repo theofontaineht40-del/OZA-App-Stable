@@ -38,12 +38,15 @@ export default function FeedbackComposer({
   initialText = "",
   onClose,
   onSend,
+  onDelete,
 }: {
   session: SessionRecord | null;
   sportifName: string;
   initialText?: string;
   onClose: () => void;
   onSend: (session: SessionRecord, text: string) => Promise<void>;
+  // Fourni seulement pour un retour déjà envoyé : ajoute « Supprimer mon retour ».
+  onDelete?: (session: SessionRecord) => Promise<void>;
 }) {
   const [text, setText] = useState(initialText);
   const [sending, setSending] = useState(false);
@@ -101,6 +104,26 @@ export default function FeedbackComposer({
           />
 
           <View style={styles.actions}>
+            {onDelete && !!initialText && session && (
+              <TouchableOpacity
+                style={styles.delete}
+                disabled={sending}
+                onPress={async () => {
+                  setSending(true);
+                  try {
+                    await onDelete(session);
+                    onClose();
+                  } catch {
+                    // l'appelant a déjà affiché l'erreur
+                  } finally {
+                    setSending(false);
+                  }
+                }}
+              >
+                <Text style={styles.deleteText}>Supprimer mon retour</Text>
+              </TouchableOpacity>
+            )}
+            <View style={{ flex: 1 }} />
             <TouchableOpacity style={styles.cancel} onPress={onClose} disabled={sending}>
               <Text style={styles.cancelText}>Annuler</Text>
             </TouchableOpacity>
@@ -140,7 +163,9 @@ const styles = StyleSheet.create({
     color: Colors.text,
     textAlignVertical: "top",
   },
-  actions: { flexDirection: "row", justifyContent: "flex-end", gap: 10, marginTop: 14 },
+  actions: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 14 },
+  delete: { paddingVertical: 12 },
+  deleteText: { fontSize: 13, fontWeight: "700", color: Colors.riskHigh },
   cancel: { paddingHorizontal: 16, paddingVertical: 12 },
   cancelText: { fontSize: 14, fontWeight: "600", color: Colors.textSecondary },
   send: {

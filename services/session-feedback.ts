@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 import { db } from "../firebase";
 import { addDays } from "./schedule";
@@ -70,6 +70,10 @@ export async function saveSessionFeedback(
     createdAt: new Date(),
     seenAt: null,
   });
+}
+
+export async function deleteSessionFeedback(feedbackId: string): Promise<void> {
+  await deleteDoc(doc(db, "sessionFeedback", feedbackId));
 }
 
 export async function markFeedbackSeen(feedbackId: string): Promise<void> {

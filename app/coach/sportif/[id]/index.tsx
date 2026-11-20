@@ -19,6 +19,7 @@ import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
 import {
+  deleteSessionFeedback,
   getFeedbackForCoach,
   saveSessionFeedback,
   sessionLabel,
@@ -297,6 +298,20 @@ export default function SportifDetailScreen() {
           seenAt: null,
         },
       }));
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+      throw error;
+    }
+  }
+
+  async function handleDeleteFeedback(session: SessionRecord) {
+    try {
+      await deleteSessionFeedback(session.id);
+      setFeedbackBySession((prev) => {
+        const next = { ...prev };
+        delete next[session.id];
+        return next;
+      });
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));
       throw error;
@@ -668,6 +683,7 @@ export default function SportifDetailScreen() {
       initialText={composeFor ? feedbackBySession[composeFor.id]?.text ?? "" : ""}
       onClose={() => setComposeFor(null)}
       onSend={handleSendFeedback}
+      onDelete={handleDeleteFeedback}
     />
 
     <ConfirmModal

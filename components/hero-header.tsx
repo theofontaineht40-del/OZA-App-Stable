@@ -37,12 +37,15 @@ export default function HeroHeader({
       ]}
     >
       <View style={styles.topRow}>
-        <Image
-          source={require("../assets/images/logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-          tintColor="#FFFFFF"
-        />
+        {/* logo.png a de larges marges transparentes : on le recadre sur le mot. */}
+        <View style={styles.logoClip}>
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+            tintColor="#FFFFFF"
+          />
+        </View>
         <View style={styles.actions}>{right}</View>
       </View>
       <Text style={styles.title}>{title}</Text>
@@ -64,9 +67,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 14,
   },
+  logoClip: {
+    width: 104,
+    height: 36,
+    overflow: "hidden",
+  },
   logo: {
-    width: 150,
-    height: 56,
+    position: "absolute",
+    width: 300,
+    height: 120,
+    left: -98,
+    top: -42,
   },
   actions: {
     flexDirection: "row",

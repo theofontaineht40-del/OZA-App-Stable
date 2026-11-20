@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../constants/tokens";
 import { Colors } from "../constants/colors";
 import { TestCategory, TestDefinition } from "../constants/test-types";
 import { addTestResult, getTestResults, TestResult } from "../services/tests";
@@ -229,6 +230,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

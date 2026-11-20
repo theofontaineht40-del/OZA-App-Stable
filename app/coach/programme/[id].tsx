@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../../constants/tokens";
 import GradientFill from "../../../components/gradient-fill";
 import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
@@ -285,7 +286,7 @@ export default function ProgrammeEditorScreen() {
     const b = newBloc();
     b.nom = "Échauffement";
     b.objectif = protocol.nom;
-    b.couleur = "#FF9F0A";
+    b.couleur = "#E0B000";
     b.exercices = cloneExercices(protocol.exercices);
     updateBlocs((blocs) => [b, ...blocs]);
     setShowWarmupPicker(false);
@@ -1380,6 +1381,7 @@ const styles = StyleSheet.create({
   },
 
   programmeNomInput: {
+    fontFamily: Type.heading,
     fontSize: 22,
     fontWeight: "700",
     color: Colors.text,

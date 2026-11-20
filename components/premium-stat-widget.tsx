@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Svg, { Circle, Path, Rect } from "react-native-svg";
 
+import { Type } from "../constants/tokens";
 import { Colors } from "../constants/colors";
 import AnimatedPressable from "./animated-pressable";
 
@@ -12,7 +13,7 @@ const TRANSITION_OUT_MS = 200;
 const TRANSITION_IN_MS = 260;
 const RING_RADIUS = 26;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-const STREAK_ACCENT = "#FF9F0A";
+const STREAK_ACCENT = "#E0B000";
 
 type StateKey = "seances" | "temps" | "objectif" | "streak";
 
@@ -185,7 +186,7 @@ export default function PremiumStatWidget({
             current.onPress();
           }}
         >
-          <Text style={[styles.ctaText, { color: current.key === "streak" ? "#C2570A" : Colors.primaryDark }]}>
+          <Text style={[styles.ctaText, { color: current.key === "streak" ? "#8A6A00" : Colors.primaryDark }]}>
             {current.cta}
           </Text>
           <Ionicons name="chevron-forward" size={14} color={theme.accent} />
@@ -368,6 +369,7 @@ const styles = StyleSheet.create({
   },
 
   value: {
+    fontFamily: Type.heading,
     fontSize: 30,
     fontWeight: "700",
     color: Colors.text,

@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import { GraphGridTexture } from "../../components/decor";
 import ProgressionChart, { ProgressionPoint } from "../../components/progression-chart";
 import { Colors } from "../../constants/colors";
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

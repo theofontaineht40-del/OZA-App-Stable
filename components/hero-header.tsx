@@ -2,6 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ReactNode } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../constants/tokens";
 import { Gradients } from "../constants/colors";
 
 // Bandeau d'en-tête turquoise des accueils (maquette OZA) : wordmark en haut,
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
+    fontFamily: Type.heading,
     fontSize: 27,
     fontWeight: "800",
     color: "#FFFFFF",

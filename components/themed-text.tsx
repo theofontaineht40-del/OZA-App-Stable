@@ -1,3 +1,4 @@
+import { Type } from "../constants/tokens";
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   title: {
+    fontFamily: Type.heading,
     fontSize: 32,
     fontWeight: 'bold',
     lineHeight: 32,

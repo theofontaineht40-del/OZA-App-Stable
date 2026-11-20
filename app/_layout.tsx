@@ -1,5 +1,6 @@
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { Oswald_600SemiBold, Oswald_700Bold } from "@expo-google-fonts/oswald";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -37,6 +38,8 @@ const NavTheme = {
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     ...Ionicons.font,
+    Oswald_600SemiBold,
+    Oswald_700Bold,
   });
 
   useEffect(() => {

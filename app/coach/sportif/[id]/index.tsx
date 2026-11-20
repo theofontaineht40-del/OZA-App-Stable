@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../../../constants/tokens";
 import CardioReferences from "../../../../components/cardio-references";
 import CoachNotes from "../../../../components/coach-notes";
 import CoachObjectives from "../../../../components/coach-objectives";
@@ -748,6 +749,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

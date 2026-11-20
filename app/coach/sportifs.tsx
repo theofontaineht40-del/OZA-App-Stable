@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import { TeamIllustration } from "../../components/empty-illustrations";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
@@ -564,6 +565,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

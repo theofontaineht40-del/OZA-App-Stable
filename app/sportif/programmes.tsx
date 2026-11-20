@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
 import GradientFill from "../../components/gradient-fill";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
@@ -166,6 +167,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,
@@ -219,6 +221,7 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
+    fontFamily: Type.heading,
     fontSize: 22,
     fontWeight: "800",
     color: Colors.white,

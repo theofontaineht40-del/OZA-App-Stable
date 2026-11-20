@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../../../constants/tokens";
 import GradientFill from "../../../../components/gradient-fill";
 import { AccessDenied } from "../../../../components/access-denied";
 import { RadarChart } from "../../../../components/radar-chart";
@@ -366,6 +367,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

@@ -247,7 +247,7 @@ function pageShell(opts: {
           .stat .s { font-size: 10px; color: ${MUTED}; margin-top: 2px; }
           .pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
           .pill-green { background: #E5F5EF; color: #1B7F5B; }
-          .pill-orange { background: #FCEFDD; color: #B5791C; }
+          .pill-orange { background: #FBF3D0; color: #8A6A00; }
           .pill-red { background: #FBE6E4; color: #C0392B; }
           .chart-card {
             background: #FFFFFF; border: 1px solid #E4EFEC; border-radius: 14px;

@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import DateField from "../../components/date-field";
 import { CalendarIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
@@ -285,6 +286,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.textOnDark,

@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import ConfirmModal from "../../components/confirm-modal";
 import ReviewModal from "../../components/review-modal";
 import { Colors } from "../../constants/colors";
@@ -449,6 +450,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

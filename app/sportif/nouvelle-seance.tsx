@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import GradientFill from "../../components/gradient-fill";
 import PhotoBackground from "../../components/photo-background";
 import PulseDot from "../../components/pulse-dot";
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 26,
     fontWeight: "700",
     color: Colors.textOnDark,

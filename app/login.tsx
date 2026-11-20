@@ -11,9 +11,11 @@ import {
 } from "react-native";
 
 import { doc, getDoc } from "firebase/firestore";
+import { Type } from "../constants/tokens";
 import GradientFill from "../components/gradient-fill";
 import AnimatedPressable from "../components/animated-pressable";
-import PhotoBackground from "../components/photo-background";
+import { LinearGradient } from "expo-linear-gradient";
+import OzaDisc from "../components/oza-disc";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser, resetPassword } from "../services/auth";
@@ -86,7 +88,16 @@ export default function LoginScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground />
+    <LinearGradient
+      colors={["#075B57", "#062D2B", "#041F1D"]}
+      start={{ x: 0.2, y: 0 }}
+      end={{ x: 0.8, y: 1 }}
+      style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
+    />
+    {/* Le disque OZA, signature de la marque, en filigrane derrière le formulaire. */}
+    <View style={styles.discWrap}>
+      <OzaDisc size={440} />
+    </View>
     <View style={styles.container}>
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
@@ -94,7 +105,7 @@ export default function LoginScreen() {
             source={require("../assets/images/logo.png")}
             style={styles.logo}
             resizeMode="contain"
-            tintColor={Colors.primaryDark}
+            tintColor={Colors.white}
           />
         </View>
 
@@ -148,6 +159,14 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  discWrap: {
+    position: "absolute",
+    right: -150,
+    bottom: -90,
+    opacity: 0.28,
+    pointerEvents: "none",
+  },
+
   container: {
     flex: 1,
     justifyContent: "center",
@@ -166,15 +185,16 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 34,
     fontWeight: "700",
-    color: Colors.text,
+    color: Colors.textOnDark,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
     marginBottom: 35,
   },
 
@@ -199,7 +219,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.canard,
+    color: Colors.primaryLight,
   },
 
   button: {
@@ -225,11 +245,11 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: Colors.textSecondary,
+    color: Colors.textOnDarkSecondary,
   },
 
   registerText: {
-    color: Colors.canard,
+    color: Colors.primaryLight,
     fontWeight: "700",
   },
 });

@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import GradientFill from "../../components/gradient-fill";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

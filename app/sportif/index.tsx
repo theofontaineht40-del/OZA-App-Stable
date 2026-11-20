@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import ExerciseStrip from "../../components/exercise-strip";
 import HeroHeader from "../../components/hero-header";
 import SessionFeedbackCard from "../../components/session-feedback-card";
@@ -391,6 +392,7 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
+    fontFamily: Type.heading,
     fontSize: 28,
     fontWeight: "700",
     color: Colors.text,

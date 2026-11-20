@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import { AGE_BRACKETS, AgeBracket, SEXES, Sexe } from "../../constants/athlete-segments";
 import { Colors } from "../../constants/colors";
 import { MOBILITY_TESTS } from "../../constants/mobility-tests";
@@ -254,6 +255,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

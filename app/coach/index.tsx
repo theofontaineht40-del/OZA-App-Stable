@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
 import AgendaCard from "../../components/coach/agenda-card";
 import AreaChart from "../../components/coach/area-chart";
@@ -1015,6 +1016,7 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
+    fontFamily: Type.heading,
     fontSize: 26,
     fontWeight: "700",
     color: Colors.text,

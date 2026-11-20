@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../constants/tokens";
 import AnimatedPressable from "../components/animated-pressable";
 import GradientFill from "../components/gradient-fill";
 import PhotoBackground from "../components/photo-background";
@@ -144,39 +146,31 @@ export default function RegisterScreen() {
       <Text style={styles.roleTitle}>Je suis :</Text>
 
       <View style={styles.roleContainer}>
-        <TouchableOpacity
-          style={[
-            styles.roleButton,
-            role === "sportif" && styles.roleButtonActive,
-          ]}
-          onPress={() => setRole("sportif")}
-        >
-          <Text
-            style={[
-              styles.roleText,
-              role === "sportif" && styles.roleTextActive,
-            ]}
-          >
-            🏃 Sportif
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.roleButton,
-            role === "coach" && styles.roleButtonActive,
-          ]}
-          onPress={() => setRole("coach")}
-        >
-          <Text
-            style={[
-              styles.roleText,
-              role === "coach" && styles.roleTextActive,
-            ]}
-          >
-            🏋️ Coach
-          </Text>
-        </TouchableOpacity>
+        {(
+          [
+            { key: "sportif", icon: "fitness-outline", title: "Sportif", sub: "Je suis suivi par un coach" },
+            { key: "coach", icon: "trophy-outline", title: "Coach", sub: "J'accompagne des sportifs" },
+          ] as const
+        ).map((r) => {
+          const active = role === r.key;
+          return (
+            <TouchableOpacity
+              key={r.key}
+              style={[styles.roleCard, active && styles.roleCardActive]}
+              onPress={() => setRole(r.key)}
+              activeOpacity={0.85}
+            >
+              <Ionicons name={r.icon} size={24} color={active ? Colors.primary : Colors.textSecondary} />
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.roleCardTitle, active && styles.roleTextActive]}>{r.title}</Text>
+                <Text style={styles.roleCardSub}>{r.sub}</Text>
+              </View>
+              <View style={[styles.roleCheck, active && styles.roleCheckActive]}>
+                {active && <Ionicons name="checkmark" size={14} color={Colors.white} />}
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       <AnimatedPressable
@@ -227,6 +221,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 36,
     fontWeight: "700",
     color: Colors.text,
@@ -259,8 +254,52 @@ const styles = StyleSheet.create({
   },
 
   roleContainer: {
-    flexDirection: "row",
+    gap: 12,
     marginBottom: 28,
+  },
+
+  roleCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.surface,
+  },
+
+  roleCardActive: {
+    borderColor: Colors.primary,
+    backgroundColor: Colors.accentTint,
+  },
+
+  roleCardTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  roleCardSub: {
+    fontSize: 12.5,
+    color: Colors.textSecondary,
+    marginTop: 1,
+  },
+
+  roleCheck: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: Colors.grayMedium,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  roleCheckActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
   },
 
   roleButton: {

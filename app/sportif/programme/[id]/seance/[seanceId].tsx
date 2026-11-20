@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../../../../constants/tokens";
 import GradientFill from "../../../../../components/gradient-fill";
 import ExerciseSetEditor, { SetEntry } from "../../../../../components/exercise-set-editor";
 import ExerciseThumb from "../../../../../components/exercise-thumb";
@@ -478,6 +479,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.textOnDark,

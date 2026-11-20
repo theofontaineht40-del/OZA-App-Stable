@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../constants/tokens";
 import { Colors } from "../../constants/colors";
 import { CalendarIllustration, CoachIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
@@ -243,6 +244,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.textOnDark,

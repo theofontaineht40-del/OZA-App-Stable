@@ -18,44 +18,45 @@
 // écrans hors onglets (login/register/accueil) qui n'ont pas ce problème
 // d'empilement.
 export const Colors = {
-  primary: "#14B8A6",
-  primaryDark: "#0B2E2D",
-  primaryLight: "#5EEAD4",
-  // Alias de `primary` : plus de rose OZA comme accent séparé, le teal est
-  // la seule couleur de marque désormais.
-  accent: "#14B8A6",
-  black: "#0B1F1E",
+  // Palette officielle (cahier des charges UI/UX) :
+  //  bleu pétrole #062D2B · vert canard #075B57 · turquoise foncé #087F78 ·
+  //  turquoise principal #12C9B8 · vert d'eau #8BEDE0 · blanc cassé #F7FAFA ·
+  //  gris clair #EAF1F1. Répartition ~60 % clair / 30 % pétrole-canard / 10 %
+  //  turquoise vif. Aucun orange.
+  primary: "#087F78", // boutons, états actifs, éléments sélectionnés
+  primaryDark: "#062D2B", // fonds sombres, navigation, contraste
+  primaryLight: "#8BEDE0", // surbrillance et détails doux
+  accent: "#087F78",
+  black: "#062D2B",
   white: "#FFFFFF",
-  background: "#F6F8F8",
-  navBackground: "#0C2E2D",
+  background: "#F7FAFA",
+  navBackground: "#062D2B",
   surface: "#FFFFFF",
-  surfaceAlt: "#EEF3F2",
-  accentTint: "#E1F5F0",
-  grayLight: "#EDF1F1",
-  grayMedium: "rgba(11, 31, 30, 0.16)",
-  text: "#101C1B",
-  textSecondary: "rgba(16, 28, 27, 0.60)",
-  // Texte/icônes posés sur une surface teal foncé (auth, nav bar, hero
-  // cards) — jamais utilisés sur les fonds clairs par défaut.
+  surfaceAlt: "#EEF4F4",
+  accentTint: "#E3F7F4",
+  grayLight: "#EAF1F1",
+  grayMedium: "rgba(6, 45, 43, 0.16)",
+  text: "#0B1F1E",
+  textSecondary: "rgba(11, 31, 30, 0.62)",
+  // Texte/icônes posés sur une surface sombre (auth, nav bar, hero cards).
   textOnDark: "#FFFFFF",
-  textOnDarkSecondary: "rgba(255, 255, 255, 0.72)",
-  border: "rgba(11, 31, 30, 0.10)",
-  // Répartition visuelle : ~60 % blanc / gris très clair, ~30 % bleu pétrole
-  // et vert canard, ~10 % turquoise lumineux (accents, indicateurs, CTA).
-  canard: "#146B62",
-  turquoise: "#2DD4BF",
+  textOnDarkSecondary: "rgba(255, 255, 255, 0.74)",
+  border: "#EAF1F1",
+  canard: "#075B57", // vert canard : surfaces secondaires, dégradés
+  turquoise: "#12C9B8", // accents, graphiques, progression
   riskUnder: "#0A84FF",
-  riskLow: "#34C759",
-  riskMedium: "#FF9F0A",
-  riskHigh: "#FF3B30",
+  riskLow: "#12C9B8",
+  // Pas d'orange dans la charte : la vigilance passe en jaune doré.
+  riskMedium: "#E0B000",
+  riskHigh: "#E5484D",
 };
 
 // Fond d'écran partagé (voir components/app-background.tsx) : teal profond
 // avec un halo lumineux subtil, pour les écrans hors onglets (login/register).
 export const Gradients = {
-  app: ["#0B2E2D", "#146B62", "#0B2E2D"] as const,
+  app: ["#062D2B", "#075B57", "#062D2B"] as const,
   // Boutons principaux : dégradé turquoise.
-  cta: ["#2DD4BF", "#14B8A6"] as const,
-  // Bandeau d'en-tête des accueils (turquoise profond → turquoise lumineux).
-  hero: ["#0A5A53", "#12A596", "#2DD4BF"] as const,
+  cta: ["#12C9B8", "#087F78"] as const,
+  // Bandeau d'en-tête des accueils.
+  hero: ["#075B57", "#0E9A8E", "#12C9B8"] as const,
 };

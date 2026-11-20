@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { Type } from "../../../constants/tokens";
 import { TeamIllustration } from "../../../components/empty-illustrations";
 import PhotoBackground from "../../../components/photo-background";
 import { Colors } from "../../../constants/colors";
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

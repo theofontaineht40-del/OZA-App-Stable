@@ -262,7 +262,7 @@ export const EXERCISE_LIBRARY: ExerciseTemplate[] = [
 
 export const BLOC_COLORS = [
   "#14B8A6",
-  "#FF9F0A",
+  "#E0B000",
   "#34C759",
   "#5EEAD4",
   "#AF52DE",
@@ -276,7 +276,7 @@ export const BLOC_COLORS = [
 export const MUSCLE_GROUP_COLORS: Record<GroupeMusculaire, string> = {
   "Quadriceps": "#FF2D7A",
   "Ischio-jambiers": "#FF6B35",
-  "Fessiers": "#FF9F0A",
+  "Fessiers": "#E0B000",
   "Mollets": "#C9A227",
   "Pectoraux": "#34C759",
   "Dos": "#0A84FF",

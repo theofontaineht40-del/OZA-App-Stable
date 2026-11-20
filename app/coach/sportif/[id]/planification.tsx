@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../../../constants/tokens";
 import { AccessDenied } from "../../../../components/access-denied";
 import DateField from "../../../../components/date-field";
 import ProgrammeLinkModal from "../../../../components/programme-link-modal";
@@ -473,6 +474,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
     color: Colors.text,

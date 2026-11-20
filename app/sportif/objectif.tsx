@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import DateField from "../../components/date-field";
 import PhotoBackground from "../../components/photo-background";
 import { Colors } from "../../constants/colors";
@@ -203,6 +204,8 @@ export default function ObjectifScreen() {
         <DateField value={targetDate} onChange={setTargetDate} placeholder="Choisir une date" />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleSave} disabled={saving}>
+
+          <GradientFill />
           {saving ? (
             <ActivityIndicator color={Colors.white} />
           ) : (
@@ -329,6 +332,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 56,
     borderRadius: 16,

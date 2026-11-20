@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import { Colors } from "../../constants/colors";
 import ImageCropModal from "../../components/image-crop-modal";
 import PhotoBackground from "../../components/photo-background";
@@ -283,6 +284,8 @@ export default function ProfilProScreen() {
       </View>
 
       <TouchableOpacity style={styles.primaryButton} onPress={handleSave} disabled={saving}>
+
+        <GradientFill />
         {saving ? (
           <ActivityIndicator color={Colors.white} />
         ) : (
@@ -495,6 +498,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 54,
     borderRadius: 16,

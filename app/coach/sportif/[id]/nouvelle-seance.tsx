@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../../../components/gradient-fill";
 import ExerciseSetEditor, { SetEntry } from "../../../../components/exercise-set-editor";
 import PhotoBackground from "../../../../components/photo-background";
 import PulseDot from "../../../../components/pulse-dot";
@@ -344,6 +345,8 @@ export default function CoachNouvelleSeanceScreen() {
       />
 
       <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit} disabled={submitting}>
+
+        <GradientFill />
         {submitting ? (
           <ActivityIndicator color={Colors.white} />
         ) : (
@@ -560,6 +563,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 56,
     borderRadius: 16,

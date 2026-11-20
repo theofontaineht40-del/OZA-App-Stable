@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../../../components/gradient-fill";
 import { AccessDenied } from "../../../../components/access-denied";
 import { BodyChart } from "../../../../components/body-chart";
 import { AGE_BRACKETS, SEXES } from "../../../../constants/athlete-segments";
@@ -273,6 +274,7 @@ export default function ProfilMedicalScreen() {
               onChangeText={setPainNotes}
             />
             <TouchableOpacity style={styles.primaryButton} onPress={handleSavePain}>
+              <GradientFill />
               <Text style={styles.primaryButtonText}>Enregistrer la douleur</Text>
             </TouchableOpacity>
           </View>
@@ -371,6 +373,8 @@ export default function ProfilMedicalScreen() {
           />
 
           <TouchableOpacity style={styles.primaryButton} onPress={handleAddInjury}>
+
+            <GradientFill />
             <Text style={styles.primaryButtonText}>Ajouter la blessure</Text>
           </TouchableOpacity>
         </View>
@@ -495,6 +499,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 50,
     borderRadius: 14,

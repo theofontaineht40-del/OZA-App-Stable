@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../../../components/gradient-fill";
 import { AccessDenied } from "../../../../components/access-denied";
 import { RadarChart } from "../../../../components/radar-chart";
 import { Colors } from "../../../../constants/colors";
@@ -304,6 +305,8 @@ export default function TaskAnalysisScreen() {
             })}
 
             <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
+
+              <GradientFill />
               {saving ? (
                 <ActivityIndicator color={Colors.white} />
               ) : (
@@ -546,6 +549,7 @@ const styles = StyleSheet.create({
   },
 
   saveButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 50,
     borderRadius: 14,

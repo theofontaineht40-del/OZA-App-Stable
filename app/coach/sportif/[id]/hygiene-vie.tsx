@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../../../components/gradient-fill";
 import { AccessDenied } from "../../../../components/access-denied";
 import { Colors } from "../../../../constants/colors";
 import { usePrincipalAccess } from "../../../../hooks/use-principal-access";
@@ -201,6 +202,8 @@ export default function HygieneVieScreen() {
         />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleSave} disabled={saving}>
+
+          <GradientFill />
           {saving ? (
             <ActivityIndicator color={Colors.white} />
           ) : (
@@ -379,6 +382,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 52,
     borderRadius: 14,

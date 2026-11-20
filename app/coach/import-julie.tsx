@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import { Colors } from "../../constants/colors";
 import { auth, db } from "../../firebase";
 import { blockDateRange, newBlockId, savePlanification } from "../../services/planification";
@@ -243,6 +244,7 @@ export default function ImportJulieScreen() {
 
       {step === "idle" && (
         <TouchableOpacity style={styles.primaryButton} onPress={handleImport}>
+          <GradientFill />
           <Text style={styles.primaryButtonText}>Importer</Text>
         </TouchableOpacity>
       )}
@@ -341,6 +343,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 52,
     borderRadius: 14,

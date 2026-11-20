@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import DateField from "../../components/date-field";
 import { Colors } from "../../constants/colors";
 import { Materiel } from "../../constants/exercise-library";
@@ -301,6 +302,8 @@ export default function CoachGenerateurScreen() {
           {!!error && <Text style={styles.warning}>{error}</Text>}
 
           <TouchableOpacity style={styles.primaryButton} onPress={handleCreate} disabled={saving || !uid}>
+
+            <GradientFill />
             {saving ? (
               <ActivityIndicator color={Colors.white} />
             ) : (
@@ -363,6 +366,7 @@ const styles = StyleSheet.create({
   exName: { flex: 1, fontSize: 13, color: Colors.text },
   exDose: { fontSize: 12, color: Colors.textSecondary },
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     borderRadius: 14,
     paddingVertical: 15,

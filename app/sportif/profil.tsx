@@ -11,6 +11,9 @@ import PhotoBackground from "../../components/photo-background";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
 import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
+import { todayKey } from "../../services/load";
+import { addDays } from "../../services/schedule";
+import { getSessionsForSportif, getWellnessForSportif } from "../../services/tracking";
 
 type ProfileData = {
   firstName: string;
@@ -23,6 +26,7 @@ type ProfileData = {
 export default function ProfilScreen() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
+  const [stats, setStats] = useState<{ sessions: number; load7d: number; wellness: number | null } | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -46,6 +50,22 @@ export default function ProfilScreen() {
         });
       }
       setGoalState(goalData);
+
+      // Chiffres clés : un échec ne doit pas bloquer le profil.
+      try {
+        const [sessions, wellness] = await Promise.all([
+          getSessionsForSportif(user.uid),
+          getWellnessForSportif(user.uid),
+        ]);
+        const since = addDays(todayKey(), -6);
+        setStats({
+          sessions: sessions.length,
+          load7d: sessions.filter((x) => x.date >= since).reduce((sum, x) => sum + x.load, 0),
+          wellness: wellness.length > 0 ? Math.round(wellness[0].score * 10) : null,
+        });
+      } catch {
+        setStats(null);
+      }
     });
 
     return unsubscribe;
@@ -83,6 +103,22 @@ export default function ProfilScreen() {
           <Text style={styles.badgeText}>🏃 Sportif</Text>
         </View>
       </View>
+
+      {stats && (
+        <View style={styles.statsRow}>
+          {[
+            { icon: "heart-outline", value: stats.wellness !== null ? `${stats.wellness}%` : "—", label: "Bien-être" },
+            { icon: "calendar-outline", value: String(stats.sessions), label: "Séances" },
+            { icon: "barbell-outline", value: `${Math.round(stats.load7d)}`, label: "Charge 7 j (u.a.)" },
+          ].map((t) => (
+            <View key={t.label} style={styles.statTile}>
+              <Ionicons name={t.icon as keyof typeof Ionicons.glyphMap} size={18} color={Colors.canard} />
+              <Text style={styles.statValue}>{t.value}</Text>
+              <Text style={styles.statLabel}>{t.label}</Text>
+            </View>
+          ))}
+        </View>
+      )}
 
       <Text style={styles.sectionTitle}>Suivi</Text>
       <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/equipe")}>
@@ -136,6 +172,40 @@ export default function ProfilScreen() {
 }
 
 const styles = StyleSheet.create({
+  statsRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 20,
+  },
+
+  statTile: {
+    flex: 1,
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 14,
+    borderRadius: 18,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    shadowColor: "#0B2E2D",
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+
+  statValue: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: Colors.primaryDark,
+  },
+
+  statLabel: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: Colors.textSecondary,
+    textAlign: "center",
+  },
+
   container: {
     flex: 1,
     backgroundColor: Colors.background,

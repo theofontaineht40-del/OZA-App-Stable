@@ -349,8 +349,12 @@ service cloud.firestore {
       // document potentiellement inexistant, et une règle basée uniquement
       // sur resource.data échoue en "permission-denied" dans ce cas (même
       // gotcha que /conversations plus bas).
+      // `resource.data.sportifId` : nécessaire pour qu'un sportif puisse LISTER
+      // ses propres bilans (requête where sportifId == uid) — l'id seul n'est
+      // pas prouvable pour une liste.
       allow read: if isSignedIn() && (
         wellnessId.split("_")[0] == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid ||
         resource.data.coachId == request.auth.uid
       );
       // Le sportif peut toujours écrire son propre check-in ; son coach

@@ -7,6 +7,7 @@ import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 
 import AnimatedPressable from "../../components/animated-pressable";
 import AreaChart from "../../components/coach/area-chart";
+import FeedbackCard from "../../components/coach/feedback-card";
 import TriageCard from "../../components/coach/triage-card";
 import HeroHeader, { HeroIconButton } from "../../components/hero-header";
 import { HeaderTexture } from "../../components/decor";
@@ -29,6 +30,13 @@ import {
   TrainingLoadStats,
 } from "../../services/coach-analytics";
 import { buildTriage } from "../../services/coach-signals";
+import {
+  getFeedbackForCoach,
+  pendingFeedbackSessions,
+  saveSessionFeedback,
+  sessionLabel,
+  SessionFeedback,
+} from "../../services/session-feedback";
 import { getInjuries } from "../../services/medical";
 import { Conversation, subscribeToConversationsForCoach } from "../../services/messages";
 import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
@@ -67,6 +75,7 @@ export default function CoachHome() {
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
   const [openInjuries, setOpenInjuries] = useState<Record<string, { zone: string; gravite: number }[]>>({});
   // Les graphiques et l'analyse détaillée sont repliés : l'accueil répond d'abord à "qui a besoin de moi".
   const [showDetails, setShowDetails] = useState(false);
@@ -101,6 +110,13 @@ export default function CoachHome() {
           setScheduled(await getScheduledForCoach(user.uid));
         } catch {
           setScheduled([]);
+        }
+        // Retours sur séances : un échec (ex. règles pas encore publiées) ne
+        // doit pas empêcher l'accueil de s'afficher.
+        try {
+          setFeedbacks(await getFeedbackForCoach(user.uid));
+        } catch {
+          setFeedbacks([]);
         }
       } finally {
         setLoading(false);
@@ -168,6 +184,39 @@ export default function CoachHome() {
   );
 
   const analysis = useMemo(() => computeCoachAnalysis(sportifRows), [sportifRows]);
+
+  const feedbackItems = useMemo(() => {
+    const names = new Map(sportifs.map((sp) => [sp.uid, `${sp.firstName} ${sp.lastName}`.trim()]));
+    return pendingFeedbackSessions(sessions, feedbacks, todayKey()).map((session) => ({
+      session,
+      sportifName: names.get(session.sportifId) ?? "Sportif",
+    }));
+  }, [sessions, feedbacks, sportifs]);
+
+  async function handleSendFeedback(session: SessionRecord, text: string) {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+    try {
+      await saveSessionFeedback(session, uid, firstName ?? "Ton coach", text);
+      setFeedbacks((prev) => [
+        {
+          id: session.id,
+          sportifId: session.sportifId,
+          coachId: uid,
+          coachName: firstName ?? "Ton coach",
+          sessionDate: session.date,
+          sessionLabel: sessionLabel(session),
+          text: text.trim(),
+          createdAt: Date.now(),
+          seenAt: null,
+        },
+        ...prev,
+      ]);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+      throw error;
+    }
+  }
 
   const triage = useMemo(
     () =>
@@ -301,6 +350,8 @@ export default function CoachHome() {
               onReply={(uid) => router.push(`/coach/messages/${uid}`)}
               onSeeAll={() => router.push("/coach/sportifs")}
             />
+
+            <FeedbackCard items={feedbackItems} onSend={handleSendFeedback} />
 
             {sportifs.length > 0 && (
               <TouchableOpacity style={styles.teamRow} onPress={() => router.push("/coach/sportifs")}>

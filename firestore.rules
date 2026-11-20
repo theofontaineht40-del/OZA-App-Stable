@@ -312,6 +312,34 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ── Retours du coach sur une séance réalisée ──
+    // Un document par séance (id = id de la séance) : le coach principal y
+    // écrit son retour, le sportif le lit et peut seulement le marquer "vu"
+    // (champ seenAt). Toujours lus par requête filtrée sur coachId / sportifId.
+    match /sessionFeedback/{sessionId} {
+      allow read: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        resource.data.sportifId == request.auth.uid
+      );
+      allow create: if isSignedIn() &&
+        request.resource.data.coachId == request.auth.uid &&
+        isPrincipalOf(request.resource.data.sportifId) &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 2000;
+      allow update: if isSignedIn() && (
+        (resource.data.coachId == request.auth.uid &&
+          request.resource.data.coachId == resource.data.coachId &&
+          request.resource.data.sportifId == resource.data.sportifId &&
+          request.resource.data.text is string &&
+          request.resource.data.text.size() > 0 &&
+          request.resource.data.text.size() <= 2000) ||
+        (resource.data.sportifId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seenAt']))
+      );
+      allow delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+    }
+
     // ── Bien-être quotidien ──
     // Lisible par le sportif lui-même et par le coach qui suivait la séance
     // au moment de la saisie (voir services/tracking.ts::addWellnessEntry).

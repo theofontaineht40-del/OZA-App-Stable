@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import HeroHeader from "../../components/hero-header";
+import SessionFeedbackCard from "../../components/session-feedback-card";
 import WellnessSummaryCard from "../../components/wellness-summary-card";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
@@ -24,6 +25,7 @@ import { auth, db } from "../../firebase";
 import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
 import { describeSpec } from "../../services/cardio";
 import { todayKey } from "../../services/load";
+import { getFeedbackForSportif, markFeedbackSeen, SessionFeedback } from "../../services/session-feedback";
 import { subscribeToConversationsForSportif } from "../../services/messages";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import {
@@ -49,6 +51,7 @@ export default function SportifHome() {
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
+  const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
   const [todayWellness, setTodayWellness] = useState<Awaited<ReturnType<typeof getTodayWellness>>>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
@@ -80,6 +83,11 @@ export default function SportifHome() {
         setSessions(sessionData);
         setProgrammes(programmeData);
         setCheckinDone(todayScore !== null);
+        try {
+          setFeedbacks(await getFeedbackForSportif(user.uid));
+        } catch {
+          setFeedbacks([]);
+        }
         try {
           setTodayWellness(await getTodayWellness(user.uid));
         } catch {
@@ -146,6 +154,8 @@ export default function SportifHome() {
 
   const today = todayKey();
   const weekAgo = addDays(today, -6);
+  // Le retour le plus récent que le sportif n'a pas encore marqué comme lu.
+  const unseenFeedback = feedbacks.find((f) => f.seenAt === null) ?? null;
   const monday = mondayOf(today);
   const weekDays = weekDates(monday);
   const scheduleStatuses = computeScheduleStatuses(scheduled, sessions, today);
@@ -237,6 +247,15 @@ export default function SportifHome() {
         style={{ opacity: fade, transform: [{ translateY: slide }] }}
       >
         <HeroHeader title={`Bonjour ${firstName ?? ""} 👋`} subtitle="Prêt pour ta séance du jour ?" />
+        {unseenFeedback && (
+          <SessionFeedbackCard
+            feedback={unseenFeedback}
+            onSeen={() => {
+              setFeedbacks((prev) => prev.map((f) => (f.id === unseenFeedback.id ? { ...f, seenAt: Date.now() } : f)));
+              markFeedbackSeen(unseenFeedback.id).catch(() => {});
+            }}
+          />
+        )}
         <WellnessSummaryCard
           wellness={todayWellness}
           weekLoad={sessions.filter((s) => s.date >= weekAgo).reduce((sum, s) => sum + s.load, 0)}

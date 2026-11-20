@@ -1,40 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
 import { sessionLabel } from "../../services/session-feedback";
 import { SessionRecord } from "../../services/tracking";
-import GradientFill from "../gradient-fill";
+import FeedbackComposer, { feedbackDateLabel } from "./feedback-composer";
 
 export type FeedbackItem = { session: SessionRecord; sportifName: string };
 
 const MAX_VISIBLE = 5;
-
-// Réponses en un tap : le coach complète ou envoie tel quel.
-const QUICK_REPLIES = [
-  "Bravo, belle séance 💪",
-  "Super régularité, continue comme ça !",
-  "Attention à bien récupérer cette semaine.",
-  "On peut monter un peu la charge la prochaine fois.",
-];
-
-function dateLabel(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, (m ?? 1) - 1, d ?? 1).toLocaleDateString("fr-FR", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
 
 // « Retours à donner » : séances récentes faites par les sportifs et pas
 // encore commentées. Un tap ouvre la rédaction ; le sportif voit ensuite le
@@ -47,26 +22,8 @@ export default function FeedbackCard({
   onSend: (session: SessionRecord, text: string) => Promise<void>;
 }) {
   const [target, setTarget] = useState<FeedbackItem | null>(null);
-  const [text, setText] = useState("");
-  const [sending, setSending] = useState(false);
 
   if (items.length === 0) return null;
-
-  function close() {
-    setTarget(null);
-    setText("");
-  }
-
-  async function submit() {
-    if (!target || !text.trim()) return;
-    setSending(true);
-    try {
-      await onSend(target.session, text);
-      close();
-    } finally {
-      setSending(false);
-    }
-  }
 
   return (
     <View style={styles.card}>
@@ -86,7 +43,7 @@ export default function FeedbackCard({
               {item.sportifName}
             </Text>
             <Text style={styles.meta} numberOfLines={1}>
-              {sessionLabel(item.session)} · {dateLabel(item.session.date)} · RPE {item.session.rpe} ·{" "}
+              {sessionLabel(item.session)} · {feedbackDateLabel(item.session.date)} · RPE {item.session.rpe} ·{" "}
               {item.session.duration} min
             </Text>
           </View>
@@ -99,61 +56,12 @@ export default function FeedbackCard({
         <Text style={styles.more}>+ {items.length - MAX_VISIBLE} autres séances à commenter</Text>
       )}
 
-      <Modal visible={target !== null} transparent animationType="fade" onRequestClose={close}>
-        <View style={styles.backdrop}>
-          <View style={styles.sheet}>
-            <Text style={styles.sheetTitle}>Retour à {target?.sportifName}</Text>
-            {target && (
-              <Text style={styles.sheetMeta}>
-                {sessionLabel(target.session)} · {dateLabel(target.session.date)} · RPE {target.session.rpe} ·{" "}
-                {target.session.duration} min
-              </Text>
-            )}
-            {!!target?.session.commentaire && (
-              <View style={styles.sportifNote}>
-                <Text style={styles.sportifNoteLabel}>Ce qu'il a écrit</Text>
-                <Text style={styles.sportifNoteText}>{target.session.commentaire}</Text>
-              </View>
-            )}
-
-            <View style={styles.quickRow}>
-              {QUICK_REPLIES.map((q) => (
-                <TouchableOpacity key={q} style={styles.quick} onPress={() => setText(q)}>
-                  <Text style={styles.quickText}>{q}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <TextInput
-              style={styles.input}
-              value={text}
-              onChangeText={setText}
-              placeholder="Ton retour sur cette séance…"
-              placeholderTextColor={Colors.textSecondary}
-              multiline
-              maxLength={1500}
-            />
-
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.cancel} onPress={close} disabled={sending}>
-                <Text style={styles.cancelText}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.send, !text.trim() && styles.sendDisabled]}
-                onPress={submit}
-                disabled={sending || !text.trim()}
-              >
-                {text.trim() ? <GradientFill /> : null}
-                {sending ? (
-                  <ActivityIndicator color={Colors.white} />
-                ) : (
-                  <Text style={styles.sendText}>Envoyer</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <FeedbackComposer
+        session={target?.session ?? null}
+        sportifName={target?.sportifName ?? ""}
+        onClose={() => setTarget(null)}
+        onSend={onSend}
+      />
     </View>
   );
 }
@@ -189,40 +97,4 @@ const styles = StyleSheet.create({
   },
   actionText: { fontSize: 12, fontWeight: "700", color: Colors.primaryDark },
   more: { fontSize: 12.5, color: Colors.textSecondary, paddingTop: 8, textAlign: "center" },
-
-  backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "center", padding: 20 },
-  sheet: { backgroundColor: Colors.surface, borderRadius: 22, padding: 20, maxWidth: 520, width: "100%", alignSelf: "center" },
-  sheetTitle: { fontSize: 18, fontWeight: "800", color: Colors.text },
-  sheetMeta: { fontSize: 12.5, color: Colors.textSecondary, marginTop: 4, marginBottom: 12 },
-  sportifNote: { backgroundColor: Colors.surfaceAlt, borderRadius: 12, padding: 12, marginBottom: 12 },
-  sportifNoteLabel: { fontSize: 10.5, fontWeight: "700", letterSpacing: 0.5, color: Colors.textSecondary },
-  sportifNoteText: { fontSize: 13.5, color: Colors.text, marginTop: 3 },
-  quickRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
-  quick: { backgroundColor: Colors.accentTint, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7 },
-  quickText: { fontSize: 12, fontWeight: "600", color: Colors.primaryDark },
-  input: {
-    minHeight: 96,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 14,
-    padding: 12,
-    fontSize: 14,
-    color: Colors.text,
-    textAlignVertical: "top",
-  },
-  actions: { flexDirection: "row", justifyContent: "flex-end", gap: 10, marginTop: 14 },
-  cancel: { paddingHorizontal: 16, paddingVertical: 12 },
-  cancelText: { fontSize: 14, fontWeight: "600", color: Colors.textSecondary },
-  send: {
-    overflow: "hidden",
-    minWidth: 110,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  sendDisabled: { backgroundColor: Colors.grayMedium },
-  sendText: { fontSize: 14, fontWeight: "700", color: Colors.white },
 });

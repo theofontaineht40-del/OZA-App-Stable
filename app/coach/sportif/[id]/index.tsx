@@ -14,9 +14,16 @@ import { LoadSummary } from "../../../../components/load-summary";
 import ProgressionChart, { ProgressionPoint } from "../../../../components/progression-chart";
 import RoutineCard from "../../../../components/routine-card";
 import WellnessReport from "../../../../components/wellness-report";
+import FeedbackComposer from "../../../../components/coach/feedback-composer";
 import { Colors } from "../../../../constants/colors";
 import { auth, db } from "../../../../firebase";
 import { buildDailyLoadSeries } from "../../../../services/load";
+import {
+  getFeedbackForCoach,
+  saveSessionFeedback,
+  sessionLabel,
+  SessionFeedback,
+} from "../../../../services/session-feedback";
 import { getInjuries, Injury } from "../../../../services/medical";
 import { getProgrammesForCoachAndSportif, Programme } from "../../../../services/programmes";
 import { deleteManagedSportif, getRelation, Relation } from "../../../../services/relations";
@@ -48,6 +55,9 @@ export default function SportifDetailScreen() {
   const [deleting, setDeleting] = useState(false);
   const [reportBusy, setReportBusy] = useState<"wellness" | "load" | null>(null);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+  // Retours du coach sur les séances de ce sportif (par id de séance).
+  const [feedbackBySession, setFeedbackBySession] = useState<Record<string, SessionFeedback>>({});
+  const [composeFor, setComposeFor] = useState<SessionRecord | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -92,6 +102,13 @@ export default function SportifDetailScreen() {
           setSessions(sessionData);
         } catch {
           setSessions([]);
+        }
+
+        try {
+          const list = (await getFeedbackForCoach(coachId)).filter((f) => f.sportifId === id);
+          setFeedbackBySession(Object.fromEntries(list.map((f) => [f.id, f])));
+        } catch {
+          setFeedbackBySession({});
         }
 
         try {
@@ -258,6 +275,32 @@ export default function SportifDetailScreen() {
         </TouchableOpacity>
       </ScrollView>
     );
+  }
+
+  async function handleSendFeedback(session: SessionRecord, text: string) {
+    if (!coachUid) return;
+    try {
+      const coachSnap = await getDoc(doc(db, "users", coachUid));
+      const coachName = coachSnap.exists() ? coachSnap.data().firstName ?? "Ton coach" : "Ton coach";
+      await saveSessionFeedback(session, coachUid, coachName, text);
+      setFeedbackBySession((prev) => ({
+        ...prev,
+        [session.id]: {
+          id: session.id,
+          sportifId: session.sportifId,
+          coachId: coachUid,
+          coachName,
+          sessionDate: session.date,
+          sessionLabel: sessionLabel(session),
+          text: text.trim(),
+          createdAt: Date.now(),
+          seenAt: null,
+        },
+      }));
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+      throw error;
+    }
   }
 
   if (!sessions) {
@@ -567,6 +610,18 @@ export default function SportifDetailScreen() {
                   {session.commentaire ? (
                     <Text style={styles.sessionComment}>{session.commentaire}</Text>
                   ) : null}
+                  {feedbackBySession[session.id] ? (
+                    <View style={styles.feedbackBubble}>
+                      <Text style={styles.feedbackLabel}>Ton retour</Text>
+                      <Text style={styles.feedbackText}>{feedbackBySession[session.id].text}</Text>
+                    </View>
+                  ) : null}
+                  <TouchableOpacity style={styles.feedbackButton} onPress={() => setComposeFor(session)} hitSlop={6}>
+                    <Ionicons name="chatbubble-ellipses-outline" size={14} color={Colors.canard} />
+                    <Text style={styles.feedbackButtonText}>
+                      {feedbackBySession[session.id] ? "Modifier mon retour" : "Donner un retour"}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
                 <Text style={styles.sessionLoad}>{session.load} UA</Text>
                 {hasDetail && (
@@ -606,6 +661,14 @@ export default function SportifDetailScreen() {
         })
       )}
     </ScrollView>
+
+    <FeedbackComposer
+      session={composeFor}
+      sportifName={name ?? "ce sportif"}
+      initialText={composeFor ? feedbackBySession[composeFor.id]?.text ?? "" : ""}
+      onClose={() => setComposeFor(null)}
+      onSend={handleSendFeedback}
+    />
 
     <ConfirmModal
       visible={deleteStep === "confirm"}
@@ -909,6 +972,38 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     color: Colors.textSecondary,
+  },
+
+  feedbackBubble: {
+    marginTop: 8,
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: Colors.accentTint,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary,
+  },
+  feedbackLabel: {
+    fontSize: 10.5,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    color: Colors.canard,
+  },
+  feedbackText: {
+    fontSize: 13.5,
+    color: Colors.text,
+    marginTop: 2,
+  },
+  feedbackButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    alignSelf: "flex-start",
+    marginTop: 8,
+  },
+  feedbackButtonText: {
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: Colors.canard,
   },
 
   sessionRow: {

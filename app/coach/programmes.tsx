@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import AnimatedPressable from "../../components/animated-pressable";
 import ConfirmModal from "../../components/confirm-modal";
 import { TeamIllustration } from "../../components/empty-illustrations";
@@ -364,6 +365,7 @@ export default function ProgrammesScreen() {
             onPress={handleCreate}
             disabled={saving || !nom.trim()}
           >
+            {nom.trim() ? <GradientFill /> : null}
             {saving ? (
               <ActivityIndicator color={Colors.white} />
             ) : (
@@ -658,7 +660,7 @@ const styles = StyleSheet.create({
 
   segment: {
     flexDirection: "row",
-    backgroundColor: "rgba(0,0,0,0.18)",
+    backgroundColor: Colors.surfaceAlt,
     borderRadius: 14,
     padding: 4,
     marginBottom: 14,
@@ -672,17 +674,17 @@ const styles = StyleSheet.create({
   },
 
   segmentItemActive: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.primaryDark,
   },
 
   segmentText: {
     fontSize: 13.5,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   segmentTextActive: {
-    color: Colors.primaryDark,
+    color: Colors.white,
   },
 
   createRow: {
@@ -740,32 +742,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: "rgba(0,0,0,0.18)",
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
 
   objectifTabActive: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.primaryDark,
+    borderColor: Colors.primaryDark,
   },
 
   objectifTabText: {
     fontSize: 13,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   objectifTabTextActive: {
-    color: Colors.primaryDark,
+    color: Colors.white,
   },
 
   libraryIntro: {
     fontSize: 13,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 14,
   },
 
   libraryEmpty: {
     fontSize: 13,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 14,
   },
 
@@ -779,7 +784,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   card: {
@@ -843,6 +848,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 50,
     borderRadius: 14,
@@ -945,7 +951,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginTop: 8,
     marginBottom: 12,
   },

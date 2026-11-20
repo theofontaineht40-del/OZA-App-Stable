@@ -1,34 +1,47 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
+import Svg, { Circle, Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
-// Fonds abstraits fournis par le coach (pas générés, pas remplacés), un par
-// grande section de l'app : "accueil", "programmes", "seances", "profil".
-// Un voile noir léger garde le texte lisible par-dessus les zones les plus
-// lumineuses (halos teal) sans écraser l'image.
-const SOURCES = {
-  accueil: require("../assets/images/image de fond oza.png"),
-  programmes: require("../assets/images/image de fond oza.png"),
-  seances: require("../assets/images/image de fond oza.png"),
-  profil: require("../assets/images/image de fond oza.png"),
-};
+import { Colors } from "../constants/colors";
 
-const OVERLAY_OPACITY: Record<Variant, number> = {
-  accueil: 0,
-  programmes: 0,
-  seances: 0,
-  profil: 0,
-};
+// Deux ambiances (≈ 80 % d'écrans clairs / 20 % sombres) :
+//  - "light" (par défaut) : fond blanc cassé très clair avec deux halos
+//    turquoise à peine visibles, pour rester reconnaissable comme OZA sans
+//    tomber dans un blanc générique ;
+//  - "dark" : le fond bleu pétrole d'origine (image fournie par le coach),
+//    réservé aux moments immersifs (séance en cours, bien-être du jour).
+const DARK_SOURCE = require("../assets/images/image de fond oza.png");
 
-type Variant = keyof typeof SOURCES;
+type Variant = "accueil" | "programmes" | "seances" | "profil";
 
-export default function PhotoBackground({ variant }: { variant: Variant }) {
+export default function PhotoBackground({
+  tone = "light",
+}: {
+  variant?: Variant;
+  tone?: "light" | "dark";
+}) {
+  if (tone === "dark") {
+    return (
+      <ImageBackground
+        source={DARK_SOURCE}
+        style={[styles.fill, { pointerEvents: "none" }]}
+        resizeMode="cover"
+      />
+    );
+  }
   return (
-    <ImageBackground
-      source={SOURCES[variant]}
-      style={[styles.fill, { pointerEvents: "none" }]}
-      resizeMode="cover"
-    >
-      <View style={[styles.overlay, { backgroundColor: `rgba(0, 0, 0, ${OVERLAY_OPACITY[variant]})` }]} />
-    </ImageBackground>
+    <View style={[styles.fill, { pointerEvents: "none", backgroundColor: Colors.background }]}>
+      <Svg width="100%" height="100%" viewBox="0 0 800 900" preserveAspectRatio="xMidYMin slice">
+        <Defs>
+          <RadialGradient id="halo" cx="50%" cy="50%" r="50%">
+            <Stop offset="0%" stopColor="#2DD4BF" stopOpacity={0.16} />
+            <Stop offset="100%" stopColor="#2DD4BF" stopOpacity={0} />
+          </RadialGradient>
+        </Defs>
+        <Rect x={0} y={0} width={800} height={900} fill={Colors.background} />
+        <Circle cx={720} cy={40} r={300} fill="url(#halo)" />
+        <Circle cx={0} cy={760} r={260} fill="url(#halo)" />
+      </Svg>
+    </View>
   );
 }
 
@@ -39,20 +52,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // `right`/`bottom` seuls ne suffisent pas à étirer l'<img> sous-jacent
-    // sur react-native-web au-delà de sa largeur naturelle (~850px, la
-    // largeur des sources) — un fond restait donc coupé à mi-écran sur les
-    // très larges viewports desktop. `width`/`height: 100%` forcent
-    // l'étirement réel quelle que soit la largeur du conteneur.
+    // `width`/`height: 100%` forcent l'étirement réel sur react-native-web
+    // (voir l'historique : un fond restait coupé à mi-écran sur desktop).
     width: "100%",
     height: "100%",
-  },
-
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
 });

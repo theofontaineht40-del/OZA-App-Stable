@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "../../../components/gradient-fill";
 import { AccessDenied } from "../../../components/access-denied";
 import ConfirmModal from "../../../components/confirm-modal";
 import ExercisePickerModal from "../../../components/exercise-picker-modal";
@@ -120,16 +121,16 @@ export default function ProgrammeEditorScreen() {
     if (!notFound) return <View style={styles.container} />;
     return (
       <View style={[styles.container, { alignItems: "center", justifyContent: "center", padding: 32, gap: 12 }]}>
-        <Ionicons name="alert-circle-outline" size={36} color={Colors.textOnDark} />
-        <Text style={{ fontSize: 17, fontWeight: "700", color: Colors.textOnDark, textAlign: "center" }}>
+        <Ionicons name="alert-circle-outline" size={36} color={Colors.text} />
+        <Text style={{ fontSize: 17, fontWeight: "700", color: Colors.text, textAlign: "center" }}>
           Ce programme n'existe plus
         </Text>
-        <Text style={{ fontSize: 13, color: Colors.textOnDarkSecondary, textAlign: "center", maxWidth: 320 }}>
+        <Text style={{ fontSize: 13, color: Colors.textSecondary, textAlign: "center", maxWidth: 320 }}>
           Il a été supprimé, ou il appartient à un autre coach. Le bloc du planning qui y renvoie peut être
           détaché depuis la planification du sportif.
         </Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ fontSize: 14, fontWeight: "700", color: Colors.textOnDark }}>Retour</Text>
+          <Text style={{ fontSize: 14, fontWeight: "700", color: Colors.text }}>Retour</Text>
         </TouchableOpacity>
       </View>
     );
@@ -437,11 +438,11 @@ export default function ProgrammeEditorScreen() {
       <PhotoBackground variant="programmes" />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color={Colors.textOnDark} />
+          <Ionicons name="chevron-back" size={24} color={Colors.text} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <TextInput
-  placeholderTextColor={Colors.textOnDarkSecondary}
+  placeholderTextColor={Colors.textSecondary}
             style={styles.programmeNomInput}
             value={programme.nom}
             onChangeText={(text) => setProgramme((prev) => (prev ? { ...prev, nom: text } : prev))}
@@ -496,10 +497,10 @@ export default function ProgrammeEditorScreen() {
                 size={14}
                 color={
                   i === 0
-                    ? Colors.textOnDarkSecondary
+                    ? Colors.textSecondary
                     : activeSeance.id === s.id
                     ? Colors.white
-                    : Colors.textOnDark
+                    : Colors.text
                 }
               />
             </TouchableOpacity>
@@ -518,10 +519,10 @@ export default function ProgrammeEditorScreen() {
                 size={14}
                 color={
                   i === programme.seances.length - 1
-                    ? Colors.textOnDarkSecondary
+                    ? Colors.textSecondary
                     : activeSeance.id === s.id
                     ? Colors.white
-                    : Colors.textOnDark
+                    : Colors.text
                 }
               />
             </TouchableOpacity>
@@ -573,6 +574,7 @@ export default function ProgrammeEditorScreen() {
               en une fois.
             </Text>
             <TouchableOpacity style={styles.emptySeanceButton} onPress={handleQuickAdd}>
+              <GradientFill />
               <Ionicons name="add" size={20} color={Colors.white} />
               <Text style={styles.emptySeanceButtonText}>Ajouter des exercices</Text>
             </TouchableOpacity>
@@ -1379,12 +1381,12 @@ const styles = StyleSheet.create({
   programmeNomInput: {
     fontSize: 22,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   programmeSportifLabel: {
     fontSize: 12,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 2,
   },
 
@@ -1419,7 +1421,7 @@ const styles = StyleSheet.create({
   seanceTabText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   seanceTabTextActive: {
@@ -1666,18 +1668,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
     borderRadius: 999,
-    backgroundColor: "rgba(0,0,0,0.18)",
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   objectifChipActive: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.primaryDark,
+    borderColor: Colors.primaryDark,
   },
   objectifChipText: {
     fontSize: 12.5,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
   objectifChipTextActive: {
-    color: Colors.primaryDark,
+    color: Colors.white,
   },
   statsRow: {
     paddingHorizontal: 20,
@@ -1709,6 +1714,7 @@ const styles = StyleSheet.create({
     maxWidth: 360,
   },
   emptySeanceButton: {
+    overflow: "hidden",
     flexDirection: "row",
     alignItems: "center",
     gap: 6,

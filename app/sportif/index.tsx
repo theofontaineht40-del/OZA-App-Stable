@@ -296,7 +296,7 @@ export default function SportifHome() {
           onPress={() => router.push("/sportif/nouvelle-seance")}
           activeOpacity={0.7}
         >
-          <Ionicons name="add-circle-outline" size={18} color={Colors.textOnDark} />
+          <Ionicons name="add-circle-outline" size={18} color={Colors.text} />
           <Text style={styles.freeSessionText}>Enregistrer une séance libre</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -325,12 +325,12 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 28,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
   upcomingLabel: {
     fontSize: 12,
     fontWeight: "700",
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     textTransform: "uppercase",
     letterSpacing: 0.6,
     marginBottom: 10,
@@ -375,6 +375,6 @@ const styles = StyleSheet.create({
   freeSessionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 });

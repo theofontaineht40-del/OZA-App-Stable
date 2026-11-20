@@ -141,7 +141,7 @@ export default function CheckinScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="profil" />
+    <PhotoBackground variant="profil" tone="dark" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}

@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import GradientFill from "./gradient-fill";
 import { Colors } from "../constants/colors";
 import {
   ExerciseTemplate,
@@ -444,6 +445,7 @@ export default function ExercisePickerModal({
               onPress={handleCreateExercise}
               disabled={!nom.trim() || saving}
             >
+              {nom.trim() ? <GradientFill /> : null}
               {saving ? (
                 <ActivityIndicator color={Colors.white} />
               ) : (
@@ -570,6 +572,7 @@ export default function ExercisePickerModal({
                   onPress={handleConfirmMany}
                   disabled={picked.length === 0}
                 >
+                  {picked.length > 0 ? <GradientFill /> : null}
                   <Text style={styles.primaryButtonText}>Ajouter</Text>
                 </TouchableOpacity>
               </View>
@@ -839,6 +842,7 @@ const styles = StyleSheet.create({
   },
 
   pickBarButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 46,
     paddingHorizontal: 26,
@@ -963,6 +967,7 @@ const styles = StyleSheet.create({
 
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 50,
     borderRadius: 14,

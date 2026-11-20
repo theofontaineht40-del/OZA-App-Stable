@@ -49,7 +49,7 @@ export default function SportifCardioScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <PhotoBackground variant="programmes" />
+      <PhotoBackground variant="programmes" tone="dark" />
       <ScrollView contentContainerStyle={styles.content}>
         <TouchableOpacity style={styles.back} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={22} color={Colors.textOnDark} />

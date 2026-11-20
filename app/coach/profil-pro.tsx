@@ -168,7 +168,7 @@ export default function ProfilProScreen() {
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
+        <Ionicons name="chevron-back" size={20} color={Colors.text} />
         <Text style={styles.backText}>Profil</Text>
       </TouchableOpacity>
 
@@ -321,19 +321,19 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.textOnDark,
+    color: Colors.text,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   subtitle: {
     fontSize: 13,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 20,
     lineHeight: 18,
@@ -376,13 +376,13 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 8,
   },
 
   fieldHint: {
     fontSize: 12,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: -4,
     marginBottom: 12,
     lineHeight: 16,

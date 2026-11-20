@@ -195,7 +195,7 @@ export default function CoachNouvelleSeanceScreen() {
       <View style={styles.container}>
         <PhotoBackground variant="seances" />
         <View style={styles.centeredEmpty}>
-          <Ionicons name="lock-closed-outline" size={40} color={Colors.textOnDarkSecondary} />
+          <Ionicons name="lock-closed-outline" size={40} color={Colors.textSecondary} />
           <Text style={styles.emptyTitle}>Accès non autorisé</Text>
           <Text style={styles.emptyText}>
             Seul le coach principal de ce sportif peut ajouter une séance.
@@ -214,7 +214,7 @@ export default function CoachNouvelleSeanceScreen() {
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
+        <Ionicons name="chevron-back" size={20} color={Colors.text} />
         <Text style={styles.backText}>Retour</Text>
       </TouchableOpacity>
 
@@ -375,19 +375,19 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.textOnDark,
+    color: Colors.text,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   subtitle: {
     fontSize: 14,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -403,20 +403,20 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginTop: 4,
   },
 
   emptyText: {
     fontSize: 14,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     textAlign: "center",
   },
 
   fieldLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 12,
   },
 
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     height: 34,
     borderRadius: 17,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: Colors.grayMedium,
     justifyContent: "center",
     marginRight: 8,
   },
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 12,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   chipTextActive: {

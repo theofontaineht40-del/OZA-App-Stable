@@ -26,12 +26,12 @@ export const Colors = {
   accent: "#14B8A6",
   black: "#0B1F1E",
   white: "#FFFFFF",
-  background: "#F6F4EE",
+  background: "#F6F8F8",
   navBackground: "#0C2E2D",
   surface: "#FFFFFF",
-  surfaceAlt: "#F0EDE4",
+  surfaceAlt: "#EEF3F2",
   accentTint: "#E1F5F0",
-  grayLight: "#EFEDE6",
+  grayLight: "#EDF1F1",
   grayMedium: "rgba(11, 31, 30, 0.16)",
   text: "#101C1B",
   textSecondary: "rgba(16, 28, 27, 0.60)",
@@ -40,6 +40,10 @@ export const Colors = {
   textOnDark: "#FFFFFF",
   textOnDarkSecondary: "rgba(255, 255, 255, 0.72)",
   border: "rgba(11, 31, 30, 0.10)",
+  // Répartition visuelle : ~60 % blanc / gris très clair, ~30 % bleu pétrole
+  // et vert canard, ~10 % turquoise lumineux (accents, indicateurs, CTA).
+  canard: "#146B62",
+  turquoise: "#2DD4BF",
   riskUnder: "#0A84FF",
   riskLow: "#34C759",
   riskMedium: "#FF9F0A",
@@ -50,4 +54,6 @@ export const Colors = {
 // avec un halo lumineux subtil, pour les écrans hors onglets (login/register).
 export const Gradients = {
   app: ["#0B2E2D", "#146B62", "#0B2E2D"] as const,
+  // Boutons principaux : dégradé turquoise.
+  cta: ["#2DD4BF", "#14B8A6"] as const,
 };

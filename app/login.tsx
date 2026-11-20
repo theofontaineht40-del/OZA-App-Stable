@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { doc, getDoc } from "firebase/firestore";
+import GradientFill from "../components/gradient-fill";
 import AnimatedPressable from "../components/animated-pressable";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
@@ -124,6 +125,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <AnimatedPressable style={styles.button} onPress={handleLogin}>
+          <GradientFill />
           <Text style={styles.buttonText}>Se connecter</Text>
         </AnimatedPressable>
 
@@ -197,6 +199,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    overflow: "hidden",
     backgroundColor: TEAL,
     height: 58,
     borderRadius: 14,

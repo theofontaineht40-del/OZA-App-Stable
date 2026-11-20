@@ -229,19 +229,19 @@ export default function CoachHome() {
                 <Text style={styles.subtitle}>Vue d'ensemble</Text>
               </View>
               <TouchableOpacity style={styles.headerIconButton} onPress={comingSoon}>
-                <Ionicons name="notifications-outline" size={20} color={Colors.textOnDark} />
+                <Ionicons name="notifications-outline" size={20} color={Colors.text} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.headerIconButton} onPress={() => router.push("/coach/profil")}>
-                <Ionicons name="person-outline" size={20} color={Colors.textOnDark} />
+                <Ionicons name="person-outline" size={20} color={Colors.text} />
               </TouchableOpacity>
             </View>
 
             <View style={styles.headerSearchRow}>
-              <Ionicons name="search" size={16} color={Colors.textOnDarkSecondary} />
+              <Ionicons name="search" size={16} color={Colors.textSecondary} />
               <TextInput
                 style={styles.headerSearchInput}
                 placeholder="Rechercher un sportif"
-                placeholderTextColor={Colors.textOnDarkSecondary}
+                placeholderTextColor={Colors.textSecondary}
                 value={sportifSearch}
                 onChangeText={setSportifSearch}
               />
@@ -263,7 +263,7 @@ export default function CoachHome() {
                       <Text style={styles.searchResultText}>
                         {s.firstName} {s.lastName}
                       </Text>
-                      <Ionicons name="arrow-forward" size={14} color={Colors.textOnDarkSecondary} />
+                      <Ionicons name="arrow-forward" size={14} color={Colors.textSecondary} />
                     </TouchableOpacity>
                   ))
                 )}
@@ -334,7 +334,7 @@ export default function CoachHome() {
               <Text style={styles.detailsToggleText}>
                 {showDetails ? "Masquer les analyses détaillées" : "Analyses détaillées"}
               </Text>
-              <Ionicons name={showDetails ? "chevron-up" : "chevron-down"} size={16} color={Colors.textOnDark} />
+              <Ionicons name={showDetails ? "chevron-up" : "chevron-down"} size={16} color={Colors.text} />
             </TouchableOpacity>
 
             {showDetails && (
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
+    backgroundColor: Colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -884,7 +884,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 11,
     fontWeight: "700",
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     textTransform: "uppercase",
     letterSpacing: 0.8,
   },
@@ -892,13 +892,13 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginTop: 2,
   },
 
   subtitle: {
     fontSize: 14,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 2,
   },
 
@@ -906,7 +906,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
+    backgroundColor: Colors.surface,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -916,7 +916,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 14,
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   searchResults: {
@@ -1017,7 +1017,7 @@ const styles = StyleSheet.create({
   detailsToggleText: {
     fontSize: 14,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   kpiGrid: {
@@ -1442,7 +1442,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 14,
   },
 
@@ -1529,10 +1529,10 @@ const styles = StyleSheet.create({
   },
 
   actionBanner: {
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: "#5BFCE0",
+    borderColor: Colors.border,
     padding: 20,
     marginBottom: 24,
     gap: 6,
@@ -1541,12 +1541,12 @@ const styles = StyleSheet.create({
   actionBannerTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   actionBannerText: {
     fontSize: 13,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 8,
   },
 
@@ -1616,10 +1616,10 @@ const styles = StyleSheet.create({
   },
 
   quickActionInner: {
-    backgroundColor: "rgba(3, 20, 18, 0.35)",
+    backgroundColor: Colors.surface,
     borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: "#5BFCE0",
+    borderColor: Colors.border,
     paddingVertical: 20,
     paddingHorizontal: 16,
     shadowColor: "#5BFCE0",
@@ -1632,7 +1632,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "rgba(91, 252, 224, 0.14)",
+    backgroundColor: Colors.accentTint,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -1641,6 +1641,6 @@ const styles = StyleSheet.create({
   quickActionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 });

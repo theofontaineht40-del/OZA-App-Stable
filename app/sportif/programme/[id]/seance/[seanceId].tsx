@@ -255,7 +255,7 @@ export default function SeanceExecutionScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="seances" />
+    <PhotoBackground variant="seances" tone="dark" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}

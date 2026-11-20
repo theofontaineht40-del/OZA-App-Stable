@@ -98,7 +98,7 @@ export default function SportifProgrammeViewScreen() {
       <PhotoBackground variant="programmes" />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color={Colors.textOnDark} />
+          <Ionicons name="chevron-back" size={24} color={Colors.text} />
         </TouchableOpacity>
         <Text style={styles.programmeNom}>{programme.nom}</Text>
       </View>
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   programmeNom: {
     fontSize: 22,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   seanceTabs: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   seanceTabText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   seanceTabTextActive: {
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     fontSize: 13,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
   },
 
   blocCard: {

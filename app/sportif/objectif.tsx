@@ -115,7 +115,7 @@ export default function ObjectifScreen() {
         showsVerticalScrollIndicator={false}
       >
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={20} color={Colors.textOnDark} />
+          <Ionicons name="chevron-back" size={20} color={Colors.text} />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
 
@@ -240,14 +240,14 @@ const styles = StyleSheet.create({
 
   backText: {
     fontSize: 14,
-    color: Colors.textOnDark,
+    color: Colors.text,
     fontWeight: "600",
   },
 
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   coachObjectivesCard: {
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 15,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 24,
   },
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 8,
   },
 

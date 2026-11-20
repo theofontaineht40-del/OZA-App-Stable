@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import HeroHeader from "../../components/hero-header";
+import WellnessSummaryCard from "../../components/wellness-summary-card";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
 import SportifRoutine from "../../components/sportif-routine";
@@ -27,6 +28,7 @@ import { subscribeToConversationsForSportif } from "../../services/messages";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
 import {
   computeDayState,
+  addDays,
   computeScheduleStatuses,
   daysBetween,
   getScheduledForSportif,
@@ -35,13 +37,19 @@ import {
   weekDates,
 } from "../../services/schedule";
 import { getNextSeance, getSeanceExerciseNames } from "../../services/session-muscles";
-import { getLatestWellnessScore, getSessionsForSportif, SessionRecord } from "../../services/tracking";
+import {
+  getLatestWellnessScore,
+  getSessionsForSportif,
+  getTodayWellness,
+  SessionRecord,
+} from "../../services/tracking";
 
 export default function SportifHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
+  const [todayWellness, setTodayWellness] = useState<Awaited<ReturnType<typeof getTodayWellness>>>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
   // Dernier message du coach (s'il a écrit en dernier) pour la carte "Mot de ton coach".
@@ -72,6 +80,11 @@ export default function SportifHome() {
         setSessions(sessionData);
         setProgrammes(programmeData);
         setCheckinDone(todayScore !== null);
+        try {
+          setTodayWellness(await getTodayWellness(user.uid));
+        } catch {
+          setTodayWellness(null);
+        }
         setGoalState(goalData);
 
         // Planning posé par le coach : un échec (ex. règles pas encore
@@ -132,6 +145,7 @@ export default function SportifHome() {
   const nextSeance = getNextSeance(programmes[0] ?? null, sessions);
 
   const today = todayKey();
+  const weekAgo = addDays(today, -6);
   const monday = mondayOf(today);
   const weekDays = weekDates(monday);
   const scheduleStatuses = computeScheduleStatuses(scheduled, sessions, today);
@@ -223,7 +237,11 @@ export default function SportifHome() {
         style={{ opacity: fade, transform: [{ translateY: slide }] }}
       >
         <HeroHeader title={`Bonjour ${firstName ?? ""} 👋`} subtitle="Prêt pour ta séance du jour ?" />
-        <View style={{ height: 8 }} />
+        <WellnessSummaryCard
+          wellness={todayWellness}
+          weekLoad={sessions.filter((s) => s.date >= weekAgo).reduce((sum, s) => sum + s.load, 0)}
+          onCheckin={() => router.push("/sportif/checkin")}
+        />
 
         <WeekStrip states={dayStates} />
 

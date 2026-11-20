@@ -324,6 +324,23 @@ export async function getLatestWellnessScore(sportifUid: string): Promise<number
   return snap.data().score ?? null;
 }
 
+// Bien-être du jour avec le détail des 4 items (10 = bon état), pour la carte
+// de l'accueil sportif. null = check-in pas encore fait aujourd'hui.
+export async function getTodayWellness(
+  sportifUid: string
+): Promise<(WellnessInput & { score: number }) | null> {
+  const snap = await getDoc(doc(db, "wellness", `${sportifUid}_${todayKey()}`));
+  if (!snap.exists()) return null;
+  const d = snap.data();
+  return {
+    sommeil: d.sommeil ?? 0,
+    fatigue: d.fatigue ?? 0,
+    courbatures: d.courbatures ?? 0,
+    stress: d.stress ?? 0,
+    score: d.score ?? 0,
+  };
+}
+
 export async function getWellnessForSportif(
   sportifUid: string
 ): Promise<{ date: string; score: number }[]> {

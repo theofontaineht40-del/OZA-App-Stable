@@ -8,6 +8,7 @@ import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import AnimatedPressable from "../../components/animated-pressable";
 import AreaChart from "../../components/coach/area-chart";
 import TriageCard from "../../components/coach/triage-card";
+import HeroHeader, { HeroIconButton } from "../../components/hero-header";
 import { HeaderTexture } from "../../components/decor";
 import MiniSparkline from "../../components/mini-sparkline";
 import { TeamIllustration } from "../../components/empty-illustrations";
@@ -220,22 +221,23 @@ export default function CoachHome() {
       >
         <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
           {/* ── 1. HEADER ── */}
-          <View style={styles.header}>
-            <HeaderTexture />
-            <View style={styles.headerTopRow}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.eyebrow}>Espace coach</Text>
-                <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
-                <Text style={styles.subtitle}>Vue d'ensemble</Text>
-              </View>
-              <TouchableOpacity style={styles.headerIconButton} onPress={comingSoon}>
-                <Ionicons name="notifications-outline" size={20} color={Colors.text} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.headerIconButton} onPress={() => router.push("/coach/profil")}>
-                <Ionicons name="person-outline" size={20} color={Colors.text} />
-              </TouchableOpacity>
-            </View>
-
+          <HeroHeader
+            title={`Bonjour ${firstName ?? ""} 👋`}
+            subtitle="Voici ce qui demande ton attention"
+            bleedX={0}
+            bleedTop={0}
+            right={
+              <>
+                <HeroIconButton onPress={comingSoon}>
+                  <Ionicons name="notifications-outline" size={19} color="#FFFFFF" />
+                </HeroIconButton>
+                <HeroIconButton onPress={() => router.push("/coach/profil")}>
+                  <Ionicons name="person-outline" size={19} color="#FFFFFF" />
+                </HeroIconButton>
+              </>
+            }
+          />
+          <View style={styles.searchWrap}>
             <View style={styles.headerSearchRow}>
               <Ionicons name="search" size={16} color={Colors.textSecondary} />
               <TextInput
@@ -866,6 +868,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
+  searchWrap: {
+    paddingHorizontal: 24,
+    marginBottom: 6,
+    zIndex: 2,
+  },
+
   headerTopRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -910,7 +918,11 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    marginTop: 18,
+    marginTop: 0,
+    shadowColor: "#0B2E2D",
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
   },
 
   headerSearchInput: {

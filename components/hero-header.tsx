@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { ReactNode } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Gradients } from "../constants/colors";
 
@@ -11,14 +11,15 @@ export default function HeroHeader({
   title,
   subtitle,
   right,
-  horizontalPadding = 24,
-  topPadding = 70,
+  bleedX = 24,
+  bleedTop = 70,
 }: {
   title: string;
   subtitle?: string;
   right?: ReactNode;
-  horizontalPadding?: number;
-  topPadding?: number;
+  // Marges négatives qui compensent le padding de l'écran parent.
+  bleedX?: number;
+  bleedTop?: number;
 }) {
   return (
     <LinearGradient
@@ -28,10 +29,10 @@ export default function HeroHeader({
       style={[
         styles.hero,
         {
-          marginHorizontal: -horizontalPadding,
-          marginTop: -topPadding,
-          paddingTop: topPadding - 8,
-          paddingHorizontal: horizontalPadding,
+          marginHorizontal: -bleedX,
+          marginTop: -bleedTop,
+          paddingTop: 62,
+          paddingHorizontal: 24,
         },
       ]}
     >
@@ -52,11 +53,10 @@ export default function HeroHeader({
 
 const styles = StyleSheet.create({
   hero: {
-    paddingBottom: 44,
+    paddingBottom: 48,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    marginBottom: -20,
-    zIndex: 0,
+    marginBottom: -22,
   },
   topRow: {
     flexDirection: "row",
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   logo: {
-    width: 74,
-    height: 28,
+    width: 150,
+    height: 56,
   },
   actions: {
     flexDirection: "row",
@@ -82,5 +82,25 @@ const styles = StyleSheet.create({
     fontSize: 14.5,
     color: "rgba(255,255,255,0.86)",
     marginTop: 4,
+  },
+});
+
+// Bouton rond translucide pour les actions du bandeau (cloche, profil...).
+export function HeroIconButton({ children, onPress }: { children: ReactNode; onPress?: () => void }) {
+  return (
+    <TouchableOpacity style={iconStyles.button} onPress={onPress} activeOpacity={0.7}>
+      {children}
+    </TouchableOpacity>
+  );
+}
+
+const iconStyles = StyleSheet.create({
+  button: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

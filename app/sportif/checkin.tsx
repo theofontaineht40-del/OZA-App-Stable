@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import GradientFill from "../../components/gradient-fill";
 import PhotoBackground from "../../components/photo-background";
 import PulseDot from "../../components/pulse-dot";
 import { Colors } from "../../constants/colors";
@@ -141,7 +142,7 @@ export default function CheckinScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-    <PhotoBackground variant="profil" tone="dark" />
+    <PhotoBackground variant="profil" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -259,6 +260,7 @@ export default function CheckinScreen() {
       )}
 
       <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit} disabled={submitting}>
+        <GradientFill />
         {submitting ? (
           <ActivityIndicator color={Colors.white} />
         ) : (
@@ -285,12 +287,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   subtitle: {
     fontSize: 15,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginTop: 4,
     marginBottom: 20,
   },
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
   wellnessLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 12,
   },
 
@@ -360,7 +362,7 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.24)",
+    borderColor: "rgba(11, 31, 30, 0.16)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -373,7 +375,7 @@ const styles = StyleSheet.create({
   painToggleText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   painToggleTextActive: {
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
   zoneGroupLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 10,
   },
 
@@ -406,7 +408,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.24)",
+    borderColor: "rgba(11, 31, 30, 0.16)",
   },
 
   chipActive: {
@@ -417,7 +419,7 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   chipTextActive: {
@@ -425,9 +427,10 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
+    overflow: "hidden",
     backgroundColor: Colors.primary,
     height: 56,
-    borderRadius: 16,
+    borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 8,

@@ -12,6 +12,8 @@ import {
 } from "react-native";
 
 import AnimatedPressable from "../components/animated-pressable";
+import GradientFill from "../components/gradient-fill";
+import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { registerUser } from "../services/auth";
 import { showAlert } from "../utils/alert";
@@ -73,6 +75,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={{ flex: 1 }}>
+    <PhotoBackground />
     <ScrollView
       style={styles.scrollContainer}
       contentContainerStyle={styles.container}
@@ -84,7 +87,7 @@ export default function RegisterScreen() {
             source={require("../assets/images/logo.png")}
             style={styles.logo}
             resizeMode="contain"
-            tintColor={Colors.white}
+            tintColor={Colors.primaryDark}
           />
         </View>
 
@@ -180,6 +183,7 @@ export default function RegisterScreen() {
         style={styles.button}
         onPress={handleRegister}
       >
+        <GradientFill />
         <Text style={styles.buttonText}>Créer mon compte</Text>
       </AnimatedPressable>
 
@@ -212,26 +216,26 @@ const styles = StyleSheet.create({
   },
 
   logoRow: {
-    marginBottom: 20,
+    marginBottom: 18,
     alignItems: "center",
   },
 
   logo: {
-    height: 200,
-    width: 184,
+    height: 90,
+    width: 150,
     
   },
 
   title: {
     fontSize: 36,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 35,
   },
 
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
     height: 56,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 16,
     fontSize: 16,
@@ -251,7 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   roleContainer: {
@@ -286,9 +290,10 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    overflow: "hidden",
     backgroundColor: TEAL,
     height: 58,
-    borderRadius: 16,
+    borderRadius: 29,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 28,
@@ -306,12 +311,12 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     fontSize: 15,
   },
 
   loginText: {
-    color: Colors.primaryLight,
+    color: Colors.canard,
     fontWeight: "700",
     fontSize: 15,
   },

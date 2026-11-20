@@ -238,6 +238,7 @@ export default function ProgrammesScreen() {
             style={[styles.segmentItem, view === key && styles.segmentItemActive]}
             onPress={() => setView(key)}
           >
+            {view === key && <GradientFill />}
             <Text style={[styles.segmentText, view === key && styles.segmentTextActive]}>{label}</Text>
           </TouchableOpacity>
         ))}
@@ -502,6 +503,7 @@ export default function ProgrammesScreen() {
                   style={[styles.objectifTab, active && styles.objectifTabActive]}
                   onPress={() => setObjectifTab(o)}
                 >
+                  {active && <GradientFill />}
                   <Text style={[styles.objectifTabText, active && styles.objectifTabTextActive]}>
                     {o ?? "Tous"} · {count}
                   </Text>
@@ -671,10 +673,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 9,
     borderRadius: 11,
+    overflow: "hidden",
   },
 
   segmentItemActive: {
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: Colors.primary,
   },
 
   segmentText: {
@@ -745,11 +748,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderWidth: 1,
     borderColor: Colors.border,
+    overflow: "hidden",
   },
 
   objectifTabActive: {
-    backgroundColor: Colors.primaryDark,
-    borderColor: Colors.primaryDark,
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
   },
 
   objectifTabText: {

@@ -13,6 +13,7 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import GradientFill from "../components/gradient-fill";
 import AnimatedPressable from "../components/animated-pressable";
+import PhotoBackground from "../components/photo-background";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser, resetPassword } from "../services/auth";
@@ -84,6 +85,8 @@ export default function LoginScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <PhotoBackground />
     <View style={styles.container}>
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
         <View style={styles.logoRow}>
@@ -91,7 +94,7 @@ export default function LoginScreen() {
             source={require("../assets/images/logo.png")}
             style={styles.logo}
             resizeMode="contain"
-            tintColor={Colors.white}
+            tintColor={Colors.primaryDark}
           />
         </View>
 
@@ -140,6 +143,7 @@ export default function LoginScreen() {
         </View>
       </Animated.View>
     </View>
+    </View>
   );
 }
 
@@ -152,25 +156,25 @@ const styles = StyleSheet.create({
   },
 
   logoRow: {
-    marginBottom: 28,
+    marginBottom: 18,
     alignItems: "center",
   },
 
   logo: {
-    height: 220,
-    width: 184,
+    height: 90,
+    width: 150,
   },
 
   title: {
     fontSize: 34,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 16,
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
     marginBottom: 35,
   },
 
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
     height: 56,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingHorizontal: 16,
     fontSize: 16,
     marginBottom: 18,
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.primaryLight,
+    color: Colors.canard,
   },
 
   button: {
@@ -221,11 +225,11 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: Colors.textOnDarkSecondary,
+    color: Colors.textSecondary,
   },
 
   registerText: {
-    color: Colors.primaryLight,
+    color: Colors.canard,
     fontWeight: "700",
   },
 });

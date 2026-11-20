@@ -12,10 +12,12 @@ import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
 import { Colors, Gradients } from "../../constants/colors";
 import { auth } from "../../firebase";
-import { getProgrammesForSportif, Objectif, Programme } from "../../services/programmes";
+import { estimateSeanceMinutes, getProgrammesForSportif, Objectif, Programme } from "../../services/programmes";
+import { getSessionsForSportif, SessionRecord } from "../../services/tracking";
 
 export default function SportifProgrammesScreen() {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
+  const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Objectif | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
@@ -30,6 +32,12 @@ export default function SportifProgrammesScreen() {
       try {
         const data = await getProgrammesForSportif(user.uid);
         setProgrammes(data);
+        // La progression est un plus : sans elle la liste reste complète.
+        try {
+          setSessions(await getSessionsForSportif(user.uid));
+        } catch {
+          setSessions([]);
+        }
       } finally {
         setLoading(false);
       }
@@ -55,6 +63,20 @@ export default function SportifProgrammesScreen() {
     new Set(programmes.map((p) => p.objectif).filter((o): o is Objectif => o !== null))
   );
   const visible = programmes.filter((p) => tab === null || p.objectif === tab);
+  // Progression d'un programme = séances différentes déjà réalisées / séances prévues.
+  function progressOf(p: Programme): number {
+    if (p.seances.length === 0) return 0;
+    const done = new Set(
+      sessions.filter((x) => x.programmeId === p.id && x.seanceId).map((x) => x.seanceId as string)
+    );
+    const count = p.seances.filter((se) => done.has(se.id)).length;
+    return Math.min(1, count / p.seances.length);
+  }
+  function durationOf(p: Programme): string {
+    const mins = p.seances.map(estimateSeanceMinutes).filter((m) => m > 0);
+    if (mins.length === 0) return "";
+    return `≈ ${Math.round(mins.reduce((a, b) => a + b, 0) / mins.length)} min / séance`;
+  }
   const featured = visible[0];
   const others = visible.slice(1);
 
@@ -120,7 +142,12 @@ export default function SportifProgrammesScreen() {
               <Text style={styles.heroTitle}>{featured.nom}</Text>
               <Text style={styles.heroMeta}>
                 {featured.seances.length} séance{featured.seances.length > 1 ? "s" : ""}
+                {durationOf(featured) ? ` · ${durationOf(featured)}` : ""}
               </Text>
+              <View style={styles.heroTrack}>
+                <View style={[styles.heroFill, { width: `${Math.round(progressOf(featured) * 100)}%` }]} />
+              </View>
+              <Text style={styles.heroPercent}>{Math.round(progressOf(featured) * 100)} % réalisé</Text>
               <View style={styles.heroButton}>
                 <Text style={styles.heroButtonText}>Ouvrir</Text>
                 <Ionicons name="arrow-forward" size={15} color={Colors.primaryDark} />
@@ -141,7 +168,11 @@ export default function SportifProgrammesScreen() {
                 <Text style={styles.programmeMeta}>
                   {p.objectif ? `${p.objectif} · ` : ""}
                   {p.seances.length} séance{p.seances.length > 1 ? "s" : ""}
+                  {durationOf(p) ? ` · ${durationOf(p)}` : ""}
                 </Text>
+                <View style={styles.rowTrack}>
+                  <View style={[styles.rowFill, { width: `${Math.round(progressOf(p) * 100)}%` }]} />
+                </View>
               </View>
               <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
             </AnimatedPressable>
@@ -232,6 +263,41 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "rgba(255,255,255,0.85)",
     marginTop: 4,
+  },
+
+  heroTrack: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    marginTop: 14,
+    overflow: "hidden",
+  },
+
+  heroFill: {
+    height: "100%",
+    borderRadius: 4,
+    backgroundColor: Colors.primaryLight,
+  },
+
+  heroPercent: {
+    fontSize: 11.5,
+    fontWeight: "700",
+    color: "rgba(255,255,255,0.9)",
+    marginTop: 6,
+  },
+
+  rowTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.grayLight,
+    marginTop: 8,
+    overflow: "hidden",
+  },
+
+  rowFill: {
+    height: "100%",
+    borderRadius: 3,
+    backgroundColor: Colors.turquoise,
   },
 
   heroButton: {

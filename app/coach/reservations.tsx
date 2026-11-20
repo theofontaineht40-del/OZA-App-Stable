@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     fontFamily: Type.heading,
     fontSize: 24,
     fontWeight: "700",
-    color: Colors.textOnDark,
+    color: Colors.text,
   },
 
   card: {

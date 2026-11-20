@@ -103,6 +103,20 @@ export async function getSlotsForSportif(sportifId: string): Promise<Slot[]> {
   return sortSlots(slots).filter((s) => s.date >= todayKey());
 }
 
+// Toutes les réservations du sportif, passées comprises (onglet « Passées »).
+export async function getAllSlotsForSportif(sportifId: string): Promise<Slot[]> {
+  const q = query(collection(db, "slots"), where("sportifId", "==", sportifId));
+  const snap = await getDocs(q);
+  const slots = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Slot, "id">) }));
+  return sortSlots(slots);
+}
+
+export function slotDurationMinutes(slot: Pick<Slot, "heureDebut" | "heureFin">): number | null {
+  const a = timeToMinutes(slot.heureDebut);
+  const b = timeToMinutes(slot.heureFin);
+  return a === null || b === null || b <= a ? null : b - a;
+}
+
 export async function getAvailableSlotsForCoach(coachId: string): Promise<Slot[]> {
   const slots = await getSlotsForCoach(coachId);
   return slots.filter((s) => s.status === "disponible");

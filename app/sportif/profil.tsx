@@ -7,6 +7,8 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 
 import { Colors } from "../../constants/colors";
 import { AvatarHalo } from "../../components/decor";
+import BarChart from "../../components/bar-chart";
+import GradientFill from "../../components/gradient-fill";
 import PhotoBackground from "../../components/photo-background";
 import { auth, db } from "../../firebase";
 import { logoutUser } from "../../services/auth";
@@ -26,7 +28,14 @@ type ProfileData = {
 export default function ProfilScreen() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
-  const [stats, setStats] = useState<{ sessions: number; load7d: number; wellness: number | null } | null>(null);
+  const [stats, setStats] = useState<{
+    sessions: number;
+    load7d: number;
+    wellness: number | null;
+    // 4 dernières semaines glissantes, de la plus ancienne à la plus récente.
+    weeks: { label: string; load: number; count: number }[];
+  } | null>(null);
+  const [tab, setTab] = useState<"overview" | "stats" | "goals">("overview");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -62,6 +71,16 @@ export default function ProfilScreen() {
           sessions: sessions.length,
           load7d: sessions.filter((x) => x.date >= since).reduce((sum, x) => sum + x.load, 0),
           wellness: wellness.length > 0 ? Math.round(wellness[0].score * 10) : null,
+          weeks: [3, 2, 1, 0].map((i) => {
+            const from = addDays(todayKey(), -(i * 7 + 6));
+            const to = addDays(todayKey(), -i * 7);
+            const inWeek = sessions.filter((x) => x.date >= from && x.date <= to);
+            return {
+              label: i === 0 ? "Cette sem." : i === 1 ? "S-1" : `S-${i}`,
+              load: inWeek.reduce((sum, x) => sum + x.load, 0),
+              count: inWeek.length,
+            };
+          }),
         });
       } catch {
         setStats(null);
@@ -104,6 +123,21 @@ export default function ProfilScreen() {
         </View>
       </View>
 
+      <View style={styles.tabs}>
+        {(
+          [
+            ["overview", "Vue d'ensemble"],
+            ["stats", "Stats"],
+            ["goals", "Objectifs"],
+          ] as const
+        ).map(([key, label]) => (
+          <TouchableOpacity key={key} style={[styles.tab, tab === key && styles.tabActive]} onPress={() => setTab(key)}>
+            {tab === key && <GradientFill />}
+            <Text style={[styles.tabText, tab === key && styles.tabTextActive]}>{label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       {stats && (
         <View style={styles.statsRow}>
           {[
@@ -120,7 +154,29 @@ export default function ProfilScreen() {
         </View>
       )}
 
-      <Text style={styles.sectionTitle}>Suivi</Text>
+      {tab !== "goals" && stats && (
+        <View style={styles.chartCard}>
+          <Text style={styles.chartTitle}>
+            {tab === "stats" ? "Séances par semaine" : "Charge par semaine"}
+          </Text>
+          <BarChart
+            data={stats.weeks.map((w) => ({ label: w.label, value: tab === "stats" ? w.count : w.load }))}
+            unit={tab === "stats" ? undefined : "u.a."}
+          />
+          <Text style={styles.chartHint}>4 dernières semaines</Text>
+        </View>
+      )}
+
+      {tab === "stats" && stats && (
+        <View style={styles.chartCard}>
+          <Text style={styles.chartTitle}>Charge par semaine</Text>
+          <BarChart data={stats.weeks.map((w) => ({ label: w.label, value: w.load }))} unit="u.a." />
+        </View>
+      )}
+
+      {tab === "overview" && (
+        <>
+          <Text style={styles.sectionTitle}>Raccourcis</Text>
       <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/equipe")}>
         <Ionicons name="people-outline" size={22} color={Colors.primary} />
         <View style={{ flex: 1 }}>
@@ -134,6 +190,21 @@ export default function ProfilScreen() {
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
 
+
+          <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/historique")}>
+            <Ionicons name="time-outline" size={22} color={Colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.equipeTitle}>Historique des séances</Text>
+              <Text style={styles.equipeSubtitle}>Toutes tes séances et leur évolution</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+          </TouchableOpacity>
+        </>
+      )}
+
+      {tab === "goals" && (
+        <>
+          <Text style={styles.sectionTitle}>Mon objectif</Text>
       <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/objectif")}>
         <Ionicons
           name={goalDone ? "checkmark-circle" : "flag-outline"}
@@ -162,6 +233,9 @@ export default function ProfilScreen() {
         <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
       </TouchableOpacity>
 
+        </>
+      )}
+
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={20} color={Colors.primary} />
         <Text style={styles.logoutText}>Se déconnecter</Text>
@@ -172,6 +246,59 @@ export default function ProfilScreen() {
 }
 
 const styles = StyleSheet.create({
+  tabs: {
+    flexDirection: "row",
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 14,
+    padding: 4,
+    marginBottom: 16,
+  },
+
+  tab: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 9,
+    borderRadius: 11,
+    overflow: "hidden",
+  },
+
+  tabActive: {
+    backgroundColor: Colors.primary,
+  },
+
+  tabText: {
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: Colors.textSecondary,
+  },
+
+  tabTextActive: {
+    color: Colors.white,
+  },
+
+  chartCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  chartTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 14,
+  },
+
+  chartHint: {
+    fontSize: 11.5,
+    color: Colors.textSecondary,
+    marginTop: 10,
+    textAlign: "center",
+  },
+
   statsRow: {
     flexDirection: "row",
     gap: 10,

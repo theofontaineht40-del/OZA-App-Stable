@@ -1,6 +1,8 @@
 import Svg, {
   Circle,
   Defs,
+  Ellipse,
+  G,
   LinearGradient,
   RadialGradient,
   Stop,
@@ -8,58 +10,91 @@ import Svg, {
 } from "react-native-svg";
 
 // Disque OZA 3D (élément signature) : un disque d'haltère métallique bleu
-// turquoise, dessiné en vectoriel — bord biseauté, reflets, moyeu central et
-// le mot OZA gravé en haut et (inversé) en bas, comme sur la maquette.
-export default function OzaDisc({ size = 260 }: { size?: number }) {
+// turquoise — jante biseautée, gorges concentriques, reflets spéculaires, moyeu
+// central percé et le mot OZA en relief en haut et (inversé) en bas.
+export default function OzaDisc({ size = 300 }: { size?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 300 300">
+    <Svg width={size} height={size * 1.04} viewBox="0 0 300 312">
       <Defs>
-        <LinearGradient id="rim" x1="15%" y1="0%" x2="85%" y2="100%">
-          <Stop offset="0%" stopColor="#7FEBDD" />
-          <Stop offset="35%" stopColor="#14B8A6" />
-          <Stop offset="70%" stopColor="#0A5A53" />
-          <Stop offset="100%" stopColor="#062B28" />
+        <LinearGradient id="rim" x1="10%" y1="0%" x2="90%" y2="100%">
+          <Stop offset="0%" stopColor="#B6FFF3" />
+          <Stop offset="18%" stopColor="#3FE0CB" />
+          <Stop offset="55%" stopColor="#0E8F82" />
+          <Stop offset="100%" stopColor="#04302C" />
         </LinearGradient>
-        <RadialGradient id="face" cx="35%" cy="30%" r="80%">
-          <Stop offset="0%" stopColor="#2FC7B5" />
-          <Stop offset="55%" stopColor="#0F7F74" />
-          <Stop offset="100%" stopColor="#073F3A" />
+        <LinearGradient id="rimInner" x1="90%" y1="100%" x2="10%" y2="0%">
+          <Stop offset="0%" stopColor="#7BF2E1" />
+          <Stop offset="45%" stopColor="#0F9A8C" />
+          <Stop offset="100%" stopColor="#053C37" />
+        </LinearGradient>
+        <RadialGradient id="face" cx="32%" cy="26%" r="85%">
+          <Stop offset="0%" stopColor="#4CE6D2" />
+          <Stop offset="42%" stopColor="#15A596" />
+          <Stop offset="78%" stopColor="#0A6258" />
+          <Stop offset="100%" stopColor="#052F2B" />
         </RadialGradient>
-        <RadialGradient id="hub" cx="40%" cy="35%" r="75%">
-          <Stop offset="0%" stopColor="#5FE3D2" />
-          <Stop offset="60%" stopColor="#0E8C80" />
-          <Stop offset="100%" stopColor="#053A35" />
+        <RadialGradient id="hub" cx="38%" cy="30%" r="80%">
+          <Stop offset="0%" stopColor="#8DF6E7" />
+          <Stop offset="50%" stopColor="#1BA899" />
+          <Stop offset="100%" stopColor="#053B36" />
         </RadialGradient>
-        <RadialGradient id="shine" cx="30%" cy="20%" r="50%">
-          <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.45} />
+        <RadialGradient id="spec" cx="28%" cy="18%" r="48%">
+          <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.6} />
           <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0} />
         </RadialGradient>
+        <RadialGradient id="floor" cx="50%" cy="50%" r="50%">
+          <Stop offset="0%" stopColor="#000000" stopOpacity={0.45} />
+          <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+        </RadialGradient>
+        <LinearGradient id="text" x1="0%" y1="0%" x2="0%" y2="100%">
+          <Stop offset="0%" stopColor="#0C5A52" />
+          <Stop offset="100%" stopColor="#042622" />
+        </LinearGradient>
       </Defs>
-      <Circle cx={150} cy={152} r={142} fill="#021F1D" opacity={0.35} />
-      <Circle cx={150} cy={150} r={140} fill="url(#rim)" />
-      <Circle cx={150} cy={150} r={126} fill="url(#face)" />
-      <Circle cx={150} cy={150} r={104} fill="none" stroke="#7FEBDD" strokeOpacity={0.35} strokeWidth={2} />
-      <Circle cx={150} cy={150} r={84} fill="none" stroke="#021F1D" strokeOpacity={0.35} strokeWidth={3} />
-      <SvgText x={150} y={80} fontSize={34} fontWeight="800" fontFamily="Helvetica, Arial, sans-serif" fill="#0A5A53" fillOpacity={0.9} textAnchor="middle">
-        OZA
-      </SvgText>
-      <SvgText
-        x={150}
-        y={80}
-        fontSize={34}
-        fontWeight="800"
-        fontFamily="Helvetica, Arial, sans-serif"
-        fill="#0A5A53"
-        fillOpacity={0.9}
-        textAnchor="middle"
-        transform="rotate(180 150 150)"
-      >
-        OZA
-      </SvgText>
-      <Circle cx={150} cy={150} r={44} fill="url(#hub)" />
-      <Circle cx={150} cy={150} r={44} fill="none" stroke="#7FEBDD" strokeOpacity={0.5} strokeWidth={2} />
-      <Circle cx={150} cy={150} r={17} fill="#031C1A" />
-      <Circle cx={150} cy={150} r={140} fill="url(#shine)" />
+
+      {/* ombre au sol */}
+      <Ellipse cx={150} cy={294} rx={120} ry={13} fill="url(#floor)" />
+
+      {/* épaisseur du disque */}
+      <Circle cx={150} cy={158} r={142} fill="#031F1C" />
+      <Circle cx={150} cy={154} r={142} fill="url(#rim)" />
+      <Circle cx={150} cy={154} r={131} fill="url(#rimInner)" />
+      <Circle cx={150} cy={154} r={124} fill="url(#face)" />
+
+      {/* gorges concentriques */}
+      <Circle cx={150} cy={154} r={108} fill="none" stroke="#041F1C" strokeOpacity={0.45} strokeWidth={3} />
+      <Circle cx={150} cy={154} r={105} fill="none" stroke="#7BF2E1" strokeOpacity={0.35} strokeWidth={1.5} />
+      <Circle cx={150} cy={154} r={78} fill="none" stroke="#041F1C" strokeOpacity={0.4} strokeWidth={3} />
+      <Circle cx={150} cy={154} r={75} fill="none" stroke="#7BF2E1" strokeOpacity={0.3} strokeWidth={1.5} />
+
+      {/* OZA en relief (haut) et inversé (bas) */}
+      <G>
+        <SvgText x={151} y={83} fontSize={38} fontWeight="900" fontStyle="italic" fontFamily="Helvetica, Arial, sans-serif" fill="#7BF2E1" fillOpacity={0.5} textAnchor="middle">
+          OZA
+        </SvgText>
+        <SvgText x={150} y={81} fontSize={38} fontWeight="900" fontStyle="italic" fontFamily="Helvetica, Arial, sans-serif" fill="url(#text)" textAnchor="middle">
+          OZA
+        </SvgText>
+      </G>
+      <G transform="rotate(180 150 154)">
+        <SvgText x={151} y={83} fontSize={38} fontWeight="900" fontStyle="italic" fontFamily="Helvetica, Arial, sans-serif" fill="#7BF2E1" fillOpacity={0.5} textAnchor="middle">
+          OZA
+        </SvgText>
+        <SvgText x={150} y={81} fontSize={38} fontWeight="900" fontStyle="italic" fontFamily="Helvetica, Arial, sans-serif" fill="url(#text)" textAnchor="middle">
+          OZA
+        </SvgText>
+      </G>
+
+      {/* moyeu */}
+      <Circle cx={150} cy={154} r={46} fill="#031F1C" opacity={0.5} />
+      <Circle cx={150} cy={152} r={44} fill="url(#hub)" />
+      <Circle cx={150} cy={152} r={44} fill="none" stroke="#B6FFF3" strokeOpacity={0.55} strokeWidth={2} />
+      <Circle cx={150} cy={152} r={19} fill="#021A17" />
+      <Circle cx={150} cy={152} r={19} fill="none" stroke="#3FE0CB" strokeOpacity={0.5} strokeWidth={2} />
+
+      {/* reflets */}
+      <Circle cx={150} cy={154} r={142} fill="url(#spec)" />
+      <Ellipse cx={104} cy={72} rx={52} ry={20} fill="#FFFFFF" fillOpacity={0.14} transform="rotate(-32 104 72)" />
     </Svg>
   );
 }

@@ -1,11 +1,12 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import {
   Animated,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -35,34 +36,43 @@ export default function WelcomeScreen() {
 
   const floatY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] });
 
+  const { width, height } = useWindowDimensions();
+  const discSize = Math.min(width * 0.86, height * 0.42, 340);
+
   return (
     <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={["#2FC9B4", "#0F8176", "#0A4D47", "#062E2B"]}
+        locations={[0, 0.35, 0.7, 1]}
+        start={{ x: 0.1, y: 0 }}
+        end={{ x: 0.9, y: 1 }}
+        style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
+      />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
-          <Image
-            source={require("../assets/images/logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-            tintColor={Colors.white}
-          />
-          <Text style={styles.tagline}>OPTIMAL ZONE FOR ATHLETES</Text>
+        <Animated.View style={[styles.column, { opacity: fade, transform: [{ translateY: slide }] }]}>
+          <View style={styles.top}>
+            <Text style={styles.wordmark}>OZA</Text>
+            <Text style={styles.tagline}>OPTIMAL ZONE FOR ATHLETES</Text>
+          </View>
 
-          <Animated.View style={{ transform: [{ translateY: floatY }], marginVertical: 28, alignSelf: "center" }}>
-            <OzaDisc size={250} />
+          <Animated.View style={{ transform: [{ translateY: floatY }], alignSelf: "center" }}>
+            <OzaDisc size={discSize} />
           </Animated.View>
 
-          <AnimatedPressable style={styles.primaryButton} onPress={() => router.push("/login")}>
-            <GradientFill />
-            <Text style={styles.primaryText}>Se connecter</Text>
-          </AnimatedPressable>
+          <View style={styles.buttons}>
+            <AnimatedPressable style={styles.primaryButton} onPress={() => router.push("/login")}>
+              <GradientFill colors={["#35F0D8", "#0FB8A4"]} />
+              <Text style={styles.primaryText}>Se connecter</Text>
+            </AnimatedPressable>
 
-          <AnimatedPressable style={styles.secondaryButton} onPress={() => router.push("/register")}>
-            <Text style={styles.secondaryText}>Créer un compte</Text>
-          </AnimatedPressable>
+            <AnimatedPressable style={styles.secondaryButton} onPress={() => router.push("/register")}>
+              <Text style={styles.secondaryText}>Créer un compte</Text>
+            </AnimatedPressable>
+          </View>
         </Animated.View>
       </ScrollView>
     </View>
@@ -77,24 +87,47 @@ const styles = StyleSheet.create({
 
   content: {
     flexGrow: 1,
-    justifyContent: "center",
-    paddingHorizontal: 30,
-    paddingVertical: 50,
+    alignItems: "center",
+    paddingHorizontal: 28,
+    paddingTop: 56,
+    paddingBottom: 36,
   },
 
-  logo: {
-    alignSelf: "center",
-    width: 300,
-    height: 120,
+  column: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 460,
+    justifyContent: "space-between",
+    gap: 24,
+  },
+
+  top: {
+    alignItems: "center",
+  },
+
+  wordmark: {
+    fontSize: 92,
+    lineHeight: 100,
+    fontWeight: "900",
+    fontStyle: "italic",
+    letterSpacing: 2,
+    color: Colors.white,
+    textShadowColor: "rgba(4, 38, 34, 0.45)",
+    textShadowOffset: { width: 0, height: 6 },
+    textShadowRadius: 14,
   },
 
   tagline: {
     fontSize: 12,
     fontWeight: "700",
-    letterSpacing: 3,
-    color: Colors.textOnDarkSecondary,
-    marginTop: 4,
+    letterSpacing: 3.2,
+    color: "rgba(255,255,255,0.88)",
+    marginTop: 2,
     textAlign: "center",
+  },
+
+  buttons: {
+    gap: 14,
   },
 
   primaryButton: {
@@ -103,7 +136,9 @@ const styles = StyleSheet.create({
     borderRadius: 29,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 14,
+    backgroundColor: Colors.primary,
+    borderWidth: 1.5,
+    borderColor: "rgba(255,255,255,0.55)",
   },
 
   primaryText: {

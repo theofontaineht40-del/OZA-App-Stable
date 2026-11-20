@@ -56,4 +56,6 @@ export const Gradients = {
   app: ["#0B2E2D", "#146B62", "#0B2E2D"] as const,
   // Boutons principaux : dégradé turquoise.
   cta: ["#2DD4BF", "#14B8A6"] as const,
+  // Bandeau d'en-tête des accueils (turquoise profond → turquoise lumineux).
+  hero: ["#0A5A53", "#12A596", "#2DD4BF"] as const,
 };

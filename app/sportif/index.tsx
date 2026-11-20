@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { HeaderTexture } from "../../components/decor";
+import HeroHeader from "../../components/hero-header";
 import NextSessionWidget from "../../components/next-session-widget";
 import PhotoBackground from "../../components/photo-background";
 import SportifRoutine from "../../components/sportif-routine";
@@ -222,11 +222,8 @@ export default function SportifHome() {
       <Animated.View
         style={{ opacity: fade, transform: [{ translateY: slide }] }}
       >
-        <View style={styles.header}>
-          <HeaderTexture />
-          <Text style={styles.greeting}>Bonjour {firstName ?? ""} 👋</Text>
-          <Text style={styles.subtitle}>{todayLabel}</Text>
-        </View>
+        <HeroHeader title={`Bonjour ${firstName ?? ""} 👋`} subtitle="Prêt pour ta séance du jour ?" />
+        <View style={{ height: 8 }} />
 
         <WeekStrip states={dayStates} />
 

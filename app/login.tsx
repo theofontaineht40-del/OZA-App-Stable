@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: TEAL,
     height: 58,
-    borderRadius: 14,
+    borderRadius: 29,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,

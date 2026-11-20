@@ -1,5 +1,5 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
-import Svg, { Circle, Defs, RadialGradient, Rect, Stop } from "react-native-svg";
+import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { Colors } from "../constants/colors";
 
@@ -32,14 +32,19 @@ export default function PhotoBackground({
     <View style={[styles.fill, { pointerEvents: "none", backgroundColor: Colors.background }]}>
       <Svg width="100%" height="100%" viewBox="0 0 800 900" preserveAspectRatio="xMidYMin slice">
         <Defs>
+          <LinearGradient id="mint" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor="#FFFFFF" />
+            <Stop offset="55%" stopColor="#F1FAF8" />
+            <Stop offset="100%" stopColor="#D9F3EE" />
+          </LinearGradient>
           <RadialGradient id="halo" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#2DD4BF" stopOpacity={0.16} />
+            <Stop offset="0%" stopColor="#2DD4BF" stopOpacity={0.2} />
             <Stop offset="100%" stopColor="#2DD4BF" stopOpacity={0} />
           </RadialGradient>
         </Defs>
-        <Rect x={0} y={0} width={800} height={900} fill={Colors.background} />
-        <Circle cx={720} cy={40} r={300} fill="url(#halo)" />
-        <Circle cx={0} cy={760} r={260} fill="url(#halo)" />
+        <Rect x={0} y={0} width={800} height={900} fill="url(#mint)" />
+        <Circle cx={760} cy={820} r={340} fill="url(#halo)" />
+        <Circle cx={30} cy={420} r={220} fill="url(#halo)" />
       </Svg>
     </View>
   );

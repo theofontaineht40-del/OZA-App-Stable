@@ -41,7 +41,7 @@ export default function CustomBottomTabBar({
 
         const focused = state.index === index;
         const label = options.title ?? route.name;
-        const color = focused ? Colors.primaryLight : "rgba(255, 255, 255, 0.55)";
+        const color = focused ? Colors.primary : "rgba(16, 28, 27, 0.45)";
 
         function onPress() {
           const event = navigation.emit({
@@ -56,7 +56,9 @@ export default function CustomBottomTabBar({
 
         return (
           <Pressable key={route.key} style={styles.item} onPress={onPress}>
-            {options.tabBarIcon?.({ focused, color, size: 24 })}
+            <View style={[styles.iconWrap, focused && styles.iconWrapActive]}>
+              {options.tabBarIcon?.({ focused, color, size: 22 })}
+            </View>
             <Text style={[styles.label, { color }]} numberOfLines={1}>
               {label}
             </Text>
@@ -76,9 +78,28 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: "row",
     paddingTop: 8,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
-    backgroundColor: Colors.navBackground,
+    backgroundColor: Colors.surface,
+    shadowColor: "#0B2E2D",
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: -4 },
+    elevation: 10,
+  },
+
+  iconWrap: {
+    width: 44,
+    height: 30,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  iconWrapActive: {
+    backgroundColor: Colors.accentTint,
   },
 
   item: {

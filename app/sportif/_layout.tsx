@@ -71,6 +71,7 @@ export default function SportifTabsLayout() {
       <Tabs.Screen name="nouvelle-seance" options={{ href: null }} />
       <Tabs.Screen name="checkin" options={{ href: null }} />
       <Tabs.Screen name="objectif" options={{ href: null }} />
+      <Tabs.Screen name="analyse" options={{ href: null }} />
       <Tabs.Screen name="historique" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]" options={{ href: null }} />
       <Tabs.Screen name="cardio/[id]" options={{ href: null }} />

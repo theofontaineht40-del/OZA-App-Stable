@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -6,6 +7,8 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { Type } from "../../../constants/tokens";
 import { ChatIllustration } from "../../../components/empty-illustrations";
 import PhotoBackground from "../../../components/photo-background";
+import GradientFill from "../../../components/gradient-fill";
+import { messageTimeLabel } from "../../../utils/message-time";
 import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForSportif } from "../../../services/messages";
@@ -84,7 +87,14 @@ export default function SportifMessagesListScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Messagerie</Text>
+      <View style={styles.titleRow}>
+        <Text style={[styles.title, { marginBottom: 0 }]}>Messagerie</Text>
+        {/* Nouvelle conversation : on trouve un coach dans Découvrir. */}
+        <TouchableOpacity style={styles.newButton} onPress={() => router.push("/sportif/decouvrir")}>
+          <GradientFill />
+          <Ionicons name="add" size={22} color={Colors.white} />
+        </TouchableOpacity>
+      </View>
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>
@@ -122,6 +132,8 @@ export default function SportifMessagesListScreen() {
                     <Text style={styles.unreadBadgeText}>Non lu</Text>
                   </View>
                 )}
+                <View style={{ flex: 1 }} />
+                <Text style={styles.time}>{messageTimeLabel(row.conversation?.lastMessageAt)}</Text>
               </View>
               <Text
                 style={[styles.preview, row.conversation?.unreadBySportif && styles.previewUnread]}
@@ -156,6 +168,28 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text,
     marginBottom: 20,
+  },
+
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+
+  newButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    overflow: "hidden",
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  time: {
+    fontSize: 11.5,
+    color: Colors.textSecondary,
   },
 
   emptyCard: {

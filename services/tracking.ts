@@ -352,6 +352,28 @@ export async function getWellnessForSportif(
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+// Bilans de bien-être détaillés du sportif (analyse OZA) : les 4 items /10
+// (10 = bon état) et le score, du plus récent au plus ancien.
+export async function getWellnessEntriesForSportif(
+  sportifUid: string
+): Promise<(WellnessInput & { date: string; score: number })[]> {
+  const q = query(collection(db, "wellness"), where("sportifId", "==", sportifUid));
+  const snap = await getDocs(q);
+  return snap.docs
+    .map((d) => {
+      const x = d.data();
+      return {
+        date: x.date as string,
+        score: x.score ?? 0,
+        sommeil: x.sommeil ?? 0,
+        fatigue: x.fatigue ?? 0,
+        courbatures: x.courbatures ?? 0,
+        stress: x.stress ?? 0,
+      };
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
 // Le coach ne peut pas interroger `wellness` filtré par sportifId (règles
 // Firestore : seul un filtre sur coachId est prouvable pour une liste). On
 // récupère donc tout son propre périmètre puis on filtre côté client.

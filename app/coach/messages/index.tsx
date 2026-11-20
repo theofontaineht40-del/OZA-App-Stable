@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { Type } from "../../../constants/tokens";
 import { TeamIllustration } from "../../../components/empty-illustrations";
 import PhotoBackground from "../../../components/photo-background";
+import { messageTimeLabel } from "../../../utils/message-time";
 import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForCoach } from "../../../services/messages";
@@ -96,6 +97,8 @@ export default function MessagesListScreen() {
                     <Text style={styles.unreadBadgeText}>Non lu</Text>
                   </View>
                 )}
+                <View style={{ flex: 1 }} />
+                <Text style={styles.time}>{messageTimeLabel(conversation?.lastMessageAt)}</Text>
               </View>
               <Text
                 style={[styles.preview, conversation?.unreadByCoach && styles.previewUnread]}
@@ -130,6 +133,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text,
     marginBottom: 20,
+  },
+
+  time: {
+    fontSize: 11.5,
+    color: Colors.textSecondary,
   },
 
   emptyCard: {

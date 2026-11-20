@@ -191,6 +191,15 @@ export default function ProfilScreen() {
       </TouchableOpacity>
 
 
+          <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/analyse")}>
+            <Ionicons name="pulse-outline" size={22} color={Colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.equipeTitle}>Analyse OZA</Text>
+              <Text style={styles.equipeSubtitle}>Radar de tes variables clés</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/historique")}>
             <Ionicons name="time-outline" size={22} color={Colors.primary} />
             <View style={{ flex: 1 }}>

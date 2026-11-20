@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 
+import { Type } from "../../../../constants/tokens";
 import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
 import { auth } from "../../../../firebase";
@@ -20,6 +21,10 @@ import ExerciseThumb from "../../../../components/exercise-thumb";
 import InlineLoopingVideo from "../../../../components/inline-looping-video";
 import { ExerciseTemplate } from "../../../../constants/exercise-library";
 import { getExerciseLibrary } from "../../../../services/exercises";
+import { estimateSeanceMinutes } from "../../../../services/programmes";
+import { MUSCLE_ID_LABELS } from "../../../../constants/muscle-selection";
+import GradientFill from "../../../../components/gradient-fill";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   getOneRepMaxesForSportif,
   referenceMap,
@@ -145,13 +150,63 @@ export default function SportifProgrammeViewScreen() {
                     contentContainerStyle={styles.content}
                     showsVerticalScrollIndicator={false}
                   >
-                    <TouchableOpacity
-                      style={styles.startButton}
-                      onPress={() => router.push(`/sportif/programme/${programme.id}/seance/${seance.id}`)}
+                    <LinearGradient
+                      colors={["#062D2B", "#075B57"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.seanceHero}
                     >
-                      <Ionicons name="play-circle" size={20} color={Colors.white} />
-                      <Text style={styles.startButtonText}>Démarrer cette séance</Text>
-                    </TouchableOpacity>
+                      <Text style={styles.seanceHeroEyebrow}>{programme.objectif ?? programme.nom}</Text>
+                      <Text style={styles.seanceHeroTitle}>{seance.nom}</Text>
+                      <View style={styles.seanceHeroMeta}>
+                        <View style={styles.metaChip}>
+                          <Ionicons name="barbell-outline" size={13} color={Colors.primaryLight} />
+                          <Text style={styles.metaChipText}>
+                            {seance.blocs.reduce((n, b) => n + b.exercices.length, 0)} exercices
+                          </Text>
+                        </View>
+                        {estimateSeanceMinutes(seance) > 0 && (
+                          <View style={styles.metaChip}>
+                            <Ionicons name="time-outline" size={13} color={Colors.primaryLight} />
+                            <Text style={styles.metaChipText}>≈ {estimateSeanceMinutes(seance)} min</Text>
+                          </View>
+                        )}
+                        {(seance.muscles ?? []).slice(0, 3).map((m) => (
+                          <View key={m} style={styles.metaChip}>
+                            <Text style={styles.metaChipText}>{MUSCLE_ID_LABELS[m]}</Text>
+                          </View>
+                        ))}
+                      </View>
+                      <TouchableOpacity
+                        style={styles.startButton}
+                        onPress={() => router.push(`/sportif/programme/${programme.id}/seance/${seance.id}`)}
+                      >
+                        <GradientFill />
+                        <Ionicons name="play" size={16} color={Colors.white} />
+                        <Text style={styles.startButtonText}>Démarrer la séance</Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+
+                    {seance.blocs.some((b) => b.exercices.length > 0) && (
+                      <View style={styles.previewCard}>
+                        <Text style={styles.previewTitle}>Aperçu des exercices</Text>
+                        {seance.blocs.flatMap((b) => b.exercices).map((ex, i) => (
+                          <View key={ex.id} style={[styles.previewRow, i > 0 && styles.previewRowBorder]}>
+                            <ExerciseThumb exercise={photosByExerciceId.get(ex.exerciceId)} size={46} radius={12} />
+                            <View style={{ flex: 1, minWidth: 0 }}>
+                              <Text style={styles.previewName} numberOfLines={1}>
+                                {ex.exerciceNom}
+                              </Text>
+                              <Text style={styles.previewMeta}>
+                                {ex.series} × {ex.repetitions}
+                                {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}
+                                {ex.poidsIndicatif ? ` · ~${ex.poidsIndicatif} kg` : ""}
+                              </Text>
+                            </View>
+                          </View>
+                        ))}
+                      </View>
+                    )}
 
                     {seance.blocs.length === 0 ? (
                       <Text style={styles.emptyText}>Aucun bloc dans cette séance.</Text>
@@ -307,15 +362,102 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
 
+  seanceHero: {
+    borderRadius: 22,
+    padding: 18,
+    marginBottom: 16,
+  },
+
+  seanceHeroEyebrow: {
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: Colors.primaryLight,
+  },
+
+  seanceHeroTitle: {
+    fontFamily: Type.heading,
+    fontSize: 28,
+    color: Colors.white,
+    marginTop: 4,
+  },
+
+  seanceHeroMeta: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 12,
+    marginBottom: 16,
+  },
+
+  metaChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+
+  metaChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.white,
+  },
+
+  previewCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  previewTitle: {
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.6,
+    color: Colors.textSecondary,
+    marginBottom: 6,
+    textTransform: "uppercase",
+  },
+
+  previewRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 10,
+  },
+
+  previewRowBorder: {
+    borderTopWidth: 1,
+    borderTopColor: Colors.grayLight,
+  },
+
+  previewName: {
+    fontSize: 14.5,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  previewMeta: {
+    fontSize: 12.5,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+
   startButton: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
+    overflow: "hidden",
     backgroundColor: Colors.primary,
-    height: 54,
-    borderRadius: 16,
-    marginBottom: 20,
+    height: 52,
+    borderRadius: 26,
   },
 
   startButtonText: {

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import AnimatedPressable from "../../components/animated-pressable";
+import AgendaCard from "../../components/coach/agenda-card";
 import AreaChart from "../../components/coach/area-chart";
 import FeedbackCard from "../../components/coach/feedback-card";
 import TriageCard from "../../components/coach/triage-card";
@@ -39,6 +40,7 @@ import {
 } from "../../services/session-feedback";
 import { getInjuries } from "../../services/medical";
 import { Conversation, subscribeToConversationsForCoach } from "../../services/messages";
+import { getSlotsForCoach, Slot } from "../../services/reservations";
 import { getScheduledForCoach, ScheduledSession } from "../../services/schedule";
 import {
   getMySportifs,
@@ -68,10 +70,17 @@ function comingSoon() {
   showAlert("Bientôt disponible", "Cette fonctionnalité arrive prochainement.");
 }
 
+function tomorrowKey(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function CoachHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [sportifs, setSportifs] = useState<SportifSummary[]>([]);
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
+  const [slots, setSlots] = useState<Slot[]>([]);
   const [wellness, setWellness] = useState<WellnessEntry[]>([]);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -95,13 +104,15 @@ export default function CoachHome() {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-        const [sportifData, sessionData, wellnessData] = await Promise.all([
+        const [sportifData, sessionData, slotData, wellnessData] = await Promise.all([
           getMySportifs(user.uid),
           getSessionsForCoach(user.uid),
+          getSlotsForCoach(user.uid),
           getWellnessForCoach(user.uid),
         ]);
         setSportifs(sportifData);
         setSessions(sessionData);
+        setSlots(slotData);
         setWellness(wellnessData);
 
         // Le planning est un plus : s'il ne se charge pas (ex. règles pas
@@ -251,6 +262,13 @@ export default function CoachHome() {
   );
 
   const today = todayKey();
+  const tomorrow = tomorrowKey();
+  const todaySlots = slots
+    .filter((s) => s.date === today && s.status === "confirme")
+    .sort((a, b) => a.heureDebut.localeCompare(b.heureDebut));
+  const tomorrowSlots = slots
+    .filter((s) => s.date === tomorrow && s.status === "confirme")
+    .sort((a, b) => a.heureDebut.localeCompare(b.heureDebut));
 
   const filteredSportifs = sportifs.filter((s) =>
     `${s.firstName} ${s.lastName}`.toLowerCase().includes(sportifSearch.trim().toLowerCase())
@@ -352,6 +370,8 @@ export default function CoachHome() {
             />
 
             <FeedbackCard items={feedbackItems} onSend={handleSendFeedback} />
+
+            <AgendaCard slots={todaySlots} onPress={() => router.push("/coach/reservations")} />
 
             {sportifs.length > 0 && (
               <TouchableOpacity style={styles.teamRow} onPress={() => router.push("/coach/sportifs")}>
@@ -559,6 +579,37 @@ export default function CoachHome() {
             </View>
 
             <View style={styles.twoColRow}>
+              {/* ── 5. PROCHAINS RENDEZ-VOUS ── */}
+              <View style={[styles.card, styles.colCard]}>
+                <Text style={styles.cardTitle}>Prochains rendez-vous</Text>
+                {todaySlots.length === 0 && tomorrowSlots.length === 0 ? (
+                  <Text style={styles.emptyText}>Aucun rendez-vous à venir.</Text>
+                ) : (
+                  <>
+                    {todaySlots.length > 0 && (
+                      <>
+                        <Text style={styles.rdvGroupLabel}>Aujourd'hui</Text>
+                        {todaySlots.map((slot) => (
+                          <RdvRow key={slot.id} slot={slot} />
+                        ))}
+                      </>
+                    )}
+                    {tomorrowSlots.length > 0 && (
+                      <>
+                        <Text style={styles.rdvGroupLabel}>Demain</Text>
+                        {tomorrowSlots.map((slot) => (
+                          <RdvRow key={slot.id} slot={slot} />
+                        ))}
+                      </>
+                    )}
+                  </>
+                )}
+                <TouchableOpacity style={styles.seeAllButton} onPress={() => router.push("/coach/reservations")}>
+                  <Text style={styles.seeAllText}>Voir tout</Text>
+                  <Ionicons name="arrow-forward" size={13} color={Colors.primary} />
+                </TouchableOpacity>
+              </View>
+
               {/* ── 6. ÉTAT DES SPORTIFS ── */}
               <View style={[styles.card, styles.colCard]}>
                 <Text style={styles.cardTitle}>État des sportifs</Text>
@@ -636,7 +687,8 @@ export default function CoachHome() {
 
             <Text style={styles.sectionTitle}>Accès rapides</Text>
             <View style={styles.quickGrid}>
-              <QuickAction icon="barbell-outline" label="Programmes" delay={0} onPress={() => router.push("/coach/programmes")} />
+              <QuickAction icon="calendar-outline" label="Réservations" delay={0} onPress={() => router.push("/coach/reservations")} />
+              <QuickAction icon="barbell-outline" label="Programmes" delay={250} onPress={() => router.push("/coach/programmes")} />
               <QuickAction icon="chatbubble-outline" label="Messagerie" delay={500} onPress={() => router.push("/coach/messages")} />
               <QuickAction icon="notifications-outline" label="Notifications" delay={750} onPress={comingSoon} />
             </View>
@@ -797,6 +849,20 @@ function MetricTile({
     <View style={[styles.metricTile, basis ? { minWidth: basis } : null]}>
       <Text style={styles.metricValue}>{value}</Text>
       <Text style={styles.metricLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function RdvRow({ slot }: { slot: Slot }) {
+  return (
+    <View style={styles.rdvRow}>
+      <View style={styles.rdvDot} />
+      <View style={{ flex: 1 }}>
+        <Text style={styles.rdvTime}>
+          {slot.heureDebut} — {slot.heureFin}
+        </Text>
+        <Text style={styles.rdvName}>{slot.sportifName}</Text>
+      </View>
     </View>
   );
 }

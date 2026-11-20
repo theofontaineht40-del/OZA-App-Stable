@@ -31,6 +31,7 @@ import { getExerciseLibrary } from "../../services/exercises";
 import { getFeedbackForSportif, markFeedbackSeen, SessionFeedback } from "../../services/session-feedback";
 import { subscribeToConversationsForSportif } from "../../services/messages";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
+import { getSlotsForSportif, Slot } from "../../services/reservations";
 import {
   computeDayState,
   addDays,
@@ -52,6 +53,7 @@ import {
 export default function SportifHome() {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
+  const [upcomingSlots, setUpcomingSlots] = useState<Slot[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
   const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
@@ -79,13 +81,15 @@ export default function SportifHome() {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
 
-        const [sessionData, programmeData, todayScore, goalData] = await Promise.all([
+        const [sessionData, slotData, programmeData, todayScore, goalData] = await Promise.all([
           getSessionsForSportif(user.uid),
+          getSlotsForSportif(user.uid),
           getProgrammesForSportif(user.uid),
           getLatestWellnessScore(user.uid),
           getGoal(user.uid),
         ]);
         setSessions(sessionData);
+        setUpcomingSlots(slotData);
         setProgrammes(programmeData);
         setCheckinDone(todayScore !== null);
         try {
@@ -319,7 +323,11 @@ export default function SportifHome() {
           <TodayHero
             eyebrow="Séance du jour"
             title="Rien de prévu aujourd'hui"
-            meta="Ton coach n'a pas encore planifié de séance."
+            meta={
+              upcomingSlots.length > 0
+                ? `Prochain créneau : ${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut}`
+                : "Ton coach n'a pas encore planifié de séance."
+            }
           />
         )}
 

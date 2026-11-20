@@ -16,6 +16,9 @@ import {
 import PhotoBackground from "../../../../components/photo-background";
 import { Colors } from "../../../../constants/colors";
 import { auth } from "../../../../firebase";
+import ExerciseThumb from "../../../../components/exercise-thumb";
+import InlineLoopingVideo from "../../../../components/inline-looping-video";
+import { ExerciseTemplate } from "../../../../constants/exercise-library";
 import { getExerciseLibrary } from "../../../../services/exercises";
 import {
   getOneRepMaxesForSportif,
@@ -39,7 +42,7 @@ export default function SportifProgrammeViewScreen() {
   // programme lui-même — il faut la charger séparément une fois qu'on
   // connaît programme.coachId (voir aussi le constructeur côté coach, qui
   // fait le même lookup par exerciceId).
-  const [photosByExerciceId, setPhotosByExerciceId] = useState<Map<string, string | null>>(
+  const [photosByExerciceId, setPhotosByExerciceId] = useState<Map<string, ExerciseTemplate>>(
     new Map()
   );
   // 1RM de référence du sportif (exerciceId → kg) : convertit les charges
@@ -66,7 +69,7 @@ export default function SportifProgrammeViewScreen() {
       if (p?.coachId) {
         getExerciseLibrary(p.coachId)
           .then((library) => {
-            setPhotosByExerciceId(new Map(library.map((e) => [e.id, e.photoUrl ?? null])));
+            setPhotosByExerciceId(new Map(library.map((e) => [e.id, e])));
           })
           .catch(() => {
             // Pas de photo plutôt que bloquer l'affichage du programme.
@@ -166,15 +169,23 @@ export default function SportifProgrammeViewScreen() {
                           {!!bloc.objectif && <Text style={styles.blocObjectif}>{bloc.objectif}</Text>}
 
                           {bloc.exercices.map((ex) => {
-                            const photoUrl = photosByExerciceId.get(ex.exerciceId);
+                            const template = photosByExerciceId.get(ex.exerciceId);
                             return (
                             <View key={ex.id} style={styles.exerciceCard}>
-                              {photoUrl && (
+                              {template?.videoUrl ? (
+                                <View style={[styles.exercicePhoto, { overflow: "hidden" }]}>
+                                  <InlineLoopingVideo videoUrl={template.videoUrl} width="100%" height={160} borderRadius={0} />
+                                </View>
+                              ) : template?.photoUrl ? (
                                 <Image
-                                  source={{ uri: photoUrl }}
+                                  source={{ uri: template.photoUrl }}
                                   style={styles.exercicePhoto}
                                   resizeMode="contain"
                                 />
+                              ) : (
+                                <View style={styles.exerciceIllustration}>
+                                  <ExerciseThumb exercise={template} size={72} />
+                                </View>
                               )}
                               <Text style={styles.exerciceName}>{ex.exerciceNom}</Text>
 
@@ -372,6 +383,11 @@ const styles = StyleSheet.create({
 
   // Déborde jusqu'aux bords de la carte (marges négatives = padding de
   // exerciceCard) pour une vraie photo bien visible, pas une icône minuscule.
+  exerciceIllustration: {
+    alignItems: "center",
+    marginBottom: 8,
+  },
+
   exercicePhoto: {
     height: 160,
     marginTop: -14,

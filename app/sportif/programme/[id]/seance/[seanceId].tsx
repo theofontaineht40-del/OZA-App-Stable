@@ -16,6 +16,7 @@ import {
 
 import GradientFill from "../../../../../components/gradient-fill";
 import ExerciseSetEditor, { SetEntry } from "../../../../../components/exercise-set-editor";
+import ExerciseThumb from "../../../../../components/exercise-thumb";
 import PhotoBackground from "../../../../../components/photo-background";
 import ProgressionChart, { ProgressionPoint } from "../../../../../components/progression-chart";
 import SportifRoutine from "../../../../../components/sportif-routine";
@@ -25,6 +26,8 @@ import SessionCompleteOverlay from "../../../../../components/session-complete-o
 import { Colors } from "../../../../../constants/colors";
 import { auth, db } from "../../../../../firebase";
 import { useRestTimer } from "../../../../../hooks/use-rest-timer";
+import { ExerciseTemplate } from "../../../../../constants/exercise-library";
+import { getExerciseLibrary } from "../../../../../services/exercises";
 import { ChargeType, getProgramme, Programme } from "../../../../../services/programmes";
 import {
   addSession,
@@ -119,6 +122,8 @@ export default function SeanceExecutionScreen() {
   } | null>(null);
   const [pastSessions, setPastSessions] = useState<SessionRecord[]>([]);
   const [expandedExerciceId, setExpandedExerciceId] = useState<string | null>(null);
+  // Visuels des exercices (bibliothèque du coach auteur du programme).
+  const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
   const restTimer = useRestTimer();
 
   // Historique de charge par nom d'exercice, à partir des séances déjà
@@ -155,6 +160,14 @@ export default function SeanceExecutionScreen() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    if (!programme?.coachId) return;
+    // Sans visuels, la séance reste utilisable : on ignore un échec de chargement.
+    getExerciseLibrary(programme.coachId)
+      .then((list) => setLibrary(new Map(list.map((e) => [e.id, e]))))
+      .catch(() => {});
+  }, [programme?.coachId]);
 
   useEffect(() => {
     if (!id) return;
@@ -289,11 +302,16 @@ export default function SeanceExecutionScreen() {
             const expanded = expandedExerciceId === ex.id;
             return (
               <View key={ex.id} style={styles.exerciceCard}>
-                <ExerciceCheck
-                  complete={state.complete}
-                  name={ex.exerciceNom}
-                  onToggle={() => toggleComplete(ex.id)}
-                />
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                  <ExerciseThumb exercise={library.get(ex.exerciceId)} size={56} />
+                  <View style={{ flex: 1 }}>
+                    <ExerciceCheck
+                      complete={state.complete}
+                      name={ex.exerciceNom}
+                      onToggle={() => toggleComplete(ex.id)}
+                    />
+                  </View>
+                </View>
                 <Text style={styles.prescrit}>
                   Prescrit : {ex.series} × {ex.repetitions}
                   {ex.chargeValeur ? ` · ${ex.chargeValeur} ${CHARGE_LABELS[ex.chargeType]}` : ""}

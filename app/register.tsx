@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -29,7 +28,9 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<"coach" | "sportif">("sportif");
+  // L'inscription publique ne crée que des comptes sportifs : les clients de
+  // l'app sont le grand public. Les comptes coach ne passent pas par ici.
+  const role = "sportif" as const;
 
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(20)).current;
@@ -143,36 +144,6 @@ export default function RegisterScreen() {
         onChangeText={setConfirmPassword}
       />
 
-      <Text style={styles.roleTitle}>Je suis :</Text>
-
-      <View style={styles.roleContainer}>
-        {(
-          [
-            { key: "sportif", icon: "fitness-outline", title: "Sportif", sub: "Je suis suivi par un coach" },
-            { key: "coach", icon: "trophy-outline", title: "Coach", sub: "J'accompagne des sportifs" },
-          ] as const
-        ).map((r) => {
-          const active = role === r.key;
-          return (
-            <TouchableOpacity
-              key={r.key}
-              style={[styles.roleCard, active && styles.roleCardActive]}
-              onPress={() => setRole(r.key)}
-              activeOpacity={0.85}
-            >
-              <Ionicons name={r.icon} size={24} color={active ? Colors.primary : Colors.textSecondary} />
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.roleCardTitle, active && styles.roleTextActive]}>{r.title}</Text>
-                <Text style={styles.roleCardSub}>{r.sub}</Text>
-              </View>
-              <View style={[styles.roleCheck, active && styles.roleCheckActive]}>
-                {active && <Ionicons name="checkmark" size={14} color={Colors.white} />}
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-
       <AnimatedPressable
         style={styles.button}
         onPress={handleRegister}
@@ -246,87 +217,17 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
   },
 
-  roleTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 12,
-    color: Colors.text,
-  },
 
-  roleContainer: {
-    gap: 12,
-    marginBottom: 28,
-  },
 
-  roleCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    borderRadius: 18,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    backgroundColor: Colors.surface,
-  },
 
-  roleCardActive: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.accentTint,
-  },
 
-  roleCardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.text,
-  },
 
-  roleCardSub: {
-    fontSize: 12.5,
-    color: Colors.textSecondary,
-    marginTop: 1,
-  },
 
-  roleCheck: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: Colors.grayMedium,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  roleCheckActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
 
-  roleButton: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: Colors.border,
-    borderRadius: 14,
-    paddingVertical: 16,
-    marginHorizontal: 5,
-    alignItems: "center",
-    backgroundColor: Colors.surface,
-  },
 
-  roleButtonActive: {
-    borderColor: TEAL,
-    backgroundColor: Colors.accentTint,
-  },
 
-  roleText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text,
-  },
 
-  roleTextActive: {
-    color: TEAL,
-  },
 
   button: {
     overflow: "hidden",

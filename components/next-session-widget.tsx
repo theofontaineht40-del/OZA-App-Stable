@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { ReactNode } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../constants/colors";
@@ -47,7 +48,10 @@ export default function NextSessionWidget({
   exercises,
   muscles,
   onPress,
+  thumbs,
 }: {
+  // Vignettes des exercices, sous le titre.
+  thumbs?: ReactNode;
   workoutName: string;
   subtitle?: string;
   duration?: string;
@@ -65,6 +69,7 @@ export default function NextSessionWidget({
       <Text style={styles.eyebrow}>Prochaine séance</Text>
       <Text style={styles.workoutName}>{workoutName}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      {thumbs}
 
       <View style={styles.mapWrap}>
         <MuscleMap activeZones={activeZones} width={100} cropBottom={6} />

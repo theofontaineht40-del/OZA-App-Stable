@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { ReactNode } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../constants/colors";
@@ -13,7 +14,10 @@ export function TodayHero({
   buttonLabel,
   done,
   onPress,
+  extra,
 }: {
+  // Contenu libre sous le méta (ex. vignettes des exercices).
+  extra?: ReactNode;
   eyebrow: string;
   title: string;
   meta?: string;
@@ -29,6 +33,7 @@ export function TodayHero({
         <Text style={styles.heroTitle}>{title}</Text>
       </View>
       {!!meta && <Text style={styles.heroMeta}>{meta}</Text>}
+      {extra}
       {!!buttonLabel && !!onPress && (
         <TouchableOpacity style={styles.heroButton} onPress={onPress} activeOpacity={0.85}>
           <Ionicons name="play" size={16} color="#04312C" />

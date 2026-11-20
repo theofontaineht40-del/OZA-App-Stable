@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import ExerciseStrip from "../../components/exercise-strip";
 import HeroHeader from "../../components/hero-header";
 import SessionFeedbackCard from "../../components/session-feedback-card";
 import WellnessSummaryCard from "../../components/wellness-summary-card";
@@ -25,6 +26,8 @@ import { auth, db } from "../../firebase";
 import { computeGoalProgress, getGoal, Goal } from "../../services/goals";
 import { describeSpec } from "../../services/cardio";
 import { todayKey } from "../../services/load";
+import { ExerciseTemplate } from "../../constants/exercise-library";
+import { getExerciseLibrary } from "../../services/exercises";
 import { getFeedbackForSportif, markFeedbackSeen, SessionFeedback } from "../../services/session-feedback";
 import { subscribeToConversationsForSportif } from "../../services/messages";
 import { getProgrammesForSportif, Programme } from "../../services/programmes";
@@ -52,6 +55,8 @@ export default function SportifHome() {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [checkinDone, setCheckinDone] = useState(true);
   const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
+  // Visuels des exercices (bibliothèque de chaque coach auteur d'un programme).
+  const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
   const [todayWellness, setTodayWellness] = useState<Awaited<ReturnType<typeof getTodayWellness>>>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
@@ -144,6 +149,14 @@ export default function SportifHome() {
     ]).start();
   }, [loading]);
 
+  // Sans visuels l'accueil reste complet : un échec est ignoré.
+  const programmeCoachKey = Array.from(new Set(programmes.map((p) => p.coachId))).join(",");
+  useEffect(() => {
+    if (!programmeCoachKey) return;
+    Promise.all(programmeCoachKey.split(",").map((c) => getExerciseLibrary(c).catch(() => [] as ExerciseTemplate[])))
+      .then((lists) => setLibrary(new Map(lists.flat().map((e) => [e.id, e]))));
+  }, [programmeCoachKey]);
+
   if (loading) {
     return <View style={styles.container} />;
   }
@@ -190,6 +203,17 @@ export default function SportifHome() {
     return undefined;
   }
   const focusMeta = focusPending ? describeScheduled(focusPending) : undefined;
+  const focusExerciseIds =
+    focusPending?.kind === "programme"
+      ? getSeanceExerciseNames(
+          programmes
+            .find((p) => p.id === focusPending.programmeId)
+            ?.seances.find((x) => x.id === focusPending.seanceId) ?? null
+        ).map((e) => e.id).filter((x): x is string => !!x)
+      : [];
+  const nextExerciseIds = getSeanceExerciseNames(nextSeance)
+    .map((e) => e.id)
+    .filter((x): x is string => !!x);
 
   function startScheduled(item: ScheduledSession) {
     if (item.kind === "cardio") router.push(`/sportif/cardio/${item.id}`);
@@ -271,6 +295,7 @@ export default function SportifHome() {
             meta={focusMeta}
             buttonLabel="Démarrer la séance"
             onPress={() => startScheduled(focusPending)}
+            extra={<ExerciseStrip ids={focusExerciseIds} library={library} />}
           />
         ) : todayItems.length > 0 ? (
           <TodayHero
@@ -286,6 +311,7 @@ export default function SportifHome() {
               subtitle={programmes[0]?.nom}
               exercises={getSeanceExerciseNames(nextSeance)}
               muscles={nextSeance.muscles}
+              thumbs={<ExerciseStrip ids={nextExerciseIds} library={library} light />}
               onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
             />
           </View>

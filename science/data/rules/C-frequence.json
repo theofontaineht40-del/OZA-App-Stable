@@ -1,0 +1,128 @@
+[
+  {
+    "id": "C-frequence-par-muscle",
+    "category": "C",
+    "parameter": "Fréquence par groupe musculaire",
+    "unit": "fois/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "frequence-muscle"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2016-frequency"
+    ],
+    "limits": "À volume hebdomadaire égal, l'effet propre de la fréquence sur l'hypertrophie est faible ; plus utile pour la force.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Modéré à fort » pour 2 fois/semaine. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 4
+      }
+    }
+  },
+  {
+    "id": "C-seances-par-semaine",
+    "category": "C",
+    "parameter": "Séances d'entraînement en résistance par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "seances-semaine"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "intermediaire": {
+        "min": 3,
+        "recommended": null,
+        "max": 5
+      },
+      "avance": {
+        "min": 4,
+        "recommended": null,
+        "max": 6
+      }
+    }
+  },
+  {
+    "id": "C-series-par-seance-par-muscle",
+    "category": "C",
+    "parameter": "Séries par muscle et par séance",
+    "unit": "séries/séance",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "volume-seance"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré ». Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 4
+      },
+      "intermediaire": {
+        "min": 3,
+        "recommended": null,
+        "max": 6
+      },
+      "avance": {
+        "min": 3,
+        "recommended": null,
+        "max": 8
+      }
+    }
+  }
+]

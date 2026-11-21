@@ -1,0 +1,20 @@
+{
+  "id": "A-quadriceps-volume-hebdo",
+  "category": "A",
+  "parameter": "À REMPLIR (ex. Séries par semaine)",
+  "unit": "À REMPLIR (ex. séries/semaine)",
+  "value": { "min": null, "recommended": null, "max": null },
+  "byLevel": {
+    "debutant": { "min": null, "recommended": null, "max": null },
+    "intermediaire": { "min": null, "recommended": null, "max": null },
+    "avance": { "min": null, "recommended": null, "max": null }
+  },
+  "sportIds": "*",
+  "target": { "kind": "muscle", "id": "À REMPLIR" },
+  "evidence": "faible",
+  "sourceIds": [],
+  "limits": "À REMPLIR",
+  "conditions": "À REMPLIR",
+  "status": "brouillon",
+  "version": 1
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "D-cycle-duree",
+    "category": "D",
+    "parameter": "Durée d'un cycle de programmation",
+    "unit": "semaines",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "cycle-duree"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Durée pratique, pas un seuil scientifique.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré ». Aucune source. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "avance": {
+        "min": 3,
+        "recommended": null,
+        "max": 6
+      }
+    }
+  },
+  {
+    "id": "D-decharge-reduction-volume",
+    "category": "D",
+    "parameter": "Réduction de volume pendant une décharge",
+    "unit": "% du volume",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "decharge"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Hypothèse pratique : aucune preuve solide n'impose une décharge régulière ni ce dosage.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 20,
+        "recommended": null,
+        "max": 40
+      },
+      "intermediaire": {
+        "min": 30,
+        "recommended": null,
+        "max": 50
+      },
+      "avance": {
+        "min": 30,
+        "recommended": null,
+        "max": 50
+      }
+    }
+  }
+]

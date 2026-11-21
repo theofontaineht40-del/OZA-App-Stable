@@ -1,0 +1,567 @@
+[
+  {
+    "id": "F-intermittent-15-15-bloc",
+    "category": "F",
+    "parameter": "Durée d'un bloc d'intermittent 15/15",
+    "unit": "min",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré », aucune source. Format pratique, dosage à individualiser. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 8
+      },
+      "avance": {
+        "min": 8,
+        "recommended": null,
+        "max": 8
+      }
+    }
+  },
+  {
+    "id": "F-intermittent-15-15-blocs",
+    "category": "F",
+    "parameter": "Nombre de blocs d'intermittent 15/15",
+    "unit": "blocs",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 3,
+        "recommended": null,
+        "max": 3
+      }
+    }
+  },
+  {
+    "id": "F-intermittent-30-30-bloc",
+    "category": "F",
+    "parameter": "Durée d'un bloc d'intermittent 30/30",
+    "unit": "min",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré », aucune source. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 5,
+        "recommended": null,
+        "max": 6
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 6
+      },
+      "avance": {
+        "min": 6,
+        "recommended": null,
+        "max": 8
+      }
+    }
+  },
+  {
+    "id": "F-intermittent-30-30-blocs",
+    "category": "F",
+    "parameter": "Nombre de blocs d'intermittent 30/30",
+    "unit": "blocs",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 3,
+        "recommended": null,
+        "max": 3
+      }
+    }
+  },
+  {
+    "id": "F-intervalles-longs-duree",
+    "category": "F",
+    "parameter": "Durée des intervalles longs",
+    "unit": "min",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT. Intensité déterminée par un test. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 3,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 4,
+        "recommended": null,
+        "max": 4
+      }
+    }
+  },
+  {
+    "id": "F-intervalles-longs-repetitions",
+    "category": "F",
+    "parameter": "Répétitions d'intervalles longs",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 3,
+        "recommended": null,
+        "max": 3
+      },
+      "intermediaire": {
+        "min": 4,
+        "recommended": null,
+        "max": 4
+      },
+      "avance": {
+        "min": 4,
+        "recommended": null,
+        "max": 5
+      }
+    }
+  },
+  {
+    "id": "F-sit-duree-effort",
+    "category": "F",
+    "parameter": "Durée d'un effort de sprint interval training",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "zeng-2026-hiit"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 10,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 15,
+        "recommended": null,
+        "max": 15
+      },
+      "avance": {
+        "min": 20,
+        "recommended": null,
+        "max": 30
+      }
+    }
+  },
+  {
+    "id": "F-sit-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de sprint interval training",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "zeng-2026-hiit"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 4
+      },
+      "intermediaire": {
+        "min": 5,
+        "recommended": null,
+        "max": 6
+      },
+      "avance": {
+        "min": 6,
+        "recommended": null,
+        "max": 8
+      }
+    }
+  },
+  {
+    "id": "F-phosphagenes-duree-effort",
+    "category": "F",
+    "parameter": "Durée d'un effort phosphagène",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré », aucune source. Récupération longue pour restaurer la performance. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 5,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 5,
+        "recommended": null,
+        "max": 10
+      },
+      "avance": {
+        "min": 5,
+        "recommended": null,
+        "max": 10
+      }
+    }
+  },
+  {
+    "id": "F-puissance-aerobie-intensite",
+    "category": "F",
+    "parameter": "Intensité de travail pour la puissance aérobie",
+    "unit": "% vVO2max",
+    "value": {
+      "min": 90,
+      "recommended": null,
+      "max": 100
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT. Intensité individualisée. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-puissance-aerobie-ratio",
+    "category": "F",
+    "parameter": "Ratio récupération/effort, puissance aérobie",
+    "unit": "ratio",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 2
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "1:1 à 1:2. Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-capacite-aerobie-intensite",
+    "category": "F",
+    "parameter": "Intensité de travail pour la capacité aérobie",
+    "unit": "% VMA",
+    "value": {
+      "min": 80,
+      "recommended": null,
+      "max": 95
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-capacite-aerobie-ratio",
+    "category": "F",
+    "parameter": "Ratio récupération/effort, capacité aérobie",
+    "unit": "ratio",
+    "value": {
+      "min": 0.5,
+      "recommended": null,
+      "max": 1
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "1:0,5 à 1:1. Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-glycolyse-duree-effort",
+    "category": "F",
+    "parameter": "Durée d'un effort glycolytique anaérobie",
+    "unit": "s",
+    "value": {
+      "min": 20,
+      "recommended": null,
+      "max": 60
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-glycolyse-ratio",
+    "category": "F",
+    "parameter": "Ratio récupération/effort, glycolyse anaérobie",
+    "unit": "ratio",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "1:2 à 1:5. Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-phosphagenes-ratio",
+    "category": "F",
+    "parameter": "Ratio récupération/effort, phosphagènes",
+    "unit": "ratio",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 15
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "modere",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "1:6 à 1:15. Aucune source donnée par GPT. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "F-seances-intenses-semaine",
+    "category": "F",
+    "parameter": "Séances d'entraînement intense (cardio) par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Propositions de programmation, pas des maxima physiologiques. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 1,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      }
+    }
+  }
+]

@@ -1,0 +1,229 @@
+[
+  {
+    "id": "J-adolescents-frequence",
+    "category": "J",
+    "parameter": "Entraînement en résistance des adolescents : séances par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "adolescents"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "lloyd-2014-youth"
+    ],
+    "limits": "Consensus : pas d'âge minimum universel ; maturité et encadrement priment. Supervision indispensable.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      }
+    },
+    "population": {
+      "note": "Adolescents (âge exact non précisé par GPT) ; encadrement qualifié indispensable."
+    }
+  },
+  {
+    "id": "J-adolescents-series",
+    "category": "J",
+    "parameter": "Entraînement en résistance des adolescents : séries par exercice",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "adolescents"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "lloyd-2014-youth"
+    ],
+    "limits": "Apprentissage technique avant volume. Supervision indispensable.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 1,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 4
+      }
+    },
+    "population": {
+      "note": "Adolescents (âge exact non précisé par GPT) ; encadrement qualifié indispensable."
+    }
+  },
+  {
+    "id": "J-adolescents-repetitions",
+    "category": "J",
+    "parameter": "Entraînement en résistance des adolescents : répétitions",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "adolescents"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "lloyd-2014-youth"
+    ],
+    "limits": "Technique prioritaire. Supervision indispensable.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 8,
+        "recommended": null,
+        "max": 15
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 15
+      },
+      "avance": {
+        "min": 6,
+        "recommended": null,
+        "max": 15
+      }
+    },
+    "population": {
+      "note": "Adolescents (âge exact non précisé par GPT) ; encadrement qualifié indispensable."
+    }
+  },
+  {
+    "id": "J-plus-40-force-frequence",
+    "category": "J",
+    "parameter": "Plus de 40 ans : séances de force par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "plus-40-ans"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 4
+      }
+    },
+    "population": {
+      "ageMin": 40,
+      "note": "40 ans n'est pas un seuil physiologique de déclin brutal."
+    }
+  },
+  {
+    "id": "J-plus-40-hypertrophie-volume",
+    "category": "J",
+    "parameter": "Plus de 40 ans : séries par muscle et par semaine (hypertrophie)",
+    "unit": "séries/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "plus-40-ans"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 18
+      }
+    },
+    "population": {
+      "ageMin": 40,
+      "note": "Pas de seuil spécifique à 40 ans."
+    }
+  }
+]

@@ -1,0 +1,727 @@
+[
+  {
+    "id": "B-force-maximale-intensite",
+    "category": "B",
+    "parameter": "Intensité : Force maximale",
+    "unit": "% 1RM",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, varie selon l'exercice et la capacité à produire de la force. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 70,
+        "recommended": null,
+        "max": 85
+      },
+      "intermediaire": {
+        "min": 80,
+        "recommended": null,
+        "max": 90
+      },
+      "avance": {
+        "min": 85,
+        "recommended": null,
+        "max": 100
+      }
+    }
+  },
+  {
+    "id": "B-force-maximale-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Force maximale",
+    "unit": "répétitions",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-maximale-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Force maximale",
+    "unit": "séries",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-maximale-rpe",
+    "category": "B",
+    "parameter": "RPE : Force maximale",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 7,
+      "recommended": null,
+      "max": 9
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Équivaut à environ 1-3 RIR pour les qualités de force et d'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-maximale-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Force maximale",
+    "unit": "s",
+    "value": {
+      "min": 180,
+      "recommended": null,
+      "max": 300
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-vitesse-intensite",
+    "category": "B",
+    "parameter": "Intensité : Force-vitesse",
+    "unit": "% 1RM",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, varie selon l'exercice et la capacité à produire de la force. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 30,
+        "recommended": null,
+        "max": 60
+      },
+      "intermediaire": {
+        "min": 30,
+        "recommended": null,
+        "max": 60
+      },
+      "avance": {
+        "min": 30,
+        "recommended": null,
+        "max": 70
+      }
+    }
+  },
+  {
+    "id": "B-force-vitesse-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Force-vitesse",
+    "unit": "répétitions",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-vitesse-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Force-vitesse",
+    "unit": "séries",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-vitesse-rpe",
+    "category": "B",
+    "parameter": "RPE : Force-vitesse",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 5,
+      "recommended": null,
+      "max": 7
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Équivaut à environ 1-3 RIR pour les qualités de force et d'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-force-vitesse-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Force-vitesse",
+    "unit": "s",
+    "value": {
+      "min": 120,
+      "recommended": null,
+      "max": 240
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-puissance-intensite",
+    "category": "B",
+    "parameter": "Intensité : Puissance",
+    "unit": "% 1RM",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, varie selon l'exercice et la capacité à produire de la force. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 30,
+        "recommended": null,
+        "max": 60
+      },
+      "intermediaire": {
+        "min": 30,
+        "recommended": null,
+        "max": 70
+      },
+      "avance": {
+        "min": 30,
+        "recommended": null,
+        "max": 80
+      }
+    }
+  },
+  {
+    "id": "B-puissance-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Puissance",
+    "unit": "répétitions",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-puissance-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Puissance",
+    "unit": "séries",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-puissance-rpe",
+    "category": "B",
+    "parameter": "RPE : Puissance",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 5,
+      "recommended": null,
+      "max": 7
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Équivaut à environ 1-3 RIR pour les qualités de force et d'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-puissance-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Puissance",
+    "unit": "s",
+    "value": {
+      "min": 120,
+      "recommended": null,
+      "max": 240
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-hypertrophie-intensite",
+    "category": "B",
+    "parameter": "Intensité : Hypertrophie",
+    "unit": "% 1RM",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, varie selon l'exercice et la capacité à produire de la force. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 40,
+        "recommended": null,
+        "max": 80
+      },
+      "intermediaire": {
+        "min": 40,
+        "recommended": null,
+        "max": 85
+      },
+      "avance": {
+        "min": 40,
+        "recommended": null,
+        "max": 85
+      }
+    }
+  },
+  {
+    "id": "B-hypertrophie-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Hypertrophie",
+    "unit": "répétitions",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 15
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Plusieurs plages de répétitions fonctionnent pour l'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-hypertrophie-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Hypertrophie",
+    "unit": "séries",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 4
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-hypertrophie-rpe",
+    "category": "B",
+    "parameter": "RPE : Hypertrophie",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 7,
+      "recommended": null,
+      "max": 9
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Équivaut à environ 1-3 RIR pour les qualités de force et d'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-hypertrophie-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Hypertrophie",
+    "unit": "s",
+    "value": {
+      "min": 60,
+      "recommended": null,
+      "max": 180
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Le repos long sert surtout à préserver la qualité des séries suivantes, il n'est pas plus hypertrophique en soi (GPT, références [6][7]). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-endurance-de-force-intensite",
+    "category": "B",
+    "parameter": "Intensité : Endurance de force",
+    "unit": "% 1RM",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "endurance-de-force"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, varie selon l'exercice et la capacité à produire de la force. GPT : « Faible à modéré », aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 30,
+        "recommended": null,
+        "max": 60
+      },
+      "intermediaire": {
+        "min": 30,
+        "recommended": null,
+        "max": 65
+      },
+      "avance": {
+        "min": 30,
+        "recommended": null,
+        "max": 70
+      }
+    }
+  },
+  {
+    "id": "B-endurance-de-force-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Endurance de force",
+    "unit": "répétitions",
+    "value": {
+      "min": 15,
+      "recommended": null,
+      "max": 30
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "endurance-de-force"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-endurance-de-force-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Endurance de force",
+    "unit": "séries",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 4
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "endurance-de-force"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-endurance-de-force-rpe",
+    "category": "B",
+    "parameter": "RPE : Endurance de force",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 7,
+      "recommended": null,
+      "max": 9
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "endurance-de-force"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Équivaut à environ 1-3 RIR pour les qualités de force et d'hypertrophie. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-endurance-de-force-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Endurance de force",
+    "unit": "s",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 90
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "endurance-de-force"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-hypertrophie-tempo",
+    "category": "B",
+    "parameter": "Durée d'une répétition (hypertrophie)",
+    "unit": "s/répétition",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 3
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "schoenfeld-2015-tempo"
+    ],
+    "limits": "Outil de contrôle technique, pas une règle physiologique universelle. Niveau de preuve non précisé par GPT (mis à « faible »).",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  }
+]

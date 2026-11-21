@@ -1,0 +1,418 @@
+[
+  {
+    "id": "E-acceleration-distance",
+    "category": "E",
+    "parameter": "Distance de sprint d'accélération",
+    "unit": "m",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "acceleration"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "myrvang-2024-sprint"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 5,
+        "recommended": null,
+        "max": 15
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 20
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 30
+      }
+    }
+  },
+  {
+    "id": "E-vitesse-maximale-distance",
+    "category": "E",
+    "parameter": "Distance de sprint lancé (vitesse maximale)",
+    "unit": "m",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "vitesse-maximale"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "myrvang-2024-sprint"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Faible à modéré ». Nécessite une montée progressive en vitesse. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 15,
+        "recommended": null,
+        "max": 20
+      },
+      "intermediaire": {
+        "min": 20,
+        "recommended": null,
+        "max": 30
+      },
+      "avance": {
+        "min": 20,
+        "recommended": null,
+        "max": 40
+      }
+    }
+  },
+  {
+    "id": "E-sprint-repetitions",
+    "category": "E",
+    "parameter": "Répétitions de sprint par séance",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "sprint-repete"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "thurlow-2023-rsa"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Adapter à la distance. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 3,
+        "recommended": null,
+        "max": 5
+      },
+      "intermediaire": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "avance": {
+        "min": 4,
+        "recommended": null,
+        "max": 10
+      }
+    }
+  },
+  {
+    "id": "E-recup-acceleration",
+    "category": "E",
+    "parameter": "Récupération entre sprints d'accélération",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "acceleration"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère pratique, aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 60,
+        "recommended": null,
+        "max": 120
+      },
+      "intermediaire": {
+        "min": 120,
+        "recommended": null,
+        "max": 180
+      },
+      "avance": {
+        "min": 120,
+        "recommended": null,
+        "max": 240
+      }
+    }
+  },
+  {
+    "id": "E-recup-vitesse-maximale",
+    "category": "E",
+    "parameter": "Récupération entre sprints de vitesse maximale",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "vitesse-maximale"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère pratique, aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 120,
+        "recommended": null,
+        "max": 240
+      },
+      "intermediaire": {
+        "min": 180,
+        "recommended": null,
+        "max": 300
+      },
+      "avance": {
+        "min": 240,
+        "recommended": null,
+        "max": 360
+      }
+    }
+  },
+  {
+    "id": "E-volume-sprint-hebdo",
+    "category": "E",
+    "parameter": "Volume hebdomadaire de sprint",
+    "unit": "m/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "sprint"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère pratique, aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 100,
+        "recommended": null,
+        "max": 200
+      },
+      "intermediaire": {
+        "min": 150,
+        "recommended": null,
+        "max": 300
+      },
+      "avance": {
+        "min": 200,
+        "recommended": null,
+        "max": 500
+      }
+    }
+  },
+  {
+    "id": "E-sprint-repete-distance",
+    "category": "E",
+    "parameter": "Distance des sprints répétés préservant la qualité",
+    "unit": "m",
+    "value": {
+      "min": 15,
+      "recommended": null,
+      "max": 25
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "sprint-repete"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "thurlow-2023-rsa"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "D'après GPT : au-delà de 30 m et avec ≤20 s de récupération, contraintes physiologiques et baisse de performance plus fortes. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "E-sprint-repete-recuperation",
+    "category": "E",
+    "parameter": "Récupération minimale entre sprints répétés pour préserver la qualité",
+    "unit": "s",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "sprint-repete"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "thurlow-2023-rsa"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Valable pour préserver la qualité ; une récupération courte est choisie pour un objectif métabolique. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "E-pliometrie-contacts-seance",
+    "category": "E",
+    "parameter": "Contacts au sol par séance de pliométrie",
+    "unit": "contacts",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "pliometrie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Repère de programmation, aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 20,
+        "recommended": null,
+        "max": 40
+      },
+      "intermediaire": {
+        "min": 40,
+        "recommended": null,
+        "max": 80
+      },
+      "avance": {
+        "min": 60,
+        "recommended": null,
+        "max": 120
+      }
+    }
+  },
+  {
+    "id": "E-pliometrie-contacts-hebdo",
+    "category": "E",
+    "parameter": "Contacts au sol hebdomadaires de pliométrie",
+    "unit": "contacts/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "pliometrie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "À moduler selon les autres impacts sportifs. Aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 40,
+        "recommended": null,
+        "max": 80
+      },
+      "intermediaire": {
+        "min": 80,
+        "recommended": null,
+        "max": 150
+      },
+      "avance": {
+        "min": 100,
+        "recommended": null,
+        "max": 200
+      }
+    }
+  },
+  {
+    "id": "E-pliometrie-frequence",
+    "category": "E",
+    "parameter": "Séances de pliométrie par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "pliometrie"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source (non trouvé). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 1,
+        "recommended": null,
+        "max": 2
+      },
+      "intermediaire": {
+        "min": 2,
+        "recommended": null,
+        "max": 2
+      },
+      "avance": {
+        "min": 2,
+        "recommended": null,
+        "max": 3
+      }
+    }
+  }
+]

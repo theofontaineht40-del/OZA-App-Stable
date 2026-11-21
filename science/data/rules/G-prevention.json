@@ -1,0 +1,103 @@
+[
+  {
+    "id": "G-nordic-seances-semaine",
+    "category": "G",
+    "parameter": "Nordic Hamstring Exercise : séances par semaine après familiarisation",
+    "unit": "séances/semaine",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 2
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "nordic-hamstring"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "petersen-2011-nordic",
+      "vanderhorst-2015-nordic"
+    ],
+    "limits": "Effet démontré chez des footballeurs masculins ; l'adhésion est déterminante (courbatures fréquentes au début). Ne pas extrapoler à d'autres populations ou sports sans le signaler.",
+    "conditions": "Programme progressif d'environ 10 semaines puis entretien hebdomadaire (essai initial).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Fort » pour Petersen, « Modéré » pour van der Horst. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "G-copenhague-seances-semaine",
+    "category": "G",
+    "parameter": "Copenhagen Adduction : séances par semaine en préparation",
+    "unit": "séances/semaine",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 3
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "copenhagen"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "haroy-2019-copenhagen"
+    ],
+    "limits": "Étude principale chez des footballeurs masculins semi-professionnels ; risque de problèmes aux adducteurs inférieur d'environ 41 % selon GPT.",
+    "conditions": "En préparation, puis environ 1 fois par semaine en entretien. GPT : « Modéré à fort ».",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "G-fifa11plus-seances-semaine",
+    "category": "G",
+    "parameter": "FIFA 11+ : séances par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "fifa-11-plus"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "thorborg-2017-fifa11"
+    ],
+    "limits": "Résultat valable pour le programme COMPLET (échauffement, équilibre, force, contrôle neuromusculaire), pas pour un exercice isolé. Adhésion déterminante. Football récréatif et subélite.",
+    "conditions": "Environ 20 minutes par séance, progression des exercices.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "G-fifa11plus-duree",
+    "category": "G",
+    "parameter": "FIFA 11+ : durée d'une séance",
+    "unit": "min",
+    "value": {
+      "min": null,
+      "recommended": 20,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "fifa-11-plus"
+    },
+    "evidence": "fort",
+    "sourceIds": [
+      "thorborg-2017-fifa11"
+    ],
+    "limits": "Idem : programme complet, football récréatif et subélite.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  }
+]

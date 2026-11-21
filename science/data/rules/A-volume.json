@@ -1,0 +1,680 @@
+[
+  {
+    "id": "A-quadriceps-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Quadriceps",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "quadriceps"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Squat, presse, extensions. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      },
+      "avance": {
+        "min": 12,
+        "recommended": null,
+        "max": 20
+      }
+    }
+  },
+  {
+    "id": "A-ischio-jambiers-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Ischio-jambiers",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "ischio-jambiers"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Combiner flexion de genou et extension de hanche. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      }
+    }
+  },
+  {
+    "id": "A-fessiers-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Fessiers",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "fessiers"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2017-volume"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Squat, hip thrust, fentes, charnière. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      },
+      "avance": {
+        "min": 12,
+        "recommended": null,
+        "max": 20
+      }
+    }
+  },
+  {
+    "id": "A-mollets-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Mollets",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "mollets"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Peu de données spécifiques. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 8,
+        "recommended": null,
+        "max": 12
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      }
+    }
+  },
+  {
+    "id": "A-pectoraux-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Pectoraux",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "pectoraux"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2017-volume"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Développés et écartés. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      },
+      "avance": {
+        "min": 12,
+        "recommended": null,
+        "max": 20
+      }
+    }
+  },
+  {
+    "id": "A-dos-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Dos",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "dos"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Distinguer dorsaux et haut du dos. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      },
+      "avance": {
+        "min": 12,
+        "recommended": null,
+        "max": 20
+      }
+    }
+  },
+  {
+    "id": "A-epaules-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Épaules",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "epaules"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Distinguer faisceaux antérieur, moyen et postérieur. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      }
+    }
+  },
+  {
+    "id": "A-biceps-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Biceps",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "biceps"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2017-volume"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Compter aussi les tractions et tirages. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 6
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 12
+      },
+      "avance": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      }
+    }
+  },
+  {
+    "id": "A-triceps-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Triceps",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "triceps"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2017-volume"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Compter aussi les développés. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 6
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 12
+      },
+      "avance": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      }
+    }
+  },
+  {
+    "id": "A-abdominaux-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Abdominaux",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "abdominaux"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Travail dynamique et anti-mouvement. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 12
+      },
+      "avance": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      }
+    }
+  },
+  {
+    "id": "A-trapezes-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Trapèzes",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "trapezes"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Faisceaux supérieur, moyen et inférieur. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 6
+      },
+      "intermediaire": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "avance": {
+        "min": 8,
+        "recommended": null,
+        "max": 14
+      }
+    }
+  },
+  {
+    "id": "A-coiffe-rotateurs-volume-hebdo",
+    "category": "A",
+    "parameter": "Séries par semaine : Coiffe des rotateurs",
+    "unit": "séries stimulantes équivalentes/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "muscle",
+      "id": "coiffe-rotateurs"
+    },
+    "evidence": "faible",
+    "sourceIds": [],
+    "limits": "GPT précise que ces fourchettes par muscle ne sont PAS issues d'essais dose-réponse propres à chaque muscle : propositions de programmation construites à partir de la littérature générale sur le volume.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune source donnée par GPT (« non trouvé »). Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 2,
+        "recommended": null,
+        "max": 4
+      },
+      "intermediaire": {
+        "min": 4,
+        "recommended": null,
+        "max": 8
+      },
+      "avance": {
+        "min": 4,
+        "recommended": null,
+        "max": 10
+      }
+    }
+  },
+  {
+    "id": "A-volume-initial",
+    "category": "A",
+    "parameter": "Volume hebdomadaire de départ par groupe musculaire",
+    "unit": "séries/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "volume-initial"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "schoenfeld-2017-volume"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Valeurs de départ pratiques. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 4,
+        "recommended": null,
+        "max": 6
+      },
+      "intermediaire": {
+        "min": 8,
+        "recommended": null,
+        "max": 12
+      },
+      "avance": {
+        "min": 10,
+        "recommended": null,
+        "max": 14
+      }
+    }
+  },
+  {
+    "id": "A-zone-developpement",
+    "category": "A",
+    "parameter": "Zone de développement du volume par groupe musculaire",
+    "unit": "séries/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "volume-developpement"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "GPT : « Modéré à fort ». Le communiqué ACSM évoque environ 10 séries/semaine/groupe pour l'hypertrophie : à vérifier dans le texte. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 6,
+        "recommended": null,
+        "max": 10
+      },
+      "intermediaire": {
+        "min": 10,
+        "recommended": null,
+        "max": 16
+      },
+      "avance": {
+        "min": 12,
+        "recommended": null,
+        "max": 20
+      }
+    }
+  },
+  {
+    "id": "A-volume-eleve",
+    "category": "A",
+    "parameter": "Volume élevé par groupe musculaire (rendements décroissants)",
+    "unit": "séries/semaine",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "volume-eleve"
+    },
+    "evidence": "modere",
+    "sourceIds": [
+      "currier-2026-acsm"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Le « 18-20 séries » attribué à l'ACSM par GPT n'a pas été retrouvé dans les points clés publiés : à vérifier dans le texte intégral. Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés.",
+    "byLevel": {
+      "debutant": {
+        "min": 12,
+        "recommended": null,
+        "max": 16
+      },
+      "intermediaire": {
+        "min": 16,
+        "recommended": null,
+        "max": 20
+      },
+      "avance": {
+        "min": 18,
+        "recommended": null,
+        "max": 22
+      }
+    }
+  },
+  {
+    "id": "A-serie-muscle-principal",
+    "category": "A",
+    "parameter": "Poids d'une série pour le muscle moteur principal",
+    "unit": "série équivalente",
+    "value": {
+      "min": 1,
+      "recommended": 1,
+      "max": 1
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "comptage-series"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "pelland-2026-dose-response"
+    ],
+    "limits": "Fourchette de programmation à individualiser, pas un seuil physiologique universel.",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "A-serie-muscle-secondaire",
+    "category": "A",
+    "parameter": "Poids d'une série pour un muscle secondaire fortement sollicité (méthode fractionnaire)",
+    "unit": "série équivalente",
+    "value": {
+      "min": 0,
+      "recommended": 0.5,
+      "max": 0.5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "comptage-series"
+    },
+    "evidence": "faible",
+    "sourceIds": [
+      "pelland-2026-dose-response"
+    ],
+    "limits": "Convention de suivi, pas une mesure de la tension mécanique reçue par chaque muscle. Niveau de preuve non précisé par GPT (mis à « faible »).",
+    "conditions": "Adultes sains ; à adapter au niveau, à la récupération et à la progression observée.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  }
+]

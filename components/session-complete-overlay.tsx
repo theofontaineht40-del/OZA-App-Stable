@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { Animated, Modal, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "../constants/colors";
+import OzaDisc from "./oza-disc";
 import { PersonalRecord } from "../services/tracking";
 
 type Props = {
@@ -57,8 +58,12 @@ export default function SessionCompleteOverlay({
     <Modal transparent visible={visible} animationType="none">
       <Animated.View style={[styles.backdrop, { opacity: backdrop }]}>
         <View style={styles.card}>
-          <Animated.View style={[styles.checkCircle, { transform: [{ scale: checkScale }] }]}>
-            <Ionicons name="checkmark" size={36} color={Colors.white} />
+          {/* Le disque OZA, signature de la marque, valide la séance. */}
+          <Animated.View style={[styles.discWrap, { transform: [{ scale: checkScale }] }]}>
+            <OzaDisc size={110} />
+            <View style={styles.checkBadge}>
+              <Ionicons name="checkmark" size={18} color={Colors.white} />
+            </View>
           </Animated.View>
           <Text style={styles.title}>Séance enregistrée</Text>
           <Animated.View style={{ opacity: summaryOpacity, width: "100%" }}>
@@ -100,6 +105,24 @@ export default function SessionCompleteOverlay({
 }
 
 const styles = StyleSheet.create({
+  discWrap: {
+    marginBottom: 14,
+  },
+
+  checkBadge: {
+    position: "absolute",
+    right: -4,
+    bottom: -2,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: Colors.primary,
+    borderWidth: 3,
+    borderColor: Colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.75)",

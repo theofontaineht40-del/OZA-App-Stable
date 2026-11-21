@@ -4,6 +4,10 @@ import { auth, db } from "../firebase";
 
 // Fonction serveur Vercel (voir api/coach-advice.ts) : la clé Anthropic n'est
 // jamais dans l'app.
+// Interrupteur du mini-coach IA. Désactivé tant que la clé ANTHROPIC_API_KEY n'est
+// pas posée sur Vercel (voir docs/ia-mini-coach.md) : mettre true pour le réactiver.
+export const AI_COACH_ENABLED = false;
+
 export const COACH_API_URL = "https://oza-app-stable.vercel.app/api/coach-advice";
 
 export type AiVerdict = "reprise" | "alleger" | "maintenir" | "progresser";

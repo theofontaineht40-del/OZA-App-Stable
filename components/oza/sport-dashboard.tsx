@@ -21,6 +21,7 @@ import {
   weeklyAdvice,
 } from "../../services/sport-dashboard";
 import { SessionRecord, getWellnessEntriesForSportif } from "../../services/tracking";
+import { AI_COACH_ENABLED } from "../../services/coach-ai";
 import AiCoachCard from "./ai-coach-card";
 import { AiPayload } from "../../services/coach-ai";
 
@@ -155,7 +156,7 @@ export default function SportDashboard({
         <Text style={styles.disclaimer}>Conseil automatique d'après tes séances et ton bien-être. Il ne remplace ni ton coach ni un avis médical.</Text>
       </View>
 
-      {payload && <AiCoachCard uid={uid} consent={!!profile.aiConsentAt} payload={payload} />}
+      {AI_COACH_ENABLED && payload && <AiCoachCard uid={uid} consent={!!profile.aiConsentAt} payload={payload} />}
     </View>
   );
 }

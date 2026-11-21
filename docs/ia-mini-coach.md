@@ -34,3 +34,7 @@ Environ 1 500 jetons en entrée et 500 en sortie par conseil : de l'ordre de 0,0
 - Données validées côté serveur (bornes, longueurs) ; les textes libres sont traités comme des données, pas des instructions.
 - Le modèle ne pose pas de diagnostic, renvoie vers un professionnel en cas de douleur, et ne propose jamais plus de 10 % de charge en plus d'une semaine à l'autre.
 - Si la clé n'est pas configurée, l'app affiche « bientôt disponible » sans erreur.
+
+## État actuel
+
+Mini-coach **désactivé** (décision du coach, 2026-11-21 : l'API Anthropic est payante, on attend d'avoir des clients qui le demandent). La carte est masquée par `AI_COACH_ENABLED = false` dans `services/coach-ai.ts`. Pour le réactiver : poser `ANTHROPIC_API_KEY` dans Vercel (Settings, Environment Variables), redéployer, puis passer `AI_COACH_ENABLED` à `true`. Le conseil de la semaine par règles reste actif et gratuit.

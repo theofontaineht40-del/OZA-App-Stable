@@ -31,6 +31,8 @@ export default function ProfilScreen() {
   const [stats, setStats] = useState<{
     sessions: number;
     load7d: number;
+    // Charge des 28 derniers jours vs les 28 précédents, en % (null = pas de base de comparaison).
+    progression: number | null;
     wellness: number | null;
     // 4 dernières semaines glissantes, de la plus ancienne à la plus récente.
     weeks: { label: string; load: number; count: number }[];
@@ -70,6 +72,14 @@ export default function ProfilScreen() {
         setStats({
           sessions: sessions.length,
           load7d: sessions.filter((x) => x.date >= since).reduce((sum, x) => sum + x.load, 0),
+          progression: (() => {
+            const t = todayKey();
+            const cur = sessions.filter((x) => x.date >= addDays(t, -27)).reduce((sum, x) => sum + x.load, 0);
+            const prev = sessions
+              .filter((x) => x.date >= addDays(t, -55) && x.date <= addDays(t, -28))
+              .reduce((sum, x) => sum + x.load, 0);
+            return prev > 0 ? Math.round(((cur - prev) / prev) * 100) : null;
+          })(),
           wellness: wellness.length > 0 ? Math.round(wellness[0].score * 10) : null,
           weeks: [3, 2, 1, 0].map((i) => {
             const from = addDays(todayKey(), -(i * 7 + 6));
@@ -144,6 +154,11 @@ export default function ProfilScreen() {
             { icon: "heart-outline", value: stats.wellness !== null ? `${stats.wellness}%` : "—", label: "Bien-être" },
             { icon: "calendar-outline", value: String(stats.sessions), label: "Séances" },
             { icon: "barbell-outline", value: `${Math.round(stats.load7d)}`, label: "Charge 7 j (u.a.)" },
+            {
+              icon: "trending-up-outline",
+              value: stats.progression !== null ? `${stats.progression > 0 ? "+" : ""}${stats.progression}%` : "—",
+              label: "Progression",
+            },
           ].map((t) => (
             <View key={t.label} style={styles.statTile}>
               <Ionicons name={t.icon as keyof typeof Ionicons.glyphMap} size={18} color={Colors.canard} />
@@ -177,6 +192,24 @@ export default function ProfilScreen() {
       {tab === "overview" && (
         <>
           <Text style={styles.sectionTitle}>Raccourcis</Text>
+          <View style={styles.shortcuts}>
+            {(
+              [
+                { icon: "flag-outline", label: "Objectifs", to: "/sportif/objectif" },
+                { icon: "pulse-outline", label: "Analyse OZA", to: "/sportif/analyse" },
+                { icon: "heart-outline", label: "Bien-être", to: "/sportif/bien-etre" },
+                { icon: "time-outline", label: "Historique", to: "/sportif/historique" },
+              ] as const
+            ).map((t) => (
+              <TouchableOpacity key={t.label} style={styles.shortcut} onPress={() => router.push(t.to)} activeOpacity={0.8}>
+                <View style={styles.shortcutIcon}>
+                  <Ionicons name={t.icon} size={22} color={Colors.primary} />
+                </View>
+                <Text style={styles.shortcutLabel}>{t.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
       <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/equipe")}>
         <Ionicons name="people-outline" size={22} color={Colors.primary} />
         <View style={{ flex: 1 }}>
@@ -191,23 +224,6 @@ export default function ProfilScreen() {
       </TouchableOpacity>
 
 
-          <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/analyse")}>
-            <Ionicons name="pulse-outline" size={22} color={Colors.primary} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.equipeTitle}>Analyse OZA</Text>
-              <Text style={styles.equipeSubtitle}>Radar de tes variables clés</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/historique")}>
-            <Ionicons name="time-outline" size={22} color={Colors.primary} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.equipeTitle}>Historique des séances</Text>
-              <Text style={styles.equipeSubtitle}>Toutes tes séances et leur évolution</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
-          </TouchableOpacity>
         </>
       )}
 
@@ -255,6 +271,39 @@ export default function ProfilScreen() {
 }
 
 const styles = StyleSheet.create({
+  shortcuts: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 16,
+  },
+
+  shortcut: {
+    flex: 1,
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 14,
+    backgroundColor: Colors.surface,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  shortcutIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.accentTint,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  shortcutLabel: {
+    fontSize: 11.5,
+    fontWeight: "700",
+    color: Colors.text,
+    textAlign: "center",
+  },
+
   tabs: {
     flexDirection: "row",
     backgroundColor: Colors.surfaceAlt,

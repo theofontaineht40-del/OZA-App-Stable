@@ -120,7 +120,7 @@ export default function SportifAnalyseScreen() {
           {loading ? null : axes.length >= 3 ? (
             <>
               <View style={{ alignItems: "center" }}>
-                <RadarChart axesCount={axes.length} seriesA={axes.map((a) => a.value)} colorA={Colors.turquoise} />
+                <RadarChart axesCount={axes.length} seriesA={axes.map((a) => a.value)} labels={axes.map((a) => a.label)} colorA={Colors.turquoise} />
               </View>
               <View style={styles.legend}>
                 {axes.map((a) => (

@@ -1,4 +1,4 @@
-import Svg, { Circle, Line, Polygon } from "react-native-svg";
+import Svg, { Circle, Line, Polygon, Text as SvgText } from "react-native-svg";
 
 import { Colors } from "../constants/colors";
 
@@ -31,12 +31,15 @@ export function RadarChart({
   seriesB,
   colorA = Colors.primary,
   colorB = Colors.text,
+  labels,
 }: {
   axesCount: number;
   seriesA: number[];
   seriesB?: number[];
   colorA?: string;
   colorB?: string;
+  // Noms des axes, affichés aux sommets (même ordre que les séries).
+  labels?: string[];
 }) {
   const gridLevels = [2, 4, 6, 8, 10];
 
@@ -86,6 +89,24 @@ export function RadarChart({
       />
 
       <Circle cx={CENTER} cy={CENTER} r={2} fill={Colors.textSecondary} />
+
+      {labels?.map((label, i) => {
+        const p = pointFor(i, axesCount, MAX_VALUE + 1.6);
+        const anchor = p.x < CENTER - 10 ? "end" : p.x > CENTER + 10 ? "start" : "middle";
+        return (
+          <SvgText
+            key={label}
+            x={p.x}
+            y={p.y + 4}
+            fontSize={11.5}
+            fontWeight="700"
+            fill={Colors.primaryDark}
+            textAnchor={anchor}
+          >
+            {label}
+          </SvgText>
+        );
+      })}
     </Svg>
   );
 }

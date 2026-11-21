@@ -15,6 +15,7 @@ import {
   isOzaAdmin,
   OzaProgram,
   seedDefaultOzaSports,
+  seedStarterPrograms,
 } from "../../services/oza-programs";
 import { showAlert } from "../../utils/alert";
 import { useOzaBase } from "./use-oza-base";
@@ -51,6 +52,20 @@ export default function OzaSportsGrid() {
     try {
       const n = await seedDefaultOzaSports();
       showAlert("Catalogue enregistré", `${n} sports sont maintenant dans Firebase et modifiables sans toucher au code.`);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function seedPrograms() {
+    try {
+      const n = await seedStarterPrograms();
+      showAlert(
+        n > 0 ? "Programmes importés" : "Déjà importés",
+        n > 0
+          ? `${n} programme${n > 1 ? "s" : ""} ajouté${n > 1 ? "s" : ""} en brouillon. Ouvre le sport Rugby pour les relire, puis publie-les.`
+          : "Les programmes de démarrage sont déjà dans Firebase."
+      );
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));
     }
@@ -114,6 +129,12 @@ export default function OzaSportsGrid() {
         <TouchableOpacity style={styles.adminButton} onPress={seed}>
           <Ionicons name="cloud-upload-outline" size={16} color={Colors.primary} />
           <Text style={styles.adminText}>Administrateur : enregistrer le catalogue dans Firebase</Text>
+        </TouchableOpacity>
+      )}
+      {admin && (
+        <TouchableOpacity style={styles.adminButton} onPress={seedPrograms}>
+          <Ionicons name="document-text-outline" size={16} color={Colors.primary} />
+          <Text style={styles.adminText}>Administrateur : importer les programmes de démarrage (brouillons)</Text>
         </TouchableOpacity>
       )}
     </View>

@@ -1,3 +1,4 @@
+import { onAuthStateChanged } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
@@ -15,6 +16,7 @@ import { showAlert } from "../../../utils/alert";
 import {
   clearOzaSportHeroImage,
   getOzaProgramsForSport,
+  getOzaProgramsForSportAdmin,
   isOzaAdmin,
   setOzaSportHeroImage,
   getOzaSport,
@@ -39,9 +41,14 @@ export default function OzaSportScreen() {
   useEffect(() => {
     if (!sportId) return;
     getOzaSport(sportId).then(setSport);
-    getOzaProgramsForSport(sportId).then(setPrograms).catch(() => setPrograms([]));
-    const uid = auth.currentUser?.uid;
-    if (uid) getOzaUserState(uid).then(setUserState);
+    // L'administrateur voit aussi les brouillons pour les relire avant publication.
+    // On attend l'état d'authentification : juste après un rechargement,
+    // auth.currentUser est encore vide.
+    return onAuthStateChanged(auth, (user) => {
+      const load = isOzaAdmin(user?.email) ? getOzaProgramsForSportAdmin : getOzaProgramsForSport;
+      load(sportId).then(setPrograms).catch(() => setPrograms([]));
+      if (user) getOzaUserState(user.uid).then(setUserState);
+    });
   }, [sportId]);
 
   const visible = useMemo(() => {
@@ -150,6 +157,7 @@ export default function OzaSportScreen() {
                 <TouchableOpacity key={p.id} style={styles.programCard} activeOpacity={0.88} onPress={() => router.push(`${base}/programme/${p.id}` as never)}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.programName}>{p.nom}</Text>
+                    {p.statut === "brouillon" && <Text style={styles.draftTag}>BROUILLON · visible par toi seul</Text>}
                     {!!p.objectif && <Text style={styles.programObjectif} numberOfLines={2}>{p.objectif}</Text>}
                     <Text style={styles.programMeta}>
                       {p.dureeSemaines} sem. · {p.seancesParSemaine} séances/sem. · {OZA_NIVEAUX.find((n) => n.key === p.niveau)?.label}
@@ -174,6 +182,7 @@ export default function OzaSportScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
+  draftTag: { fontSize: 10.5, fontWeight: "700", letterSpacing: 0.8, color: Colors.riskMedium, marginTop: 2 },
   adminBar: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 16, paddingTop: 14, width: "100%", maxWidth: 760, alignSelf: "center" },
   adminButton: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: Colors.accentTint, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
   adminText: { fontSize: 12.5, fontWeight: "700", color: Colors.primaryDark },

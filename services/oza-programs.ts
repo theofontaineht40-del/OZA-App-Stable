@@ -2,8 +2,11 @@ import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } fro
 
 import { db } from "../firebase";
 import { DEFAULT_OZA_SPORTS, OzaNiveau, OzaSport } from "../constants/oza-sports";
+import { RUGBY_STARTER_PROGRAMS } from "../constants/oza-starter-programs";
 import { uploadExercisePhoto } from "./exercises";
 import { Programme, Seance, cloneSeance } from "./programmes";
+
+const STARTER_PROGRAMS = [...RUGBY_STARTER_PROGRAMS];
 
 // ── Types ──
 
@@ -120,6 +123,37 @@ export async function getOzaProgramsForSport(sportId: string): Promise<OzaProgra
     query(collection(db, "ozaPrograms"), where("sportId", "==", sportId), where("statut", "==", "publie"))
   );
   return snap.docs.map((d) => toProgram(d.id, d.data())).sort((a, b) => a.nom.localeCompare(b.nom));
+}
+
+// Administrateur : liste aussi les brouillons (les règles n'autorisent cette
+// lecture non filtrée qu'à l'admin).
+export async function getOzaProgramsForSportAdmin(sportId: string): Promise<OzaProgram[]> {
+  const snap = await getDocs(query(collection(db, "ozaPrograms"), where("sportId", "==", sportId)));
+  return snap.docs.map((d) => toProgram(d.id, d.data())).sort((a, b) => a.nom.localeCompare(b.nom));
+}
+
+export async function setOzaProgramStatut(programId: string, statut: "brouillon" | "publie"): Promise<void> {
+  await setDoc(doc(db, "ozaPrograms", programId), { statut, updatedAt: new Date() }, { merge: true });
+}
+
+// Importe les programmes de démarrage en BROUILLON, sans écraser un programme
+// déjà présent (relu ou modifié depuis). Retourne le nombre ajouté.
+export async function seedStarterPrograms(): Promise<number> {
+  let added = 0;
+  for (const sp of STARTER_PROGRAMS) {
+    const ref = doc(db, "ozaPrograms", sp.id);
+    if ((await getDoc(ref)).exists()) continue;
+    const { id: _id, ...data } = sp;
+    await setDoc(ref, {
+      ...JSON.parse(JSON.stringify(data)),
+      dureeSemaines: sp.semaines.length,
+      statut: "brouillon",
+      version: 1,
+      updatedAt: new Date(),
+    });
+    added++;
+  }
+  return added;
 }
 
 export async function getOzaProgram(programId: string): Promise<OzaProgram | null> {

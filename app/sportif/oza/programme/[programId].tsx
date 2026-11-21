@@ -14,6 +14,7 @@ import { Type } from "../../../../constants/tokens";
 import { auth } from "../../../../firebase";
 import {
   deleteOzaProgram,
+  setOzaProgramStatut,
   getOzaProgram,
   isOzaAdmin,
   resetOzaProgress,
@@ -226,6 +227,25 @@ export default function OzaProgramScreen() {
           {progress && !isCoach && (
             <TouchableOpacity onPress={() => setConfirm("reset")} style={styles.dangerLink}>
               <Text style={styles.dangerText}>Réinitialiser ma progression</Text>
+            </TouchableOpacity>
+          )}
+          {isOzaAdmin(auth.currentUser?.email) && (
+            <TouchableOpacity
+              onPress={async () => {
+                const next = program.statut === "publie" ? "brouillon" : "publie";
+                try {
+                  await setOzaProgramStatut(program.id, next);
+                  setProgram({ ...program, statut: next });
+                  showAlert(next === "publie" ? "Programme publié" : "Repassé en brouillon", next === "publie" ? "Il est maintenant visible par tous les utilisateurs." : "Il n'est plus visible que par toi.");
+                } catch (error) {
+                  showAlert("Erreur", error instanceof Error ? error.message : String(error));
+                }
+              }}
+              style={styles.dangerLink}
+            >
+              <Text style={[styles.dangerText, { color: Colors.primary }]}>
+                {program.statut === "publie" ? "Administrateur : repasser en brouillon" : "Administrateur : publier ce programme"}
+              </Text>
             </TouchableOpacity>
           )}
           {isOzaAdmin(auth.currentUser?.email) && (

@@ -44,7 +44,12 @@ export function RadarChart({
   const gridLevels = [2, 4, 6, 8, 10];
 
   return (
-    <Svg width={SIZE} height={SIZE}>
+    // Marge latérale pour les noms d'axes ; le dessin s'adapte à la largeur dispo.
+    <Svg
+      width="100%"
+      viewBox={`-60 -10 ${SIZE + 120} ${SIZE + 24}`}
+      style={{ aspectRatio: (SIZE + 120) / (SIZE + 24), maxWidth: SIZE + 120 }}
+    >
       {gridLevels.map((level) => (
         <Polygon
           key={level}
@@ -100,6 +105,7 @@ export function RadarChart({
             y={p.y + 4}
             fontSize={11.5}
             fontWeight="700"
+            fontFamily="Helvetica, Arial, sans-serif"
             fill={Colors.primaryDark}
             textAnchor={anchor}
           >

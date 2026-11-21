@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 import { db } from "../firebase";
 import { DEFAULT_OZA_SPORTS, OzaNiveau, OzaSport } from "../constants/oza-sports";
@@ -237,4 +237,20 @@ export function programProgress(program: OzaProgram, progress: OzaProgress | und
   const total = program.semaines.reduce((n, w) => n + w.seances.length, 0);
   if (total === 0 || !progress) return 0;
   return Math.min(1, progress.done.length / total);
+}
+
+// Administrateur : retire un programme de la bibliothèque (irréversible).
+export async function deleteOzaProgram(programId: string): Promise<void> {
+  await deleteDoc(doc(db, "ozaPrograms", programId));
+}
+
+// Efface la progression de l'utilisateur dans un programme (repart de zéro) ;
+// le favori est conservé.
+export async function resetOzaProgress(uid: string, programId: string): Promise<OzaUserState> {
+  const state = await getOzaUserState(uid);
+  const progress = { ...state.progress };
+  delete progress[programId];
+  const next = { ...state, progress };
+  await saveState(uid, next);
+  return next;
 }

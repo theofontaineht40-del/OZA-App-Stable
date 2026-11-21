@@ -13,7 +13,10 @@ import { OZA_NIVEAUX, OzaSport } from "../../../../constants/oza-sports";
 import { Type } from "../../../../constants/tokens";
 import { auth } from "../../../../firebase";
 import {
+  deleteOzaProgram,
   getOzaProgram,
+  isOzaAdmin,
+  resetOzaProgress,
   getOzaSport,
   getOzaUserState,
   OzaProgram,
@@ -23,6 +26,7 @@ import {
   startOzaProgram,
   toggleOzaFavorite,
 } from "../../../../services/oza-programs";
+import ConfirmModal from "../../../../components/confirm-modal";
 import { assignCopyToSportif, estimateSeanceMinutes, Programme } from "../../../../services/programmes";
 import { getMySportifs, SportifSummary } from "../../../../services/tracking";
 import { showAlert } from "../../../../utils/alert";
@@ -37,6 +41,7 @@ export default function OzaProgramScreen() {
   const base = useOzaBase();
   const isCoach = useIsCoachSpace();
   const [assignOpen, setAssignOpen] = useState(false);
+  const [confirm, setConfirm] = useState<null | "delete" | "reset">(null);
   const [myAthletes, setMyAthletes] = useState<SportifSummary[]>([]);
   const [program, setProgram] = useState<OzaProgram | null | undefined>(undefined);
   const [sport, setSport] = useState<OzaSport | null>(null);
@@ -215,8 +220,46 @@ export default function OzaProgramScreen() {
               })}
             </>
           )}
+
+          {progress && !isCoach && (
+            <TouchableOpacity onPress={() => setConfirm("reset")} style={styles.dangerLink}>
+              <Text style={styles.dangerText}>Réinitialiser ma progression</Text>
+            </TouchableOpacity>
+          )}
+          {isOzaAdmin(auth.currentUser?.email) && (
+            <TouchableOpacity onPress={() => setConfirm("delete")} style={styles.dangerLink}>
+              <Text style={styles.dangerText}>Administrateur : supprimer ce programme</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
+
+      <ConfirmModal
+        visible={confirm !== null}
+        title={confirm === "delete" ? "Supprimer ce programme" : "Réinitialiser la progression"}
+        message={
+          confirm === "delete"
+            ? "Le programme disparaît de la bibliothèque OZA Programs pour tout le monde. Action définitive."
+            : "Tes séances terminées dans ce programme sont effacées de ta progression (ton historique de séances reste). Ton favori est conservé."
+        }
+        confirmLabel={confirm === "delete" ? "Supprimer" : "Réinitialiser"}
+        destructive
+        onCancel={() => setConfirm(null)}
+        onConfirm={async () => {
+          const action = confirm;
+          setConfirm(null);
+          try {
+            if (action === "delete") {
+              await deleteOzaProgram(program.id);
+              router.back();
+            } else if (uid) {
+              setState(await resetOzaProgress(uid, program.id));
+            }
+          } catch (error) {
+            showAlert("Erreur", error instanceof Error ? error.message : String(error));
+          }
+        }}
+      />
 
       {assignOpen && (
         <View style={styles.assignBackdrop}>
@@ -308,6 +351,8 @@ const styles = StyleSheet.create({
   assignTitle: { fontFamily: Type.heading, fontSize: 22, color: Colors.text, marginBottom: 8 },
   assignRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.grayLight },
   assignName: { fontSize: 16, fontWeight: "700", color: Colors.text },
+  dangerLink: { alignItems: "center", paddingVertical: 10 },
+  dangerText: { fontSize: 13, fontWeight: "700", color: Colors.riskHigh },
   bar: { position: "absolute", left: 0, right: 0, bottom: 0, padding: 16, paddingBottom: 22, backgroundColor: Colors.background, borderTopWidth: 1, borderTopColor: Colors.border, gap: 8 },
   resume: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: Colors.primaryDark, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10 },
   resumeText: { fontSize: 12.5, fontWeight: "700", color: Colors.white, flex: 1 },

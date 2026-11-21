@@ -9,9 +9,9 @@
 
 import { EXERCISE_LIBRARY } from "./exercise-library";
 import type { OzaNiveau } from "./oza-sports";
-import type { Bloc, BlocExercice, BlocRole, Seance } from "../services/programmes";
+import type { Bloc, BlocExercice, BlocMode, BlocRole, Seance } from "../services/programmes";
 
-type Ex = {
+export type Ex = {
   id: string;
   series: string;
   reps: string;
@@ -20,7 +20,7 @@ type Ex = {
   note?: string;
 };
 
-type BlocSpec = { role?: BlocRole; nom: string; objectif: string; couleur: string; exos: Ex[] };
+export type BlocSpec = { role?: BlocRole; mode?: BlocMode; nom: string; objectif: string; couleur: string; exos: Ex[] };
 
 const lib = new Map(EXERCISE_LIBRARY.map((e) => [e.id, e]));
 
@@ -44,7 +44,7 @@ function exo(seed: string, e: Ex, i: number): BlocExercice {
   };
 }
 
-function seance(id: string, nom: string, blocs: BlocSpec[], muscles?: Seance["muscles"]): Seance {
+export function seance(id: string, nom: string, blocs: BlocSpec[], muscles?: Seance["muscles"]): Seance {
   return {
     id,
     nom,
@@ -53,6 +53,7 @@ function seance(id: string, nom: string, blocs: BlocSpec[], muscles?: Seance["mu
       (b, bi): Bloc => ({
         id: `${id}-b${bi}`,
         ...(b.role ? { role: b.role } : {}),
+        ...(b.mode ? { mode: b.mode } : {}),
         nom: b.nom,
         objectif: b.objectif,
         couleur: b.couleur,
@@ -62,11 +63,11 @@ function seance(id: string, nom: string, blocs: BlocSpec[], muscles?: Seance["mu
   };
 }
 
-const TEAL = "#14B8A6";
-const GOLD = "#E0B000";
-const GREEN = "#34C759";
-const SKY = "#5EEAD4";
-const NAVY = "#0B2E2D";
+export const TEAL = "#14B8A6";
+export const GOLD = "#E0B000";
+export const GREEN = "#34C759";
+export const SKY = "#5EEAD4";
+export const NAVY = "#0B2E2D";
 
 export type StarterProgram = {
   id: string;
@@ -84,10 +85,10 @@ export type StarterProgram = {
 
 // ── Rugby · Cycle d'approche (débutant, progression linéaire) ──
 
-type Approche = { series: string; reps: string; rpe: string; repos: string };
+export type Approche = { series: string; reps: string; rpe: string; repos: string };
 
 // Linéaire : le volume baisse légèrement et l'intensité monte chaque semaine.
-const APPROCHE: Approche[] = [
+export const APPROCHE: Approche[] = [
   { series: "3", reps: "12", rpe: "5", repos: "90 s" },
   { series: "3", reps: "10", rpe: "6", repos: "90 s" },
   { series: "3", reps: "8", rpe: "6-7", repos: "2 min" },
@@ -191,7 +192,7 @@ function approcheSeances(w: number): Seance[] {
 
 // ── Rugby · Préparation générale (intermédiaire, ondulatoire hebdomadaire) ──
 
-type Onde = {
+export type Onde = {
   theme: string;
   consignes: string;
   principal: { series: string; reps: string; rpe: string; repos: string };
@@ -200,7 +201,7 @@ type Onde = {
   finisher: { series: string; effort: string; repos: string };
 };
 
-const ONDE: Onde[] = [
+export const ONDE: Onde[] = [
   {
     theme: "Hypertrophie fonctionnelle",
     consignes: "Volume élevé, intensité moyenne. Cherche la qualité de chaque répétition, garde 2 à 3 répétitions en réserve.",

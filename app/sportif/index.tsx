@@ -8,6 +8,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 import { Type } from "../../constants/tokens";
 import ExerciseThumb from "../../components/exercise-thumb";
 import OzaResumeCard from "../../components/oza/resume-card";
+import SportDashboard from "../../components/oza/sport-dashboard";
 import ProfilePromptCard from "../../components/oza/profile-prompt-card";
 import { AthleteProfile, getAthleteProfile } from "../../services/athlete-profile";
 import NextSessionCard from "../../components/next-session-card";
@@ -409,6 +410,7 @@ export default function SportifHome() {
         {athlete !== undefined && !athlete?.completed && (
           <ProfilePromptCard onPress={() => router.push("/onboarding?edit=1" as never)} />
         )}
+        {uid && athlete?.sportId ? <SportDashboard uid={uid} profile={athlete} sessions={sessions} /> : null}
         <WellnessSummaryCard
           wellness={todayWellness}
           weekLoad={sessions.filter((s) => s.date >= weekAgo).reduce((sum, s) => sum + s.load, 0)}

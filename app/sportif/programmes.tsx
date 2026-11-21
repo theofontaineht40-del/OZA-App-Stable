@@ -9,6 +9,7 @@ import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
 import GradientFill from "../../components/gradient-fill";
 import OzaSportsGrid from "../../components/oza/oza-sports-grid";
+import ForYou from "../../components/oza/for-you";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
 import ExerciseThumb from "../../components/exercise-thumb";
@@ -121,7 +122,10 @@ export default function SportifProgrammesScreen() {
       </View>
 
       {mode === "oza" ? (
-        <OzaSportsGrid />
+        <>
+          <ForYou />
+          <OzaSportsGrid />
+        </>
       ) : (
       <>
 

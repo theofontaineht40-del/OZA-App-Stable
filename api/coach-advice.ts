@@ -177,12 +177,12 @@ export default async function handler(req: any, res: any) {
     return res.status(503).json({ error: "not_configured", message: "Le mini-coach IA n'est pas encore activé." });
   }
 
+  // 1. Qui appelle ? Jeton d'identification Firebase (refus immédiat sans jeton).
+  const token = String(req.headers.authorization ?? "").replace(/^Bearer\s+/i, "");
+  if (!token) return res.status(401).json({ error: "unauthorized" });
+
   try {
     getAdminApp();
-
-    // 1. Qui appelle ? Jeton d'identification Firebase.
-    const token = String(req.headers.authorization ?? "").replace(/^Bearer\s+/i, "");
-    if (!token) return res.status(401).json({ error: "unauthorized" });
     let uid: string;
     try {
       uid = (await getAuth().verifyIdToken(token)).uid;

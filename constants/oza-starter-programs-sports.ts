@@ -25,9 +25,9 @@ import {
 import type { OzaNiveau } from "./oza-sports";
 import type { Seance } from "../services/programmes";
 
-type Slot = "power" | "principal" | "secondaire" | "accessoire" | "gainage" | "vitesse" | "finisher" | "cardio" | "circuit" | "warm";
-type ExSpec = { id: string; reps?: string; note?: string };
-type BlocT = {
+export type Slot = "power" | "principal" | "secondaire" | "accessoire" | "gainage" | "vitesse" | "finisher" | "cardio" | "circuit" | "warm";
+export type ExSpec = { id: string; reps?: string; note?: string };
+export type BlocT = {
   slot: Slot;
   nom: string;
   objectif: string;
@@ -38,7 +38,7 @@ type BlocT = {
   intermediaireOnly?: boolean;
   exos: ExSpec[];
 };
-type SeanceT = { nom: string; blocs: BlocT[] };
+export type SeanceT = { nom: string; blocs: BlocT[] };
 
 // ── Prescription : emplacement + niveau + semaine → série/rép/RPE/repos ──
 
@@ -93,7 +93,7 @@ const WARM: BlocT = {
   exos: [{ id: "rotation-hanche-genou-leve", reps: "10 / côté" }, { id: "marche-basse-position-gardee", reps: "10 m" }, { id: "mobilite-epaule" }],
 };
 
-function buildSeances(key: string, level: OzaNiveau, w: number, templates: SeanceT[], onde: Onde): Seance[] {
+export function buildSeances(key: string, level: OzaNiveau, w: number, templates: SeanceT[], onde: Onde): Seance[] {
   return templates.map((t, i) =>
     seance(
       `${key}-s${w + 1}-${i + 1}`,
@@ -112,7 +112,7 @@ function buildSeances(key: string, level: OzaNiveau, w: number, templates: Seanc
   );
 }
 
-type SportDef = {
+export type SportDef = {
   sportId: string;
   nom: string;
   qualitesApproche: { nom: string; pct: number }[];
@@ -171,7 +171,7 @@ const HAUT_CORPS: BlocT[] = [
   { slot: "accessoire", nom: "Épaules", objectif: "Santé et stabilité de l'épaule.", couleur: GOLD, exos: [{ id: "face-pull", reps: "15" }] },
 ];
 
-const SPORTS: SportDef[] = [
+export const SPORT_DEFS_BASE: SportDef[] = [
   {
     sportId: "football",
     nom: "Football",
@@ -706,7 +706,53 @@ const MUSCULATION: SportDef = {
   ],
 };
 
-export const SPORT_STARTER_PROGRAMS: StarterProgram[] = [...SPORTS, MUSCULATION].flatMap((d) => [
+export const SPORT_DEFS: SportDef[] = [...SPORT_DEFS_BASE, MUSCULATION];
+
+export const SPORT_STARTER_PROGRAMS: StarterProgram[] = SPORT_DEFS.flatMap((d) => [
   program(d, "debutant"),
   program(d, "intermediaire"),
 ]);
+
+// Base du rugby pour les programmes par poste (le programme « tous postes » du
+// rugby est défini à la main dans oza-starter-programs.ts).
+export const RUGBY_DEF: SportDef = {
+  sportId: "rugby",
+  nom: "Rugby",
+  objectifApproche: "",
+  objectifGeneral: "",
+  publicApproche: "",
+  publicGeneral: "",
+  materiel: ["Salle de sport complète", "Barre et rack", "Kettlebell", "Piste ou terrain", "Assault bike"],
+  qualitesApproche: [],
+  qualitesGeneral: [],
+  seances: [
+    {
+      nom: "Bas du corps : force et puissance",
+      blocs: [
+        { slot: "power", intermediaireOnly: true, role: "specifique", nom: "Puissance du bas du corps", objectif: "Activer le système nerveux avant le travail lourd.", couleur: NAVY, exos: [{ id: "cmj" }] },
+        { slot: "principal", role: "principal", nom: "Squat", objectif: "Mouvement principal de la séance.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+        { slot: "secondaire", nom: "Charnière et unilatéral", objectif: "Chaîne postérieure et force sur une jambe.", couleur: GREEN, exos: [{ id: "souleve-terre-roumain" }, { id: "split-squat", reps: "8 / jambe" }] },
+        GAINAGE_ROT,
+      ],
+    },
+    {
+      nom: "Haut du corps : poussée et tirage",
+      blocs: [
+        { slot: "principal", role: "principal", nom: "Poussée horizontale", objectif: "Force de poussée en contact.", couleur: TEAL, exos: [{ id: "developpe-couche" }] },
+        { slot: "secondaire", nom: "Tirage", objectif: "Équilibrer la poussée, tenir le contact.", couleur: GREEN, exos: [{ id: "tractions", note: "Assistées (élastique ou machine) si tu ne fais pas encore le nombre de répétitions demandé." }, { id: "rowing-barre" }] },
+        { slot: "secondaire", nom: "Épaules", objectif: "Force verticale.", couleur: GOLD, exos: [{ id: "developpe-militaire-halteres" }] },
+        { slot: "gainage", nom: "Gainage", objectif: "Gainer le tronc en extension.", couleur: SKY, exos: [{ id: "hollow-body", reps: "25 s" }] },
+      ],
+    },
+    {
+      nom: "Corps entier : vitesse et répétition d'efforts",
+      blocs: [
+        { slot: "vitesse", role: "specifique", nom: "Vitesse", objectif: "Accélérer : qualité d'abord, repos complet.", couleur: NAVY, exos: [{ id: "sprint", reps: "15 m" }] },
+        { slot: "principal", role: "principal", nom: "Chaîne postérieure", objectif: "Poussée de hanche explosive.", couleur: TEAL, exos: [{ id: "hip-thrust" }] },
+        { slot: "secondaire", nom: "Balancé", objectif: "Puissance de hanche.", couleur: GREEN, exos: [{ id: "kettlebell-swing", reps: "12" }] },
+        { slot: "accessoire", nom: "Portés", objectif: "Force fonctionnelle, tenue sous charge.", couleur: GOLD, exos: [{ id: "farmer-walk", reps: "30 m" }] },
+        { slot: "finisher", intermediaireOnly: true, nom: "Répétition d'efforts", objectif: "Répéter des efforts intenses, comme en match.", couleur: GOLD, exos: [{ id: "assault-bike" }] },
+      ],
+    },
+  ],
+};

@@ -3,11 +3,12 @@ import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } fro
 import { db } from "../firebase";
 import { DEFAULT_OZA_SPORTS, OzaNiveau, OzaSport } from "../constants/oza-sports";
 import { RUGBY_STARTER_PROGRAMS } from "../constants/oza-starter-programs";
+import { POSTE_STARTER_PROGRAMS } from "../constants/oza-starter-programs-postes";
 import { SPORT_STARTER_PROGRAMS } from "../constants/oza-starter-programs-sports";
 import { uploadExercisePhoto } from "./exercises";
 import { Programme, Seance, cloneSeance } from "./programmes";
 
-const STARTER_PROGRAMS = [...RUGBY_STARTER_PROGRAMS, ...SPORT_STARTER_PROGRAMS];
+const STARTER_PROGRAMS = [...RUGBY_STARTER_PROGRAMS, ...SPORT_STARTER_PROGRAMS, ...POSTE_STARTER_PROGRAMS];
 
 // ── Types ──
 

@@ -16,6 +16,7 @@ import {
 
 import { Type } from "../../constants/tokens";
 import GradientFill from "../../components/gradient-fill";
+import OzaSportsGrid from "../../components/oza/oza-sports-grid";
 import AnimatedPressable from "../../components/animated-pressable";
 import ConfirmModal from "../../components/confirm-modal";
 import { TeamIllustration } from "../../components/empty-illustrations";
@@ -54,7 +55,7 @@ export default function ProgrammesScreen() {
   const [showForm, setShowForm] = useState(false);
   // Deux espaces : les sportifs (planification + programmes coachés) et la
   // bibliothèque (séances et programmes modèles, sans sportif).
-  const [view, setView] = useState<"sportifs" | "bibliotheque">("bibliotheque");
+  const [view, setView] = useState<"sportifs" | "bibliotheque" | "oza">("bibliotheque");
   const [formKind, setFormKind] = useState<ProgrammeKind>("programme");
   const [formObjectif, setFormObjectif] = useState<Objectif | null>(null);
   // Onglet d'objectif de la bibliothèque (null = tous).
@@ -232,6 +233,7 @@ export default function ProgrammesScreen() {
           [
             ["sportifs", "Mes sportifs"],
             ["bibliotheque", "Bibliothèque"],
+            ["oza", "OZA Programs"],
           ] as const
         ).map(([key, label]) => (
           <TouchableOpacity
@@ -245,6 +247,8 @@ export default function ProgrammesScreen() {
         ))}
       </View>
 
+      {view !== "oza" && (
+      <>
       <View style={styles.createRow}>
         <TouchableOpacity
           style={styles.createButton}
@@ -378,6 +382,11 @@ export default function ProgrammesScreen() {
           </TouchableOpacity>
         </View>
       )}
+
+      </>
+      )}
+
+      {view === "oza" && <OzaSportsGrid />}
 
       {view === "sportifs" && (sportifs.length === 0 ? (
         <View style={styles.emptyCard}>

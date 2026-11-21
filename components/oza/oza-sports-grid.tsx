@@ -17,10 +17,12 @@ import {
   seedDefaultOzaSports,
 } from "../../services/oza-programs";
 import { showAlert } from "../../utils/alert";
+import { useOzaBase } from "./use-oza-base";
 
 // Contenu de l'onglet « OZA Programs » : recherche, favoris à reprendre, puis
 // une tuile par sport (chacune dans les couleurs de son univers).
 export default function OzaSportsGrid() {
+  const base = useOzaBase();
   const [sports, setSports] = useState<OzaSport[] | null>(null);
   const [favorites, setFavorites] = useState<OzaProgram[]>([]);
   const [search, setSearch] = useState("");
@@ -73,7 +75,7 @@ export default function OzaSportsGrid() {
         <View style={{ marginBottom: 18 }}>
           <Text style={styles.section}>Mes favoris</Text>
           {favorites.map((p) => (
-            <TouchableOpacity key={p.id} style={styles.favRow} onPress={() => router.push(`/sportif/oza/programme/${p.id}`)}>
+            <TouchableOpacity key={p.id} style={styles.favRow} onPress={() => router.push(`${base}/programme/${p.id}` as never)}>
               <Ionicons name="star" size={18} color={Colors.riskMedium} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.favName} numberOfLines={1}>{p.nom}</Text>
@@ -92,7 +94,7 @@ export default function OzaSportsGrid() {
         {filtered.map((s) => {
           const light = s.variant === "clean";
           return (
-            <TouchableOpacity key={s.id} style={styles.tileWrap} activeOpacity={0.88} onPress={() => router.push(`/sportif/oza/${s.id}`)}>
+            <TouchableOpacity key={s.id} style={styles.tileWrap} activeOpacity={0.88} onPress={() => router.push(`${base}/${s.id}` as never)}>
               <LinearGradient colors={[s.couleurs.from, s.couleurs.to]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.tile}>
                 {s.variant === "competition" && <View style={styles.stripe} />}
                 <Text style={[styles.tileName, { color: light ? Colors.primaryDark : s.variant === "competition" ? s.couleurs.accent : Colors.white }]}>

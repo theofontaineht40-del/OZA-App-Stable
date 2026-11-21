@@ -60,6 +60,9 @@ export default function CoachTabsLayout() {
       <Tabs.Screen name="fix-julie" options={{ href: null }} />
       <Tabs.Screen name="referentiels" options={{ href: null }} />
       <Tabs.Screen name="programme/[id]" options={{ href: null }} />
+      <Tabs.Screen name="oza/[sportId]" options={{ href: null }} />
+      <Tabs.Screen name="oza/programme/[programId]" options={{ href: null }} />
+      <Tabs.Screen name="oza/seance/[programId]/[seanceId]" options={{ href: null }} />
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />
       <Tabs.Screen name="profil-pro" options={{ href: null }} />
       <Tabs.Screen name="generateur" options={{ href: null }} />

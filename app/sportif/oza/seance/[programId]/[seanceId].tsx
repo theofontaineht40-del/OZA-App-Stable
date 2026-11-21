@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import { useIsCoachSpace } from "../../../../../components/oza/use-oza-base";
 import ExerciseThumb from "../../../../../components/exercise-thumb";
 import GradientFill from "../../../../../components/gradient-fill";
 import SessionCompleteOverlay from "../../../../../components/session-complete-overlay";
@@ -39,6 +40,7 @@ export default function OzaSeanceScreen() {
   const { programId, seanceId, week } = useLocalSearchParams<{ programId: string; seanceId: string; week?: string }>();
   const weekNumber = Number(week ?? 1) || 1;
   const uid = auth.currentUser?.uid;
+  const isCoach = useIsCoachSpace();
   const [program, setProgram] = useState<OzaProgram | null | undefined>(undefined);
   const [openId, setOpenId] = useState<string | null>(null);
   const [finishing, setFinishing] = useState(false);
@@ -56,7 +58,7 @@ export default function OzaSeanceScreen() {
 
   useEffect(() => {
     // Ouvrir une séance démarre le programme s'il ne l'était pas (point de reprise).
-    if (uid && program) startOzaProgram(uid, program).catch(() => {});
+    if (uid && program && !isCoach) startOzaProgram(uid, program).catch(() => {});
   }, [uid, program?.id]);
 
   useEffect(() => {
@@ -143,12 +145,15 @@ export default function OzaSeanceScreen() {
         </View>
       </ScrollView>
 
+      {/* Le coach consulte la séance ; seul le sportif l'enregistre. */}
+      {!isCoach && (
       <View style={styles.bar}>
         <TouchableOpacity style={styles.cta} onPress={() => setFinishing(true)} activeOpacity={0.88}>
           <GradientFill />
           <Text style={styles.ctaText}>Terminer la séance</Text>
         </TouchableOpacity>
       </View>
+      )}
 
       {finishing && (
         <View style={styles.sheetBackdrop}>

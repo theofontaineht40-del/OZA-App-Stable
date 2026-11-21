@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { useOzaBase } from "../../../components/oza/use-oza-base";
 import PositionPicker from "../../../components/oza/position-picker";
 import SportHero from "../../../components/oza/sport-hero";
 import { Colors } from "../../../constants/colors";
@@ -22,6 +23,7 @@ import {
 // niveau, puis les programmes publiés pour ce poste.
 export default function OzaSportScreen() {
   const { sportId } = useLocalSearchParams<{ sportId: string }>();
+  const base = useOzaBase();
   const [sport, setSport] = useState<OzaSport | null>(null);
   const [programs, setPrograms] = useState<OzaProgram[] | null>(null);
   const [userState, setUserState] = useState<OzaUserState | null>(null);
@@ -101,7 +103,7 @@ export default function OzaSportScreen() {
               const prog = userState?.progress[p.id];
               const pct = Math.round(programProgress(p, prog) * 100);
               return (
-                <TouchableOpacity key={p.id} style={styles.programCard} activeOpacity={0.88} onPress={() => router.push(`/sportif/oza/programme/${p.id}`)}>
+                <TouchableOpacity key={p.id} style={styles.programCard} activeOpacity={0.88} onPress={() => router.push(`${base}/programme/${p.id}` as never)}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.programName}>{p.nom}</Text>
                     {!!p.objectif && <Text style={styles.programObjectif} numberOfLines={2}>{p.objectif}</Text>}

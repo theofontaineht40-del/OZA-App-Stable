@@ -16,7 +16,7 @@ export default function SportHero({ sport, onBack }: { sport: OzaSport; onBack: 
   const sub = light ? "rgba(6,45,43,0.7)" : "rgba(255,255,255,0.82)";
 
   return (
-    <View style={[styles.wrap, sport.variant === "vertical" && { height: 300 }]}>
+    <View style={[styles.wrap, sport.variant === "vertical" && { height: 340 }]}>
       <LinearGradient
         colors={[sport.couleurs.from, sport.couleurs.to]}
         start={{ x: 0, y: 0 }}
@@ -41,9 +41,9 @@ export default function SportHero({ sport, onBack }: { sport: OzaSport; onBack: 
         {sport.variant === "vertical" ? (
           <View style={styles.verticalRow}>
             <View style={styles.verticalTitleWrap}>
-              <Text style={[styles.verticalTitle, { color: ink }]} numberOfLines={1} adjustsFontSizeToFit>
-                {sport.nom.toUpperCase()}
-              </Text>
+              <View style={styles.verticalTitleBox}>
+                <Text style={[styles.verticalTitle, { color: ink }]}>{sport.nom.toUpperCase()}</Text>
+              </View>
             </View>
             <View style={{ flex: 1, gap: 6 }}>
               <Text style={[styles.tagline, { color: sub }]}>{sport.tagline}</Text>
@@ -160,14 +160,10 @@ const styles = StyleSheet.create({
   chipLight: { backgroundColor: "rgba(6,45,43,0.08)" },
   chipText: { fontSize: 11.5, fontWeight: "700" },
   verticalRow: { flexDirection: "row", gap: 14, alignItems: "flex-end" },
-  verticalTitleWrap: { width: 50, height: 200, alignItems: "center", justifyContent: "center" },
-  verticalTitle: {
-    width: 200,
-    textAlign: "center",
-    fontFamily: Type.heading,
-    fontSize: 26,
-    transform: [{ rotate: "-90deg" }],
-  },
+  verticalTitleWrap: { width: 50, height: 210 },
+  // Boîte large puis tournée : le titre se lit de bas en haut, sans être tronqué.
+  verticalTitleBox: { position: "absolute", width: 210, height: 50, left: -80, top: 80, alignItems: "center", justifyContent: "center", transform: [{ rotate: "-90deg" }] },
+  verticalTitle: { fontFamily: Type.heading, fontSize: 30, letterSpacing: 1 },
   axisRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   axisDot: { width: 6, height: 6, borderRadius: 3 },
   axisText: { fontSize: 13, fontWeight: "600" },

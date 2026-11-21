@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { useIsCoachSpace, useOzaBase } from "../../../../components/oza/use-oza-base";
 import ExerciseThumb from "../../../../components/exercise-thumb";
 import GradientFill from "../../../../components/gradient-fill";
 import { Colors } from "../../../../constants/colors";
@@ -22,7 +23,9 @@ import {
   startOzaProgram,
   toggleOzaFavorite,
 } from "../../../../services/oza-programs";
-import { estimateSeanceMinutes } from "../../../../services/programmes";
+import { assignCopyToSportif, estimateSeanceMinutes, Programme } from "../../../../services/programmes";
+import { getMySportifs, SportifSummary } from "../../../../services/tracking";
+import { showAlert } from "../../../../utils/alert";
 
 const LIB = new Map(EXERCISE_LIBRARY.map((e) => [e.id, e]));
 
@@ -31,6 +34,10 @@ const LIB = new Map(EXERCISE_LIBRARY.map((e) => [e.id, e]));
 export default function OzaProgramScreen() {
   const { programId } = useLocalSearchParams<{ programId: string }>();
   const uid = auth.currentUser?.uid;
+  const base = useOzaBase();
+  const isCoach = useIsCoachSpace();
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [myAthletes, setMyAthletes] = useState<SportifSummary[]>([]);
   const [program, setProgram] = useState<OzaProgram | null | undefined>(undefined);
   const [sport, setSport] = useState<OzaSport | null>(null);
   const [state, setState] = useState<OzaUserState | null>(null);
@@ -87,7 +94,36 @@ export default function OzaProgramScreen() {
     const first = program.semaines[0]?.seances[0];
     const target = next.progress[program.id]?.currentSeanceId ?? first?.id;
     const targetWeek = next.progress[program.id]?.currentWeek ?? 1;
-    if (target) router.push(`/sportif/oza/seance/${program.id}/${target}?week=${targetWeek}`);
+    if (target) router.push(`${base}/seance/${program.id}/${target}?week=${targetWeek}` as never);
+  }
+
+  // Coach : donne ce programme à un sportif (copie dans ses programmes).
+  async function openAssign() {
+    if (!uid) return;
+    if (myAthletes.length === 0) setMyAthletes(await getMySportifs(uid));
+    setAssignOpen(true);
+  }
+
+  async function assignTo(athlete: SportifSummary) {
+    if (!uid || !program) return;
+    const asProgramme: Programme = {
+      id: program.id,
+      kind: "programme",
+      objectif: null,
+      coachId: uid,
+      sportifId: athlete.uid,
+      sportifName: `${athlete.firstName} ${athlete.lastName}`.trim(),
+      nom: program.nom,
+      seances: program.semaines.flatMap((w) => w.seances),
+      updatedAt: new Date(),
+    };
+    try {
+      await assignCopyToSportif(asProgramme, athlete.uid, asProgramme.sportifName ?? "");
+      setAssignOpen(false);
+      showAlert("Assigné", `${program.nom} est maintenant dans les programmes de ${athlete.firstName}.`);
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
   }
 
   const from = sport?.couleurs.from ?? Colors.primaryDark;
@@ -167,7 +203,7 @@ export default function OzaProgramScreen() {
                 const first = s.blocs.flatMap((b) => b.exercices)[0];
                 const count = s.blocs.reduce((n, b) => n + b.exercices.length, 0);
                 return (
-                  <TouchableOpacity key={s.id} style={styles.seanceRow} activeOpacity={0.88} onPress={() => router.push(`/sportif/oza/seance/${program.id}/${s.id}?week=${current.numero}`)}>
+                  <TouchableOpacity key={s.id} style={styles.seanceRow} activeOpacity={0.88} onPress={() => router.push(`${base}/seance/${program.id}/${s.id}?week=${current.numero}` as never)}>
                     <ExerciseThumb exercise={first ? LIB.get(first.exerciceId) : null} size={50} radius={12} />
                     <View style={{ flex: 1, minWidth: 0 }}>
                       <Text style={styles.seanceName} numberOfLines={1}>{s.nom}</Text>
@@ -182,17 +218,37 @@ export default function OzaProgramScreen() {
         </View>
       </ScrollView>
 
+      {assignOpen && (
+        <View style={styles.assignBackdrop}>
+          <View style={styles.assignSheet}>
+            <Text style={styles.assignTitle}>Assigner à…</Text>
+            <ScrollView style={{ maxHeight: 340 }}>
+              {myAthletes.map((a) => (
+                <TouchableOpacity key={a.uid} style={styles.assignRow} onPress={() => assignTo(a)}>
+                  <Text style={styles.assignName}>{a.firstName} {a.lastName}</Text>
+                  <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+                </TouchableOpacity>
+              ))}
+              {myAthletes.length === 0 && <Text style={styles.line}>Aucun sportif suivi pour l'instant.</Text>}
+            </ScrollView>
+            <TouchableOpacity onPress={() => setAssignOpen(false)}><Text style={[styles.link, { textAlign: "center", padding: 12 }]}>Annuler</Text></TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       {program.semaines.length > 0 && (
         <View style={styles.bar}>
           {resumeSeance && (
-            <TouchableOpacity style={styles.resume} onPress={() => router.push(`/sportif/oza/seance/${program.id}/${resumeSeance.s.id}?week=${resumeSeance.w}`)}>
+            <TouchableOpacity style={styles.resume} onPress={() => router.push(`${base}/seance/${program.id}/${resumeSeance.s.id}?week=${resumeSeance.w}` as never)}>
               <Text style={styles.resumeText}>Reprendre · Semaine {resumeSeance.w} · {resumeSeance.s.nom}</Text>
               <Ionicons name="play" size={14} color={Colors.primaryLight} />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={styles.cta} onPress={onStart} activeOpacity={0.88}>
+          <TouchableOpacity style={styles.cta} onPress={isCoach ? openAssign : onStart} activeOpacity={0.88}>
             <GradientFill />
-            <Text style={styles.ctaText}>{progress ? "Continuer le programme" : "Démarrer le programme"}</Text>
+            <Text style={styles.ctaText}>
+              {isCoach ? "Assigner à un sportif" : progress ? "Continuer le programme" : "Démarrer le programme"}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -247,6 +303,11 @@ const styles = StyleSheet.create({
   seanceMeta: { fontSize: 12.5, color: Colors.textSecondary, marginTop: 2 },
   check: { width: 26, height: 26, borderRadius: 13, borderWidth: 1.5, borderColor: Colors.grayMedium, alignItems: "center", justifyContent: "center" },
   checkOn: { backgroundColor: Colors.turquoise, borderColor: Colors.turquoise },
+  assignBackdrop: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.45)", justifyContent: "flex-end", zIndex: 10 } as any,
+  assignSheet: { backgroundColor: Colors.surface, borderTopLeftRadius: 26, borderTopRightRadius: 26, padding: 20, paddingBottom: 26 },
+  assignTitle: { fontFamily: Type.heading, fontSize: 22, color: Colors.text, marginBottom: 8 },
+  assignRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.grayLight },
+  assignName: { fontSize: 16, fontWeight: "700", color: Colors.text },
   bar: { position: "absolute", left: 0, right: 0, bottom: 0, padding: 16, paddingBottom: 22, backgroundColor: Colors.background, borderTopWidth: 1, borderTopColor: Colors.border, gap: 8 },
   resume: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: Colors.primaryDark, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10 },
   resumeText: { fontSize: 12.5, fontWeight: "700", color: Colors.white, flex: 1 },

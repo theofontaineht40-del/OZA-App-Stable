@@ -1023,5 +1023,695 @@
     "status": "brouillon",
     "version": 1,
     "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-puissance-lactique-effort-max",
+    "category": "F",
+    "parameter": "Durée maximale d'un effort (puissance glycolyse anaérobie)",
+    "unit": "s",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 60
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-capacite-lactique-effort-max",
+    "category": "F",
+    "parameter": "Durée maximale d'un effort (capacité glycolyse anaérobie)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": 120
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-aerobie-effort-max",
+    "category": "F",
+    "parameter": "Durée maximale d'un effort (puissance glycolyse aérobie)",
+    "unit": "min",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 8
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-intermittent-courses-max",
+    "category": "F",
+    "parameter": "Nombre maximal de courses par séance en intermittent",
+    "unit": "courses",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 40
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-continu-courses-max",
+    "category": "F",
+    "parameter": "Nombre maximal de courses par séance en continu",
+    "unit": "courses",
+    "value": {
+      "min": 10,
+      "recommended": null,
+      "max": 15
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-phosphagenes-recuperation-entre-repetitions",
+    "category": "F",
+    "parameter": "Récupération entre répétitions (phosphagènes)",
+    "unit": "s",
+    "value": {
+      "min": 50,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-phosphagenes-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries (phosphagènes)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 360,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "phosphagene"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-lactique-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries (glycolyse anaérobie)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques »."
+  },
+  {
+    "id": "F-coach-perte-de-poids-intensite-moderee",
+    "category": "F",
+    "parameter": "Intensité d'une course modérée pour un déficit calorique",
+    "unit": "% VMA",
+    "value": {
+      "min": 70,
+      "recommended": null,
+      "max": 90
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Les calories dépensées viennent surtout de la glycolyse. Source : cours ProSportConcept (C. Damien), « La perte de poids »."
+  },
+  {
+    "id": "F-coach-intersaison-30-30-intensite",
+    "category": "F",
+    "parameter": "Intensité du fractionné 30\"/30\"",
+    "unit": "% VMA",
+    "value": {
+      "min": 100,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-30-30-repetitions",
+    "category": "F",
+    "parameter": "Répétitions par série : 30\"/30\"",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 10,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-30-30-series",
+    "category": "F",
+    "parameter": "Séries : 30\"/30\"",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-30-30-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries : 30\"/30\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20-20-intensite",
+    "category": "F",
+    "parameter": "Intensité du fractionné 20\"/20\"",
+    "unit": "% VMA",
+    "value": {
+      "min": 105,
+      "recommended": null,
+      "max": 110
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20-20-repetitions",
+    "category": "F",
+    "parameter": "Répétitions par série : 20\"/20\"",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 8,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20-20-series",
+    "category": "F",
+    "parameter": "Séries : 20\"/20\"",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20-20-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries : 20\"/20\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-15-20-intensite",
+    "category": "F",
+    "parameter": "Intensité du fractionné 15\"/20\"",
+    "unit": "% VMA",
+    "value": {
+      "min": 120,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-15-20-repetitions",
+    "category": "F",
+    "parameter": "Répétitions par série : 15\"/20\"",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 4,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-15-20-series",
+    "category": "F",
+    "parameter": "Séries : 15\"/20\"",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-15-20-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries : 15\"/20\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20s-140-intensite",
+    "category": "F",
+    "parameter": "Intensité du fractionné 20\" à 140 % VMA",
+    "unit": "% VMA",
+    "value": {
+      "min": 140,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "glycolytique"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20s-140-repetitions",
+    "category": "F",
+    "parameter": "Répétitions par série : 20\" à 140 % VMA",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 6,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20s-140-series",
+    "category": "F",
+    "parameter": "Séries : 20\" à 140 % VMA",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 5,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20s-140-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries : 20\" à 140 % VMA",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 360,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-20s-140-recuperation-entre-repetitions",
+    "category": "F",
+    "parameter": "Récupération entre répétitions : 20\" à 140 % VMA",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 50,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-sprint-6s-repetitions",
+    "category": "F",
+    "parameter": "Répétitions par série : sprints de 6\"",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 4,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-sprint-6s-series",
+    "category": "F",
+    "parameter": "Séries : sprints de 6\"",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-sprint-6s-recuperation-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries : sprints de 6\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 360,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
+  },
+  {
+    "id": "F-coach-intersaison-sprint-6s-recuperation-entre-repetitions",
+    "category": "F",
+    "parameter": "Récupération entre répétitions : sprints de 6\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 50,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin)."
   }
 ]

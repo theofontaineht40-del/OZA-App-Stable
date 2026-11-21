@@ -124,5 +124,143 @@
         "max": 8
       }
     }
+  },
+  {
+    "id": "C-coach-hypertrophie-passages-semaine",
+    "category": "C",
+    "parameter": "Passages par groupe musculaire (hypertrophie)",
+    "unit": "fois/semaine",
+    "value": {
+      "min": null,
+      "recommended": 2,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Planification » et « Gestion de l'effort »."
+  },
+  {
+    "id": "C-coach-hypertrophie-seances-semaine",
+    "category": "C",
+    "parameter": "Séances d'hypertrophie par semaine",
+    "unit": "séances/semaine",
+    "value": {
+      "min": 4,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "hypertrophie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Hypertrophie » (séances idéales : 4 à 5) et « Planification » (jusqu'à 5)."
+  },
+  {
+    "id": "C-coach-force-max-frequence-groupe",
+    "category": "C",
+    "parameter": "Séances de force max par groupe musculaire",
+    "unit": "séances/semaine",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 2
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Planification »."
+  },
+  {
+    "id": "C-coach-effort-dynamique-frequence-groupe",
+    "category": "C",
+    "parameter": "Séances d'effort dynamique par groupe musculaire",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": 2,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Planification »."
+  },
+  {
+    "id": "C-coach-5x5-seances",
+    "category": "C",
+    "parameter": "Séances par semaine du programme 5x5 (full body, un jour de repos entre chaque)",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "C-coach-531-seances",
+    "category": "C",
+    "parameter": "Séances par semaine du programme 5/3/1 (squat, poussées, soulevé)",
+    "unit": "séances/semaine",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
   }
 ]

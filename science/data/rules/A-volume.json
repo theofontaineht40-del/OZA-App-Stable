@@ -676,5 +676,74 @@
     "status": "brouillon",
     "version": 1,
     "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "A-coach-series-muscle-split",
+    "category": "A",
+    "parameter": "Séries par muscle (hypertrophie, split)",
+    "unit": "séries/muscle",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 12
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "hypertrophie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
+  },
+  {
+    "id": "A-coach-series-muscle-half-body",
+    "category": "A",
+    "parameter": "Séries par muscle (hypertrophie, half body)",
+    "unit": "séries/muscle",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 10
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "hypertrophie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
+  },
+  {
+    "id": "A-coach-series-muscle-full-body",
+    "category": "A",
+    "parameter": "Séries par muscle (hypertrophie, full body)",
+    "unit": "séries/muscle",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "hypertrophie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
   }
 ]

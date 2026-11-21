@@ -1,1 +1,48 @@
-[]
+[
+  {
+    "id": "H-coach-polyarticulaires-par-pattern",
+    "category": "H",
+    "parameter": "Exercices polyarticulaires par pattern de mouvement dans une séance",
+    "unit": "exercices",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 2
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "pattern",
+      "id": "tous"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » (1 à 2 polyarticulaires par pattern)."
+  },
+  {
+    "id": "H-coach-monoarticulaires-par-articulation",
+    "category": "H",
+    "parameter": "Exercices monoarticulaires par articulation dans une séance",
+    "unit": "exercices",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 2
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "pattern",
+      "id": "isolation"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » (1 à 2 par articulation mobilisée dans les polyarticulaires)."
+  }
+]

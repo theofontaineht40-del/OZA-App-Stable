@@ -723,5 +723,925 @@
     "status": "brouillon",
     "version": 1,
     "notes": "Importé de la revue GPT du 2026-11-21 : valeurs et DOI non vérifiés."
+  },
+  {
+    "id": "B-coach-force-maximale-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Force maximale",
+    "unit": "séries",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-maximale-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Force maximale",
+    "unit": "répétitions",
+    "value": {
+      "min": 1,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "1 à 6 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-maximale-intensite",
+    "category": "B",
+    "parameter": "Intensité : Force maximale",
+    "unit": "% 1RM",
+    "value": {
+      "min": 85,
+      "recommended": null,
+      "max": 120
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Au-delà de 100 % : travail excentrique seul (100 à 120 %). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-maximale-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Force maximale",
+    "unit": "s",
+    "value": {
+      "min": 180,
+      "recommended": null,
+      "max": 480
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Jusqu'à 10 minutes lors d'une séance très lourde ; 3 minutes = récupération incomplète (cours force max). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-maximale-tstt",
+    "category": "B",
+    "parameter": "Temps sous tension total d'une série (TSTT) : Force maximale",
+    "unit": "s",
+    "value": {
+      "min": 0,
+      "recommended": null,
+      "max": 20
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie »."
+  },
+  {
+    "id": "B-coach-puissance-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Puissance",
+    "unit": "séries",
+    "value": {
+      "min": 4,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-puissance-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Puissance",
+    "unit": "répétitions",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-puissance-intensite",
+    "category": "B",
+    "parameter": "Intensité : Puissance",
+    "unit": "% 1RM",
+    "value": {
+      "min": 50,
+      "recommended": null,
+      "max": 70
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-puissance-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Puissance",
+    "unit": "s",
+    "value": {
+      "min": 120,
+      "recommended": null,
+      "max": 180
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "puissance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-endurance-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Force endurance",
+    "unit": "séries",
+    "value": {
+      "min": 4,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-endurance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-endurance-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Force endurance",
+    "unit": "répétitions",
+    "value": {
+      "min": 15,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-endurance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "15 à 100 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-endurance-intensite",
+    "category": "B",
+    "parameter": "Intensité : Force endurance",
+    "unit": "% 1RM",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 65
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-endurance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-endurance-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Force endurance",
+    "unit": "s",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 60
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-endurance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-endurance-tstt",
+    "category": "B",
+    "parameter": "Temps sous tension total d'une série (TSTT) : Force endurance",
+    "unit": "s",
+    "value": {
+      "min": 60,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-endurance"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie »."
+  },
+  {
+    "id": "B-coach-force-vitesse-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Force vitesse",
+    "unit": "séries",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-vitesse-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Force vitesse",
+    "unit": "répétitions",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-vitesse-intensite",
+    "category": "B",
+    "parameter": "Intensité : Force vitesse",
+    "unit": "% 1RM",
+    "value": {
+      "min": 30,
+      "recommended": null,
+      "max": 50
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-force-vitesse-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Force vitesse",
+    "unit": "s",
+    "value": {
+      "min": 60,
+      "recommended": null,
+      "max": 90
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-vitesse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-explosivite-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Explosivité",
+    "unit": "séries",
+    "value": {
+      "min": 4,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "explosivite"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-explosivite-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Explosivité",
+    "unit": "répétitions",
+    "value": {
+      "min": 4,
+      "recommended": null,
+      "max": 8
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "explosivite"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-explosivite-intensite",
+    "category": "B",
+    "parameter": "Intensité : Explosivité",
+    "unit": "% 1RM",
+    "value": {
+      "min": 0,
+      "recommended": null,
+      "max": 30
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "explosivite"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-explosivite-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Explosivité",
+    "unit": "s",
+    "value": {
+      "min": 45,
+      "recommended": null,
+      "max": 90
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "explosivite"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-masse-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Masse (hypertrophie myofibrillaire)",
+    "unit": "séries",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 4
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Pour la masse et le volume : 2 à 4 séries par exercice en split ou full body, 3 à 8 en half body (cours hypertrophie). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-masse-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Masse (hypertrophie myofibrillaire)",
+    "unit": "répétitions",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 10
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "6 à 10 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-masse-intensite",
+    "category": "B",
+    "parameter": "Intensité : Masse (hypertrophie myofibrillaire)",
+    "unit": "% 1RM",
+    "value": {
+      "min": 65,
+      "recommended": null,
+      "max": 80
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-masse-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Masse (hypertrophie myofibrillaire)",
+    "unit": "s",
+    "value": {
+      "min": 90,
+      "recommended": null,
+      "max": 180
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-masse-tstt",
+    "category": "B",
+    "parameter": "Temps sous tension total d'une série (TSTT) : Masse (hypertrophie myofibrillaire)",
+    "unit": "s",
+    "value": {
+      "min": 20,
+      "recommended": null,
+      "max": 40
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie »."
+  },
+  {
+    "id": "B-coach-volume-series",
+    "category": "B",
+    "parameter": "Séries par exercice : Volume (hypertrophie sarcoplasmique)",
+    "unit": "séries",
+    "value": {
+      "min": 2,
+      "recommended": null,
+      "max": 4
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Pour la masse et le volume : 2 à 4 séries par exercice en split ou full body, 3 à 8 en half body (cours hypertrophie). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-volume-repetitions",
+    "category": "B",
+    "parameter": "Répétitions par série : Volume (hypertrophie sarcoplasmique)",
+    "unit": "répétitions",
+    "value": {
+      "min": 10,
+      "recommended": null,
+      "max": 15
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "10 à 15 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-volume-intensite",
+    "category": "B",
+    "parameter": "Intensité : Volume (hypertrophie sarcoplasmique)",
+    "unit": "% 1RM",
+    "value": {
+      "min": 50,
+      "recommended": null,
+      "max": 75
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-volume-repos",
+    "category": "B",
+    "parameter": "Repos entre séries : Volume (hypertrophie sarcoplasmique)",
+    "unit": "s",
+    "value": {
+      "min": 60,
+      "recommended": null,
+      "max": 90
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+  },
+  {
+    "id": "B-coach-volume-tstt",
+    "category": "B",
+    "parameter": "Temps sous tension total d'une série (TSTT) : Volume (hypertrophie sarcoplasmique)",
+    "unit": "s",
+    "value": {
+      "min": 40,
+      "recommended": null,
+      "max": 60
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie »."
+  },
+  {
+    "id": "B-coach-force-maximale-rpe",
+    "category": "B",
+    "parameter": "RPE : force maximale",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": 8,
+      "recommended": null,
+      "max": 9.5
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Proche du RM. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "B-coach-masse-rpe",
+    "category": "B",
+    "parameter": "RPE : masse (hypertrophie myofibrillaire)",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": null,
+      "recommended": 9,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "masse"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Lecture du tableau extrait à confirmer (« 9/10 »). Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
+  },
+  {
+    "id": "B-coach-volume-rpe",
+    "category": "B",
+    "parameter": "RPE : volume (hypertrophie sarcoplasmique)",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": null,
+      "recommended": 9,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "volume"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Lecture du tableau extrait à confirmer (« 9/10 »). Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
+  },
+  {
+    "id": "B-coach-efforts-sous-maximaux-rpe",
+    "category": "B",
+    "parameter": "RPE des efforts sous-maximaux (qualité d'exécution)",
+    "unit": "RPE (0-10)",
+    "value": {
+      "min": null,
+      "recommended": null,
+      "max": 7
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Séries plus ou moins longues, pour privilégier la technique. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "B-coach-excentrique-supramaximal-intensite",
+    "category": "B",
+    "parameter": "Charge du travail excentrique supra-maximal",
+    "unit": "% 1RM",
+    "value": {
+      "min": 100,
+      "recommended": null,
+      "max": 120
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Inutile de dépasser 120 %. Ratio bénéfice/risque jugé défavorable, déconseillé sur squat. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "B-coach-excentrique-supramaximal-espacement",
+    "category": "B",
+    "parameter": "Espacement des séances d'excentrique supra-maximal",
+    "unit": "jours",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Aucune séance de force pendant cette période de récupération. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "B-coach-isometrie-duree",
+    "category": "B",
+    "parameter": "Durée d'une contraction isométrique maximale (force max)",
+    "unit": "s",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Plutôt en fin d'entraînement, au moins 3 angulations différentes. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "B-coach-isometrie-recuperation",
+    "category": "B",
+    "parameter": "Récupération entre isométries (force max)",
+    "unit": "s",
+    "value": {
+      "min": 60,
+      "recommended": null,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
   }
 ]

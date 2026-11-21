@@ -78,5 +78,97 @@
         "max": 50
       }
     }
+  },
+  {
+    "id": "D-coach-mesocycle-duree",
+    "category": "D",
+    "parameter": "Durée d'un cycle (mésocycle) dans la plupart des objectifs",
+    "unit": "semaines",
+    "value": {
+      "min": 3,
+      "recommended": null,
+      "max": 6
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "cycle"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Un mésocycle compte formellement 2 à 6 microcycles. Source : cours ProSportConcept (C. Damien), « Planification »."
+  },
+  {
+    "id": "D-coach-531-vague-semaines",
+    "category": "D",
+    "parameter": "Durée d'une vague 5/3/1 (3 semaines de charge puis 1 semaine de décharge)",
+    "unit": "semaines",
+    "value": {
+      "min": null,
+      "recommended": 4,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "quality",
+      "id": "force-maximale"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Décharge = 5 × 40 %, 5 × 50 %, 5 × 60 %. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale »."
+  },
+  {
+    "id": "D-coach-pic-de-forme-reduction-volume",
+    "category": "D",
+    "parameter": "Réduction du volume pour un pic de forme (affûtage)",
+    "unit": "% du volume",
+    "value": {
+      "min": 40,
+      "recommended": null,
+      "max": 60
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "affutage"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Pendant environ 3 semaines. Source : cours ProSportConcept (C. Damien), « Planification »."
+  },
+  {
+    "id": "D-coach-pic-de-forme-duree",
+    "category": "D",
+    "parameter": "Durée de l'affûtage",
+    "unit": "semaines",
+    "value": {
+      "min": null,
+      "recommended": 3,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "general",
+      "id": "affutage"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach (méthode ProSportConcept, cours de C. Damien) : niveau de preuve « opinion d'experts », pas une étude.",
+    "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours ProSportConcept (C. Damien), « Planification »."
   }
 ]

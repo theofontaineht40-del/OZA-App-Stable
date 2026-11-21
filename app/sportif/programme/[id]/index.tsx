@@ -150,12 +150,18 @@ export default function SportifProgrammeViewScreen() {
                     contentContainerStyle={styles.content}
                     showsVerticalScrollIndicator={false}
                   >
-                    <LinearGradient
-                      colors={["#062D2B", "#075B57"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      style={styles.seanceHero}
-                    >
+                    <View style={styles.seanceHero}>
+                      <Image
+                        source={require("../../../../assets/images/gym-teal.jpg")}
+                        style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
+                        resizeMode="cover"
+                      />
+                      <LinearGradient
+                        colors={["rgba(6,45,43,0.35)", "rgba(6,45,43,0.92)"]}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
+                      />
                       <Text style={styles.seanceHeroEyebrow}>{programme.objectif ?? programme.nom}</Text>
                       <Text style={styles.seanceHeroTitle}>{seance.nom}</Text>
                       <View style={styles.seanceHeroMeta}>
@@ -185,7 +191,7 @@ export default function SportifProgrammeViewScreen() {
                         <Ionicons name="play" size={16} color={Colors.white} />
                         <Text style={styles.startButtonText}>Démarrer la séance</Text>
                       </TouchableOpacity>
-                    </LinearGradient>
+                    </View>
 
                     {seance.blocs.some((b) => b.exercices.length > 0) && (
                       <View style={styles.previewCard}>
@@ -363,7 +369,10 @@ const styles = StyleSheet.create({
   },
 
   seanceHero: {
+    overflow: "hidden",
     borderRadius: 22,
+    minHeight: 220,
+    justifyContent: "flex-end",
     padding: 18,
     marginBottom: 16,
   },

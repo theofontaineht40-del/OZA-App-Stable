@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
@@ -143,10 +143,15 @@ export default function SportifProgrammesScreen() {
               style={styles.heroCard}
               onPress={() => router.push(`/sportif/programme/${featured.id}`)}
             >
+              <Image
+                source={require("../../assets/images/gym-teal.jpg")}
+                style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
+                resizeMode="cover"
+              />
               <LinearGradient
-                colors={Gradients.hero}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+                colors={["rgba(6,45,43,0.25)", "rgba(6,45,43,0.88)"]}
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
                 style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
               />
               <Text style={styles.heroEyebrow}>{featured.objectif ?? "Programme en cours"}</Text>
@@ -282,7 +287,8 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 20,
     marginBottom: 14,
-    minHeight: 150,
+    minHeight: 190,
+    justifyContent: "flex-end",
   },
 
   heroEyebrow: {

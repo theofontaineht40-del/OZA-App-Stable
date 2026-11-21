@@ -19,6 +19,7 @@ import OzaDisc from "../components/oza-disc";
 import { Colors } from "../constants/colors";
 import { db } from "../firebase";
 import { loginUser, resetPassword } from "../services/auth";
+import { getAthleteProfile, needsOnboarding } from "../services/athlete-profile";
 import { showAlert } from "../utils/alert";
 import { friendlyAuthError } from "../utils/firebase-errors";
 
@@ -60,7 +61,15 @@ export default function LoginScreen() {
       if (data.role === "coach") {
         router.push("/coach");
       } else {
-        router.push("/sportif");
+        // Premier passage : le questionnaire d'accueil (une seule fois, il
+        // peut être écarté avec « Plus tard »).
+        let needsQuestionnaire = false;
+        try {
+          needsQuestionnaire = needsOnboarding(await getAthleteProfile(user.uid));
+        } catch {
+          needsQuestionnaire = false;
+        }
+        router.push(needsQuestionnaire ? "/onboarding" : "/sportif");
       }
     } catch (error) {
       showAlert("Erreur", friendlyAuthError(error));

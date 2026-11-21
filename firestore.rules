@@ -134,6 +134,14 @@ service cloud.firestore {
       allow delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
     }
 
+    // ── Profil sportif (questionnaire d'accueil) ──
+    // Sport, niveau, objectif, disponibilités, matériel et limitations :
+    // le sportif le remplit seul ; son coach principal peut le lire.
+    match /sportProfiles/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if isSignedIn() && request.auth.uid == sportifId;
+    }
+
     // ── Dossier médical (coach principal uniquement) ──
     match /medicalProfiles/{sportifId} {
       allow read: if canAccessSportifData(sportifId);

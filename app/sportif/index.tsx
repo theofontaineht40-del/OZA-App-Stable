@@ -8,6 +8,8 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 import { Type } from "../../constants/tokens";
 import ExerciseThumb from "../../components/exercise-thumb";
 import OzaResumeCard from "../../components/oza/resume-card";
+import ProfilePromptCard from "../../components/oza/profile-prompt-card";
+import { AthleteProfile, getAthleteProfile } from "../../services/athlete-profile";
 import NextSessionCard from "../../components/next-session-card";
 import HeroHeader from "../../components/hero-header";
 import SessionFeedbackCard from "../../components/session-feedback-card";
@@ -65,6 +67,8 @@ export default function SportifHome() {
   const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
   // Visuels des exercices (bibliothèque de chaque coach auteur d'un programme).
   const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
+  // undefined = pas encore chargé ; null = questionnaire jamais abordé.
+  const [athlete, setAthlete] = useState<AthleteProfile | null | undefined>(undefined);
   const [ozaResume, setOzaResume] = useState<{
     programId: string;
     programName: string;
@@ -95,6 +99,7 @@ export default function SportifHome() {
       try {
         const userSnap = await getDoc(doc(db, "users", user.uid));
         setFirstName(userSnap.exists() ? userSnap.data().firstName : null);
+        getAthleteProfile(user.uid).then(setAthlete).catch(() => setAthlete(undefined));
 
         const [sessionData, slotData, programmeData, todayScore, goalData] = await Promise.all([
           getSessionsForSportif(user.uid),
@@ -400,6 +405,9 @@ export default function SportifHome() {
               markFeedbackSeen(unseenFeedback.id).catch(() => {});
             }}
           />
+        )}
+        {athlete !== undefined && !athlete?.completed && (
+          <ProfilePromptCard onPress={() => router.push("/onboarding?edit=1" as never)} />
         )}
         <WellnessSummaryCard
           wellness={todayWellness}

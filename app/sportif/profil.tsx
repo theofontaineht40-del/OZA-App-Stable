@@ -1,3 +1,4 @@
+import AthleteProfileCard from "../../components/oza/athlete-profile-card";
 import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
 import { router } from "expo-router";
@@ -209,6 +210,8 @@ export default function ProfilScreen() {
               </TouchableOpacity>
             ))}
           </View>
+
+      <AthleteProfileCard />
 
       <TouchableOpacity style={styles.equipeCard} onPress={() => router.push("/sportif/equipe")}>
         <Ionicons name="people-outline" size={22} color={Colors.primary} />

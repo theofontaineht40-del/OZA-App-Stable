@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import * as ImagePicker from "expo-image-picker";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useOzaBase } from "../../../components/oza/use-oza-base";
@@ -10,8 +11,12 @@ import { Colors } from "../../../constants/colors";
 import { DEFAULT_OZA_SPORTS, OZA_NIVEAUX, OzaNiveau, OzaSport } from "../../../constants/oza-sports";
 import { Type } from "../../../constants/tokens";
 import { auth } from "../../../firebase";
+import { showAlert } from "../../../utils/alert";
 import {
+  clearOzaSportHeroImage,
   getOzaProgramsForSport,
+  isOzaAdmin,
+  setOzaSportHeroImage,
   getOzaSport,
   getOzaUserState,
   OzaProgram,
@@ -29,6 +34,7 @@ export default function OzaSportScreen() {
   const [userState, setUserState] = useState<OzaUserState | null>(null);
   const [positionId, setPositionId] = useState<string | null>(null);
   const [niveau, setNiveau] = useState<OzaNiveau | null>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
 
   useEffect(() => {
     if (!sportId) return;
@@ -45,6 +51,30 @@ export default function OzaSportScreen() {
     );
   }, [programs, positionId, niveau]);
 
+  async function changePhoto() {
+    const uid = auth.currentUser?.uid;
+    if (!uid || !sport) return;
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.8, allowsEditing: true, aspect: [3, 2] });
+    if (result.canceled) return;
+    setPhotoBusy(true);
+    try {
+      setSport(await setOzaSportHeroImage(uid, sport, result.assets[0].uri));
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
+
+  async function removePhoto() {
+    if (!sport) return;
+    try {
+      setSport(await clearOzaSportHeroImage(sport));
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
+  }
+
   if (!sport) return <View style={styles.container}>{<ActivityIndicator style={{ marginTop: 120 }} color={Colors.primary} />}</View>;
 
   const position = sport.positions.find((p) => p.id === positionId) ?? null;
@@ -56,6 +86,19 @@ export default function OzaSportScreen() {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
         <SportHero sport={sport} onBack={() => router.back()} />
+        {isOzaAdmin(auth.currentUser?.email) && (
+          <View style={styles.adminBar}>
+            <TouchableOpacity style={styles.adminButton} onPress={changePhoto} disabled={photoBusy}>
+              {photoBusy ? <ActivityIndicator size="small" color={Colors.primary} /> : <Ionicons name="image-outline" size={16} color={Colors.primary} />}
+              <Text style={styles.adminText}>{sport.heroImage ? "Changer la photo" : "Ajouter une photo d'action"}</Text>
+            </TouchableOpacity>
+            {!!sport.heroImage && (
+              <TouchableOpacity onPress={removePhoto}>
+                <Text style={styles.adminRemove}>Retirer</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
 
         <View style={styles.body}>
           <Text style={styles.section}>Choisis {label}</Text>
@@ -131,6 +174,10 @@ export default function OzaSportScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
+  adminBar: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 16, paddingTop: 14, width: "100%", maxWidth: 760, alignSelf: "center" },
+  adminButton: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: Colors.accentTint, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
+  adminText: { fontSize: 12.5, fontWeight: "700", color: Colors.primaryDark },
+  adminRemove: { fontSize: 12.5, fontWeight: "700", color: Colors.riskHigh },
   body: { padding: 20, width: "100%", maxWidth: 760, alignSelf: "center" },
   section: { fontFamily: Type.heading, fontSize: 22, color: Colors.text, marginBottom: 12 },
   infoCard: { backgroundColor: Colors.surface, borderRadius: 18, padding: 16, marginTop: 14, borderWidth: 1, borderColor: Colors.border },

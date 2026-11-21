@@ -2,6 +2,7 @@ import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } fro
 
 import { db } from "../firebase";
 import { DEFAULT_OZA_SPORTS, OzaNiveau, OzaSport } from "../constants/oza-sports";
+import { uploadExercisePhoto } from "./exercises";
 import { Programme, Seance, cloneSeance } from "./programmes";
 
 // ── Types ──
@@ -252,5 +253,23 @@ export async function resetOzaProgress(uid: string, programId: string): Promise<
   delete progress[programId];
   const next = { ...state, progress };
   await saveState(uid, next);
+  return next;
+}
+
+// Administrateur : met une photo d'action en tête d'un sport. La photo est
+// envoyée dans le stockage existant, puis la fiche du sport (catalogue par
+// défaut incluse) est enregistrée dans Firestore avec son `heroImage`.
+export async function setOzaSportHeroImage(uid: string, sport: OzaSport, localUri: string): Promise<OzaSport> {
+  const url = await uploadExercisePhoto(uid, `oza-sport-${sport.id}`, localUri);
+  const next: OzaSport = { ...sport, heroImage: url };
+  const { id, ...data } = next;
+  await setDoc(doc(db, "ozaSports", id), JSON.parse(JSON.stringify(data)));
+  return next;
+}
+
+export async function clearOzaSportHeroImage(sport: OzaSport): Promise<OzaSport> {
+  const next: OzaSport = { ...sport, heroImage: null };
+  const { id, ...data } = next;
+  await setDoc(doc(db, "ozaSports", id), JSON.parse(JSON.stringify(data)));
   return next;
 }

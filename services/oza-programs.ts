@@ -139,24 +139,30 @@ export async function setOzaProgramStatut(programId: string, statut: "brouillon"
   await setDoc(doc(db, "ozaPrograms", programId), { statut, updatedAt: new Date() }, { merge: true });
 }
 
-// Importe les programmes de démarrage en BROUILLON, sans écraser un programme
-// déjà présent (relu ou modifié depuis). Retourne le nombre ajouté.
-export async function seedStarterPrograms(): Promise<number> {
-  let added = 0;
+// Importe les programmes de démarrage en BROUILLON. Un programme déjà PUBLIÉ
+// n'est jamais touché ; un brouillon existant est mis à jour avec la dernière
+// version du générateur (version incrémentée). Retourne les compteurs.
+export async function seedStarterPrograms(): Promise<{ added: number; updated: number; skipped: number }> {
+  const res = { added: 0, updated: 0, skipped: 0 };
   for (const sp of STARTER_PROGRAMS) {
     const ref = doc(db, "ozaPrograms", sp.id);
-    if ((await getDoc(ref)).exists()) continue;
+    const existing = await getDoc(ref);
+    if (existing.exists() && existing.data().statut === "publie") {
+      res.skipped++;
+      continue;
+    }
     const { id: _id, ...data } = sp;
     await setDoc(ref, {
       ...JSON.parse(JSON.stringify(data)),
       dureeSemaines: sp.semaines.length,
       statut: "brouillon",
-      version: 1,
+      version: (existing.exists() ? (existing.data().version ?? 0) : 0) + 1,
       updatedAt: new Date(),
     });
-    added++;
+    if (existing.exists()) res.updated++;
+    else res.added++;
   }
-  return added;
+  return res;
 }
 
 export async function getOzaProgram(programId: string): Promise<OzaProgram | null> {

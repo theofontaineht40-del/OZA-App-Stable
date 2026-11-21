@@ -88,7 +88,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Cou et trapèzes : Shrugs 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Cou et trapèzes : Shrugs 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Épaules : Développé militaire haltères 3×6 RPE 8 (repos 2 min)
 - Gainage : Hollow body hold 3×25 s (repos 45 s)
 
@@ -98,7 +98,7 @@
 - Vitesse : Sprint 6×10 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 ### Rugby · Deuxième ligne — Intermédiaire · Deuxième ligne
@@ -123,7 +123,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Épaules : Développé militaire haltères 3×6 RPE 8 (repos 2 min)
 - Gainage : Hollow body hold 3×25 s (repos 45 s)
 
@@ -133,7 +133,7 @@
 - Vitesse : Sprint 6×15 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 ### Rugby · Troisième ligne — Intermédiaire · Troisième ligne
@@ -167,7 +167,7 @@
 - Vitesse : Sprint 6×20 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 - Capacité aérobie : Rameur 4×3 min RPE 7-8 (repos 2 min)
 
@@ -204,7 +204,7 @@
 - Changements de direction : Déplacement latéral — adduction 6×10 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 ### Rugby · Demi d'ouverture — Intermédiaire · Demi d'ouverture
@@ -222,7 +222,7 @@
 - Puissance du bas du corps : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Ischio-jambiers : Leg curl 3×6 RPE 8 (repos 60 s)
+- Ischio-jambiers : Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps : poussée et tirage**
@@ -240,7 +240,7 @@
 - Vitesse : Sprint 6×15 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 ### Rugby · Centres — Intermédiaire · Centres
@@ -275,7 +275,7 @@
 - Vitesse : Sprint 6×20 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 ### Rugby · Ailiers — Intermédiaire · Ailiers
@@ -293,7 +293,7 @@
 - Puissance du bas du corps : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Ischio-jambiers : Leg curl 3×6 RPE 8 (repos 60 s)
+- Ischio-jambiers : Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps : poussée et tirage**
@@ -327,7 +327,7 @@
 - Puissance du bas du corps : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Ischio-jambiers : Leg curl 3×6 RPE 8 (repos 60 s)
+- Ischio-jambiers : Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps : poussée et tirage**
@@ -344,7 +344,7 @@
 - Vitesse : Sprint 6×20 m RPE 9 (repos 2 min)
 - Chaîne postérieure : Hip thrust 5×4 RPE 8 (repos 3 min)
 - Balancé : Kettlebell swing 3×12 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Répétition d'efforts : Assault bike 6×20 s RPE 8 (repos 40 s)
 - Capacité aérobie : Rameur 4×3 min RPE 7-8 (repos 2 min)
 
@@ -397,7 +397,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -413,9 +413,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Gardien — Intermédiaire · Gardien
 
@@ -432,7 +432,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s) ; Box jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -448,10 +448,10 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Défenseur central — Intermédiaire · Défenseur central
 
@@ -468,8 +468,8 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -485,9 +485,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Latéral — Intermédiaire · Latéral
 
@@ -504,7 +504,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -521,9 +521,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Milieu défensif — Intermédiaire · Milieu défensif
 
@@ -540,8 +540,8 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -558,9 +558,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Milieu offensif — Intermédiaire · Milieu offensif
 
@@ -577,7 +577,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -595,9 +595,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Ailier — Intermédiaire · Ailier
 
@@ -614,7 +614,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -630,9 +630,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Football · Attaquant — Intermédiaire · Attaquant
 
@@ -649,7 +649,7 @@
 - Détente : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Prévention : Leg curl 3×6 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Prévention : Leg curl 3×10-15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et puissance**
 
@@ -666,9 +666,9 @@
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Frappe : rotation : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Chevilles : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Chevilles : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ## Basket-ball (7)
 
@@ -718,7 +718,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -734,7 +734,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Basket-ball · Meneur — Intermédiaire · Meneur
@@ -751,7 +751,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -768,7 +768,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Basket-ball · Arrière — Intermédiaire · Arrière
@@ -785,7 +785,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -802,7 +802,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Basket-ball · Ailier — Intermédiaire · Ailier
@@ -819,7 +819,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -835,7 +835,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Basket-ball · Ailier fort — Intermédiaire · Ailier fort
@@ -852,8 +852,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -869,7 +869,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Basket-ball · Pivot — Intermédiaire · Pivot
@@ -886,8 +886,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
-- Chevilles et adducteurs : Mollets debout 3×15 RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
+- Chevilles et adducteurs : Mollets debout 3×15 RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Détente verticale et vitesse**
 
@@ -902,7 +902,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Épaules : Face pull 3×15 RPE 8 (repos 60 s)
+- Épaules : Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ## Handball (7)
@@ -959,7 +959,7 @@
 - Rotation explosive : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -983,7 +983,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps et lancer**
@@ -991,7 +991,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -1025,7 +1025,7 @@
 - Rotation explosive : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -1058,7 +1058,7 @@
 - Chaîne cinétique du tir : Rotation en landmine (barre déséquilibrée) 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -1090,7 +1090,7 @@
 - Rotation explosive : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -1115,7 +1115,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps et lancer**
@@ -1124,7 +1124,7 @@
 - Rotation explosive : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Corps entier : vitesse et répétition d'efforts**
 
@@ -1178,7 +1178,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1207,7 +1207,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 - Endurance aérobie : Vélo 4×5 min RPE 7-8 (repos 2 min)
 
 **Intervalles : rameur et SkiErg**
@@ -1237,8 +1237,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
-- Endurance de force : Presse à cuisses 3×15 RPE 8 (repos 60 s) ; Fentes marchées 3×20 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
+- Endurance de force : Presse à cuisses 3×15 RPE 7 (repos 60 s) ; Fentes marchées 3×20 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1267,7 +1267,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1297,7 +1297,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1329,7 +1329,7 @@
 - Presse : Presse à cuisses 3×6 RPE 8 (repos 2 min)
 - Poussée de traîneau (substitut) : Départ résisté (élastique) 3×15 m RPE 8 (repos 2 min) ; Marche basse (position gardée) 3×20 m RPE 8 (repos 2 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1358,7 +1358,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1388,7 +1388,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Fentes et charnière : Fentes marchées 3×20 m RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×40 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×40 m RPE 7 (repos 60 s)
 
 **Intervalles : rameur et SkiErg**
 
@@ -1450,13 +1450,13 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
@@ -1464,7 +1464,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Rebonds : Corde à sauter 3×30 s (repos 90 s) ; Squat sauté 3×5 (repos 90 s)
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 ### Course à pied · 5 km — Intermédiaire · 5 km
 
@@ -1480,13 +1480,13 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
@@ -1495,7 +1495,7 @@
 - Rebonds : Corde à sauter 3×30 s (repos 90 s) ; Squat sauté 3×5 (repos 90 s)
 - Vitesse : Sprint 6×20 m RPE 9 (repos 2 min)
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 ### Course à pied · 10 km — Intermédiaire · 10 km
 
@@ -1511,14 +1511,14 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Endurance de force : Fentes marchées 3×20 m RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Endurance de force : Fentes marchées 3×20 m RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
@@ -1526,7 +1526,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Rebonds : Corde à sauter 3×30 s (repos 90 s) ; Squat sauté 3×5 (repos 90 s)
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 ### Course à pied · Semi-marathon — Intermédiaire · Semi-marathon
 
@@ -1542,15 +1542,15 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Endurance de force : Fentes marchées 3×20 m RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Endurance de force : Fentes marchées 3×20 m RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
@@ -1558,7 +1558,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Rebonds : Corde à sauter 3×30 s (repos 90 s) ; Squat sauté 3×5 (repos 90 s)
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 ### Course à pied · Marathon — Intermédiaire · Marathon
 
@@ -1574,22 +1574,22 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 ### Course à pied · Trail — Intermédiaire · Trail
 
@@ -1604,15 +1604,15 @@
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
-- Descente : excentrique : Reverse lunge 3×10 / jambe RPE 8 (repos 60 s)
+- Descente : excentrique : Reverse lunge 3×10 / jambe RPE 7 (repos 60 s)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et stabilité**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
-- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Hip thrust 3×10 RPE 8 (repos 60 s)
+- Hanches : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Hip thrust 3×10 RPE 7 (repos 60 s)
 - Haut du corps léger : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Pompes 3×10 RPE 8 (repos 2 min)
 
 **Pliométrie légère et mollets**
@@ -1620,8 +1620,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Rebonds : Corde à sauter 3×30 s (repos 90 s) ; Squat sauté 3×5 (repos 90 s)
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Pieds et chevilles : Mollets debout 3×15 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
-- Marche sur les talons : Marche sur les talons 3×20 m RPE 8 (repos 60 s)
+- Pieds et chevilles : Mollets debout 3×15 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
+- Marche sur les talons : Marche sur les talons 3×20 m RPE 7 (repos 60 s)
 
 ## Tennis (6)
 
@@ -1670,14 +1670,14 @@
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral : Reverse lunge 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
 - Première accélération : Sprint 6×10 m RPE 9 (repos 2 min)
-- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Haut du corps et épaule**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Rotation et gainage**
 
@@ -1702,7 +1702,7 @@
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral : Reverse lunge 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
 - Première accélération : Sprint 6×10 m RPE 9 (repos 2 min)
-- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 - Capacité aérobie : Rameur 4×3 min RPE 7-8 (repos 2 min)
 
 **Haut du corps et épaule**
@@ -1710,7 +1710,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Rotation et gainage**
 
@@ -1736,14 +1736,14 @@
 - Unilatéral : Reverse lunge 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
 - Première accélération : Sprint 6×5 m RPE 9 (repos 2 min)
 - Réaction au filet : Countermovement jump 3×3 (repos 90 s)
-- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Haut du corps et épaule**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Rotation et gainage**
 
@@ -1768,7 +1768,7 @@
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral : Reverse lunge 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
 - Première accélération : Sprint 6×10 m RPE 9 (repos 2 min)
-- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 8 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s)
+- Déplacements latéraux : Déplacement latéral — adduction 3×10 m RPE 7 (repos 60 s) ; Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s)
 
 **Haut du corps et épaule**
 
@@ -1776,8 +1776,8 @@
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Poussée verticale : Développé militaire haltères 3×6 RPE 8 (repos 2 min)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
-- Rotation externe : Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
+- Rotation externe : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Rotation et gainage**
 
@@ -1864,7 +1864,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -1895,8 +1895,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Ischio-jambiers : Leg curl 3×6 RPE 8 (repos 60 s)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Ischio-jambiers : Leg curl 3×10-15 RPE 7 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -1927,9 +1927,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Passage de haie : Rotation de hanche, genou levé 3×10 / côté RPE 8 (repos 60 s)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Passage de haie : Rotation de hanche, genou levé 3×10 / côté RPE 7 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -1960,7 +1960,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -1990,8 +1990,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Ischio-jambiers : Leg curl 3×6 RPE 8 (repos 60 s)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Ischio-jambiers : Leg curl 3×10-15 RPE 7 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -2022,7 +2022,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -2038,7 +2038,7 @@
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Rotation de lancer : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Tirage : Tirage horizontal 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 
 ### Athlétisme · Épreuves combinées — Intermédiaire · Épreuves combinées
@@ -2055,8 +2055,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Vitesse et pliométrie**
 
@@ -2121,7 +2121,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2136,7 +2136,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ### Volley-ball · Passeur — Intermédiaire · Passeur
@@ -2153,7 +2153,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2169,7 +2169,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ### Volley-ball · Réceptionneur-attaquant — Intermédiaire · Réceptionneur-attaquant
@@ -2186,7 +2186,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2202,7 +2202,7 @@
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Rotation d'attaque : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ### Volley-ball · Pointu — Intermédiaire · Pointu
@@ -2219,7 +2219,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2235,8 +2235,8 @@
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Rotation d'attaque : Swing baseball (rotation explosive) 3×3 (repos 90 s)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ### Volley-ball · Central — Intermédiaire · Central
@@ -2253,7 +2253,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2269,7 +2269,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé militaire haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ### Volley-ball · Libéro — Intermédiaire · Libéro
@@ -2286,7 +2286,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min)
-- Genou et cheville : Mollets debout 3×15 RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Genou et cheville : Mollets debout 3×15 RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 
 **Détente et puissance**
 
@@ -2302,7 +2302,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée verticale : Développé couché haltères 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing haltère 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Gainage : Hollow body hold 3×20 s (repos 45 s)
 
 ## Sports de combat (8)
@@ -2387,7 +2387,7 @@
 - Rotation explosive : Rotation tronc explosive, gauche à droite 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s)
+- Coiffe des rotateurs : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s)
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Rotation en landmine (barre déséquilibrée) 3×10 / côté (repos 45 s)
 
 **Condition physique : circuit**
@@ -2410,7 +2410,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps et rotation**
@@ -2419,7 +2419,7 @@
 - Rotation explosive : Rotation tronc explosive, gauche à droite 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Cou et trapèzes : Shrugs 3×12 RPE 8 (repos 60 s)
+- Cou et trapèzes : Shrugs 3×12 RPE 7 (repos 60 s)
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Rotation en landmine (barre déséquilibrée) 3×10 / côté (repos 45 s)
 
 **Condition physique : circuit**
@@ -2451,7 +2451,7 @@
 - Rotation explosive : Rotation tronc explosive, gauche à droite 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 5×4 RPE 8 (repos 3 min) ; Rowing barre 5×4 RPE 8 (repos 3 min)
-- Saisies : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Saisies : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Rotation en landmine (barre déséquilibrée) 3×10 / côté (repos 45 s)
 
 **Condition physique : circuit**
@@ -2473,9 +2473,9 @@
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat avant 5×4 RPE 8 (repos 3 min)
-- Cou et trapèzes : Shrugs 3×12 RPE 8 (repos 60 s)
+- Cou et trapèzes : Shrugs 3×12 RPE 7 (repos 60 s)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
-- Portés : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Portés : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 
 **Haut du corps et rotation**
@@ -2506,9 +2506,9 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
-- Relevé au sol : Relevé au sol (get-up) 3×5 / côté RPE 8 (repos 60 s)
+- Relevé au sol : Relevé au sol (get-up) 3×5 / côté RPE 7 (repos 60 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 **Haut du corps et rotation**
 
@@ -2516,7 +2516,7 @@
 - Rotation explosive : Rotation tronc explosive, gauche à droite 3×3 (repos 90 s)
 - Poussée : Développé couché 5×4 RPE 8 (repos 3 min)
 - Tirage : Tractions 3×6 RPE 8 (repos 2 min) ; Rowing barre 3×6 RPE 8 (repos 2 min)
-- Saisies : Farmer's walk 3×30 m RPE 8 (repos 60 s)
+- Saisies : Farmer's walk 3×30 m RPE 7 (repos 60 s)
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Rotation en landmine (barre déséquilibrée) 3×10 / côté (repos 45 s)
 
 **Condition physique : circuit**
@@ -2541,7 +2541,7 @@
 - Charnière et unilatéral : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Reverse lunge 3×8 / jambe RPE 8 (repos 2 min)
 - Coup de pied : extension de hanche : Kettlebell swing 3×12 (repos 90 s)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 **Haut du corps et rotation**
 
@@ -2602,7 +2602,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage et pull-over : Rowing haltère 3×6 RPE 8 (repos 2 min) ; Tirage bras tendus (poulie haute) 3×6 RPE 8 (repos 2 min)
-- Épaule : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Épaule : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Bas du corps et départs**
 
@@ -2616,7 +2616,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
-- Rotation : Pallof press 3×10 / côté RPE 8 (repos 60 s)
+- Rotation : Pallof press 3×10 / côté RPE 7 (repos 60 s)
 
 ### Natation · Sprint — Intermédiaire · Sprint
 
@@ -2632,7 +2632,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage et pull-over : Rowing haltère 3×6 RPE 8 (repos 2 min) ; Tirage bras tendus (poulie haute) 3×6 RPE 8 (repos 2 min)
-- Épaule : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Épaule : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Bas du corps et départs**
 
@@ -2646,7 +2646,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
-- Rotation : Pallof press 3×10 / côté RPE 8 (repos 60 s)
+- Rotation : Pallof press 3×10 / côté RPE 7 (repos 60 s)
 
 ### Natation · Demi-fond — Intermédiaire · Demi-fond
 
@@ -2662,8 +2662,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage et pull-over : Rowing haltère 3×6 RPE 8 (repos 2 min) ; Tirage bras tendus (poulie haute) 3×6 RPE 8 (repos 2 min)
-- Endurance de traction : Tirage vertical 3×15 RPE 8 (repos 60 s)
-- Épaule : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Endurance de traction : Tirage vertical 3×15 RPE 7 (repos 60 s)
+- Épaule : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Bas du corps et départs**
 
@@ -2676,7 +2676,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
-- Rotation : Pallof press 3×10 / côté RPE 8 (repos 60 s)
+- Rotation : Pallof press 3×10 / côté RPE 7 (repos 60 s)
 
 ### Natation · Fond — Intermédiaire · Fond
 
@@ -2692,8 +2692,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage et pull-over : Rowing haltère 3×6 RPE 8 (repos 2 min) ; Tirage bras tendus (poulie haute) 3×6 RPE 8 (repos 2 min)
-- Épaule : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
-- Mobilité d'épaule : Mobilité épaule 3×12 RPE 8 (repos 60 s)
+- Épaule : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
+- Mobilité d'épaule : Mobilité épaule 3×12 RPE 7 (repos 60 s)
 
 **Bas du corps et départs**
 
@@ -2706,7 +2706,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
-- Rotation : Pallof press 3×10 / côté RPE 8 (repos 60 s)
+- Rotation : Pallof press 3×10 / côté RPE 7 (repos 60 s)
 
 ### Natation · Eau libre — Intermédiaire · Eau libre
 
@@ -2722,8 +2722,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage et pull-over : Rowing haltère 3×6 RPE 8 (repos 2 min) ; Tirage bras tendus (poulie haute) 3×6 RPE 8 (repos 2 min)
-- Épaule : Rotation externe R1 (poulie) 3×15 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
-- Stabilité scapulaire : Tirage scapulaire 3×12 RPE 8 (repos 60 s)
+- Épaule : Rotation externe R1 (poulie) 3×15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
+- Stabilité scapulaire : Tirage scapulaire 3×12 RPE 7 (repos 60 s)
 
 **Bas du corps et départs**
 
@@ -2736,8 +2736,8 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Hollow body hold 3×20 s (repos 45 s) ; Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
 - Poussée : Développé couché haltères 5×4 RPE 8 (repos 3 min)
-- Rotation : Pallof press 3×10 / côté RPE 8 (repos 60 s)
-- Rotation du tronc : Rotation du tronc (machine) 3×12 RPE 8 (repos 60 s)
+- Rotation : Pallof press 3×10 / côté RPE 7 (repos 60 s)
+- Rotation du tronc : Rotation du tronc (machine) 3×12 RPE 7 (repos 60 s)
 
 ## Cyclisme (6)
 
@@ -2784,21 +2784,21 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et presse : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et dos**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Charnière de hanche : Soulevé de terre roumain 5×4 RPE 8 (repos 3 min)
 - Poussée de hanche : Hip thrust 3×6 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Gainage et puissance**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Puissance : Squat sauté 3×3 (repos 90 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ### Cyclisme · Route — Intermédiaire · Route
 
@@ -2814,22 +2814,22 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et presse : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Endurance de force : Presse à cuisses 3×15 RPE 8 (repos 60 s)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Endurance de force : Presse à cuisses 3×15 RPE 7 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et dos**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Charnière de hanche : Soulevé de terre roumain 5×4 RPE 8 (repos 3 min)
 - Poussée de hanche : Hip thrust 3×6 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Gainage et puissance**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Puissance : Squat sauté 3×3 (repos 90 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ### Cyclisme · VTT — Intermédiaire · VTT
 
@@ -2845,14 +2845,14 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et presse : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et dos**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Charnière de hanche : Soulevé de terre roumain 5×4 RPE 8 (repos 3 min)
 - Poussée de hanche : Hip thrust 3×6 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Poussée et tirage : Développé couché haltères 3×6 RPE 8 (repos 2 min) ; Tractions 3×6 RPE 8 (repos 2 min)
 
 **Gainage et puissance**
@@ -2860,7 +2860,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Puissance : Box jump 3×3 (repos 90 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ### Cyclisme · Piste — Intermédiaire · Piste
 
@@ -2877,21 +2877,21 @@
 - Départ : Countermovement jump 3×3 (repos 90 s)
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et presse : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et dos**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Charnière de hanche : Soulevé de terre roumain 5×4 RPE 8 (repos 3 min)
 - Poussée de hanche : Hip thrust 3×6 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Gainage et puissance**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Puissance : Box jump 3×3 (repos 90 s) ; Squat sauté 3×3 (repos 90 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ### Cyclisme · Gravel — Intermédiaire · Gravel
 
@@ -2907,14 +2907,14 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et presse : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et dos**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Charnière de hanche : Soulevé de terre roumain 5×4 RPE 8 (repos 3 min)
 - Poussée de hanche : Hip thrust 3×6 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Poussée et tirage : Développé couché haltères 3×6 RPE 8 (repos 2 min) ; Tirage horizontal 3×6 RPE 8 (repos 2 min)
 
 **Gainage et puissance**
@@ -2922,7 +2922,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Puissance : Squat sauté 3×3 (repos 90 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ## CrossFit (6)
 
@@ -2997,7 +2997,7 @@
 - Squat avant : Squat avant 5×4 RPE 8 (repos 3 min)
 - Charnière : Soulevé de terre 3×6 RPE 8 (repos 2 min)
 - Gainage : Pallof press 3×10 / côté (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s)
-- Mobilité d'épaule et de cheville : Mobilité épaule 3×12 RPE 8 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 8 (repos 60 s)
+- Mobilité d'épaule et de cheville : Mobilité épaule 3×12 RPE 7 (repos 60 s) ; Montée sur pointes de pieds (mobilisation cheville) 3×15 RPE 7 (repos 60 s)
 
 **Force : poussée et tirage**
 
@@ -3145,20 +3145,20 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et épaules**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Tirage et épaule : Tractions 3×6 RPE 8 (repos 2 min) ; Rotation externe R1 (poulie) 3×15 RPE 8 (repos 2 min)
-- Posture : Face pull 3×15 RPE 8 (repos 60 s)
+- Posture : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et prévention**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Rebonds : Corde à sauter 3×30 s (repos 90 s)
 
 ### Triathlon · Sprint — Intermédiaire · Sprint
@@ -3175,20 +3175,20 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et épaules**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Tirage et épaule : Tractions 3×6 RPE 8 (repos 2 min) ; Rotation externe R1 (poulie) 3×15 RPE 8 (repos 2 min)
-- Posture : Face pull 3×15 RPE 8 (repos 60 s)
+- Posture : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et prévention**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Rebonds : Corde à sauter 3×30 s (repos 90 s)
 - Transition vélo-course (circuit) : Fentes marchées 4×10 m RPE 7 (repos 2 min) ; Corde à sauter 4×30 s RPE 7 (repos 2 min)
 
@@ -3206,21 +3206,21 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Endurance de force : Fentes marchées 3×20 m RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Endurance de force : Fentes marchées 3×20 m RPE 7 (repos 60 s)
 
 **Gainage et épaules**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Tirage et épaule : Tractions 3×6 RPE 8 (repos 2 min) ; Rotation externe R1 (poulie) 3×15 RPE 8 (repos 2 min)
-- Posture : Face pull 3×15 RPE 8 (repos 60 s)
+- Posture : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et prévention**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
 - Rebonds : Corde à sauter 3×30 s (repos 90 s)
 
 ### Triathlon · Distance 70.3 — Intermédiaire · Distance 70.3
@@ -3237,22 +3237,22 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
-- Endurance de force : Fentes marchées 3×20 m RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
+- Endurance de force : Fentes marchées 3×20 m RPE 7 (repos 60 s)
 
 **Gainage et épaules**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Tirage et épaule : Tractions 3×6 RPE 8 (repos 2 min) ; Rotation externe R1 (poulie) 3×15 RPE 8 (repos 2 min)
-- Posture : Face pull 3×15 RPE 8 (repos 60 s)
+- Posture : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et prévention**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ### Triathlon · Distance Ironman — Intermédiaire · Distance Ironman
 
@@ -3268,22 +3268,22 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Unilatéral et charnière : Split squat bulgare 3×8 / jambe RPE 8 (repos 2 min) ; Soulevé de terre roumain 3×6 RPE 8 (repos 2 min)
-- Mollets : Mollets debout 3×15 RPE 8 (repos 60 s)
+- Mollets : Mollets debout 3×15 RPE 7 (repos 60 s)
 
 **Gainage et épaules**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tronc : Gainage (planche) 3×30 s (repos 45 s) ; Gainage latéral 3×25 s / côté (repos 45 s) ; Pallof press 3×10 / côté (repos 45 s)
 - Tirage et épaule : Tractions 3×6 RPE 8 (repos 2 min) ; Rotation externe R1 (poulie) 3×15 RPE 8 (repos 2 min)
-- Dos : Tirage horizontal 3×6 RPE 8 (repos 60 s)
-- Posture : Face pull 3×15 RPE 8 (repos 60 s)
+- Dos : Tirage horizontal 3×10-15 RPE 7 (repos 60 s)
+- Posture : Face pull 3×15 RPE 7 (repos 60 s)
 
 **Chaîne postérieure et prévention**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée de hanche : Hip thrust 5×4 RPE 8 (repos 3 min)
-- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 8 (repos 60 s) ; Leg curl 3×6 RPE 8 (repos 60 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Prévention : Planche latérale Copenhague 3×20 s / côté RPE 7 (repos 60 s) ; Leg curl 3×10-15 RPE 7 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 ## Musculation (7)
 
@@ -3331,21 +3331,21 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 4×8 RPE 8 (repos 2 min 30)
 - Poussée verticale : Développé militaire haltères 3×10 RPE 8 (repos 90 s) ; Dips 3×8 RPE 8 (repos 90 s)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
 
 **Tirage : dos, biceps**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 4×8 RPE 8 (repos 2 min 30)
 - Tirage horizontal : Rowing barre 3×10 RPE 8 (repos 90 s) ; Tirage vertical 3×10 RPE 8 (repos 90 s)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Jambes**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 4×8 RPE 8 (repos 2 min 30)
 - Charnière et presse : Soulevé de terre roumain 3×10 RPE 8 (repos 90 s) ; Presse à cuisses 3×10 RPE 8 (repos 90 s)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Musculation · Hypertrophie — Intermédiaire · Hypertrophie
 
@@ -3361,22 +3361,22 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 4×8 RPE 8 (repos 2 min 30)
 - Poussée verticale : Développé militaire haltères 3×10 RPE 8 (repos 90 s) ; Dips 3×8 RPE 8 (repos 90 s)
-- Pectoraux : isolation : Butterfly (pec deck) 3×15 RPE 8 (repos 60 s)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
+- Pectoraux : isolation : Butterfly (pec deck) 3×15 RPE 7 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
 
 **Tirage : dos, biceps**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 4×8 RPE 8 (repos 2 min 30)
 - Tirage horizontal : Rowing barre 3×10 RPE 8 (repos 90 s) ; Tirage vertical 3×10 RPE 8 (repos 90 s)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Jambes**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 4×8 RPE 8 (repos 2 min 30)
 - Charnière et presse : Soulevé de terre roumain 3×10 RPE 8 (repos 90 s) ; Presse à cuisses 3×10 RPE 8 (repos 90 s)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Musculation · Perte de poids — Intermédiaire · Perte de poids
 
@@ -3392,7 +3392,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Poussée verticale : Développé militaire haltères 3×6 RPE 8 (repos 2 min) ; Dips 3×8 RPE 8 (repos 2 min)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
 - Finisher métabolique : Assault bike 6×20 s RPE 8 (repos 40 s)
 
 **Tirage : dos, biceps**
@@ -3400,7 +3400,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage horizontal : Rowing barre 3×6 RPE 8 (repos 2 min) ; Tirage vertical 3×6 RPE 8 (repos 2 min)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 - Finisher métabolique : Rameur 6×20 s RPE 8 (repos 40 s)
 
 **Jambes**
@@ -3408,7 +3408,7 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et presse : Soulevé de terre roumain 3×6 RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 - Finisher métabolique : Corde à sauter 6×30 s RPE 8 (repos 40 s)
 
 ### Musculation · Force — Intermédiaire · Force
@@ -3425,21 +3425,21 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 5×4 RPE 8 (repos 3 min)
 - Poussée verticale : Développé militaire haltères 3×6 RPE 8 (repos 2 min) ; Dips 3×8 RPE 8 (repos 2 min)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
 
 **Tirage : dos, biceps**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage horizontal : Rowing barre 3×6 RPE 8 (repos 2 min) ; Tirage vertical 3×6 RPE 8 (repos 2 min)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Jambes**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 5×4 RPE 8 (repos 3 min)
 - Charnière et presse : Soulevé de terre 3×6 RPE 8 (repos 2 min) ; Presse à cuisses 3×6 RPE 8 (repos 2 min)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Musculation · Haltérophilie — Intermédiaire · Haltérophilie
 
@@ -3455,14 +3455,14 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat avant (réception) : Squat avant 5×4 RPE 8 (repos 3 min)
 - Poussée verticale : Développé militaire haltères 3×6 RPE 8 (repos 2 min) ; Dips 3×8 RPE 8 (repos 2 min)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
 
 **Tirage : dos, biceps**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 5×4 RPE 8 (repos 3 min)
 - Tirage horizontal : Rowing barre 3×6 RPE 8 (repos 2 min) ; Tirage vertical 3×6 RPE 8 (repos 2 min)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Jambes**
 
@@ -3470,7 +3470,7 @@
 - Puissance de saut : Box jump 3×3 (repos 90 s)
 - Squat : Squat avant 5×4 RPE 8 (repos 3 min)
 - Tirage de sol : Soulevé de terre 3×6 RPE 8 (repos 2 min) ; Hip thrust 3×6 RPE 8 (repos 2 min)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 
 ### Musculation · Renforcement musculaire — Intermédiaire · Renforcement musculaire
 
@@ -3486,20 +3486,20 @@
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Poussée horizontale : Développé couché 4×8 RPE 8 (repos 2 min 30)
 - Poussée verticale : Développé militaire haltères 3×10 RPE 8 (repos 90 s) ; Dips 3×8 RPE 8 (repos 90 s)
-- Isolation : Élévations latérales 3×15 RPE 8 (repos 60 s) ; Extension triceps 3×12 RPE 8 (repos 60 s)
-- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 8 (repos 60 s)
+- Isolation : Élévations latérales 3×15 RPE 7 (repos 60 s) ; Extension triceps 3×12 RPE 7 (repos 60 s)
+- Mobilité de hanche : Étirement fessier debout (figure 4) 3×30 s / côté RPE 7 (repos 60 s)
 
 **Tirage : dos, biceps**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Tirage vertical : Tractions 4×8 RPE 8 (repos 2 min 30)
 - Tirage horizontal : Rowing barre 3×10 RPE 8 (repos 90 s) ; Tirage vertical 3×10 RPE 8 (repos 90 s)
-- Isolation : Curl biceps 3×12 RPE 8 (repos 60 s) ; Face pull 3×15 RPE 8 (repos 60 s)
+- Isolation : Curl biceps 3×12 RPE 7 (repos 60 s) ; Face pull 3×15 RPE 7 (repos 60 s)
 
 **Jambes**
 
 - Échauffement : Rotation de hanche, genou levé 1×10 / côté ; Marche basse (position gardée) 1×10 m ; Mobilité épaule 1×10
 - Squat : Squat arrière 4×8 RPE 8 (repos 2 min 30)
 - Charnière et presse : Soulevé de terre roumain 3×10 RPE 8 (repos 90 s) ; Presse à cuisses 3×10 RPE 8 (repos 90 s)
-- Isolation : Leg curl 3×12 RPE 8 (repos 60 s) ; Mollets debout 3×15 RPE 8 (repos 60 s)
+- Isolation : Leg curl 3×12 RPE 7 (repos 60 s) ; Mollets debout 3×15 RPE 7 (repos 60 s)
 - Gainage : Gainage (planche) 3×30 s (repos 45 s) ; Hollow body hold 3×20 s (repos 45 s)

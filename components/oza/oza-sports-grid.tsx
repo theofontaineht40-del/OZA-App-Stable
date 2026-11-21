@@ -59,12 +59,10 @@ export default function OzaSportsGrid() {
 
   async function seedPrograms() {
     try {
-      const n = await seedStarterPrograms();
+      const { added, updated, skipped } = await seedStarterPrograms();
       showAlert(
-        n > 0 ? "Programmes importés" : "Déjà importés",
-        n > 0
-          ? `${n} programme${n > 1 ? "s" : ""} ajouté${n > 1 ? "s" : ""} en brouillon. Ouvre le sport Rugby pour les relire, puis publie-les.`
-          : "Les programmes de démarrage sont déjà dans Firebase."
+        "Programmes importés",
+        `${added} ajouté(s), ${updated} brouillon(s) mis à jour, ${skipped} publié(s) laissé(s) intact(s). Ouvre un sport pour relire les brouillons avant de publier.`
       );
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));

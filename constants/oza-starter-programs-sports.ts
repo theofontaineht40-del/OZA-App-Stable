@@ -55,10 +55,15 @@ function prescribe(slot: Slot, level: OzaNiveau, w: number, e: ExSpec, onde: Ond
       return deb
         ? { ...base, series: p.series, reps: e.reps ?? p.reps, rpe: p.rpe, repos: p.repos }
         : { ...base, series: onde.secondaire.series, reps: e.reps ?? onde.secondaire.reps, rpe: onde.secondaire.rpe, repos: onde.secondaire.repos };
-    case "accessoire":
+    case "accessoire": {
+      // Exercices d'isolation et accessoires : fourchette de répétitions
+      // propre à ces exercices, indépendante de la qualité dominante de la
+      // semaine (une série de 6 répétitions à RPE 8 sur un leg curl n'a pas de sens).
+      const decharge = onde.theme === "Décharge";
       return deb
         ? { ...base, series: "3", reps: e.reps ?? "12", rpe: "5", repos: "60 s" }
-        : { ...base, series: "3", reps: e.reps ?? onde.secondaire.reps, rpe: onde.secondaire.rpe, repos: "60 s" };
+        : { ...base, series: decharge ? "2" : "3", reps: e.reps ?? "10-15", rpe: decharge ? "6" : "7", repos: "60 s" };
+    }
     case "power":
       return deb
         ? { ...base, series: "2", reps: e.reps ?? "5", repos: "90 s" }

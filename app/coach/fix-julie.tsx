@@ -218,7 +218,7 @@ export default function FixDuplicatesScreen() {
       }
 
       showAlert("Terminé", "Fusion et nettoyage effectués.");
-      router.replace("/coach/sportifs");
+      router.replace("/coach");
     } catch (error) {
       showAlert("Erreur", error instanceof Error ? error.message : String(error));
     } finally {

@@ -220,7 +220,7 @@ export default function SportifDetailScreen() {
     try {
       await deleteManagedSportif(id, coachUid);
       setDeleteStep("none");
-      router.replace("/coach/sportifs");
+      router.replace("/coach");
     } catch {
       showAlert("Erreur", "Impossible de supprimer ce profil pour le moment.");
     } finally {
@@ -255,7 +255,7 @@ export default function SportifDetailScreen() {
       >
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={20} color={Colors.text} />
-          <Text style={styles.backText}>Mes sportifs</Text>
+          <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
 
         <Text style={styles.title}>{name}</Text>
@@ -334,7 +334,7 @@ export default function SportifDetailScreen() {
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="chevron-back" size={20} color={Colors.text} />
-        <Text style={styles.backText}>Mes sportifs</Text>
+        <Text style={styles.backText}>Retour</Text>
       </TouchableOpacity>
 
       <View style={styles.header}>

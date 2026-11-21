@@ -312,6 +312,28 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ── OZA Programs : bibliothèque gratuite de programmes par sport ──
+    // Contenu public (lisible par tout compte connecté), écrit uniquement par
+    // l'administrateur OZA. Un programme n'est visible qu'une fois "publie".
+    function isOzaAdmin() {
+      return isSignedIn() && request.auth.token.email == "coaching.oza@gmail.com";
+    }
+
+    match /ozaSports/{sportId} {
+      allow read: if isSignedIn();
+      allow write: if isOzaAdmin();
+    }
+
+    match /ozaPrograms/{programId} {
+      allow read: if isSignedIn() && (resource.data.statut == "publie" || isOzaAdmin());
+      allow write: if isOzaAdmin();
+    }
+
+    // Favoris et progression : strictement personnels (id = uid).
+    match /ozaUserState/{uid} {
+      allow read, write: if isSignedIn() && uid == request.auth.uid;
+    }
+
     // ── Retours du coach sur une séance réalisée ──
     // Un document par séance (id = id de la séance) : le coach principal y
     // écrit son retour, le sportif le lit et peut seulement le marquer "vu"

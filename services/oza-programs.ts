@@ -1,0 +1,235 @@
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+
+import { db } from "../firebase";
+import { DEFAULT_OZA_SPORTS, OzaNiveau, OzaSport } from "../constants/oza-sports";
+import { Programme, Seance, cloneSeance } from "./programmes";
+
+// ── Types ──
+
+// Une semaine d'un cycle : un thème, des consignes générales, des séances.
+export type OzaWeek = {
+  numero: number;
+  theme: string;
+  consignes: string;
+  seances: Seance[];
+};
+
+export type OzaProgram = {
+  id: string;
+  sportId: string;
+  positionId: string | null;
+  nom: string;
+  objectif: string;
+  publicCible: string;
+  dureeSemaines: number;
+  seancesParSemaine: number;
+  niveau: OzaNiveau;
+  materiel: string[];
+  // Répartition des qualités physiques (en %), à renseigner par l'auteur.
+  qualites: { nom: string; pct: number }[];
+  semaines: OzaWeek[];
+  statut: "brouillon" | "publie";
+  version: number;
+};
+
+// Progression d'un utilisateur dans un programme.
+export type OzaProgress = {
+  startedAt: number;
+  lastOpenedAt: number;
+  // Où reprendre : semaine et séance en cours.
+  currentWeek: number;
+  currentSeanceId: string | null;
+  // Séances terminées, clé "semaine:seanceId".
+  done: string[];
+};
+
+export type OzaUserState = {
+  favorites: string[];
+  progress: Record<string, OzaProgress>;
+};
+
+// L'administrateur OZA : seul compte qui publie des programmes (les règles
+// Firestore font la même vérification côté serveur).
+export const OZA_ADMIN_EMAIL = "coaching.oza@gmail.com";
+export function isOzaAdmin(email: string | null | undefined): boolean {
+  return !!email && email.toLowerCase() === OZA_ADMIN_EMAIL;
+}
+
+// ── Sports ──
+
+// Firestore d'abord (gestion dynamique des contenus) ; le catalogue par défaut
+// prend le relais tant que la collection est vide ou illisible.
+export async function getOzaSports(): Promise<OzaSport[]> {
+  try {
+    const snap = await getDocs(collection(db, "ozaSports"));
+    const fromDb = snap.docs
+      .map((d) => ({ ...(d.data() as Omit<OzaSport, "id">), id: d.id }))
+      .filter((s) => s.actif !== false);
+    if (fromDb.length > 0) return fromDb.sort((a, b) => a.ordre - b.ordre);
+  } catch {
+    // règles pas encore publiées, hors-ligne… on retombe sur le catalogue
+  }
+  return DEFAULT_OZA_SPORTS;
+}
+
+export async function getOzaSport(sportId: string): Promise<OzaSport | null> {
+  const sports = await getOzaSports();
+  return sports.find((s) => s.id === sportId) ?? null;
+}
+
+// Enregistre le catalogue par défaut dans Firestore (administrateur) : il
+// devient alors modifiable sans toucher au code.
+export async function seedDefaultOzaSports(): Promise<number> {
+  for (const sport of DEFAULT_OZA_SPORTS) {
+    const { id, ...data } = sport;
+    await setDoc(doc(db, "ozaSports", id), data);
+  }
+  return DEFAULT_OZA_SPORTS.length;
+}
+
+// ── Programmes ──
+
+function toProgram(id: string, d: Record<string, any>): OzaProgram {
+  return {
+    id,
+    sportId: d.sportId,
+    positionId: d.positionId ?? null,
+    nom: d.nom ?? "",
+    objectif: d.objectif ?? "",
+    publicCible: d.publicCible ?? "",
+    dureeSemaines: d.dureeSemaines ?? (d.semaines?.length ?? 0),
+    seancesParSemaine: d.seancesParSemaine ?? 0,
+    niveau: d.niveau ?? "intermediaire",
+    materiel: d.materiel ?? [],
+    qualites: d.qualites ?? [],
+    semaines: d.semaines ?? [],
+    statut: d.statut === "publie" ? "publie" : "brouillon",
+    version: d.version ?? 1,
+  };
+}
+
+// Les règles n'autorisent que des lectures filtrées sur statut == "publie".
+export async function getOzaProgramsForSport(sportId: string): Promise<OzaProgram[]> {
+  const snap = await getDocs(
+    query(collection(db, "ozaPrograms"), where("sportId", "==", sportId), where("statut", "==", "publie"))
+  );
+  return snap.docs.map((d) => toProgram(d.id, d.data())).sort((a, b) => a.nom.localeCompare(b.nom));
+}
+
+export async function getOzaProgram(programId: string): Promise<OzaProgram | null> {
+  const snap = await getDoc(doc(db, "ozaPrograms", programId));
+  return snap.exists() ? toProgram(snap.id, snap.data()) : null;
+}
+
+// Programmes favoris de l'utilisateur (un lot de lectures par id, plafonné).
+export async function getOzaProgramsByIds(ids: string[]): Promise<OzaProgram[]> {
+  const list = await Promise.all(ids.slice(0, 20).map((id) => getOzaProgram(id).catch(() => null)));
+  return list.filter((p): p is OzaProgram => p !== null && p.statut === "publie");
+}
+
+// Publie (ou met à jour) un programme construit dans l'éditeur du coach.
+// Les séances de l'éditeur sont réparties en semaines de `seancesParSemaine`.
+export async function publishProgrammeToOza(
+  programme: Programme,
+  meta: Omit<OzaProgram, "id" | "semaines" | "nom" | "dureeSemaines" | "version"> & { nom?: string },
+  existingId?: string
+): Promise<string> {
+  const perWeek = Math.max(1, meta.seancesParSemaine || 1);
+  const semaines: OzaWeek[] = [];
+  for (let i = 0; i < programme.seances.length; i += perWeek) {
+    semaines.push({
+      numero: semaines.length + 1,
+      theme: "",
+      consignes: "",
+      seances: programme.seances.slice(i, i + perWeek).map((se) => cloneSeance(se, se.nom)),
+    });
+  }
+  const ref = existingId ? doc(db, "ozaPrograms", existingId) : doc(collection(db, "ozaPrograms"));
+  const prev = existingId ? await getDoc(ref) : null;
+  await setDoc(ref, {
+    ...meta,
+    nom: meta.nom?.trim() || programme.nom,
+    dureeSemaines: semaines.length,
+    // JSON aller-retour : Firestore refuse les champs `undefined`.
+    semaines: JSON.parse(JSON.stringify(semaines)),
+    version: (prev?.exists() ? (prev.data().version ?? 0) : 0) + 1,
+    updatedAt: new Date(),
+  });
+  return ref.id;
+}
+
+// ── État utilisateur : favoris et progression ──
+
+const EMPTY_STATE: OzaUserState = { favorites: [], progress: {} };
+
+export async function getOzaUserState(uid: string): Promise<OzaUserState> {
+  try {
+    const snap = await getDoc(doc(db, "ozaUserState", uid));
+    if (!snap.exists()) return EMPTY_STATE;
+    const d = snap.data();
+    return { favorites: d.favorites ?? [], progress: d.progress ?? {} };
+  } catch {
+    return EMPTY_STATE;
+  }
+}
+
+async function saveState(uid: string, state: OzaUserState): Promise<void> {
+  await setDoc(doc(db, "ozaUserState", uid), state);
+}
+
+export async function toggleOzaFavorite(uid: string, programId: string): Promise<OzaUserState> {
+  const state = await getOzaUserState(uid);
+  const favorites = state.favorites.includes(programId)
+    ? state.favorites.filter((f) => f !== programId)
+    : [programId, ...state.favorites];
+  const next = { ...state, favorites };
+  await saveState(uid, next);
+  return next;
+}
+
+export function seanceKey(week: number, seanceId: string): string {
+  return `${week}:${seanceId}`;
+}
+
+// Démarre (ou reprend) un programme : crée la progression si besoin.
+export async function startOzaProgram(uid: string, program: OzaProgram): Promise<OzaUserState> {
+  const state = await getOzaUserState(uid);
+  const existing = state.progress[program.id];
+  const first = program.semaines[0]?.seances[0]?.id ?? null;
+  const progress: OzaProgress = existing
+    ? { ...existing, lastOpenedAt: Date.now() }
+    : { startedAt: Date.now(), lastOpenedAt: Date.now(), currentWeek: 1, currentSeanceId: first, done: [] };
+  const next = { ...state, progress: { ...state.progress, [program.id]: progress } };
+  await saveState(uid, next);
+  return next;
+}
+
+// Marque une séance terminée et avance le point de reprise à la suivante.
+export async function completeOzaSeance(
+  uid: string,
+  program: OzaProgram,
+  week: number,
+  seanceId: string
+): Promise<OzaUserState> {
+  const state = await getOzaUserState(uid);
+  const prev = state.progress[program.id];
+  const done = Array.from(new Set([...(prev?.done ?? []), seanceKey(week, seanceId)]));
+  const flat = program.semaines.flatMap((w) => w.seances.map((se) => ({ week: w.numero, id: se.id })));
+  const next = flat.find((x) => !done.includes(seanceKey(x.week, x.id)));
+  const progress: OzaProgress = {
+    startedAt: prev?.startedAt ?? Date.now(),
+    lastOpenedAt: Date.now(),
+    currentWeek: next?.week ?? week,
+    currentSeanceId: next?.id ?? null,
+    done,
+  };
+  const out = { ...state, progress: { ...state.progress, [program.id]: progress } };
+  await saveState(uid, out);
+  return out;
+}
+
+export function programProgress(program: OzaProgram, progress: OzaProgress | undefined): number {
+  const total = program.semaines.reduce((n, w) => n + w.seances.length, 0);
+  if (total === 0 || !progress) return 0;
+  return Math.min(1, progress.done.length / total);
+}

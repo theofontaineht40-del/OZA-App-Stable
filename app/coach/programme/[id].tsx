@@ -53,6 +53,8 @@ import {
   Seance,
 } from "../../../services/programmes";
 import { getExerciseLibrary } from "../../../services/exercises";
+import { OZA_NIVEAUX, OzaNiveau, OzaSport } from "../../../constants/oza-sports";
+import { getOzaSports, isOzaAdmin, publishProgrammeToOza } from "../../../services/oza-programs";
 import {
   deleteWarmupProtocol,
   getWarmupProtocols,
@@ -78,6 +80,18 @@ export default function ProgrammeEditorScreen() {
   // Bibliothèque de séances modèles (importer dans ce programme).
   const [templates, setTemplates] = useState<Programme[]>([]);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  // Publication dans OZA Programs (réservée à l'administrateur OZA).
+  const [showOzaPublish, setShowOzaPublish] = useState(false);
+  const [ozaSports, setOzaSports] = useState<OzaSport[]>([]);
+  const [ozaSportId, setOzaSportId] = useState<string | null>(null);
+  const [ozaPositionId, setOzaPositionId] = useState<string | null>(null);
+  const [ozaNiveau, setOzaNiveau] = useState<OzaNiveau>("intermediaire");
+  const [ozaPerWeek, setOzaPerWeek] = useState("3");
+  const [ozaObjectif, setOzaObjectif] = useState("");
+  const [ozaPublic, setOzaPublic] = useState("");
+  const [ozaMateriel, setOzaMateriel] = useState("");
+  const [ozaQualites, setOzaQualites] = useState("");
+  const [ozaPublish, setOzaPublishFlag] = useState(false);
   const [activeSeanceId, setActiveSeanceId] = useState<string | null>(null);
   const [pickerBlocId, setPickerBlocId] = useState<string | null>(null);
   const [replaceExerciceId, setReplaceExerciceId] = useState<string | null>(null);
@@ -232,6 +246,51 @@ export default function ProgrammeEditorScreen() {
     setProgrammeObjectif(programme!.id, objectif);
   }
 
+  async function openOzaPublish() {
+    if (ozaSports.length === 0) setOzaSports(await getOzaSports());
+    setShowOzaPublish(true);
+  }
+
+  async function confirmOzaPublish() {
+    if (!ozaSportId) {
+      showAlert("Sport manquant", "Choisis le sport de ce programme.");
+      return;
+    }
+    // "Force:40, Puissance:30" → [{nom, pct}]
+    const qualites = ozaQualites
+      .split(",")
+      .map((q) => q.trim())
+      .filter(Boolean)
+      .map((q) => {
+        const [nom, pct] = q.split(":");
+        return { nom: nom.trim(), pct: Math.max(0, Math.min(100, parseInt(pct ?? "0", 10) || 0)) };
+      });
+    try {
+      await publishProgrammeToOza(
+        programme!,
+        {
+          sportId: ozaSportId,
+          positionId: ozaPositionId,
+          objectif: ozaObjectif.trim(),
+          publicCible: ozaPublic.trim(),
+          seancesParSemaine: Math.max(1, parseInt(ozaPerWeek, 10) || 1),
+          niveau: ozaNiveau,
+          materiel: ozaMateriel.split(",").map((m) => m.trim()).filter(Boolean),
+          qualites,
+          statut: ozaPublish ? "publie" : "brouillon",
+        },
+        programme!.id // même id : republier met à jour le programme OZA
+      );
+      setShowOzaPublish(false);
+      showAlert(
+        ozaPublish ? "Publié" : "Brouillon enregistré",
+        ozaPublish ? "Le programme est visible dans OZA Programs." : "Il n'est pas encore visible : publie-le quand il est prêt."
+      );
+    } catch (error) {
+      showAlert("Erreur", error instanceof Error ? error.message : String(error));
+    }
+  }
+
   function handleDuplicateSeance() {
     const copy = cloneSeance(activeSeance, `${activeSeance.nom} (copie)`);
     updateSeances((seances) => {
@@ -318,7 +377,15 @@ export default function ProgrammeEditorScreen() {
   }
 
   function handleUpdateBloc(blocId: string, patch: Partial<Bloc>) {
-    updateBlocs((blocs) => blocs.map((b) => (b.id === blocId ? { ...b, ...patch } : b)));
+    updateBlocs((blocs) =>
+      blocs.map((b) => {
+        if (b.id !== blocId) return b;
+        const merged = { ...b, ...patch } as Record<string, unknown>;
+        // Firestore refuse `undefined` : un champ remis à undefined est retiré.
+        for (const k of Object.keys(merged)) if (merged[k] === undefined) delete merged[k];
+        return merged as unknown as Bloc;
+      })
+    );
   }
 
   function handleDeleteBloc(blocId: string) {
@@ -626,6 +693,13 @@ export default function ProgrammeEditorScreen() {
           <Text style={styles.addBlocButtonText}>Ajouter un bloc</Text>
         </TouchableOpacity>
 
+        {!isSeanceModel && isOzaAdmin(auth.currentUser?.email) && (
+          <TouchableOpacity style={styles.addBlocButton} onPress={openOzaPublish}>
+            <Ionicons name="cloud-upload-outline" size={20} color={Colors.primary} />
+            <Text style={styles.addBlocButtonText}>Publier dans OZA Programs</Text>
+          </TouchableOpacity>
+        )}
+
         {!isSeanceModel && (
           <TouchableOpacity style={styles.addBlocButton} onPress={() => setShowTemplatePicker(true)}>
             <Ionicons name="albums-outline" size={20} color={Colors.primary} />
@@ -650,6 +724,73 @@ export default function ProgrammeEditorScreen() {
         onSelect={handleReplaceExercice}
         onSelectMany={handleAddExercicesToBloc}
       />
+
+      <Modal visible={showOzaPublish} animationType="fade" transparent onRequestClose={() => setShowOzaPublish(false)}>
+        <View style={styles.protocolBackdrop}>
+          <View style={[styles.protocolCard, { maxHeight: "88%" }]}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.protocolTitle}>Publier dans OZA Programs</Text>
+              <Text style={styles.protocolHint}>
+                Les séances sont réparties en semaines. Republier ce programme met à jour la version OZA Programs.
+              </Text>
+
+              <Text style={styles.ozaLabel}>Sport</Text>
+              <View style={styles.ozaChips}>
+                {ozaSports.map((sp) => (
+                  <TouchableOpacity key={sp.id} style={[styles.ozaChip, ozaSportId === sp.id && styles.ozaChipOn]} onPress={() => { setOzaSportId(sp.id); setOzaPositionId(null); }}>
+                    <Text style={[styles.ozaChipText, ozaSportId === sp.id && { color: Colors.white }]}>{sp.nom}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {!!ozaSportId && (
+                <>
+                  <Text style={styles.ozaLabel}>Poste / spécialité</Text>
+                  <View style={styles.ozaChips}>
+                    {[{ id: null as string | null, nom: "Tous" }, ...(ozaSports.find((sp) => sp.id === ozaSportId)?.positions ?? [])].map((po) => (
+                      <TouchableOpacity key={po.id ?? "all"} style={[styles.ozaChip, ozaPositionId === po.id && styles.ozaChipOn]} onPress={() => setOzaPositionId(po.id)}>
+                        <Text style={[styles.ozaChipText, ozaPositionId === po.id && { color: Colors.white }]}>{po.nom}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              )}
+
+              <Text style={styles.ozaLabel}>Niveau</Text>
+              <View style={styles.ozaChips}>
+                {OZA_NIVEAUX.map((n) => (
+                  <TouchableOpacity key={n.key} style={[styles.ozaChip, ozaNiveau === n.key && styles.ozaChipOn]} onPress={() => setOzaNiveau(n.key)}>
+                    <Text style={[styles.ozaChipText, ozaNiveau === n.key && { color: Colors.white }]}>{n.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={styles.ozaLabel}>Séances par semaine</Text>
+              <TextInput style={styles.protocolInput} value={ozaPerWeek} onChangeText={setOzaPerWeek} keyboardType="numeric" />
+              <Text style={styles.ozaLabel}>Objectif principal</Text>
+              <TextInput style={styles.protocolInput} value={ozaObjectif} onChangeText={setOzaObjectif} placeholder="Ex. Développer la force maximale" placeholderTextColor={Colors.textSecondary} />
+              <Text style={styles.ozaLabel}>Public concerné</Text>
+              <TextInput style={styles.protocolInput} value={ozaPublic} onChangeText={setOzaPublic} placeholder="Ex. Joueurs de niveau régional" placeholderTextColor={Colors.textSecondary} />
+              <Text style={styles.ozaLabel}>Matériel (séparé par des virgules)</Text>
+              <TextInput style={styles.protocolInput} value={ozaMateriel} onChangeText={setOzaMateriel} placeholder="Barre, haltères, box" placeholderTextColor={Colors.textSecondary} />
+              <Text style={styles.ozaLabel}>Qualités (nom:pourcentage, séparées par des virgules)</Text>
+              <TextInput style={styles.protocolInput} value={ozaQualites} onChangeText={setOzaQualites} placeholder="Force:40, Puissance:30, Vitesse:30" placeholderTextColor={Colors.textSecondary} />
+
+              <TouchableOpacity style={styles.ozaPublishRow} onPress={() => setOzaPublishFlag((v) => !v)}>
+                <Ionicons name={ozaPublish ? "checkbox" : "square-outline"} size={22} color={Colors.primary} />
+                <Text style={styles.protocolName}>Visible par les utilisateurs (sinon : brouillon)</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.protocolSave} onPress={confirmOzaPublish}>
+                <Text style={styles.protocolSaveText}>Enregistrer</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.protocolClose} onPress={() => setShowOzaPublish(false)}>
+                <Text style={styles.protocolCloseText}>Annuler</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         visible={showTemplatePicker}
@@ -893,6 +1034,24 @@ function BlocCard({
         })}
       </View>
       {blocModeWarning(bloc) && <Text style={styles.modeWarning}>{blocModeWarning(bloc)}</Text>}
+
+      {/* Rôle du bloc (affichage dans OZA Programs) : facultatif. */}
+      <View style={styles.modeRow}>
+        {(
+          [
+            ["echauffement", "Échauffement"],
+            ["specifique", "Prép. spécifique"],
+            ["principal", "Principal"],
+          ] as const
+        ).map(([key, label]) => {
+          const active = bloc.role === key;
+          return (
+            <TouchableOpacity key={key} style={[styles.modeChip, active && styles.modeChipActive]} onPress={() => onUpdate({ role: active ? undefined : key })}>
+              <Text style={[styles.modeChipText, active && styles.modeChipTextActive]}>{label}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
 
       {bloc.exercices.map((ex, i) => (
         <ExerciceCard
@@ -1687,6 +1846,41 @@ const styles = StyleSheet.create({
   },
   objectifChipTextActive: {
     color: Colors.white,
+  },
+  ozaLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: Colors.textSecondary,
+    marginTop: 12,
+    marginBottom: 6,
+  },
+  ozaChips: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  ozaChip: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    backgroundColor: Colors.surface,
+  },
+  ozaChipOn: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  ozaChipText: {
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+  ozaPublishRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginVertical: 14,
   },
   statsRow: {
     paddingHorizontal: 20,

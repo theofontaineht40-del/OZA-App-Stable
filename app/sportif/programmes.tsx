@@ -8,6 +8,7 @@ import { Animated, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View }
 import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
 import GradientFill from "../../components/gradient-fill";
+import OzaSportsGrid from "../../components/oza/oza-sports-grid";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
 import ExerciseThumb from "../../components/exercise-thumb";
@@ -25,6 +26,7 @@ export default function SportifProgrammesScreen() {
   const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Objectif | null>(null);
+  const [mode, setMode] = useState<"mine" | "oza">("mine");
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -101,6 +103,27 @@ export default function SportifProgrammesScreen() {
       >
       <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
       <Text style={styles.title}>Programmes</Text>
+
+      {/* Deux espaces : les programmes donnés par le coach, et la bibliothèque
+          gratuite OZA Programs (par sport et par poste). */}
+      <View style={styles.modeSeg}>
+        {(
+          [
+            ["mine", "Mes programmes"],
+            ["oza", "OZA Programs"],
+          ] as const
+        ).map(([key, label]) => (
+          <TouchableOpacity key={key} style={[styles.modeItem, mode === key && styles.modeItemOn]} onPress={() => setMode(key)}>
+            {mode === key && <GradientFill />}
+            <Text style={[styles.modeText, mode === key && styles.modeTextOn]}>{label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {mode === "oza" ? (
+        <OzaSportsGrid />
+      ) : (
+      <>
 
       {objectifs.length > 0 && (
         <ScrollView
@@ -226,6 +249,8 @@ export default function SportifProgrammesScreen() {
           ))}
         </>
       )}
+      </>
+      )}
       </Animated.View>
       </ScrollView>
     </View>
@@ -250,6 +275,36 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text,
     marginBottom: 20,
+  },
+
+  modeSeg: {
+    flexDirection: "row",
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 14,
+    padding: 4,
+    marginBottom: 16,
+  },
+
+  modeItem: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 10,
+    borderRadius: 11,
+    overflow: "hidden",
+  },
+
+  modeItemOn: {
+    backgroundColor: Colors.primary,
+  },
+
+  modeText: {
+    fontSize: 13.5,
+    fontWeight: "700",
+    color: Colors.textSecondary,
+  },
+
+  modeTextOn: {
+    color: Colors.white,
   },
 
   tabsScroll: {

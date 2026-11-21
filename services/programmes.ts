@@ -64,8 +64,13 @@ export function blocModeWarning(bloc: { mode?: BlocMode; exercices: unknown[] })
   }
 }
 
+// Rôle d'un bloc dans une séance OZA Programs (sert à l'affichage : échauffement,
+// préparation spécifique, travail principal). `undefined` = bloc ordinaire.
+export type BlocRole = "echauffement" | "specifique" | "principal";
+
 export type Bloc = {
   id: string;
+  role?: BlocRole;
   nom: string;
   objectif: string;
   couleur: string;

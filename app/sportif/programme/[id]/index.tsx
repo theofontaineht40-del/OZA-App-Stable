@@ -162,7 +162,7 @@ export default function SportifProgrammeViewScreen() {
                         end={{ x: 0.5, y: 1 }}
                         style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
                       />
-                      <Text style={styles.seanceHeroEyebrow}>{programme.objectif ?? programme.nom}</Text>
+                      <Text style={styles.seanceHeroEyebrow}>{programme.objectif ?? "Programme"}</Text>
                       <Text style={styles.seanceHeroTitle}>{seance.nom}</Text>
                       <View style={styles.seanceHeroMeta}>
                         <View style={styles.metaChip}>

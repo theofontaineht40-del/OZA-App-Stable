@@ -814,7 +814,7 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Jusqu'à 10 minutes lors d'une séance très lourde ; 3 minutes = récupération incomplète (cours force max). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort »."
+    "notes": "Jusqu'à 10 minutes lors d'une séance très lourde ; 3 minutes = récupération incomplète (cours force max). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ». Confirmé par le coach (2026-11-21) : 3 à 8 min."
   },
   {
     "id": "B-coach-force-maximale-tstt",
@@ -1489,9 +1489,9 @@
     "parameter": "RPE : masse (hypertrophie myofibrillaire)",
     "unit": "RPE (0-10)",
     "value": {
-      "min": null,
-      "recommended": 9,
-      "max": null
+      "min": 9,
+      "recommended": null,
+      "max": 10
     },
     "sportIds": "*",
     "target": {
@@ -1504,7 +1504,7 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Lecture du tableau extrait à confirmer (« 9/10 »). Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
+    "notes": "Confirmé par le coach (2026-11-21) : RPE 9 à 10. Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
   },
   {
     "id": "B-coach-volume-rpe",
@@ -1512,9 +1512,9 @@
     "parameter": "RPE : volume (hypertrophie sarcoplasmique)",
     "unit": "RPE (0-10)",
     "value": {
-      "min": null,
-      "recommended": 9,
-      "max": null
+      "min": 9,
+      "recommended": null,
+      "max": 10
     },
     "sportIds": "*",
     "target": {
@@ -1527,7 +1527,7 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Lecture du tableau extrait à confirmer (« 9/10 »). Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
+    "notes": "Confirmé par le coach (2026-11-21) : RPE 9 à 10. Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement)."
   },
   {
     "id": "B-coach-efforts-sous-maximaux-rpe",

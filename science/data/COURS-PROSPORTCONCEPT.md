@@ -42,12 +42,12 @@ Ils seront régénérés par le moteur à partir des règles que tu valides.
 - **Perte de poids** : faible intensité (débutant, obésité importante), très haute intensité (HIIT, Tabata, after-burn), masse musculaire (métabolisme de base), volume + cardio haute intensité, efforts modérés à intenses (70-90 % VMA). Estimation du métabolisme de base (Oxford, Harris-Benedict) et de la masse grasse (plis cutanés).
 - **Suivi** : sRPE (RPE × minutes), HOOPER (fatigue, stress, sommeil, courbatures), CMJ, charge externe et interne, TRIMP de Banister.
 
-## Lectures ambiguës à confirmer
+## Lectures ambiguës : réponses du coach (2026-11-21)
 
-1. « Séries par muscle » (split 6-12, half body 3-10, full body 3-6) : par séance ou par semaine ?
-2. RPE de la masse et du volume : le tableau extrait indique « 9/10 » : RPE 9 ?
-3. Le 30"/30" : 100 % VMA (programmation intersaison) ou environ 105 % (exemples du tableur) ?
-4. Récupération de la force max : 3 à 8 min (tableau des paramètres) ou 3 à 10 min (cours force max) ?
-5. Zone orange de l'ACWR : 1,3 à 1,4 (diapositive) ou 1,3 à 1,5 ?
+1. Séries par muscle (split 6-12, demi-corps 3-10, corps entier 3-6) : **par séance**. Règles mises à jour.
+2. RPE de la masse et du volume : **9 à 10**. Règles mises à jour.
+3. 30"/30" : 100 % de la VMA (intersaison) ou environ 105 % (tableur) ? **Pas de réponse reçue** : les deux règles restent en brouillon.
+4. Récupération de la force max : **3 à 8 min** (règle confirmée ; jusqu'à 10 min seulement en séance très lourde, d'après le cours de force max).
+5. Zone orange de l'ACWR (1,3 à 1,4 ou 1,3 à 1,5) : **pas de réponse reçue**, la règle de vigilance garde 1,3 à 1,5.
 
 Documents non exploités pour les règles (peu de valeurs chiffrées) : échauffement, étirements, mobilité, biomécanique, anatomie par le mouvement, préparation mentale, montée en charge et parade, renforcement, fiche d'auto-évaluation UC4, 5 piliers du bien-être.

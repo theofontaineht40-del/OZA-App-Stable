@@ -681,7 +681,7 @@
     "id": "A-coach-series-muscle-split",
     "category": "A",
     "parameter": "Séries par muscle (hypertrophie, split)",
-    "unit": "séries/muscle",
+    "unit": "séries/muscle/séance",
     "value": {
       "min": 6,
       "recommended": null,
@@ -698,13 +698,13 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
+    "notes": "Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
   },
   {
     "id": "A-coach-series-muscle-half-body",
     "category": "A",
     "parameter": "Séries par muscle (hypertrophie, half body)",
-    "unit": "séries/muscle",
+    "unit": "séries/muscle/séance",
     "value": {
       "min": 3,
       "recommended": null,
@@ -721,13 +721,13 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
+    "notes": "Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
   },
   {
     "id": "A-coach-series-muscle-full-body",
     "category": "A",
     "parameter": "Séries par muscle (hypertrophie, full body)",
-    "unit": "séries/muscle",
+    "unit": "séries/muscle/séance",
     "value": {
       "min": 3,
       "recommended": null,
@@ -744,6 +744,6 @@
     "conditions": "Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.",
     "status": "brouillon",
     "version": 1,
-    "notes": "Lecture à confirmer : par séance ou par semaine ? Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
+    "notes": "Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie »."
   }
 ]

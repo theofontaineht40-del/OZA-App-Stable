@@ -161,9 +161,9 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   discWrap: {
     position: "absolute",
-    right: -150,
-    bottom: -90,
-    opacity: 0.28,
+    right: -190,
+    bottom: -170,
+    opacity: 0.3,
     pointerEvents: "none",
   },
 

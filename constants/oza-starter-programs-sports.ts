@@ -431,6 +431,231 @@ const SPORTS: SportDef[] = [
       },
     ],
   },
+  {
+    sportId: "tennis",
+    nom: "Tennis",
+    objectifApproche: "Construire la force des jambes, la stabilité d'épaule et le gainage avant un travail explosif",
+    objectifGeneral: "Gagner en explosivité de déplacement, en puissance de rotation et en solidité d'épaule",
+    publicApproche: "Joueur débutant ou qui reprend",
+    publicGeneral: "Joueur régulier depuis plus d'un an",
+    materiel: ["Salle de sport complète", "Barre et rack", "Haltères", "Élastiques"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 35 }, { nom: "Force des jambes", pct: 25 }, { nom: "Stabilité d'épaule", pct: 25 }, { nom: "Gainage", pct: 15 }],
+    qualitesGeneral: [{ nom: "Explosivité de déplacement", pct: 25 }, { nom: "Puissance de rotation", pct: 25 }, { nom: "Force des jambes", pct: 20 }, { nom: "Santé de l'épaule", pct: 20 }, { nom: "Gainage", pct: 10 }],
+    seances: [
+      {
+        nom: "Bas du corps et déplacements",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Squat", objectif: "Force des jambes pour les appuis.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+          { slot: "secondaire", nom: "Unilatéral", objectif: "Fentes et changements d'appui.", couleur: GREEN, exos: [{ id: "reverse-lunge", reps: "8 / jambe" }, { id: "souleve-terre-roumain" }] },
+          { slot: "vitesse", intermediaireOnly: true, nom: "Première accélération", objectif: "Démarrer vite sur 5 à 10 m, comme sur un point.", couleur: NAVY, exos: [{ id: "sprint", reps: "10 m" }] },
+          { slot: "accessoire", nom: "Déplacements latéraux", objectif: "Appuis latéraux et adducteurs.", couleur: GOLD, exos: [{ id: "deplacement-lateral-adduction", reps: "10 m" }, { id: "planche-copenhague", reps: "20 s / côté" }] },
+        ],
+      },
+      {
+        nom: "Haut du corps et épaule",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Poussée", objectif: "Force de poussée.", couleur: TEAL, exos: [{ id: "developpe-couche-halteres" }] },
+          { slot: "secondaire", nom: "Tirage", objectif: "Équilibrer la poussée, protéger l'épaule.", couleur: GREEN, exos: [{ id: "tirage-horizontal" }, { id: "rowing-haltere" }] },
+          { slot: "accessoire", nom: "Coiffe des rotateurs", objectif: "Santé de l'épaule, premier site de blessure du joueur.", couleur: GOLD, exos: [{ id: "rotation-externe-r1", reps: "15" }, { id: "face-pull", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Rotation et gainage",
+        blocs: [
+          { slot: "power", intermediaireOnly: true, role: "specifique", nom: "Rotation explosive", objectif: "Transmettre la force des jambes au bras.", couleur: NAVY, exos: [{ id: "swing-baseball-rotation" }] },
+          { slot: "principal", role: "principal", nom: "Poussée de hanche", objectif: "Extension de hanche puissante.", couleur: TEAL, exos: [{ id: "hip-thrust" }] },
+          GAINAGE_ROT,
+          { slot: "gainage", nom: "Rotation contrôlée", objectif: "Contrôler les rotations du tronc.", couleur: SKY, exos: [{ id: "rotation-landmine", reps: "10 / côté" }] },
+        ],
+      },
+    ],
+  },
+  {
+    sportId: "volley",
+    nom: "Volley-ball",
+    objectifApproche: "Construire la force des jambes, la stabilité d'épaule et le gainage avant un travail de détente",
+    objectifGeneral: "Gagner en détente, en puissance d'attaque et en solidité d'épaule et de genou",
+    publicApproche: "Joueur débutant ou qui reprend, tous postes",
+    publicGeneral: "Joueur régulier depuis plus d'un an, tous postes",
+    materiel: ["Salle de sport complète", "Barre et rack", "Haltères", "Box de pliométrie"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 35 }, { nom: "Force des jambes", pct: 30 }, { nom: "Stabilité d'épaule", pct: 20 }, { nom: "Gainage", pct: 15 }],
+    qualitesGeneral: [{ nom: "Détente verticale", pct: 30 }, { nom: "Puissance d'attaque", pct: 20 }, { nom: "Force des jambes", pct: 25 }, { nom: "Santé de l'épaule et du genou", pct: 25 }],
+    seances: [
+      {
+        nom: "Bas du corps : force",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Squat", objectif: "Force des jambes.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+          { slot: "secondaire", nom: "Charnière et unilatéral", objectif: "Chaîne postérieure, stabilité du genou.", couleur: GREEN, exos: [{ id: "souleve-terre-roumain" }, { id: "split-squat", reps: "8 / jambe" }] },
+          { slot: "accessoire", nom: "Genou et cheville", objectif: "Prévention du genou du sauteur.", couleur: GOLD, exos: [{ id: "mollets-debout", reps: "15" }, { id: "leg-curl" }] },
+        ],
+      },
+      {
+        nom: "Détente et puissance",
+        blocs: [
+          { slot: "power", role: "specifique", nom: "Détente", objectif: "Sauter plus haut : intention maximale, réception contrôlée.", couleur: NAVY, exos: [{ id: "cmj" }, { id: "box-jump" }] },
+          { slot: "principal", role: "principal", nom: "Squat avant", objectif: "Force des jambes, buste droit.", couleur: TEAL, exos: [{ id: "squat-avant" }] },
+          { slot: "secondaire", nom: "Poussée de hanche", objectif: "Extension de hanche puissante.", couleur: GREEN, exos: [{ id: "hip-thrust" }] },
+          { slot: "finisher", intermediaireOnly: true, nom: "Répétition d'efforts", objectif: "Répéter des efforts courts et intenses.", couleur: GOLD, exos: [{ id: "corde-a-sauter", reps: "30 s" }] },
+        ],
+      },
+      {
+        nom: "Haut du corps et épaule",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Poussée verticale", objectif: "Force au-dessus de la tête, comme en attaque.", couleur: TEAL, exos: [{ id: "developpe-militaire-halteres" }] },
+          { slot: "secondaire", nom: "Tirage", objectif: "Équilibrer la poussée.", couleur: GREEN, exos: [{ id: "tractions" }, { id: "rowing-haltere" }] },
+          { slot: "accessoire", nom: "Coiffe des rotateurs", objectif: "Santé de l'épaule du frappeur.", couleur: GOLD, exos: [{ id: "rotation-externe-r1", reps: "15" }, { id: "face-pull", reps: "15" }] },
+          { slot: "gainage", nom: "Gainage", objectif: "Stabilité du tronc en l'air.", couleur: SKY, exos: [{ id: "hollow-body", reps: "20 s" }] },
+        ],
+      },
+    ],
+  },
+  {
+    sportId: "natation",
+    nom: "Natation",
+    objectifApproche: "Construire la force générale, la stabilité d'épaule et le gainage hors de l'eau",
+    objectifGeneral: "Gagner en force de traction, en gainage et en puissance de départ, en complément du travail dans l'eau",
+    publicApproche: "Nageur débutant ou qui reprend",
+    publicGeneral: "Nageur régulier depuis plus d'un an",
+    materiel: ["Salle de sport complète", "Barre et rack", "Haltères", "Poulie"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 35 }, { nom: "Force générale", pct: 25 }, { nom: "Stabilité d'épaule", pct: 25 }, { nom: "Gainage", pct: 15 }],
+    qualitesGeneral: [{ nom: "Force de traction", pct: 30 }, { nom: "Gainage", pct: 25 }, { nom: "Santé de l'épaule", pct: 20 }, { nom: "Puissance de départ et de virage", pct: 15 }, { nom: "Force des jambes", pct: 10 }],
+    seances: [
+      {
+        nom: "Haut du corps : traction",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Tirage vertical", objectif: "Force de traction, comme dans l'eau.", couleur: TEAL, exos: [{ id: "tractions" }] },
+          { slot: "secondaire", nom: "Tirage et pull-over", objectif: "Grand dorsal, tirage bras tendus.", couleur: GREEN, exos: [{ id: "rowing-haltere" }, { id: "pull-over-poulie-haute" }] },
+          { slot: "accessoire", nom: "Épaule", objectif: "Stabilité de l'épaule, premier site de blessure du nageur.", couleur: GOLD, exos: [{ id: "rotation-externe-r1", reps: "15" }, { id: "face-pull", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Bas du corps et départs",
+        blocs: [
+          { slot: "power", intermediaireOnly: true, role: "specifique", nom: "Détente de départ", objectif: "Puissance de jambes pour le plot et les virages.", couleur: NAVY, exos: [{ id: "cmj" }] },
+          { slot: "principal", role: "principal", nom: "Squat", objectif: "Force des jambes.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+          { slot: "secondaire", nom: "Charnière", objectif: "Chaîne postérieure.", couleur: GREEN, exos: [{ id: "souleve-terre-roumain" }, { id: "hip-thrust" }] },
+        ],
+      },
+      {
+        nom: "Gainage et poussée",
+        blocs: [
+          { slot: "gainage", nom: "Gainage", objectif: "Garder un corps gainé et aligné dans l'eau.", couleur: GOLD, exos: [{ id: "hollow-body", reps: "20 s" }, { id: "gainage-planche", reps: "30 s" }, { id: "gainage-lateral", reps: "25 s / côté" }] },
+          { slot: "principal", role: "principal", nom: "Poussée", objectif: "Force de poussée, équilibre musculaire.", couleur: TEAL, exos: [{ id: "developpe-couche-halteres" }] },
+          { slot: "accessoire", nom: "Rotation", objectif: "Rotation du tronc et du bassin.", couleur: SKY, exos: [{ id: "pallof-press", reps: "10 / côté" }] },
+        ],
+      },
+    ],
+  },
+  {
+    sportId: "cyclisme",
+    nom: "Cyclisme",
+    objectifApproche: "Construire la force des jambes, du dos et du gainage pour mieux pédaler et protéger le dos",
+    objectifGeneral: "Gagner en force des jambes, en puissance de pédalage et en tenue du dos sur la durée",
+    publicApproche: "Cycliste débutant ou qui reprend",
+    publicGeneral: "Cycliste régulier depuis plus d'un an",
+    materiel: ["Salle de sport complète", "Barre et rack", "Haltères"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 35 }, { nom: "Force des jambes", pct: 30 }, { nom: "Gainage et dos", pct: 25 }, { nom: "Haut du corps", pct: 10 }],
+    qualitesGeneral: [{ nom: "Force des jambes", pct: 35 }, { nom: "Puissance de pédalage", pct: 20 }, { nom: "Gainage et dos", pct: 25 }, { nom: "Mobilité de hanche", pct: 10 }, { nom: "Haut du corps", pct: 10 }],
+    seances: [
+      {
+        nom: "Force des jambes",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Squat", objectif: "Force pour les montées et les relances.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+          { slot: "secondaire", nom: "Unilatéral et presse", objectif: "Chaque jambe pédale seule : équilibrer les deux.", couleur: GREEN, exos: [{ id: "split-squat", reps: "8 / jambe" }, { id: "presse-cuisses" }] },
+          { slot: "accessoire", nom: "Mollets", objectif: "Transmission de la force à la pédale.", couleur: GOLD, exos: [{ id: "mollets-debout", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Chaîne postérieure et dos",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Charnière de hanche", objectif: "Fessiers et ischio-jambiers, moteurs du pédalage.", couleur: TEAL, exos: [{ id: "souleve-terre-roumain" }] },
+          { slot: "secondaire", nom: "Poussée de hanche", objectif: "Fessiers.", couleur: GREEN, exos: [{ id: "hip-thrust" }] },
+          { slot: "accessoire", nom: "Dos", objectif: "Tenir la position en selle sans douleur.", couleur: GOLD, exos: [{ id: "tirage-horizontal" }, { id: "face-pull", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Gainage et puissance",
+        blocs: [
+          { slot: "gainage", nom: "Gainage", objectif: "Stabilité du tronc sur le vélo.", couleur: GOLD, exos: [{ id: "gainage-planche", reps: "30 s" }, { id: "gainage-lateral", reps: "25 s / côté" }, { id: "pallof-press", reps: "10 / côté" }] },
+          { slot: "power", intermediaireOnly: true, role: "specifique", nom: "Puissance", objectif: "Relances explosives.", couleur: NAVY, exos: [{ id: "squat-saute" }] },
+          { slot: "accessoire", nom: "Mobilité de hanche", objectif: "Garder de l'amplitude malgré la position assise.", couleur: SKY, exos: [{ id: "etirement-fessier-debout", reps: "30 s / côté" }] },
+        ],
+      },
+    ],
+  },
+  {
+    sportId: "crossfit",
+    nom: "CrossFit",
+    objectifApproche: "Apprendre les mouvements de base du CrossFit avant d'ajouter de l'intensité",
+    objectifGeneral: "Gagner en force, en puissance et en capacité à enchaîner des mouvements à haute intensité",
+    publicApproche: "Pratiquant débutant ou qui reprend",
+    publicGeneral: "Pratiquant régulier depuis plus d'un an",
+    materiel: ["Salle de sport complète", "Barre et rack", "Kettlebell", "Rameur", "Assault bike"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 40 }, { nom: "Force générale", pct: 25 }, { nom: "Gainage", pct: 20 }, { nom: "Condition physique", pct: 15 }],
+    qualitesGeneral: [{ nom: "Force", pct: 30 }, { nom: "Puissance", pct: 20 }, { nom: "Capacité à enchaîner", pct: 30 }, { nom: "Gainage", pct: 10 }, { nom: "Endurance aérobie", pct: 10 }],
+    seances: [
+      {
+        nom: "Force : squat et tirage",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Squat avant", objectif: "Force des jambes, base des mouvements olympiques.", couleur: TEAL, exos: [{ id: "squat-avant" }] },
+          { slot: "secondaire", nom: "Charnière", objectif: "Chaîne postérieure.", couleur: GREEN, exos: [{ id: "solueve-terre" }] },
+          GAINAGE_ROT,
+        ],
+      },
+      {
+        nom: "Force : poussée et tirage",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Poussée verticale", objectif: "Développé : force au-dessus de la tête.", couleur: TEAL, exos: [{ id: "developpe-militaire" }] },
+          { slot: "secondaire", nom: "Tirage", objectif: "Tractions et tirage horizontal.", couleur: GREEN, exos: [{ id: "tractions" }, { id: "rowing-barre" }] },
+          { slot: "power", intermediaireOnly: true, nom: "Pliométrie", objectif: "Puissance de jambes.", couleur: NAVY, exos: [{ id: "box-jump" }] },
+        ],
+      },
+      {
+        nom: "Conditionnement",
+        blocs: [
+          { slot: "circuit", mode: "circuit", role: "principal", nom: "Circuit métabolique", objectif: "Enchaîner les mouvements sans temps mort, qualité d'abord.", couleur: TEAL, exos: [{ id: "kettlebell-swing", reps: "15" }, { id: "burpees", reps: "8" }, { id: "rameur", reps: "250 m" }, { id: "corde-a-sauter", reps: "30 s" }] },
+          { slot: "finisher", intermediaireOnly: true, nom: "Finisher", objectif: "Finir sous fatigue, garder la technique.", couleur: GOLD, exos: [{ id: "assault-bike" }] },
+        ],
+      },
+    ],
+  },
+  {
+    sportId: "triathlon",
+    nom: "Triathlon",
+    objectifApproche: "Renforcer les jambes, le tronc et les épaules pour tenir les trois disciplines et moins se blesser",
+    objectifGeneral: "Gagner en solidité et en économie de mouvement sur les trois disciplines, en complément du plan d'entraînement",
+    publicApproche: "Triathlète débutant ou qui reprend",
+    publicGeneral: "Triathlète régulier depuis plus d'un an",
+    materiel: ["Salle de sport complète", "Barre et rack", "Haltères"],
+    qualitesApproche: [{ nom: "Technique des mouvements de base", pct: 35 }, { nom: "Force des jambes", pct: 25 }, { nom: "Gainage", pct: 25 }, { nom: "Stabilité d'épaule", pct: 15 }],
+    qualitesGeneral: [{ nom: "Force des jambes", pct: 25 }, { nom: "Gainage et stabilité", pct: 30 }, { nom: "Santé de l'épaule", pct: 20 }, { nom: "Prévention des blessures", pct: 15 }, { nom: "Force de traction", pct: 10 }],
+    seances: [
+      {
+        nom: "Force des jambes",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Squat", objectif: "Force pour la course et le vélo.", couleur: TEAL, exos: [{ id: "squat-arriere" }] },
+          { slot: "secondaire", nom: "Unilatéral et charnière", objectif: "Équilibrer les deux jambes, chaîne postérieure.", couleur: GREEN, exos: [{ id: "split-squat", reps: "8 / jambe" }, { id: "souleve-terre-roumain" }] },
+          { slot: "accessoire", nom: "Mollets", objectif: "Absorber les impacts de la course.", couleur: GOLD, exos: [{ id: "mollets-debout", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Gainage et épaules",
+        blocs: [
+          { slot: "gainage", nom: "Tronc", objectif: "Garder une position stable sur les trois disciplines.", couleur: GOLD, exos: [{ id: "gainage-planche", reps: "30 s" }, { id: "gainage-lateral", reps: "25 s / côté" }, { id: "pallof-press", reps: "10 / côté" }] },
+          { slot: "secondaire", nom: "Tirage et épaule", objectif: "Traction pour la nage, stabilité de l'épaule.", couleur: GREEN, exos: [{ id: "tractions" }, { id: "rotation-externe-r1", reps: "15" }] },
+          { slot: "accessoire", nom: "Posture", objectif: "Tenir la position en selle.", couleur: SKY, exos: [{ id: "face-pull", reps: "15" }] },
+        ],
+      },
+      {
+        nom: "Chaîne postérieure et prévention",
+        blocs: [
+          { slot: "principal", role: "principal", nom: "Poussée de hanche", objectif: "Fessiers, moteurs de la course et du pédalage.", couleur: TEAL, exos: [{ id: "hip-thrust" }] },
+          { slot: "accessoire", nom: "Prévention", objectif: "Hanches et ischio-jambiers.", couleur: GOLD, exos: [{ id: "planche-copenhague", reps: "20 s / côté" }, { id: "leg-curl" }] },
+          { slot: "power", intermediaireOnly: true, role: "specifique", nom: "Rebonds", objectif: "Raideur et réactivité du pied pour la course.", couleur: NAVY, exos: [{ id: "corde-a-sauter", reps: "30 s" }] },
+        ],
+      },
+    ],
+  },
 ];
 
 // ── Musculation : cycle d'hypertrophie (volume → intensité → volume haut → décharge) ──

@@ -1,6 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 // Mini-coach IA : fonction Vercel (la clé Anthropic reste côté serveur, jamais
@@ -138,6 +136,8 @@ export type CoachAdvice = {
 };
 
 async function generate(input: Input): Promise<CoachAdvice> {
+  // Chargé à la demande : un souci avec le SDK ne doit pas empêcher la fonction de démarrer.
+  const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const client = new Anthropic();
   const response = await client.beta.messages.create({
     model: MODEL,
@@ -183,6 +183,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     getAdminApp();
+    const { getAuth } = await import("firebase-admin/auth");
     let uid: string;
     try {
       uid = (await getAuth().verifyIdToken(token)).uid;
@@ -232,7 +233,7 @@ export default async function handler(req: any, res: any) {
     await adviceRef.set({ ...advice, generatedAt: now, pending: false, model: MODEL });
     return res.status(200).json({ advice, generatedAt: now });
   } catch (err) {
-    console.error("coach-advice", err);
+    console.error("coach-advice", (err as Error)?.stack ?? err);
     return res.status(500).json({ error: "server_error", message: "Le mini-coach est momentanément indisponible." });
   }
 }

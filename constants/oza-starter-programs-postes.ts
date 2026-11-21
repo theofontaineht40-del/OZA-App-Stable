@@ -22,11 +22,11 @@ type Op =
   | { op: "add"; s: number; bloc: BlocT; after?: string }
   | { op: "del"; s: number; nom: string };
 
-const rep = (s: number, nom: string, patch: Partial<BlocT>): Op => ({ op: "rep", s, nom, patch });
-const add = (s: number, bloc: BlocT, after?: string): Op => ({ op: "add", s, bloc, after });
-const del = (s: number, nom: string): Op => ({ op: "del", s, nom });
+export const rep = (s: number, nom: string, patch: Partial<BlocT>): Op => ({ op: "rep", s, nom, patch });
+export const add = (s: number, bloc: BlocT, after?: string): Op => ({ op: "add", s, bloc, after });
+export const del = (s: number, nom: string): Op => ({ op: "del", s, nom });
 
-const bloc = (slot: Slot, nom: string, objectif: string, exos: ExSpec[], couleur = GOLD, intermediaireOnly = false): BlocT => ({
+export const bloc = (slot: Slot, nom: string, objectif: string, exos: ExSpec[], couleur = GOLD, intermediaireOnly = false): BlocT => ({
   slot,
   nom,
   objectif,
@@ -35,15 +35,19 @@ const bloc = (slot: Slot, nom: string, objectif: string, exos: ExSpec[], couleur
   ...(intermediaireOnly ? { intermediaireOnly } : {}),
 });
 
-const LATERAL = bloc("vitesse", "Changements de direction", "Appuis, freinage et relance latérale.", [{ id: "deplacement-lateral-adduction", reps: "10 m" }], SKY);
-const AEROBIE = bloc("cardio", "Capacité aérobie", "Tenir l'intensité sur toute la durée du match.", [{ id: "rameur", reps: "3 min" }], GREEN, true);
-const ISCHIOS = bloc("accessoire", "Ischio-jambiers", "Prévention : première blessure du sprinteur.", [{ id: "leg-curl" }], GOLD);
-const PORTES = bloc("accessoire", "Portés", "Force fonctionnelle, tenue sous charge.", [{ id: "farmer-walk", reps: "30 m" }], GOLD);
-const COIFFE = bloc("accessoire", "Coiffe des rotateurs", "Santé de l'épaule.", [{ id: "rotation-externe-r1", reps: "15" }], GOLD);
-const ROTATION = (nom = "Rotation explosive", objectif = "Transmettre la force du sol aux bras."): BlocT =>
+export const LATERAL = bloc("vitesse", "Changements de direction", "Appuis, freinage et relance latérale.", [{ id: "deplacement-lateral-adduction", reps: "10 m" }], SKY);
+export const AEROBIE = bloc("cardio", "Capacité aérobie", "Tenir l'intensité sur toute la durée du match.", [{ id: "rameur", reps: "3 min" }], GREEN, true);
+export const ISCHIOS = bloc("accessoire", "Ischio-jambiers", "Prévention : première blessure du sprinteur.", [{ id: "leg-curl" }], GOLD);
+export const PORTES = bloc("accessoire", "Portés", "Force fonctionnelle, tenue sous charge.", [{ id: "farmer-walk", reps: "30 m" }], GOLD);
+export const COIFFE = bloc("accessoire", "Coiffe des rotateurs", "Santé de l'épaule.", [{ id: "rotation-externe-r1", reps: "15" }], GOLD);
+export const ROTATION = (nom = "Rotation explosive", objectif = "Transmettre la force du sol aux bras."): BlocT =>
   bloc("power", nom, objectif, [{ id: "swing-baseball-rotation" }], NAVY, true);
 
-type PosteDef = {
+export type PosteDef = {
+  // Par défaut : intermédiaire (ondulatoire). « debutant » = cycle d'approche linéaire.
+  level?: "debutant" | "intermediaire";
+  // Cycle ondulatoire du sport (hypertrophie → force → puissance → décharge) ou celui par défaut.
+  onde?: "sport" | "default";
   sportId: string;
   id: string;
   objectif: string;
@@ -52,7 +56,7 @@ type PosteDef = {
   ops: Op[];
 };
 
-function applyOps(base: SeanceT[], ops: Op[], label: string): SeanceT[] {
+export function applyOps(base: SeanceT[], ops: Op[], label: string): SeanceT[] {
   const out: SeanceT[] = base.map((s) => ({ ...s, blocs: s.blocs.map((b) => ({ ...b })) }));
   const index = (s: number, nom: string) => {
     const i = out[s].blocs.findIndex((b) => b.nom === nom);
@@ -288,29 +292,31 @@ const POSTES: PosteDef[] = [
 
 const DEFS = new Map<string, SportDef>([...SPORT_DEFS, RUGBY_DEF].map((d) => [d.sportId, d]));
 
-function posteProgram(p: PosteDef): StarterProgram {
+export function posteProgram(p: PosteDef): StarterProgram {
   const def = DEFS.get(p.sportId);
   const sport = DEFAULT_OZA_SPORTS.find((s) => s.id === p.sportId);
   const position = sport?.positions.find((x) => x.id === p.id);
   if (!def || !sport || !position) throw new Error(`Poste inconnu : ${p.sportId}/${p.id}`);
   const seances = applyOps(def.seances, p.ops, `${p.sportId}/${p.id}`);
-  const ondes = def.onde ?? ONDE;
+  const ondes = p.onde === "default" ? ONDE : (def.onde ?? ONDE);
+  const deb = p.level === "debutant";
+  const label = sport.positionLabel === "objectif" ? "objectif" : sport.positionLabel;
   return {
     id: `starter-${p.sportId}-${p.id}`,
     sportId: p.sportId,
     positionId: p.id,
     nom: `${sport.nom} · ${position.nom}`,
     objectif: p.objectif,
-    publicCible: `Joueur régulier depuis plus d'un an, poste : ${position.nom.toLowerCase()}`,
-    niveau: "intermediaire",
+    publicCible: deb ? `Jeune pratiquant ou pratiquant qui débute, ${label} : ${position.nom.toLowerCase()}` : `Pratiquant régulier depuis plus d'un an, ${label} : ${position.nom.toLowerCase()}`,
+    niveau: deb ? "debutant" : "intermediaire",
     seancesParSemaine: seances.length,
     materiel: def.materiel,
     qualites: p.qualites,
     semaines: [0, 1, 2, 3].map((w) => ({
       numero: w + 1,
-      theme: ondes[w].theme,
-      consignes: [ondes[w].consignes, p.consigne].filter(Boolean).join(" "),
-      seances: buildSeances(`${p.sportId}-${p.id}`, "intermediaire", w, seances, ondes[w]),
+      theme: deb ? ["Découverte des mouvements", "Installation du volume", "Montée en charge", "Consolidation"][w] : ondes[w].theme,
+      consignes: [deb ? "Charges légères : l'objectif est de bien faire, pas de forcer. Garde 4 à 5 répétitions en réserve." : ondes[w].consignes, p.consigne].filter(Boolean).join(" "),
+      seances: buildSeances(`${p.sportId}-${p.id}`, deb ? "debutant" : "intermediaire", w, seances, ondes[w]),
     })),
   };
 }

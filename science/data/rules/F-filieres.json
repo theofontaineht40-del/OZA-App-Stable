@@ -563,5 +563,465 @@
         "max": 3
       }
     }
+  },
+  {
+    "id": "F-coach-30-30-effort-intensite",
+    "category": "F",
+    "parameter": "Intensité de la phase rapide du 30\"/30\"",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 105,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Exemple : 30 s à 15 km/h ou 130 m. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-30-30-recup-intensite",
+    "category": "F",
+    "parameter": "Intensité de la phase lente du 30\"/30\"",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 50,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Exemple : 30 s à 7,5 km/h ou 65 m. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-30-30-serie-duree",
+    "category": "F",
+    "parameter": "Durée d'une série de 30\"/30\"",
+    "unit": "min",
+    "value": {
+      "min": 8,
+      "recommended": null,
+      "max": 10
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "2 séries de 8 à 10 minutes. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-30-30-series",
+    "category": "F",
+    "parameter": "Nombre de séries de 30\"/30\"",
+    "unit": "séries",
+    "value": {
+      "min": null,
+      "recommended": 2,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-30-30-recup-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre les séries de 30\"/30\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-45-15-intensite",
+    "category": "F",
+    "parameter": "Intensité de la phase rapide du 45\"/15\"",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 100,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Exemple : 184 m en 45 s. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-45-15-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de 45\"/15\"",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 10,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-45-15-recup-entre-series",
+    "category": "F",
+    "parameter": "Récupération entre séries de 45\"/15\"",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-300m-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de 300 m (VMA)",
+    "unit": "répétitions",
+    "value": {
+      "min": null,
+      "recommended": 10,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "300 m en 1 min 15. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-300m-intensite",
+    "category": "F",
+    "parameter": "Intensité des 300 m (VMA)",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 98,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-300m-recuperation",
+    "category": "F",
+    "parameter": "Récupération entre les 300 m (VMA)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-400m-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de 400 m (VMA)",
+    "unit": "répétitions",
+    "value": {
+      "min": 8,
+      "recommended": null,
+      "max": 10
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "400 m en 1 min 40. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-400m-intensite",
+    "category": "F",
+    "parameter": "Intensité des 400 m (VMA)",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 98,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-400m-recuperation",
+    "category": "F",
+    "parameter": "Récupération entre les 400 m (VMA)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-500m-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de 500 m (VMA)",
+    "unit": "répétitions",
+    "value": {
+      "min": 8,
+      "recommended": null,
+      "max": 10
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "500 m en 2 min 08. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-500m-intensite",
+    "category": "F",
+    "parameter": "Intensité des 500 m (VMA)",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 95,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-500m-recuperation",
+    "category": "F",
+    "parameter": "Récupération entre les 500 m (VMA)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 180,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-600m-repetitions",
+    "category": "F",
+    "parameter": "Répétitions de 600 m (VMA)",
+    "unit": "répétitions",
+    "value": {
+      "min": 6,
+      "recommended": null,
+      "max": 8
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "600 m en 2 min 34. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-600m-intensite",
+    "category": "F",
+    "parameter": "Intensité des 600 m (VMA)",
+    "unit": "% VMA",
+    "value": {
+      "min": null,
+      "recommended": 95,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
+  },
+  {
+    "id": "F-coach-vma-600m-recuperation",
+    "category": "F",
+    "parameter": "Récupération entre les 600 m (VMA)",
+    "unit": "s",
+    "value": {
+      "min": null,
+      "recommended": 240,
+      "max": null
+    },
+    "sportIds": "*",
+    "target": {
+      "kind": "energy",
+      "id": "aerobie"
+    },
+    "evidence": "opinion",
+    "sourceIds": [],
+    "limits": "Règle de coach tirée d'exemples de séances, pas d'une étude : niveau de preuve « opinion d'experts ».",
+    "conditions": "Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).",
+    "status": "brouillon",
+    "version": 1,
+    "notes": "Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach."
   }
 ]

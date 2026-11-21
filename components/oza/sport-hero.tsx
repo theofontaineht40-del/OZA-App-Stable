@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   backLight: { backgroundColor: "rgba(255,255,255,0.7)" },
-  content: { padding: 20, paddingBottom: 22, gap: 4 },
+  content: { padding: 20, paddingBottom: 22, gap: 4, width: "100%", maxWidth: 760, alignSelf: "center" },
   eyebrow: { fontSize: 11, fontWeight: "700", letterSpacing: 2 },
   title: { fontFamily: Type.heading, fontSize: 46, lineHeight: 52 },
   titleSpeed: { fontStyle: "italic", transform: [{ skewX: "-8deg" }] },

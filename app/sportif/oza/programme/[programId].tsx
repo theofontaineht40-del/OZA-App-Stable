@@ -139,6 +139,7 @@ export default function OzaProgramScreen() {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
         <LinearGradient colors={[from, to]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
+          <View style={styles.heroInner}>
           <View style={styles.heroTop}>
             <TouchableOpacity style={[styles.circle, light && styles.circleLight]} onPress={() => router.back()}>
               <Ionicons name="chevron-back" size={20} color={light ? Colors.primaryDark : Colors.white} />
@@ -152,6 +153,7 @@ export default function OzaProgramScreen() {
           </Text>
           <Text style={[styles.title, { color: light ? Colors.primaryDark : Colors.white }]}>{program.nom}</Text>
           {!!program.objectif && <Text style={[styles.objectif, { color: light ? "rgba(6,45,43,0.75)" : "rgba(255,255,255,0.85)" }]}>{program.objectif}</Text>}
+          </View>
         </LinearGradient>
 
         <View style={styles.body}>
@@ -313,14 +315,15 @@ const styles = StyleSheet.create({
   center: { alignItems: "center", justifyContent: "center", gap: 10 },
   emptyTitle: { fontFamily: Type.heading, fontSize: 22, color: Colors.text },
   link: { fontSize: 15, fontWeight: "700", color: Colors.primary },
-  hero: { paddingTop: 54, paddingHorizontal: 20, paddingBottom: 26, borderBottomLeftRadius: 28, borderBottomRightRadius: 28 },
+  hero: { paddingTop: 54, paddingHorizontal: 20, paddingBottom: 26, alignItems: "stretch", borderBottomLeftRadius: 28, borderBottomRightRadius: 28 },
+  heroInner: { width: "100%", maxWidth: 760, alignSelf: "center" },
   heroTop: { flexDirection: "row", justifyContent: "space-between", marginBottom: 26 },
   circle: { width: 38, height: 38, borderRadius: 19, backgroundColor: "rgba(0,0,0,0.3)", alignItems: "center", justifyContent: "center" },
   circleLight: { backgroundColor: "rgba(255,255,255,0.7)" },
   eyebrow: { fontSize: 11, fontWeight: "700", letterSpacing: 1.6 },
   title: { fontFamily: Type.heading, fontSize: 32, lineHeight: 36, marginTop: 4 },
   objectif: { fontSize: 14, marginTop: 8, lineHeight: 20 },
-  body: { padding: 20, gap: 12 },
+  body: { padding: 20, gap: 12, width: "100%", maxWidth: 760, alignSelf: "center" },
   metaRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   meta: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: Colors.accentTint, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 },
   metaText: { fontSize: 12.5, fontWeight: "700", color: Colors.primaryDark },
@@ -353,9 +356,9 @@ const styles = StyleSheet.create({
   assignName: { fontSize: 16, fontWeight: "700", color: Colors.text },
   dangerLink: { alignItems: "center", paddingVertical: 10 },
   dangerText: { fontSize: 13, fontWeight: "700", color: Colors.riskHigh },
-  bar: { position: "absolute", left: 0, right: 0, bottom: 0, padding: 16, paddingBottom: 22, backgroundColor: Colors.background, borderTopWidth: 1, borderTopColor: Colors.border, gap: 8 },
-  resume: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: Colors.primaryDark, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10 },
+  bar: { position: "absolute", left: 0, right: 0, bottom: 0, padding: 16, paddingBottom: 22, backgroundColor: Colors.background, borderTopWidth: 1, borderTopColor: Colors.border, gap: 8, alignItems: "center" },
+  resume: { width: "100%", maxWidth: 760, flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: Colors.primaryDark, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10 },
   resumeText: { fontSize: 12.5, fontWeight: "700", color: Colors.white, flex: 1 },
-  cta: { overflow: "hidden", height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: Colors.primary },
+  cta: { width: "100%", maxWidth: 760, overflow: "hidden", height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: Colors.primary },
   ctaText: { color: Colors.white, fontWeight: "700", fontSize: 16 },
 });

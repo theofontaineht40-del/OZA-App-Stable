@@ -7,6 +7,7 @@ import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "
 
 import { Type } from "../../constants/tokens";
 import ExerciseThumb from "../../components/exercise-thumb";
+import OzaResumeCard from "../../components/oza/resume-card";
 import NextSessionCard from "../../components/next-session-card";
 import HeroHeader from "../../components/hero-header";
 import SessionFeedbackCard from "../../components/session-feedback-card";
@@ -34,6 +35,7 @@ import { getFeedbackForSportif, markFeedbackSeen, SessionFeedback } from "../../
 import { subscribeToConversationsForSportif } from "../../services/messages";
 import { estimateSeanceMinutes, getProgrammesForSportif, Programme } from "../../services/programmes";
 import { MUSCLE_ID_LABELS } from "../../constants/muscle-selection";
+import { getOzaProgram, getOzaUserState, programProgress } from "../../services/oza-programs";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
 import {
   computeDayState,
@@ -63,6 +65,14 @@ export default function SportifHome() {
   const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
   // Visuels des exercices (bibliothèque de chaque coach auteur d'un programme).
   const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
+  const [ozaResume, setOzaResume] = useState<{
+    programId: string;
+    programName: string;
+    seanceId: string;
+    seanceName: string;
+    week: number;
+    percent: number;
+  } | null>(null);
   const [wellnessDelta, setWellnessDelta] = useState<number | null>(null);
   const [todayWellness, setTodayWellness] = useState<Awaited<ReturnType<typeof getTodayWellness>>>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
@@ -101,6 +111,29 @@ export default function SportifHome() {
           setFeedbacks(await getFeedbackForSportif(user.uid));
         } catch {
           setFeedbacks([]);
+        }
+        // Reprise d'un programme OZA Programs en cours : un plus, sans effet sur le reste.
+        try {
+          const ozaState = await getOzaUserState(user.uid);
+          const latest = Object.entries(ozaState.progress)
+            .filter(([, p]) => p.currentSeanceId)
+            .sort((a, b) => b[1].lastOpenedAt - a[1].lastOpenedAt)[0];
+          if (latest) {
+            const prog = await getOzaProgram(latest[0]);
+            const se = prog?.semaines.flatMap((w) => w.seances).find((x) => x.id === latest[1].currentSeanceId);
+            if (prog && prog.statut === "publie" && se) {
+              setOzaResume({
+                programId: prog.id,
+                programName: prog.nom,
+                seanceId: se.id,
+                seanceName: se.nom,
+                week: latest[1].currentWeek,
+                percent: Math.round(programProgress(prog, latest[1]) * 100),
+              });
+            }
+          }
+        } catch {
+          setOzaResume(null);
         }
         // Évolution sur la semaine (carte Bien-être) : un plus, sans elle la carte reste complète.
         try {
@@ -375,6 +408,16 @@ export default function SportifHome() {
           deltaPercent={wellnessDelta}
           onOpen={() => router.push("/sportif/bien-etre")}
         />
+
+        {ozaResume && (
+          <OzaResumeCard
+            programName={ozaResume.programName}
+            seanceName={ozaResume.seanceName}
+            week={ozaResume.week}
+            percent={ozaResume.percent}
+            onPress={() => router.push(`/sportif/oza/seance/${ozaResume.programId}/${ozaResume.seanceId}?week=${ozaResume.week}`)}
+          />
+        )}
 
         <NextSessionCard
           {...nextCard}

@@ -131,7 +131,7 @@ export default function OzaSportScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  body: { padding: 20 },
+  body: { padding: 20, width: "100%", maxWidth: 760, alignSelf: "center" },
   section: { fontFamily: Type.heading, fontSize: 22, color: Colors.text, marginBottom: 12 },
   infoCard: { backgroundColor: Colors.surface, borderRadius: 18, padding: 16, marginTop: 14, borderWidth: 1, borderColor: Colors.border },
   infoTitle: { fontFamily: Type.heading, fontSize: 18, color: Colors.primaryDark },

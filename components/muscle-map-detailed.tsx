@@ -30,6 +30,7 @@ const OUTLINE = "rgba(255, 255, 255, 0.9)";
 
 export default function MuscleMapDetailed({
   activeZones,
+  zoneColors,
   width = 78,
   // Rogne le bas du cadre (unités SVG, tête→pieds = 92.8) : à taille de
   // widget égale, cacher chevilles/pieds laisse le reste du personnage
@@ -37,13 +38,16 @@ export default function MuscleMapDetailed({
   cropBottom = 0,
 }: {
   activeZones: Set<string>;
+  // Facultatif : couleur propre à chaque zone de base (ex. carte de récupération).
+  // Sans lui, toutes les zones actives sont en couleur primaire.
+  zoneColors?: Record<string, string>;
   width?: number;
   cropBottom?: number;
 }) {
   const contentH = CONTENT_H - cropBottom;
   const viewBox = `0 0 ${CONTENT_W} ${contentH}`;
   const viewBoxRatio = contentH / CONTENT_W;
-  const zonesKey = Array.from(activeZones).sort().join("|");
+  const zonesKey = Array.from(activeZones).sort().join("|") + (zoneColors ? "#" + Object.entries(zoneColors).sort().join("|") : "");
 
   const { activeFront, activeBack } = useMemo(() => {
     return {
@@ -82,11 +86,11 @@ export default function MuscleMapDetailed({
 
         <AnimatedG opacity={reveal} stroke={OUTLINE} strokeWidth={0.15}>
           {activeFront.map((p) => (
-            <Path key={p.id} d={p.path} fill={Colors.primary} />
+            <Path key={p.id} d={p.path} fill={zoneColors?.[baseZoneId(p.id)] ?? Colors.primary} />
           ))}
           <G translateX={BACK_SHIFT}>
             {activeBack.map((p) => (
-              <Path key={p.id} d={p.path} fill={Colors.primary} />
+              <Path key={p.id} d={p.path} fill={zoneColors?.[baseZoneId(p.id)] ?? Colors.primary} />
             ))}
           </G>
         </AnimatedG>

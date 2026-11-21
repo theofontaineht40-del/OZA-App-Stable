@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "science:check": "tsx scripts/check-science.ts",
-    "test:science": "tsx --test science/*.test.ts",
+    "test:science": "tsx --test science/*.test.ts services/*.test.ts",
     "science:checklist": "tsx scripts/science-checklist.ts",
     "science:apply": "tsx scripts/science-apply.ts"
   },

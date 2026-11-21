@@ -23,6 +23,7 @@ import {
 import { SessionRecord, getWellnessEntriesForSportif } from "../../services/tracking";
 import { AI_COACH_ENABLED } from "../../services/coach-ai";
 import AiCoachCard from "./ai-coach-card";
+import MuscleRecoveryCard from "./muscle-recovery-card";
 import { AiPayload } from "../../services/coach-ai";
 
 const TONE_COLOR: Record<Tone, string> = {
@@ -125,6 +126,8 @@ export default function SportDashboard({
           </View>
         ))}
       </View>
+
+      <MuscleRecoveryCard sessions={sessions} />
 
       {priorities.length > 0 && (
         <View style={styles.block}>

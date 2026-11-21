@@ -73,6 +73,7 @@ export default function SportifTabsLayout() {
       <Tabs.Screen name="cardio/[id]" options={{ href: null }} />
       <Tabs.Screen name="equipe" options={{ href: null }} />
       <Tabs.Screen name="messages/[coachId]" options={{ href: null }} />
+      <Tabs.Screen name="messages/group/[groupId]" options={{ href: null }} />
     </Tabs>
     <MessageToast
       event={newMessageEvent}

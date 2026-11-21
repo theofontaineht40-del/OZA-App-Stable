@@ -13,6 +13,7 @@ import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForSportif } from "../../../services/messages";
 import { getRelationsForSportif, Relation } from "../../../services/relations";
+import GroupsSection from "../../../components/groups-section";
 
 type Row = {
   coachId: string;
@@ -95,6 +96,8 @@ export default function SportifMessagesListScreen() {
           <Ionicons name="add" size={22} color={Colors.white} />
         </TouchableOpacity>
       </View>
+
+      {uid && <GroupsSection uid={uid} role="sportif" />}
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>

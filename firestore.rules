@@ -435,6 +435,38 @@ service cloud.firestore {
       }
     }
 
+    // ── Messagerie de groupe ──
+    // Le coach crée le groupe ; membres et coach lisent et écrivent. Un membre
+    // ne peut modifier que les champs « dernier message / non lu ».
+    match /groups/{groupId} {
+      allow read: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        request.auth.uid in resource.data.memberIds
+      );
+      allow create: if isSignedIn() &&
+        request.resource.data.coachId == request.auth.uid &&
+        request.resource.data.memberIds.size() <= 50 &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "coach";
+      allow update: if isSignedIn() && (
+        resource.data.coachId == request.auth.uid ||
+        (request.auth.uid in resource.data.memberIds &&
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(["lastMessageText", "lastMessageAt", "lastMessageSenderId", "lastSenderName", "unreadFor"]))
+      );
+      allow delete: if isSignedIn() && resource.data.coachId == request.auth.uid;
+
+      match /messages/{messageId} {
+        allow read: if isSignedIn() && (
+          get(/databases/$(database)/documents/groups/$(groupId)).data.coachId == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds
+        );
+        allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid && (
+          get(/databases/$(database)/documents/groups/$(groupId)).data.coachId == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds
+        );
+      }
+    }
+
     // ── Avis sportif → coach ──
     match /reviews/{reviewId} {
       allow read: if isSignedIn();

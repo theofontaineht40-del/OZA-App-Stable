@@ -25,6 +25,7 @@ import {
   subscribeToMessages,
   uploadChatPhoto,
 } from "../services/messages";
+import { Group, markGroupRead, sendGroupMessage, subscribeToGroupMessages } from "../services/groups";
 import { getProgrammesForCoach, Programme } from "../services/programmes";
 
 type Props = {
@@ -32,6 +33,9 @@ type Props = {
   currentUserId: string;
   currentUserRole: SenderRole;
   otherName: string;
+  // Mode groupe : le fil vient de la collection `groups` (conversationId = id du groupe).
+  group?: Group;
+  currentUserName?: string;
 };
 
 function formatTime(value: unknown): string {
@@ -42,7 +46,7 @@ function formatTime(value: unknown): string {
   return "";
 }
 
-export default function ChatThread({ conversationId, currentUserId, currentUserRole, otherName }: Props) {
+export default function ChatThread({ conversationId, currentUserId, currentUserRole, otherName, group, currentUserName = "" }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -51,10 +55,24 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
+    if (group) {
+      const unsubscribeGroup = subscribeToGroupMessages(conversationId, setMessages);
+      markGroupRead(conversationId, currentUserId);
+      return unsubscribeGroup;
+    }
     const unsubscribe = subscribeToMessages(conversationId, setMessages);
     markConversationRead(conversationId, currentUserRole);
     return unsubscribe;
-  }, [conversationId, currentUserRole]);
+  }, [conversationId, currentUserRole, currentUserId, group?.id]);
+
+  // Envoi : fil de groupe ou conversation individuelle.
+  async function send(value: string, photoUrl: string | null) {
+    if (group) {
+      await sendGroupMessage(group, { uid: currentUserId, role: currentUserRole, name: currentUserName }, value, photoUrl);
+    } else {
+      await sendMessage(conversationId, currentUserId, currentUserRole, value, photoUrl);
+    }
+  }
 
   useEffect(() => {
     scrollRef.current?.scrollToEnd({ animated: true });
@@ -66,7 +84,7 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
     setText("");
     setSending(true);
     try {
-      await sendMessage(conversationId, currentUserId, currentUserRole, value, null);
+      await send(value, null);
     } finally {
       setSending(false);
     }
@@ -78,7 +96,7 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
     setSending(true);
     try {
       const url = await uploadChatPhoto(conversationId, result.assets[0].uri);
-      await sendMessage(conversationId, currentUserId, currentUserRole, "", url);
+      await send("", url);
     } finally {
       setSending(false);
     }
@@ -123,7 +141,14 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color={Colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{otherName}</Text>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={styles.headerTitle} numberOfLines={1}>{otherName}</Text>
+          {group && (
+            <Text style={styles.headerSub} numberOfLines={1}>
+              {group.memberIds.length + 1} participants
+            </Text>
+          )}
+        </View>
       </View>
 
       <ScrollView
@@ -146,6 +171,7 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
                 style={[styles.bubbleRow, isMine ? styles.bubbleRowMine : styles.bubbleRowOther]}
               >
                 <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleOther]}>
+                  {group && !isMine && !!m.senderName && <Text style={styles.senderName}>{m.senderName}</Text>}
                   {m.photoUrl && <Image source={{ uri: m.photoUrl }} style={styles.bubblePhoto} />}
                   {m.programmeId && (
                     <TouchableOpacity
@@ -181,7 +207,7 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
         <TouchableOpacity onPress={handleSendPhoto} disabled={sending} style={styles.attachButton}>
           <Ionicons name="camera-outline" size={22} color={Colors.textSecondary} />
         </TouchableOpacity>
-        {currentUserRole === "coach" && (
+        {currentUserRole === "coach" && !group && (
           <TouchableOpacity
             onPress={handleOpenProgrammePicker}
             disabled={sending}
@@ -260,6 +286,8 @@ export default function ChatThread({ conversationId, currentUserId, currentUserR
 }
 
 const styles = StyleSheet.create({
+  headerSub: { fontSize: 12, color: Colors.textSecondary },
+  senderName: { fontSize: 11.5, fontWeight: "700", color: Colors.canard, marginBottom: 3 },
   container: {
     flex: 1,
     backgroundColor: Colors.background,

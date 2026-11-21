@@ -64,6 +64,7 @@ export default function CoachTabsLayout() {
       <Tabs.Screen name="oza/programme/[programId]" options={{ href: null }} />
       <Tabs.Screen name="oza/seance/[programId]/[seanceId]" options={{ href: null }} />
       <Tabs.Screen name="messages/[sportifId]" options={{ href: null }} />
+      <Tabs.Screen name="messages/group/[groupId]" options={{ href: null }} />
       <Tabs.Screen name="profil-pro" options={{ href: null }} />
       <Tabs.Screen name="generateur" options={{ href: null }} />
       <Tabs.Screen name="plan-course" options={{ href: null }} />

@@ -21,6 +21,8 @@ export type ChatMessage = {
   id: string;
   senderId: string;
   senderRole: SenderRole;
+  // Renseigné pour les messages de groupe (nom affiché au-dessus de la bulle).
+  senderName?: string;
   text: string;
   photoUrl: string | null;
   programmeId: string | null;

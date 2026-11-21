@@ -11,6 +11,7 @@ import { Colors } from "../../../constants/colors";
 import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForCoach } from "../../../services/messages";
 import { getMySportifs, SportifSummary } from "../../../services/tracking";
+import GroupsSection from "../../../components/groups-section";
 
 export function MessagesPanel({ showTitle = true }: { showTitle?: boolean }) {
   const [uid, setUid] = useState<string | null>(null);
@@ -57,6 +58,8 @@ export function MessagesPanel({ showTitle = true }: { showTitle?: boolean }) {
   return (
     <View>
       {showTitle && <Text style={styles.title}>Messagerie</Text>}
+
+      {uid && <GroupsSection uid={uid} role="coach" sportifs={sportifs} />}
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>

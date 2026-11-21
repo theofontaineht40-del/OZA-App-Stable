@@ -2,6 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
 
 import { auth } from "../firebase";
+import { subscribeToGroups } from "../services/groups";
 import {
   Conversation,
   subscribeToConversationsForCoach,
@@ -29,7 +30,8 @@ type Role = "coach" | "sportif";
 // une notif "tant que l'app est ouverte" (badge + toast), pas hors-app.
 export function useUnreadConversations(role: Role) {
   const [uid, setUid] = useState<string | null>(null);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [conversationUnread, setConversationUnread] = useState(0);
+  const [groupUnread, setGroupUnread] = useState(0);
   const [newMessageEvent, setNewMessageEvent] = useState<NewMessageEvent | null>(null);
   const knownRef = useRef<Map<string, number> | null>(null);
 
@@ -43,7 +45,8 @@ export function useUnreadConversations(role: Role) {
 
   useEffect(() => {
     if (!uid) {
-      setUnreadCount(0);
+      setConversationUnread(0);
+      setGroupUnread(0);
       return;
     }
 
@@ -52,7 +55,7 @@ export function useUnreadConversations(role: Role) {
       const otherIdKey: keyof Conversation = role === "coach" ? "sportifId" : "coachId";
       const otherNameKey: keyof Conversation = role === "coach" ? "sportifName" : "coachName";
 
-      setUnreadCount(list.filter((c) => c[unreadKey]).length);
+      setConversationUnread(list.filter((c) => c[unreadKey]).length);
 
       const previous = knownRef.current;
       const next = new Map<string, number>();
@@ -85,5 +88,11 @@ export function useUnreadConversations(role: Role) {
     return unsubscribe;
   }, [uid, role]);
 
-  return { unreadCount, newMessageEvent };
+  // Messages de groupe non lus (badge de l'onglet Messages).
+  useEffect(() => {
+    if (!uid) return;
+    return subscribeToGroups(uid, role, (groups) => setGroupUnread(groups.filter((g) => g.unreadFor.includes(uid)).length));
+  }, [uid, role]);
+
+  return { unreadCount: conversationUnread + groupUnread, newMessageEvent };
 }

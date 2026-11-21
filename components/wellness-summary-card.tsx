@@ -10,6 +10,8 @@ type Props = {
   wellness: { sommeil: number; fatigue: number; courbatures: number; stress: number; score: number } | null;
   weekLoad: number;
   onCheckin: () => void;
+  // Ouvre l'écran Bien-être détaillé (touche sur le haut de la carte).
+  onOpen?: () => void;
 };
 
 const SIZE = 92;
@@ -17,14 +19,14 @@ const STROKE = 10;
 
 // Carte "Bien-être global" de la maquette : anneau du score en %, puis 4
 // tuiles (charge de la semaine, sommeil, récupération, énergie).
-export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin }: Props) {
+export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin, onOpen }: Props) {
   const percent = wellness ? Math.round(wellness.score * 10) : 0;
   const r = (SIZE - STROKE) / 2;
   const circumference = 2 * Math.PI * r;
 
   return (
     <View style={styles.card}>
-      <View style={styles.topRow}>
+      <TouchableOpacity style={styles.topRow} onPress={onOpen} disabled={!onOpen} activeOpacity={0.8}>
         <View style={{ flex: 1 }}>
           <Text style={styles.label}>Bien-être global</Text>
           {wellness ? (
@@ -60,7 +62,7 @@ export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin }: P
             <Ionicons name="heart-outline" size={26} color={Colors.primary} />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
 
       {wellness ? (
         <View style={styles.tiles}>

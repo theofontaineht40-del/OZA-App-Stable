@@ -289,6 +289,7 @@ export default function SportifHome() {
           wellness={todayWellness}
           weekLoad={sessions.filter((s) => s.date >= weekAgo).reduce((sum, s) => sum + s.load, 0)}
           onCheckin={() => router.push("/sportif/checkin")}
+          onOpen={() => router.push("/sportif/bien-etre")}
         />
 
         <WeekStrip states={dayStates} />

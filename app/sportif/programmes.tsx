@@ -10,7 +10,11 @@ import AnimatedPressable from "../../components/animated-pressable";
 import GradientFill from "../../components/gradient-fill";
 import { ProgrammeIllustration } from "../../components/empty-illustrations";
 import PhotoBackground from "../../components/photo-background";
+import ExerciseThumb from "../../components/exercise-thumb";
 import { Colors, Gradients } from "../../constants/colors";
+import { ExerciseTemplate } from "../../constants/exercise-library";
+import { MUSCLE_ID_LABELS } from "../../constants/muscle-selection";
+import { getExerciseLibrary } from "../../services/exercises";
 import { auth } from "../../firebase";
 import { estimateSeanceMinutes, getProgrammesForSportif, Objectif, Programme } from "../../services/programmes";
 import { getSessionsForSportif, SessionRecord } from "../../services/tracking";
@@ -18,6 +22,7 @@ import { getSessionsForSportif, SessionRecord } from "../../services/tracking";
 export default function SportifProgrammesScreen() {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
+  const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Objectif | null>(null);
   const fade = useRef(new Animated.Value(0)).current;
@@ -32,6 +37,12 @@ export default function SportifProgrammesScreen() {
       try {
         const data = await getProgrammesForSportif(user.uid);
         setProgrammes(data);
+        // Vignettes des exercices : un plus, la liste reste complète sans elles.
+        if (data[0]?.coachId) {
+          getExerciseLibrary(data[0].coachId)
+            .then((list) => setLibrary(new Map(list.map((e) => [e.id, e]))))
+            .catch(() => {});
+        }
         // La progression est un plus : sans elle la liste reste complète.
         try {
           setSessions(await getSessionsForSportif(user.uid));
@@ -153,6 +164,37 @@ export default function SportifProgrammesScreen() {
                 <Ionicons name="arrow-forward" size={15} color={Colors.primaryDark} />
               </View>
             </AnimatedPressable>
+          )}
+          {featured && featured.seances.length > 0 && (
+            <View style={styles.seancesCard}>
+              <Text style={styles.seancesTitle}>Séances du programme</Text>
+              {featured.seances.map((se, i) => {
+                const done = sessions.some((x) => x.programmeId === featured.id && x.seanceId === se.id);
+                const firstEx = se.blocs.flatMap((b) => b.exercices)[0];
+                const focus = (se.muscles ?? []).slice(0, 2).map((m) => MUSCLE_ID_LABELS[m]).join(", ");
+                return (
+                  <TouchableOpacity
+                    key={se.id}
+                    style={[styles.seanceRow, i > 0 && styles.seanceRowBorder]}
+                    onPress={() => router.push(`/sportif/programme/${featured.id}`)}
+                    activeOpacity={0.8}
+                  >
+                    <ExerciseThumb exercise={firstEx ? library.get(firstEx.exerciceId) : null} size={48} radius={12} />
+                    <View style={{ flex: 1, minWidth: 0 }}>
+                      <Text style={styles.seanceName} numberOfLines={1}>
+                        {se.nom}
+                      </Text>
+                      <Text style={styles.seanceFocus} numberOfLines={1}>
+                        {focus ? `Focus : ${focus}` : `${se.blocs.reduce((n, b) => n + b.exercices.length, 0)} exercices`}
+                      </Text>
+                    </View>
+                    <View style={[styles.doneCircle, done && styles.doneCircleOn]}>
+                      {done && <Ionicons name="checkmark" size={15} color={Colors.white} />}
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           )}
           {others.map((p) => (
             <AnimatedPressable
@@ -298,6 +340,63 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 3,
     backgroundColor: Colors.turquoise,
+  },
+
+  seancesCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+
+  seancesTitle: {
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.6,
+    color: Colors.textSecondary,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+
+  seanceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 10,
+  },
+
+  seanceRowBorder: {
+    borderTopWidth: 1,
+    borderTopColor: Colors.grayLight,
+  },
+
+  seanceName: {
+    fontSize: 14.5,
+    fontWeight: "700",
+    color: Colors.text,
+  },
+
+  seanceFocus: {
+    fontSize: 12.5,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+
+  doneCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    borderColor: Colors.grayMedium,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  doneCircleOn: {
+    backgroundColor: Colors.turquoise,
+    borderColor: Colors.turquoise,
   },
 
   heroButton: {

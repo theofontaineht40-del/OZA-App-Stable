@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 import { Colors } from "../constants/colors";
+import { Type } from "../constants/tokens";
 import GradientFill from "./gradient-fill";
 
 type Props = {
@@ -12,6 +13,8 @@ type Props = {
   onCheckin: () => void;
   // Ouvre l'écran Bien-être détaillé (touche sur le haut de la carte).
   onOpen?: () => void;
+  // Évolution du bien-être sur 7 jours vs les 7 précédents (en points de %).
+  deltaPercent?: number | null;
 };
 
 const SIZE = 92;
@@ -19,7 +22,7 @@ const STROKE = 10;
 
 // Carte "Bien-être global" de la maquette : anneau du score en %, puis 4
 // tuiles (charge de la semaine, sommeil, récupération, énergie).
-export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin, onOpen }: Props) {
+export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin, onOpen, deltaPercent }: Props) {
   const percent = wellness ? Math.round(wellness.score * 10) : 0;
   const r = (SIZE - STROKE) / 2;
   const circumference = 2 * Math.PI * r;
@@ -30,7 +33,15 @@ export default function WellnessSummaryCard({ wellness, weekLoad, onCheckin, onO
         <View style={{ flex: 1 }}>
           <Text style={styles.label}>Bien-être global</Text>
           {wellness ? (
-            <Text style={styles.value}>{percent}%</Text>
+            <>
+              <Text style={styles.value}>{percent}%</Text>
+              {deltaPercent !== null && deltaPercent !== undefined && (
+                <Text style={[styles.delta, deltaPercent < 0 && styles.deltaDown]}>
+                  {deltaPercent >= 0 ? "+" : ""}
+                  {deltaPercent} % vs semaine dernière
+                </Text>
+              )}
+            </>
           ) : (
             <Text style={styles.pending}>Pas encore renseigné aujourd'hui</Text>
           )}
@@ -107,7 +118,9 @@ const styles = StyleSheet.create({
   },
   topRow: { flexDirection: "row", alignItems: "center" },
   label: { fontSize: 13, fontWeight: "600", color: Colors.textSecondary },
-  value: { fontSize: 40, fontWeight: "800", color: Colors.primaryDark, marginTop: 2 },
+  value: { fontFamily: Type.heading, fontSize: 46, color: Colors.primaryDark, marginTop: 2 },
+  delta: { fontSize: 12.5, fontWeight: "700", color: Colors.primary, marginTop: 2 },
+  deltaDown: { color: Colors.riskHigh },
   pending: { fontSize: 15, fontWeight: "600", color: Colors.text, marginTop: 6, maxWidth: 190 },
   ringWrap: { width: SIZE, height: SIZE, alignItems: "center", justifyContent: "center" },
   ringIcon: { position: "absolute" },

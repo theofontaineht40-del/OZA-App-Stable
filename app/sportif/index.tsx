@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Type } from "../../constants/tokens";
-import ExerciseStrip from "../../components/exercise-strip";
+import ExerciseThumb from "../../components/exercise-thumb";
+import NextSessionCard from "../../components/next-session-card";
 import HeroHeader from "../../components/hero-header";
 import SessionFeedbackCard from "../../components/session-feedback-card";
 import WellnessSummaryCard from "../../components/wellness-summary-card";
@@ -31,7 +32,8 @@ import { ExerciseTemplate } from "../../constants/exercise-library";
 import { getExerciseLibrary } from "../../services/exercises";
 import { getFeedbackForSportif, markFeedbackSeen, SessionFeedback } from "../../services/session-feedback";
 import { subscribeToConversationsForSportif } from "../../services/messages";
-import { getProgrammesForSportif, Programme } from "../../services/programmes";
+import { estimateSeanceMinutes, getProgrammesForSportif, Programme } from "../../services/programmes";
+import { MUSCLE_ID_LABELS } from "../../constants/muscle-selection";
 import { getSlotsForSportif, Slot } from "../../services/reservations";
 import {
   computeDayState,
@@ -48,6 +50,7 @@ import {
   getLatestWellnessScore,
   getSessionsForSportif,
   getTodayWellness,
+  getWellnessEntriesForSportif,
   SessionRecord,
 } from "../../services/tracking";
 
@@ -60,6 +63,7 @@ export default function SportifHome() {
   const [feedbacks, setFeedbacks] = useState<SessionFeedback[]>([]);
   // Visuels des exercices (bibliothèque de chaque coach auteur d'un programme).
   const [library, setLibrary] = useState<Map<string, ExerciseTemplate>>(new Map());
+  const [wellnessDelta, setWellnessDelta] = useState<number | null>(null);
   const [todayWellness, setTodayWellness] = useState<Awaited<ReturnType<typeof getTodayWellness>>>(null);
   const [goal, setGoalState] = useState<Goal | null>(null);
   const [scheduled, setScheduled] = useState<ScheduledSession[]>([]);
@@ -97,6 +101,20 @@ export default function SportifHome() {
           setFeedbacks(await getFeedbackForSportif(user.uid));
         } catch {
           setFeedbacks([]);
+        }
+        // Évolution sur la semaine (carte Bien-être) : un plus, sans elle la carte reste complète.
+        try {
+          const entries = await getWellnessEntriesForSportif(user.uid);
+          const t = todayKey();
+          const avgBetween = (from: string, to: string) => {
+            const list = entries.filter((e) => e.date >= from && e.date <= to);
+            return list.length > 0 ? list.reduce((sum, e) => sum + e.score, 0) / list.length : null;
+          };
+          const cur = avgBetween(addDays(t, -6), t);
+          const prev = avgBetween(addDays(t, -13), addDays(t, -7));
+          setWellnessDelta(cur !== null && prev !== null ? Math.round((cur - prev) * 10) : null);
+        } catch {
+          setWellnessDelta(null);
         }
         try {
           setTodayWellness(await getTodayWellness(user.uid));
@@ -227,6 +245,71 @@ export default function SportifHome() {
     } else router.push("/sportif/nouvelle-seance");
   }
 
+  // ── « Prochaine séance » (maquette) : la séance du jour si elle est prévue,
+  // sinon la prochaine du planning, sinon la suite du programme.
+  function seanceOfItem(item: ScheduledSession) {
+    return item.kind === "programme"
+      ? programmes.find((p) => p.id === item.programmeId)?.seances.find((x) => x.id === item.seanceId) ?? null
+      : null;
+  }
+  function focusOf(seance: ReturnType<typeof seanceOfItem>): string[] {
+    return (seance?.muscles ?? []).slice(0, 2).map((m) => MUSCLE_ID_LABELS[m]);
+  }
+  function dayWord(date: string): string {
+    const diff = daysBetween(today, date);
+    if (diff === 0) return "Aujourd'hui";
+    if (diff === 1) return "Demain";
+    const [y, m, d] = date.split("-").map(Number);
+    const label = new Date(y, m - 1, d, 12).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+  const upcomingScheduled = scheduled
+    .filter((i) => i.date > today && scheduleStatuses.get(i.id) !== "done")
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  const nextItem = focusPending ?? upcomingScheduled ?? null;
+  const nextItemSeance = nextItem ? seanceOfItem(nextItem) : null;
+  const nextItemMinutes = nextItemSeance ? estimateSeanceMinutes(nextItemSeance) : 0;
+  const nextCard: {
+    title: string;
+    when?: string;
+    meta?: string;
+    focus?: string[];
+    done?: boolean;
+    emptyText?: string;
+    buttonLabel?: string;
+    onStart?: () => void;
+    onPress?: () => void;
+    exerciseIds: string[];
+  } = nextItem
+    ? {
+        title: nextItem.titre,
+        when: [dayWord(nextItem.date), nextItemMinutes > 0 ? `${nextItemMinutes} min` : null].filter(Boolean).join(" · "),
+        meta: focusMeta,
+        focus: focusOf(nextItemSeance),
+        buttonLabel: nextItem === focusPending ? "Démarrer la séance" : undefined,
+        onStart: nextItem === focusPending ? () => startScheduled(nextItem) : undefined,
+        onPress: () => startScheduled(nextItem),
+        exerciseIds: (nextItem === focusPending ? focusExerciseIds : getSeanceExerciseNames(nextItemSeance).map((e) => e.id).filter((x): x is string => !!x)),
+      }
+    : todayItems.length > 0
+    ? { title: "Séance terminée", done: true, emptyText: "Bien joué, à demain pour la suite.", exerciseIds: [] }
+    : nextSeance && programmes[0]
+    ? {
+        title: nextSeance.nom,
+        meta: programmes[0].nom,
+        focus: (nextSeance.muscles ?? []).slice(0, 2).map((m) => MUSCLE_ID_LABELS[m]),
+        onPress: () => router.push(`/sportif/programme/${programmes[0].id}`),
+        exerciseIds: nextExerciseIds,
+      }
+    : {
+        title: "Rien de prévu",
+        emptyText:
+          upcomingSlots.length > 0
+            ? `Prochain créneau : ${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut}`
+            : "Ton coach n'a pas encore planifié de séance.",
+        exerciseIds: [],
+      };
+
   const todoItems: TodoItem[] = [
     {
       key: "checkin",
@@ -289,49 +372,17 @@ export default function SportifHome() {
           wellness={todayWellness}
           weekLoad={sessions.filter((s) => s.date >= weekAgo).reduce((sum, s) => sum + s.load, 0)}
           onCheckin={() => router.push("/sportif/checkin")}
+          deltaPercent={wellnessDelta}
           onOpen={() => router.push("/sportif/bien-etre")}
         />
 
-        <WeekStrip states={dayStates} />
+        <NextSessionCard
+          {...nextCard}
+          thumb={nextCard.exerciseIds.length > 0 ? <ExerciseThumb exercise={library.get(nextCard.exerciseIds[0])} size={84} radius={16} /> : undefined}
+          onSeeAll={() => router.push("/sportif/programmes")}
+        />
 
-        {focusPending ? (
-          <TodayHero
-            eyebrow="Séance du jour"
-            title={focusPending.titre}
-            meta={focusMeta}
-            buttonLabel="Démarrer la séance"
-            onPress={() => startScheduled(focusPending)}
-            extra={<ExerciseStrip ids={focusExerciseIds} library={library} />}
-          />
-        ) : todayItems.length > 0 ? (
-          <TodayHero
-            eyebrow="Séance du jour"
-            title="Séance terminée"
-            meta="Bien joué, à demain pour la suite."
-            done
-          />
-        ) : nextSeance ? (
-          <View style={styles.todayList}>
-            <NextSessionWidget
-              workoutName={nextSeance.nom}
-              subtitle={programmes[0]?.nom}
-              exercises={getSeanceExerciseNames(nextSeance)}
-              muscles={nextSeance.muscles}
-              thumbs={<ExerciseStrip ids={nextExerciseIds} library={library} light />}
-              onPress={() => router.push(`/sportif/programme/${programmes[0].id}`)}
-            />
-          </View>
-        ) : (
-          <TodayHero
-            eyebrow="Séance du jour"
-            title="Rien de prévu aujourd'hui"
-            meta={
-              upcomingSlots.length > 0
-                ? `Prochain créneau : ${upcomingSlots[0].date} · ${upcomingSlots[0].heureDebut}`
-                : "Ton coach n'a pas encore planifié de séance."
-            }
-          />
-        )}
+        <WeekStrip states={dayStates} />
 
         <TodoCard items={todoItems} />
 

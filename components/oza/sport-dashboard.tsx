@@ -7,6 +7,7 @@ import { Colors } from "../../constants/colors";
 import { DEFAULT_OZA_SPORTS, OZA_NIVEAUX } from "../../constants/oza-sports";
 import { Radius, Shadow, Type } from "../../constants/tokens";
 import { AthleteProfile } from "../../services/athlete-profile";
+import { materielLabel, objectifLabel } from "../../constants/onboarding";
 import { getOzaSports } from "../../services/oza-programs";
 import {
   AdviceVerdict,
@@ -16,9 +17,12 @@ import {
   buildIndicators,
   computeStats,
   familyOf,
+  tonnage,
   weeklyAdvice,
 } from "../../services/sport-dashboard";
 import { SessionRecord, getWellnessEntriesForSportif } from "../../services/tracking";
+import AiCoachCard from "./ai-coach-card";
+import { AiPayload } from "../../services/coach-ai";
 
 const TONE_COLOR: Record<Tone, string> = {
   good: Colors.riskLow,
@@ -61,6 +65,38 @@ export default function SportDashboard({
   const stats = useMemo(() => computeStats(sessions, wellness), [sessions, wellness]);
   const indicators = useMemo(() => buildIndicators(family, stats, profile), [family, stats, profile]);
   const advice = useMemo(() => weeklyAdvice(stats, profile), [stats, profile]);
+
+  const payload = useMemo<AiPayload | null>(() => {
+    if (!sport) return null;
+    const pos = sport.positions.find((p) => p.id === profile.positionId);
+    const niveauLabel = OZA_NIVEAUX.find((n) => n.key === profile.niveau)?.label ?? null;
+    const t7 = tonnage(stats.sessions7);
+    return {
+      profile: {
+        sport: sport.nom,
+        poste: pos?.nom ?? null,
+        niveau: niveauLabel,
+        objectif: objectifLabel(profile.objectif) || null,
+        seancesParSemaine: profile.seancesParSemaine,
+        dureeMinutes: profile.dureeMinutes,
+        materiel: profile.materiel.map(materielLabel),
+        limitations: profile.limitations || null,
+      },
+      stats: {
+        seances7: stats.sessions7.length,
+        seancesPrev7: stats.sessionsPrev7.length,
+        charge7: Math.round(stats.load7),
+        rpe7: stats.rpe7,
+        minutes7: stats.minutes7,
+        acwr: stats.acwr,
+        bienEtre7: stats.wellness7,
+        bienEtrePrev: stats.wellnessPrev,
+        semainesActives: stats.weeksActive,
+        tonnage7: t7 > 0 ? t7 : null,
+      },
+      regle: { verdict: advice.verdict, titre: advice.title, raisons: advice.reasons },
+    };
+  }, [sport, profile, stats, advice]);
 
   if (!sport) return null;
 
@@ -118,6 +154,8 @@ export default function SportDashboard({
         <Text style={styles.suggestion}>{advice.suggestion}</Text>
         <Text style={styles.disclaimer}>Conseil automatique d'après tes séances et ton bien-être. Il ne remplace ni ton coach ni un avis médical.</Text>
       </View>
+
+      {payload && <AiCoachCard uid={uid} consent={!!profile.aiConsentAt} payload={payload} />}
     </View>
   );
 }

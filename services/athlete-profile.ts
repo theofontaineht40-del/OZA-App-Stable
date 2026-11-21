@@ -18,6 +18,8 @@ export type AthleteProfile = {
   limitations: string | null;
   // true une fois le questionnaire parcouru jusqu'au bout.
   completed: boolean;
+  // Consentement au mini-coach IA (date) ; null/absent = pas activé.
+  aiConsentAt?: number | null;
   updatedAt?: number;
 };
 
@@ -42,7 +44,8 @@ export async function getAthleteProfile(uid: string): Promise<AthleteProfile | n
 }
 
 export async function saveAthleteProfile(uid: string, profile: AthleteProfile): Promise<void> {
-  await setDoc(doc(db, "sportProfiles", uid), { ...profile, updatedAt: Date.now() });
+  // merge : la modification du questionnaire ne doit pas effacer le consentement IA.
+  await setDoc(doc(db, "sportProfiles", uid), { ...profile, updatedAt: Date.now() }, { merge: true });
 }
 
 export async function deleteAthleteProfile(uid: string): Promise<void> {

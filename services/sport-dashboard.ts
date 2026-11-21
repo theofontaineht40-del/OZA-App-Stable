@@ -58,7 +58,7 @@ function toNumber(value: string | undefined): number {
 }
 
 // Tonnage approximatif : séries × répétitions × charge max de chaque exercice.
-function tonnage(sessions: SessionRecord[]): number {
+export function tonnage(sessions: SessionRecord[]): number {
   let total = 0;
   for (const s of sessions) {
     for (const log of s.exerciseLogs ?? []) {

@@ -142,6 +142,14 @@ service cloud.firestore {
       allow write: if isSignedIn() && request.auth.uid == sportifId;
     }
 
+    // ── Conseil du mini-coach IA ──
+    // Écrit uniquement par la fonction serveur (api/coach-advice.ts, qui
+    // contourne ces règles) : le sportif et son coach principal le lisent.
+    match /coachAdvice/{sportifId} {
+      allow read: if canAccessSportifData(sportifId);
+      allow write: if false;
+    }
+
     // ── Dossier médical (coach principal uniquement) ──
     match /medicalProfiles/{sportifId} {
       allow read: if canAccessSportifData(sportifId);

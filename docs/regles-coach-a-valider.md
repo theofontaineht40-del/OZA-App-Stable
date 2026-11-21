@@ -1,0 +1,357 @@
+# Règles de coach à valider
+
+Généré automatiquement (109 règles issues des cours ProSportConcept). Ne modifie QUE les cases :
+
+- `[x]` : je valide cette règle (elle devient utilisable par le moteur)
+- `[-]` : je refuse cette règle
+- `[ ]` : pas encore relue, rien ne change
+
+Quand tu as fini, dis « applique la validation » : le script enregistre ton nom et la date du jour sur chaque règle cochée. Rien n'est validé avant ça.
+
+## A — Volume par groupe musculaire (3)
+
+- [ ] `A-coach-series-muscle-split` — **Séries par muscle (hypertrophie, split)** : 6 à 12 séries/muscle/séance
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie ».
+- [ ] `A-coach-series-muscle-half-body` — **Séries par muscle (hypertrophie, half body)** : 3 à 10 séries/muscle/séance
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie ».
+- [ ] `A-coach-series-muscle-full-body` — **Séries par muscle (hypertrophie, full body)** : 3 à 6 séries/muscle/séance
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Confirmé par le coach (2026-11-21) : par séance. Source : cours ProSportConcept (C. Damien), « Hypertrophie ».
+
+## B — Intensité, répétitions, RPE/RIR, repos (40)
+
+- [ ] `B-coach-force-maximale-series` — **Séries par exercice : Force maximale** : 3 à 5 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-maximale-repetitions` — **Répétitions par série : Force maximale** : 1 à 5 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : 1 à 6 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-maximale-intensite` — **Intensité : Force maximale** : 85 à 120 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Au-delà de 100 % : travail excentrique seul (100 à 120 %). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-maximale-repos` — **Repos entre séries : Force maximale** : 180 à 480 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Jusqu'à 10 minutes lors d'une séance très lourde ; 3 minutes = récupération incomplète (cours force max). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ». Confirmé par le coach (2026-11-21) : 3 à 8 min.
+- [ ] `B-coach-force-maximale-tstt` — **Temps sous tension total d'une série (TSTT) : Force maximale** : 0 à 20 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie ».
+- [ ] `B-coach-puissance-series` — **Séries par exercice : Puissance** : 4 à 6 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-puissance-repetitions` — **Répétitions par série : Puissance** : 3 à 6 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-puissance-intensite` — **Intensité : Puissance** : 50 à 70 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-puissance-repos` — **Repos entre séries : Puissance** : 120 à 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-endurance-series` — **Séries par exercice : Force endurance** : 4 à 6 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-endurance-repetitions` — **Répétitions par série : Force endurance** : ≥ 15 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : 15 à 100 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-endurance-intensite` — **Intensité : Force endurance** : 30 à 65 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-endurance-repos` — **Repos entre séries : Force endurance** : 30 à 60 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-endurance-tstt` — **Temps sous tension total d'une série (TSTT) : Force endurance** : ≥ 60 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie ».
+- [ ] `B-coach-force-vitesse-series` — **Séries par exercice : Force vitesse** : 3 à 5 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-vitesse-repetitions` — **Répétitions par série : Force vitesse** : 3 à 6 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-vitesse-intensite` — **Intensité : Force vitesse** : 30 à 50 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-force-vitesse-repos` — **Repos entre séries : Force vitesse** : 60 à 90 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-explosivite-series` — **Séries par exercice : Explosivité** : 4 à 6 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-explosivite-repetitions` — **Répétitions par série : Explosivité** : 4 à 8 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-explosivite-intensite` — **Intensité : Explosivité** : 0 à 30 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-explosivite-repos` — **Repos entre séries : Explosivité** : 45 à 90 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-masse-series` — **Séries par exercice : Masse (hypertrophie myofibrillaire)** : 2 à 4 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Pour la masse et le volume : 2 à 4 séries par exercice en split ou full body, 3 à 8 en half body (cours hypertrophie). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-masse-repetitions` — **Répétitions par série : Masse (hypertrophie myofibrillaire)** : 6 à 10 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : 6 à 10 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-masse-intensite` — **Intensité : Masse (hypertrophie myofibrillaire)** : 65 à 80 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-masse-repos` — **Repos entre séries : Masse (hypertrophie myofibrillaire)** : 90 à 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-masse-tstt` — **Temps sous tension total d'une série (TSTT) : Masse (hypertrophie myofibrillaire)** : 20 à 40 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie ».
+- [ ] `B-coach-volume-series` — **Séries par exercice : Volume (hypertrophie sarcoplasmique)** : 2 à 4 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Pour la masse et le volume : 2 à 4 séries par exercice en split ou full body, 3 à 8 en half body (cours hypertrophie). Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-volume-repetitions` — **Répétitions par série : Volume (hypertrophie sarcoplasmique)** : 10 à 15 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : 10 à 15 RM. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-volume-intensite` — **Intensité : Volume (hypertrophie sarcoplasmique)** : 50 à 75 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-volume-repos` — **Repos entre séries : Volume (hypertrophie sarcoplasmique)** : 60 à 90 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation et paramètres d'effort ».
+- [ ] `B-coach-volume-tstt` — **Temps sous tension total d'une série (TSTT) : Volume (hypertrophie sarcoplasmique)** : 40 à 60 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : TSTT = temps sous tension d'une répétition × nombre de répétitions. Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » et « Hypertrophie ».
+- [ ] `B-coach-force-maximale-rpe` — **RPE : force maximale** : 8 à 9.5 RPE (0-10)
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Proche du RM. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `B-coach-masse-rpe` — **RPE : masse (hypertrophie myofibrillaire)** : 9 à 10 RPE (0-10)
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Confirmé par le coach (2026-11-21) : RPE 9 à 10. Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement).
+- [ ] `B-coach-volume-rpe` — **RPE : volume (hypertrophie sarcoplasmique)** : 9 à 10 RPE (0-10)
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Confirmé par le coach (2026-11-21) : RPE 9 à 10. Source : cours ProSportConcept (C. Damien), « Hypertrophie » (tableau d'entraînement).
+- [ ] `B-coach-efforts-sous-maximaux-rpe` — **RPE des efforts sous-maximaux (qualité d'exécution)** : ≤ 7 RPE (0-10)
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Séries plus ou moins longues, pour privilégier la technique. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `B-coach-excentrique-supramaximal-intensite` — **Charge du travail excentrique supra-maximal** : 100 à 120 % 1RM
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Inutile de dépasser 120 %. Ratio bénéfice/risque jugé défavorable, déconseillé sur squat. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `B-coach-excentrique-supramaximal-espacement` — **Espacement des séances d'excentrique supra-maximal** : ≥ 6 jours
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Aucune séance de force pendant cette période de récupération. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `B-coach-isometrie-duree` — **Durée d'une contraction isométrique maximale (force max)** : 3 à 6 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Plutôt en fin d'entraînement, au moins 3 angulations différentes. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `B-coach-isometrie-recuperation` — **Récupération entre isométries (force max)** : ≥ 60 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+
+## C — Fréquence et répartition (6)
+
+- [ ] `C-coach-hypertrophie-passages-semaine` — **Passages par groupe musculaire (hypertrophie)** : 2 fois/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification » et « Gestion de l'effort ».
+- [ ] `C-coach-hypertrophie-seances-semaine` — **Séances d'hypertrophie par semaine** : 4 à 5 séances/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Hypertrophie » (séances idéales : 4 à 5) et « Planification » (jusqu'à 5).
+- [ ] `C-coach-force-max-frequence-groupe` — **Séances de force max par groupe musculaire** : 1 à 2 séances/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification ».
+- [ ] `C-coach-effort-dynamique-frequence-groupe` — **Séances d'effort dynamique par groupe musculaire** : 2 séances/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification ».
+- [ ] `C-coach-5x5-seances` — **Séances par semaine du programme 5x5 (full body, un jour de repos entre chaque)** : 3 séances/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `C-coach-531-seances` — **Séances par semaine du programme 5/3/1 (squat, poussées, soulevé)** : 3 séances/semaine
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+
+## D — Progression, périodisation, décharge (4)
+
+- [ ] `D-coach-mesocycle-duree` — **Durée d'un cycle (mésocycle) dans la plupart des objectifs** : 3 à 6 semaines
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Un mésocycle compte formellement 2 à 6 microcycles. Source : cours ProSportConcept (C. Damien), « Planification ».
+- [ ] `D-coach-531-vague-semaines` — **Durée d'une vague 5/3/1 (3 semaines de charge puis 1 semaine de décharge)** : 4 semaines
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Décharge = 5 × 40 %, 5 × 50 %, 5 × 60 %. Source : cours ProSportConcept (C. Damien), « Méthode de développement de la force maximale ».
+- [ ] `D-coach-pic-de-forme-reduction-volume` — **Réduction du volume pour un pic de forme (affûtage)** : 40 à 60 % du volume
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Pendant environ 3 semaines. Source : cours ProSportConcept (C. Damien), « Planification ».
+- [ ] `D-coach-pic-de-forme-duree` — **Durée de l'affûtage** : 3 semaines
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification ».
+
+## F — Filières énergétiques et intermittent (50)
+
+- [ ] `F-coach-30-30-effort-intensite` — **Intensité de la phase rapide du 30"/30"** : 105 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Exemple : 30 s à 15 km/h ou 130 m. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-30-30-recup-intensite` — **Intensité de la phase lente du 30"/30"** : 50 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Exemple : 30 s à 7,5 km/h ou 65 m. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-30-30-serie-duree` — **Durée d'une série de 30"/30"** : 8 à 10 min
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : 2 séries de 8 à 10 minutes. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-30-30-series` — **Nombre de séries de 30"/30"** : 2 séries
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-30-30-recup-entre-series` — **Récupération entre les séries de 30"/30"** : 180 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-45-15-intensite` — **Intensité de la phase rapide du 45"/15"** : 100 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Exemple : 184 m en 45 s. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-45-15-repetitions` — **Répétitions de 45"/15"** : 10 répétitions
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-45-15-recup-entre-series` — **Récupération entre séries de 45"/15"** : 180 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-300m-repetitions` — **Répétitions de 300 m (VMA)** : 10 répétitions
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : 300 m en 1 min 15. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-300m-intensite` — **Intensité des 300 m (VMA)** : 98 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-300m-recuperation` — **Récupération entre les 300 m (VMA)** : 180 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-400m-repetitions` — **Répétitions de 400 m (VMA)** : 8 à 10 répétitions
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : 400 m en 1 min 40. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-400m-intensite` — **Intensité des 400 m (VMA)** : 98 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-400m-recuperation` — **Récupération entre les 400 m (VMA)** : 180 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-500m-repetitions` — **Répétitions de 500 m (VMA)** : 8 à 10 répétitions
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : 500 m en 2 min 08. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-500m-intensite` — **Intensité des 500 m (VMA)** : 95 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-500m-recuperation` — **Récupération entre les 500 m (VMA)** : 180 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-600m-repetitions` — **Répétitions de 600 m (VMA)** : 6 à 8 répétitions
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : 600 m en 2 min 34. Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-600m-intensite` — **Intensité des 600 m (VMA)** : 95 % VMA
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-vma-600m-recuperation` — **Récupération entre les 600 m (VMA)** : 240 s
+  - Conditions : Coureur dont la VMA est connue ; durées et distances à recalculer avec sa propre VMA (science/engine/vma.ts).
+  - Note : Source : cours du coach (tableur « distance et temps pour calcul en fonction de la VMA », feuille d'exemples de séances), VMA de référence 14,75 km/h. Pourcentages déduits des distances et temps indiqués : à confirmer par le coach.
+- [ ] `F-coach-puissance-lactique-effort-max` — **Durée maximale d'un effort (puissance glycolyse anaérobie)** : 30 à 60 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-capacite-lactique-effort-max` — **Durée maximale d'un effort (capacité glycolyse anaérobie)** : ≤ 120 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-aerobie-effort-max` — **Durée maximale d'un effort (puissance glycolyse aérobie)** : 6 à 8 min
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-intermittent-courses-max` — **Nombre maximal de courses par séance en intermittent** : 30 à 40 courses
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-continu-courses-max` — **Nombre maximal de courses par séance en continu** : 10 à 15 courses
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-phosphagenes-recuperation-entre-repetitions` — **Récupération entre répétitions (phosphagènes)** : ≥ 50 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-phosphagenes-recuperation-entre-series` — **Récupération entre séries (phosphagènes)** : 360 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-lactique-recuperation-entre-series` — **Récupération entre séries (glycolyse anaérobie)** : 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Développement et maintien des qualités physiques ».
+- [ ] `F-coach-perte-de-poids-intensite-moderee` — **Intensité d'une course modérée pour un déficit calorique** : 70 à 90 % VMA
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Les calories dépensées viennent surtout de la glycolyse. Source : cours ProSportConcept (C. Damien), « La perte de poids ».
+- [ ] `F-coach-intersaison-30-30-intensite` — **Intensité du fractionné 30"/30"** : ≥ 100 % VMA
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-30-30-repetitions` — **Répétitions par série : 30"/30"** : 10 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-30-30-series` — **Séries : 30"/30"** : 3 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-30-30-recuperation-entre-series` — **Récupération entre séries : 30"/30"** : 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20-20-intensite` — **Intensité du fractionné 20"/20"** : 105 à 110 % VMA
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20-20-repetitions` — **Répétitions par série : 20"/20"** : 8 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20-20-series` — **Séries : 20"/20"** : 3 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20-20-recuperation-entre-series` — **Récupération entre séries : 20"/20"** : 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-15-20-intensite` — **Intensité du fractionné 15"/20"** : ≥ 120 % VMA
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-15-20-repetitions` — **Répétitions par série : 15"/20"** : 4 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-15-20-series` — **Séries : 15"/20"** : 3 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-15-20-recuperation-entre-series` — **Récupération entre séries : 15"/20"** : 180 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20s-140-intensite` — **Intensité du fractionné 20" à 140 % VMA** : ≥ 140 % VMA
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20s-140-repetitions` — **Répétitions par série : 20" à 140 % VMA** : 6 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20s-140-series` — **Séries : 20" à 140 % VMA** : 5 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20s-140-recuperation-entre-series` — **Récupération entre séries : 20" à 140 % VMA** : 360 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-20s-140-recuperation-entre-repetitions` — **Récupération entre répétitions : 20" à 140 % VMA** : 50 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-sprint-6s-repetitions` — **Répétitions par série : sprints de 6"** : 4 répétitions
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-sprint-6s-series` — **Séries : sprints de 6"** : 3 séries
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-sprint-6s-recuperation-entre-series` — **Récupération entre séries : sprints de 6"** : 360 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+- [ ] `F-coach-intersaison-sprint-6s-recuperation-entre-repetitions` — **Récupération entre répétitions : sprints de 6"** : 50 s
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Programmation intersaison, rugby amateur » (mois de juin).
+
+## H — Équilibres et patterns moteurs (2)
+
+- [ ] `H-coach-polyarticulaires-par-pattern` — **Exercices polyarticulaires par pattern de mouvement dans une séance** : 1 à 2 exercices
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » (1 à 2 polyarticulaires par pattern).
+- [ ] `H-coach-monoarticulaires-par-articulation` — **Exercices monoarticulaires par articulation dans une séance** : 1 à 2 exercices
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Les objectifs en musculation » (1 à 2 par articulation mobilisée dans les polyarticulaires).
+
+## I — Charge d'entraînement et risque (4)
+
+- [ ] `I-coach-acwr-zone-optimale` — **Rapport charge aiguë / charge chronique : zone optimale (verte)** : 0.8 à 1.3 ratio
+  - Conditions : Suivi descriptif ; à croiser avec le wellness et la performance.
+  - Note : Charge aiguë = semaine en cours ; charge chronique = moyenne des 4 dernières semaines. La revue GPT (Impellizzeri 2020) conteste la validité causale de l'ACWR : décision du coach à confirmer. Source : cours ProSportConcept (C. Damien), « Planification » et « Gestion de l'effort ».
+- [ ] `I-coach-acwr-sous-charge` — **Rapport charge aiguë / charge chronique : sous-charge** : ≤ 0.8 ratio
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Risque lié au manque de préparation. Voir la réserve sur la validité de l'ACWR (revue GPT). Source : cours ProSportConcept (C. Damien), « Planification ».
+- [ ] `I-coach-acwr-vigilance` — **Rapport charge aiguë / charge chronique : vigilance** : 1.3 à 1.5 ratio
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification » (1,3 à 1,4 sur l'un des supports).
+- [ ] `I-coach-acwr-pic-de-charge` — **Rapport charge aiguë / charge chronique : pic (spike), réduire la charge** : ≥ 1.5 ratio
+  - Conditions : Adultes sains ; à individualiser selon le niveau, la forme du jour et la récupération.
+  - Note : Source : cours ProSportConcept (C. Damien), « Planification ».

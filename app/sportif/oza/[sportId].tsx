@@ -7,7 +7,7 @@ import { useOzaBase } from "../../../components/oza/use-oza-base";
 import PositionPicker from "../../../components/oza/position-picker";
 import SportHero from "../../../components/oza/sport-hero";
 import { Colors } from "../../../constants/colors";
-import { OZA_NIVEAUX, OzaNiveau, OzaSport } from "../../../constants/oza-sports";
+import { DEFAULT_OZA_SPORTS, OZA_NIVEAUX, OzaNiveau, OzaSport } from "../../../constants/oza-sports";
 import { Type } from "../../../constants/tokens";
 import { auth } from "../../../firebase";
 import {
@@ -24,7 +24,7 @@ import {
 export default function OzaSportScreen() {
   const { sportId } = useLocalSearchParams<{ sportId: string }>();
   const base = useOzaBase();
-  const [sport, setSport] = useState<OzaSport | null>(null);
+  const [sport, setSport] = useState<OzaSport | null>(() => DEFAULT_OZA_SPORTS.find((x) => x.id === sportId) ?? null);
   const [programs, setPrograms] = useState<OzaProgram[] | null>(null);
   const [userState, setUserState] = useState<OzaUserState | null>(null);
   const [positionId, setPositionId] = useState<string | null>(null);
@@ -49,7 +49,8 @@ export default function OzaSportScreen() {
 
   const position = sport.positions.find((p) => p.id === positionId) ?? null;
   const axes = position?.axes?.length ? position.axes : sport.axes;
-  const label = sport.positionLabel === "poste" ? "ton poste" : sport.positionLabel === "axe" ? "ton axe" : "ta spécialité";
+  const label =
+    sport.positionLabel === "poste" ? "ton poste" : sport.positionLabel === "axe" ? "ton axe" : sport.positionLabel === "objectif" ? "ton objectif" : "ta spécialité";
 
   return (
     <View style={styles.container}>

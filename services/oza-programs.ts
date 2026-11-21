@@ -60,16 +60,21 @@ export function isOzaAdmin(email: string | null | undefined): boolean {
 // Firestore d'abord (gestion dynamique des contenus) ; le catalogue par défaut
 // prend le relais tant que la collection est vide ou illisible.
 export async function getOzaSports(): Promise<OzaSport[]> {
+  let fromDb: OzaSport[] = [];
   try {
     const snap = await getDocs(collection(db, "ozaSports"));
-    const fromDb = snap.docs
-      .map((d) => ({ ...(d.data() as Omit<OzaSport, "id">), id: d.id }))
-      .filter((s) => s.actif !== false);
-    if (fromDb.length > 0) return fromDb.sort((a, b) => a.ordre - b.ordre);
+    fromDb = snap.docs.map((d) => ({ ...(d.data() as Omit<OzaSport, "id">), id: d.id }));
   } catch {
     // règles pas encore publiées, hors-ligne… on retombe sur le catalogue
   }
-  return DEFAULT_OZA_SPORTS;
+  // Union : une fiche Firestore remplace le sport du catalogue de même id
+  // (ou le masque avec actif: false) ; les sports ajoutés au catalogue
+  // apparaissent sans avoir à les recopier dans Firebase.
+  const byId = new Map<string, OzaSport>(DEFAULT_OZA_SPORTS.map((s) => [s.id, s]));
+  for (const s of fromDb) byId.set(s.id, s);
+  return Array.from(byId.values())
+    .filter((s) => s.actif !== false)
+    .sort((a, b) => a.ordre - b.ordre);
 }
 
 export async function getOzaSport(sportId: string): Promise<OzaSport | null> {

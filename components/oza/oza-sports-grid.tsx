@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { Colors } from "../../constants/colors";
-import { OzaSport } from "../../constants/oza-sports";
+import { DEFAULT_OZA_SPORTS, OzaSport } from "../../constants/oza-sports";
 import { Type } from "../../constants/tokens";
 import { auth } from "../../firebase";
 import {
@@ -23,7 +23,7 @@ import { useOzaBase } from "./use-oza-base";
 // une tuile par sport (chacune dans les couleurs de son univers).
 export default function OzaSportsGrid() {
   const base = useOzaBase();
-  const [sports, setSports] = useState<OzaSport[] | null>(null);
+  const [sports, setSports] = useState<OzaSport[] | null>(DEFAULT_OZA_SPORTS); // catalogue tout de suite, Firestore ensuite
   const [favorites, setFavorites] = useState<OzaProgram[]>([]);
   const [search, setSearch] = useState("");
   const uid = auth.currentUser?.uid;
@@ -101,7 +101,7 @@ export default function OzaSportsGrid() {
                   {s.nom.toUpperCase()}
                 </Text>
                 <Text style={[styles.tileSub, { color: light ? "rgba(6,45,43,0.7)" : "rgba(255,255,255,0.8)" }]}>
-                  {s.positions.length} {s.positionLabel === "poste" ? "postes" : s.positionLabel === "axe" ? "axes" : "spécialités"}
+                  {s.positions.length} {s.positionLabel === "poste" ? "postes" : s.positionLabel === "axe" ? "axes" : s.positionLabel === "objectif" ? "objectifs" : "spécialités"}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>

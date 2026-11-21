@@ -24,29 +24,16 @@ export default function CoachTabsLayout() {
         name="index"
         options={{
           title: "Accueil",
+          // Sportifs et Messages vivent dans l'accueil : les non-lus s'y affichent.
+          tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
+          tabBarBadgeStyle: { backgroundColor: Colors.primary },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="sportifs"
-        options={{
-          title: "Sportifs",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="reservations"
-        options={{
-          title: "Réservations",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" color={color} size={size} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="sportifs" options={{ href: null }} />
+      <Tabs.Screen name="reservations" options={{ href: null }} />
       <Tabs.Screen
         name="programmes"
         options={{
@@ -56,17 +43,7 @@ export default function CoachTabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="messages/index"
-        options={{
-          title: "Messages",
-          tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
-          tabBarBadgeStyle: { backgroundColor: Colors.primary },
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble" color={color} size={size} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="messages/index" options={{ href: null }} />
       <Tabs.Screen
         name="profil"
         options={{

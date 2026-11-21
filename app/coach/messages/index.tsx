@@ -12,7 +12,7 @@ import { auth } from "../../../firebase";
 import { Conversation, subscribeToConversationsForCoach } from "../../../services/messages";
 import { getMySportifs, SportifSummary } from "../../../services/tracking";
 
-export default function MessagesListScreen() {
+export function MessagesPanel({ showTitle = true }: { showTitle?: boolean }) {
   const [uid, setUid] = useState<string | null>(null);
   const [sportifs, setSportifs] = useState<SportifSummary[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -40,7 +40,7 @@ export default function MessagesListScreen() {
   }, [uid]);
 
   if (loading) {
-    return <View style={styles.container} />;
+    return <View style={{ minHeight: 160 }} />;
   }
 
   const rows = sportifs
@@ -55,14 +55,8 @@ export default function MessagesListScreen() {
     });
 
   return (
-    <View style={{ flex: 1 }}>
-    <PhotoBackground variant="accueil" />
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
-      <Text style={styles.title}>Messagerie</Text>
+    <View>
+      {showTitle && <Text style={styles.title}>Messagerie</Text>}
 
       {rows.length === 0 ? (
         <View style={styles.emptyCard}>
@@ -110,7 +104,18 @@ export default function MessagesListScreen() {
           </TouchableOpacity>
         ))
       )}
-    </ScrollView>
+    </View>
+  );
+}
+
+// Écran autonome (lien direct /coach/messages) : même panneau que dans l'accueil.
+export default function MessagesListScreen() {
+  return (
+    <View style={{ flex: 1 }}>
+      <PhotoBackground variant="accueil" />
+      <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <MessagesPanel />
+      </ScrollView>
     </View>
   );
 }

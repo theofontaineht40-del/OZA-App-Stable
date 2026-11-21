@@ -66,7 +66,7 @@ const TABLE_MIN_WIDTH = 760;
 // profil "géré" ici — pour un client qui n'utilisera jamais l'app lui-même
 // (voir createManagedSportif). Les deux se mélangent ; seul un badge
 // distingue les profils gérés.
-export default function SportifsTabScreen() {
+export function SportifsPanel() {
   const [coachUid, setCoachUid] = useState<string | null>(null);
   const [coachName, setCoachName] = useState<{ firstName: string; lastName: string } | null>(null);
   const [sportifs, setSportifs] = useState<SportifSummary[] | null>(null);
@@ -207,17 +207,13 @@ export default function SportifsTabScreen() {
   }
 
   if (!sportifs) {
-    return <View style={styles.container} />;
+    return <View style={{ minHeight: 160 }} />;
   }
 
   const isTable = width >= TABLE_MIN_WIDTH;
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+    <View>
       <View onLayout={(e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width)}>
         <View style={styles.headerRow}>
           <View style={{ flex: 1 }}>
@@ -429,6 +425,16 @@ export default function SportifsTabScreen() {
           </View>
         </View>
       </Modal>
+    </View>
+  );
+}
+
+// Écran autonome (lien direct /coach/sportifs) : le même panneau que dans
+// l'accueil, dans son propre défilement.
+export default function SportifsTabScreen() {
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <SportifsPanel />
     </ScrollView>
   );
 }

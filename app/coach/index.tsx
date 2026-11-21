@@ -9,6 +9,7 @@ import { Type } from "../../constants/tokens";
 import AnimatedPressable from "../../components/animated-pressable";
 import AgendaCard from "../../components/coach/agenda-card";
 import AreaChart from "../../components/coach/area-chart";
+import GradientFill from "../../components/gradient-fill";
 import FeedbackCard from "../../components/coach/feedback-card";
 import TriageCard from "../../components/coach/triage-card";
 import HeroHeader, { HeroIconButton } from "../../components/hero-header";
@@ -39,6 +40,8 @@ import {
   sessionLabel,
   SessionFeedback,
 } from "../../services/session-feedback";
+import { MessagesPanel } from "./messages/index";
+import { SportifsPanel } from "./sportifs";
 import { getInjuries } from "../../services/medical";
 import { Conversation, subscribeToConversationsForCoach } from "../../services/messages";
 import { getSlotsForCoach, Slot } from "../../services/reservations";
@@ -89,6 +92,8 @@ export default function CoachHome() {
   const [openInjuries, setOpenInjuries] = useState<Record<string, { zone: string; gravite: number }[]>>({});
   // Les graphiques et l'analyse détaillée sont repliés : l'accueil répond d'abord à "qui a besoin de moi".
   const [showDetails, setShowDetails] = useState(false);
+  const [homeTab, setHomeTab] = useState<"todo" | "sportifs" | "messages">("todo");
+  const scrollRef = useRef<ScrollView>(null);
   const [loading, setLoading] = useState(true);
   const [sportifSearch, setSportifSearch] = useState("");
   const fade = useRef(new Animated.Value(0)).current;
@@ -230,6 +235,8 @@ export default function CoachHome() {
     }
   }
 
+  const unreadCount = conversations.filter((c) => c.unreadByCoach).length;
+
   const triage = useMemo(
     () =>
       buildTriage({
@@ -283,6 +290,7 @@ export default function CoachHome() {
     <View style={{ flex: 1 }}>
       <PhotoBackground variant="accueil" />
       <ScrollView
+        ref={scrollRef}
         style={styles.container}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
@@ -341,6 +349,43 @@ export default function CoachHome() {
             )}
           </View>
 
+          {/* Sportifs et Messages vivent dans l'accueil : trois sous-onglets. */}
+          <View style={styles.homeTabs}>
+            {(
+              [
+                ["todo", "À traiter", 0],
+                ["sportifs", "Sportifs", 0],
+                ["messages", "Messages", unreadCount],
+              ] as const
+            ).map(([key, label, badge]) => (
+              <TouchableOpacity
+                key={key}
+                style={[styles.homeTab, homeTab === key && styles.homeTabActive]}
+                onPress={() => setHomeTab(key)}
+              >
+                {homeTab === key && <GradientFill />}
+                <Text style={[styles.homeTabText, homeTab === key && styles.homeTabTextActive]}>{label}</Text>
+                {badge > 0 && (
+                  <View style={styles.homeTabBadge}>
+                    <Text style={styles.homeTabBadgeText}>{badge}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {homeTab === "sportifs" && (
+            <View style={styles.body}>
+              <SportifsPanel />
+            </View>
+          )}
+          {homeTab === "messages" && (
+            <View style={styles.body}>
+              <MessagesPanel showTitle={false} />
+            </View>
+          )}
+
+          {homeTab === "todo" && (
           <View style={styles.body}>
             {/* ── À TRAITER AUJOURD'HUI ── */}
             <View style={styles.todayActions}>
@@ -367,7 +412,7 @@ export default function CoachHome() {
               items={triage}
               onOpen={(uid) => router.push(`/coach/sportif/${uid}`)}
               onReply={(uid) => router.push(`/coach/messages/${uid}`)}
-              onSeeAll={() => router.push("/coach/sportifs")}
+              onSeeAll={() => setHomeTab("sportifs")}
             />
 
             <FeedbackCard items={feedbackItems} onSend={handleSendFeedback} />
@@ -375,7 +420,7 @@ export default function CoachHome() {
             <AgendaCard slots={todaySlots} onPress={() => router.push("/coach/reservations")} />
 
             {sportifs.length > 0 && (
-              <TouchableOpacity style={styles.teamRow} onPress={() => router.push("/coach/sportifs")}>
+              <TouchableOpacity style={styles.teamRow} onPress={() => setHomeTab("sportifs")}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.teamRowTitle}>
                     {sportifs.length} sportif{sportifs.length > 1 ? "s" : ""} · {analysis.okCount} prêt
@@ -690,10 +735,11 @@ export default function CoachHome() {
             <View style={styles.quickGrid}>
               <QuickAction icon="calendar-outline" label="Réservations" delay={0} onPress={() => router.push("/coach/reservations")} />
               <QuickAction icon="barbell-outline" label="Programmes" delay={250} onPress={() => router.push("/coach/programmes")} />
-              <QuickAction icon="chatbubble-outline" label="Messagerie" delay={500} onPress={() => router.push("/coach/messages")} />
+              <QuickAction icon="chatbubble-outline" label="Messagerie" delay={500} onPress={() => { setHomeTab("messages"); scrollRef.current?.scrollTo({ y: 0, animated: true }); }} />
               <QuickAction icon="notifications-outline" label="Notifications" delay={750} onPress={comingSoon} />
             </View>
           </View>
+          )}
         </Animated.View>
       </ScrollView>
     </View>
@@ -984,6 +1030,56 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal: 24,
     overflow: "hidden",
+  },
+
+  homeTabs: {
+    flexDirection: "row",
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 14,
+    padding: 4,
+    marginHorizontal: 24,
+    marginBottom: 16,
+  },
+
+  homeTab: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 11,
+    overflow: "hidden",
+  },
+
+  homeTabActive: {
+    backgroundColor: Colors.primary,
+  },
+
+  homeTabText: {
+    fontSize: 13.5,
+    fontWeight: "700",
+    color: Colors.textSecondary,
+  },
+
+  homeTabTextActive: {
+    color: Colors.white,
+  },
+
+  homeTabBadge: {
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    paddingHorizontal: 5,
+    backgroundColor: Colors.riskHigh,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  homeTabBadgeText: {
+    fontSize: 10.5,
+    fontWeight: "800",
+    color: Colors.white,
   },
 
   searchWrap: {
